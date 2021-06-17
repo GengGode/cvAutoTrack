@@ -6,6 +6,8 @@
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include <vector>
 
+#include "resource.h"
+
 // 此类是不导出的
 class LoadGiMatchResource
 {
