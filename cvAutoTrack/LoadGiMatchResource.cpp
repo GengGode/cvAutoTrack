@@ -1,26 +1,16 @@
 ﻿#include "pch.h"
 #include "LoadGiMatchResource.h"
 
-#include "resource.h"
-
 BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 {
-	//BITMAP操作
 	BITMAP bmp;
 	GetObject(_hBmp, sizeof(BITMAP), &bmp);
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
-	//mat操作
 	cv::Mat v_mat;
 	v_mat.create(cvSize(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
-	//v_mat.create(cvSize(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
 	GetBitmapBits(_hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, v_mat.data);
 	_mat = v_mat;
-	//if (nChannels == 4)
-	//{
-	//	cv::cvtColor(v_mat, _mat, CV_RGBA2RGB);
-	//	return TRUE;
-	//}
 	return FALSE;
 }
 
@@ -80,16 +70,9 @@ LoadGiMatchResource::~LoadGiMatchResource()
 
 void LoadGiMatchResource::UIDnumberRGBA2A()
 {
-	std::vector<cv::Mat> channels;
-
 	cv::cvtColor(UID, UID, cv::COLOR_RGBA2GRAY);
-	//split(UID, channels);
-	//UID = channels[3];
-
 	for (int i = 0; i < 10; i++)
 	{
-		//split(UIDnumber[i], channels);
-		//UIDnumber[i] = channels[3];
 		cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGBA2GRAY);
 	}
 }

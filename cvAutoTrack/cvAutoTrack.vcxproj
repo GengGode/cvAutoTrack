@@ -177,6 +177,7 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AutoTrack.h" />
     <ClInclude Include="cvAutoTrack.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AutoTrack.cpp" />
     <ClCompile Include="cvAutoTrack.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="LoadGiMatchResource.cpp" />
