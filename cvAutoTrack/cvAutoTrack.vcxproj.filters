@@ -27,6 +27,12 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="LoadGiMatchResource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cvAutoTrack.cpp">
@@ -38,5 +44,30 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LoadGiMatchResource.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="cvAutoTrack.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MatchResource\PaimonDefault.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\Paimon1920x1080.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\Paimon1920x1080 拷贝.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\PaimonDefault0.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\GIMAP.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

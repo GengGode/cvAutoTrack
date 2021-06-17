@@ -1,0 +1,9 @@
+LIBRARY CVAUTOTRACK
+
+EXPORTS
+
+init=init @1
+
+GetTransforn=GetTransforn @2
+
+GetLastErr=GetLastErr @3
