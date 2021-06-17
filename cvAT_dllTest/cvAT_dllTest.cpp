@@ -3,20 +3,39 @@
 
 #include <iostream>
 #include <cvAutoTrack.h>
+
+
 int main()
 {
-	CcvAutoTrack at;
-	float x = 100;
-	float y = 10;
-	float a = 1;
-	at.init();
+	// 静态方法调用
+	// 初始化
+	init();
+	// 准备变量
+	float x = 0;
+	float y = 0;
+	float a = 0;
+	int uid = 0;
+	// 调用循环
 	while (1)
 	{
-		bool state = at.GetTransforn(x, y, a);
-		std::cout << state << " " << x << " " << y << " " << a << "\n";
+		// 调用获取方法
+		if (GetTransforn(x, y, a))
+		{
+			std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
+		if (GetUID(uid))
+		{
+			std::cout << "Now UID: " << " " << uid << " " << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
 	}
-	
-
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

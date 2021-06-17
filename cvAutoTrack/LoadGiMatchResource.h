@@ -16,8 +16,15 @@ public:
 public:
 	cv::Mat PaimonTemplate;
 	cv::Mat MapTemplate;
+	cv::Mat UID;
+	cv::Mat UIDnumber[10];
+
+private:
+	void UIDnumberRGBA2A();
 };
 
 double dis(std::vector<cv::Point> &TransfornHistory);
 double dis(cv::Point p);
 cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
+int getMaxID(double lis[], int len); 
+int getMinID(double lis[], int len);

@@ -11,7 +11,7 @@
 #endif
 
 // 此类是从 dll 导出的
-class CVAUTOTRACK_API CcvAutoTrack {
+class CcvAutoTrack {
 public:
 	CcvAutoTrack(void);
 	~CcvAutoTrack(void);
@@ -77,6 +77,8 @@ private:
 	void* _giPaimonRef = nullptr;
 	//cv::Mat
 	void* _giMiniMapRef = nullptr;
+	//cv::Mat
+	void* _giUIDRef = nullptr;
 
 private:
 	bool getGengshinImpactWnd();
@@ -84,6 +86,7 @@ private:
 	void getGengshinImpactScreen();
 	void getPaimonRefMat();
 	void getMiniMapRefMat();
+	void getUIDRefMat();
 };
 
 extern "C" __declspec(dllexport) bool __stdcall init();

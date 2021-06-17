@@ -199,8 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="MatchResource\GIMAP.bmp" />
-    <Image Include="MatchResource\Paimon1920x1080 拷贝.bmp" />
-    <Image Include="MatchResource\Paimon1920x1080.bmp" />
     <Image Include="MatchResource\PaimonDefault.bmp" />
     <Image Include="MatchResource\PaimonDefault0.bmp" />
   </ItemGroup>

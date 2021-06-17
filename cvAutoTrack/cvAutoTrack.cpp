@@ -44,6 +44,7 @@ CcvAutoTrack::CcvAutoTrack()
 	_giFrame = new cv::Mat;
 	_giPaimonRef = new cv::Mat;
 	_giMiniMapRef = new cv::Mat;
+	_giUIDRef = new cv::Mat;
     return;
 }
 
@@ -69,6 +70,7 @@ CcvAutoTrack::~CcvAutoTrack(void)
 	delete _giFrame;
 	delete _giPaimonRef;
 	delete _giMiniMapRef;
+	delete _giUIDRef;
 }
 
 bool CcvAutoTrack::init()
@@ -312,28 +314,81 @@ bool CcvAutoTrack::GetUID(int &uid)
 
 		if (!giFrame.empty())
 		{
-			getPaimonRefMat();
+			getUIDRefMat();
 
-			cv::Mat& giPaimonRef = *(cv::Mat*)_giPaimonRef;
+			cv::Mat& giUIDRef = *(cv::Mat*)_giUIDRef;
+
+			std::vector<cv::Mat> channels;
+
+			split(giUIDRef, channels);
+			giUIDRef = channels[3];
+
 			LoadGiMatchResource& giMatchResource = *(LoadGiMatchResource*)_giMatchResource;
 
-			cv::Mat paimonTemplate;
-			cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+			int _uid = 0;
+			int _NumBit[9] = { 0 };
 
-			cv::Mat tmp;
-			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+			int bitCount = 1;
+			cv::Mat matchTmp;
+			cv::Mat checkUID = giMatchResource.UID;
+			cv::Mat Roi(giUIDRef);
+
+			cv::matchTemplate(Roi, checkUID, matchTmp, cv::TM_CCOEFF_NORMED);
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
-
-			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-
-			if (minVal < 0.36 || maxVal == 1)
+			//寻找最佳匹配位置
+			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
+			if (maxVal > 0.75)
 			{
-				error_code = 6;//未能匹配到派蒙
-				return false;
-			}
+				int x = maxLoc.x + checkUID.cols + 7;
+				int y = 0;
+				double tmplis[10] = { 0 };
+				int tmplisx[10] = { 0 };
+				for (int p = 8; p >= 0; p--)
+				{
+					_NumBit[p] = 0;
+					for (int i = 0; i < 10; i++)
+					{
+						cv::Rect r(x, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
+						if (x + r.width > giUIDRef.cols)
+						{
+							r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
+						}
 
+						cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
+						Roi = giUIDRef(r);
+
+						cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
+
+						double minVali, maxVali;
+						cv::Point minLoci, maxLoci;
+						//寻找最佳匹配位置
+						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
+
+						tmplis[i] = maxVali;
+						tmplisx[i] = maxLoci.x + numCheckUID.cols - 1;
+						if (maxVali > 0.91)
+						{
+							_NumBit[p] = i;
+							x = x + maxLoci.x + numCheckUID.cols - 1;
+							break;
+						}
+						if (i == 10 - 1)
+						{
+							_NumBit[p] = getMaxID(tmplis, 10);
+							x = x + tmplisx[_NumBit[p]];
+						}
+					}
+				}
+			}
+			_uid = 0;
+			for (int i = 0; i < 9; i++)
+			{
+				_uid += _NumBit[i] * bitCount;
+				bitCount = bitCount * 10;
+			}
+			uid = _uid;
 			error_code = 0;
 			return true;
 		}
@@ -453,6 +508,19 @@ void CcvAutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
+}
+
+void CcvAutoTrack::getUIDRefMat()
+{
+	cv::Mat& giFrame = *(cv::Mat*)_giFrame;
+	cv::Mat& giUIDRef = *(cv::Mat*)_giUIDRef;
+
+	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
+	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
+	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
+	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+
+	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 }
 
 
