@@ -1,18 +1,28 @@
 # GenshinImpact_AutoTrack_DLL
 
-能够从原神中获取角色在地图上的位置，通过opencv的图像匹配算法
+能够从原神中获取角色在地图上的位置，通过opencv的图像匹配算法，使用时需要配合opencv_world450.dll调用。
 
 # 接口
 
-bool __stdcall init();
+bool init();
 
-bool __stdcall GetTransforn(float &x, float &y, float &a);
+初始化函数，初始化之后才能调用 GetTransforn 函数，整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
 
-bool __stdcall GetUID(int &uid);
+bool GetTransforn(float &x, float &y, float &a);
 
-int __stdcall GetLastErr();
+获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
 
-bool __stdcall uninit();
+bool GetUID(int &uid);
+
+获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+
+int GetLastErr();
+
+返回最后一次错误的错误码，如果此前没有错误，将返回0。
+
+bool uninit();
+
+卸载初始化时所占用的内存，此后需要再次初始化才能继续调用 GetTransforn 函数。
 
 # 错误码
 
