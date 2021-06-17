@@ -2,6 +2,10 @@
 
 能够从原神中获取角色在地图上的位置，通过opencv的图像匹配算法，使用时需要配合opencv_world450.dll调用。
 
+cvAutoTrack dll工程
+
+cvAT_dllTest C++下调用dll的测试工程
+
 # 接口
 
 bool init();
