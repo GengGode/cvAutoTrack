@@ -4,7 +4,7 @@
 
 cvAutoTrack dll工程
 
-dllTest C++下调用dll的测试工程
+cvAT_dllTest C++下调用dll的测试工程
 
 # 接口
 
