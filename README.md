@@ -6,15 +6,15 @@
 
 bool init();
 
-初始化函数，初始化之后才能调用'GetTransforn'函数，整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
+初始化函数，初始化之后才能调用 GetTransforn 函数，整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
 
 bool GetTransforn(float &x, float &y, float &a);
 
-获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用GetlastErr获取错误码查看细节，此时数据不会被改变。
+获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
 
 bool GetUID(int &uid);
 
-获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用GetlastErr获取错误码查看细节，此时数据不会被改变。
+获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
 
 int GetLastErr();
 
@@ -22,7 +22,7 @@ int GetLastErr();
 
 bool uninit();
 
-卸载初始化时所占用的内存，此后需要再次初始化才能继续调用'GetTransforn'函数。
+卸载初始化时所占用的内存，此后需要再次初始化才能继续调用 GetTransforn 函数。
 
 # 错误码
 
