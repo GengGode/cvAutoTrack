@@ -147,9 +147,18 @@ bool AutoTrack::GetTransforn(float & x, float & y, float & a)
 							if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
 							{
 								good_matchesTmp.push_back(KNN_mTmp[i][0]);
-								// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
-								lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-								lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+								try 
+								{
+									// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
+									lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
+									lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+
+								}
+								catch (...)
+								{
+									error_code = 7;//特征点数组访问越界，是个bug
+									return false;
+								}
 								sumx += lisx.back();
 								sumy += lisy.back();
 							}
