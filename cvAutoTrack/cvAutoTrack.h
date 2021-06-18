@@ -12,7 +12,7 @@
 
 // 这是已导出的函数。
 extern "C" __declspec(dllexport) bool __stdcall init();
-extern "C" __declspec(dllexport) bool __stdcall GetTransforn(float &x, float &y, float &a);
+extern "C" __declspec(dllexport) bool __stdcall GetTransfom(float &x, float &y, float &a);
 extern "C" __declspec(dllexport) bool __stdcall GetUID(int &uid);
 extern "C" __declspec(dllexport) int __stdcall GetLastErr();
 extern "C" __declspec(dllexport) bool __stdcall uninit();
