@@ -15,7 +15,7 @@ public:
 	~AutoTrack(void);
 
 	bool init();
-	bool GetTransforn(float &x, float &y, float &a);
+	bool GetTransfom(float &x, float &y, float &a);
 	bool GetUID(int &uid);
 	int GetLastError();
 	bool uninit();
