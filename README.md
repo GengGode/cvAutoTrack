@@ -22,7 +22,7 @@ bool init();
 
 初始化函数，初始化之后才能调用 GetTransforn 函数，整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
 
-bool GetTransforn(float &x, float &y, float &a);
+bool GetTransfom(float &x, float &y, float &a);
 
 获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
 
