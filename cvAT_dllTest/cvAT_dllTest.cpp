@@ -19,7 +19,7 @@ int main()
 	while (1)
 	{
 		// 调用获取方法
-		if (GetTransforn(x, y, a))
+		if (GetTransfom(x, y, a))
 		{
 			std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
 		}
