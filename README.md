@@ -12,7 +12,9 @@ cvAT_dllTest C++下调用dll的测试工程
 
 下载链接
 
+国内 链接：https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ 提取码：e7zv 
 
+国外 链接：https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/download/v1.0/Release.zip
 
 # 接口
 
