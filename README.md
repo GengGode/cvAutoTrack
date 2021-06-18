@@ -6,6 +6,14 @@ cvAutoTrack dll工程
 
 cvAT_dllTest C++下调用dll的测试工程
 
+| type | link |
+| --- | --- |
+| 国内访问 gitee | [https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll) |
+
+下载链接
+
+
+
 # 接口
 
 bool init();
