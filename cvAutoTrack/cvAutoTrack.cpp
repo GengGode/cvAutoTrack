@@ -13,9 +13,9 @@ bool __stdcall init()
 {
 	return _at->init();
 }
-bool __stdcall GetTransfom(float &x, float &y, float &a)
+bool __stdcall GetTransform(float &x, float &y, float &a)
 {
-	return _at->GetTransfom(x, y, a);
+	return _at->GetTransform(x, y, a);
 }
 bool __stdcall GetUID(int &uid)
 {

@@ -57,7 +57,7 @@ bool AutoTrack::uninit()
 	return !is_init_end;
 }
 
-bool AutoTrack::GetTransfom(float & x, float & y, float & a)
+bool AutoTrack::GetTransform(float & x, float & y, float & a)
 {
 	if (!is_init_end)
 	{
