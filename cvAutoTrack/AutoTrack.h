@@ -32,7 +32,11 @@ private:
 private:
 	int minHessian = 400;
 	float ratio_thresh = 0.66f;
+
+
 	float mapScale = 1.3f;//1.3;
+
+
 	int someSizeR = 106;
 	float MatchMatScale = 2.0;
 private:

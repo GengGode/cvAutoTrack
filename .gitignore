@@ -260,3 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 *.rar
+/cvAutoTrack/Map/Map bicubic.bmp
+/cvAutoTrack/Map/Map bicubic.jpg
+/cvAutoTrack/Map/Map bicubic.png
