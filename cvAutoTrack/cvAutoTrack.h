@@ -11,8 +11,8 @@
 #endif
 
 // 这是已导出的函数。
-extern "C" __declspec(dllexport) bool init();
-extern "C" __declspec(dllexport) bool GetTransform(float &x, float &y, float &a);
-extern "C" __declspec(dllexport) bool GetUID(int &uid);
-extern "C" __declspec(dllexport) int GetLastErr();
-extern "C" __declspec(dllexport) bool uninit();
+extern "C" CVAUTOTRACK_API bool init();
+extern "C" CVAUTOTRACK_API bool GetTransform(float &x, float &y, float &a);
+extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
+extern "C" CVAUTOTRACK_API int GetLastErr();
+extern "C" CVAUTOTRACK_API bool uninit();
