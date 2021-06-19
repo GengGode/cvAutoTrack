@@ -335,6 +335,13 @@ bool AutoTrack::GetUID(int &uid)
 				_uid += _NumBit[i] * bitCount;
 				bitCount = bitCount * 10;
 			}
+
+			if (_uid == 0)
+			{
+				error_code = 8;//未能在UID区域检测到有效UID
+				return false;
+			}
+
 			uid = _uid;
 			error_code = 0;
 			return true;
