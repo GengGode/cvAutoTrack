@@ -11,8 +11,8 @@
 #endif
 
 // 这是已导出的函数。
-extern "C" __declspec(dllexport) bool __stdcall init();
-extern "C" __declspec(dllexport) bool __stdcall GetTransform(float &x, float &y, float &a);
-extern "C" __declspec(dllexport) bool __stdcall GetUID(int &uid);
-extern "C" __declspec(dllexport) int __stdcall GetLastErr();
-extern "C" __declspec(dllexport) bool __stdcall uninit();
+extern "C" __declspec(dllexport) bool init();
+extern "C" __declspec(dllexport) bool GetTransform(float &x, float &y, float &a);
+extern "C" __declspec(dllexport) bool GetUID(int &uid);
+extern "C" __declspec(dllexport) int GetLastErr();
+extern "C" __declspec(dllexport) bool uninit();
