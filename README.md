@@ -53,3 +53,5 @@ error_code = 5;//原神小地图区域为空或者区域长宽小于60px
 error_code = 6;//未能匹配到派蒙
 
 error_code = 7;//特征点数组访问越界，是个bug
+
+error_code = 8;//未能在UID区域检测到有效UID
