@@ -4,6 +4,10 @@ EXPORTS
 
 init=init @1
 
-GetTransforn=GetTransforn @2
+GetTransform=GetTransform @2
 
-GetLastErr=GetLastErr @3
+GetUID=GetUID @3
+
+GetLastErr=GetLastErr @4
+
+uninit=uninit @5
