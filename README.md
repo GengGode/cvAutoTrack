@@ -36,7 +36,7 @@ int GetLastErr();
 
 bool uninit();
 
-卸载初始化时所占用的内存，此后需要再次初始化才能继续调用 GetTransforn 函数。
+卸载初始化时所占用的内存，此后需要再次初始化才能继续调用 GetTransform 函数。
 
 # 错误码
 
