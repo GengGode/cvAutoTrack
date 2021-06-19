@@ -55,7 +55,7 @@ private:
 
 private:
 	bool isContinuity = false;
-	cv::Point _TransfornHistory[3];
+	cv::Point2f _TransformHistory[3];
 
 private:
 	HWND giHandle;

@@ -108,9 +108,9 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			isContinuity = false;
 
-			cv::Point *hisP = _TransfornHistory;
+			cv::Point2f *hisP = _TransformHistory;
 
-			cv::Point pos;
+			cv::Point2f pos;
 
 			if ((dis(hisP[1] - hisP[0]) + dis(hisP[2] - hisP[1])) < 2000)
 			{
@@ -119,7 +119,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 					isContinuity = true;
 					if (isContinuity)
 					{
-						cv::Mat someMap(img_scene(cv::Rect(hisP[2].x - someSizeR, hisP[2].y - someSizeR, someSizeR * 2, someSizeR * 2)));
+						cv::Mat someMap(img_scene(cv::Rect(cvRound(hisP[2].x - someSizeR), cvRound(hisP[2].y - someSizeR), cvRound(someSizeR * 2), cvRound(someSizeR * 2))));
 						cv::Mat minMap(img_object);
 
 						//resize(someMap, someMap, Size(), MatchMatScale, MatchMatScale, 1);
@@ -163,12 +163,12 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 								sumy += lisy.back();
 							}
 						}
+#ifdef _DEBUG
 						cv::Mat img_matches, imgmap, imgminmap;
 						drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 						drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
 						drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-
+#endif
 						if (lisx.size() <= 4 || lisy.size() <= 4)
 						{
 							isContinuity = false;
@@ -177,15 +177,15 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 						{
 							double meanx = sumx / lisx.size(); //均值
 							double meany = sumy / lisy.size(); //均值
-							cv::Point p = SPC(lisx, sumx, lisy, sumy);
+							cv::Point2f p = SPC(lisx, sumx, lisy, sumy);
 
-							int x = (int)meanx;
-							int y = (int)meany;
+							float x = (float)meanx;
+							float y = (float)meany;
 
 							x = p.x;
 							y = p.y;
 
-							pos = cv::Point(x + hisP[2].x - someSizeR, y + hisP[2].y - someSizeR);
+							pos = cv::Point2f(x + hisP[2].x - someSizeR, y + hisP[2].y - someSizeR);
 						}
 					}
 				}
@@ -247,7 +247,6 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			error_code = 3;//窗口画面为空
 			return false;
 		}
-
 	}
 	else
 	{
@@ -407,6 +406,7 @@ void AutoTrack::getGengshinImpactScreen()
 	DeleteDC(hCompDC);
 
 	//类型转换
+	//这里获取位图的大小信息,事实上也是兼容DC绘图输出的范围
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
