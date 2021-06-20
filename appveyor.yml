@@ -8,7 +8,7 @@ environment:
   opencvinc: C:\project\opencv\include
   opencvlib: C:\project\opencv\x64\vc15\staticlib\lib
   opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
-  myProject: C:\project\cvAutoTrack\
+  myProject: C:\project\genshinimpact-autotrack-dll\
   myProjectLib: C:\project\opencv\
 skip_tags: true
   
@@ -23,11 +23,11 @@ install:
     - dir %myProjectLib%
 
 before_build: 
-    #- dir  %myProject%
+    - dir  %myProject%
     #- dir  %myProjectLib%
 
 build_script:
-    - MSBuild C:\project\cvAutoTrack\cvAutoTrack.sln 
+    - MSBuild %myProject%cvAutoTrack.sln 
 
 after_build:
     # copy include and source code files
