@@ -35,7 +35,7 @@ build_script:
 
 after_build:
     # copy include and source code files
-    - mkdir %myProject%x64/build/
+    - mkdir -p %myProject%x64/build/
     - cp -r %myProject%x64/Release/*.dll %myProject%x64/build/
 
     - 7z a cvautotrack-%TIME_STRING%.7z %myProject%x64/build/*
