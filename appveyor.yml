@@ -16,14 +16,15 @@ install:
     - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
     # download opencv:
-    - mkdir %myProjectLib%
+    - mkdir %myProjectLib% -p
     - appveyor DownloadFile %opencvURL%
     - 7z x ./*.zip -y -o%myProjectLib%
     - rm -f ./*.zip
+	- dir %myProjectLib%
 
 before_build: 
-    - dir  %myProject%
-    - dir  %myProjectLib%
+    #- dir  %myProject%
+    #- dir  %myProjectLib%
 
 build_script:
     - MSBuild C:\project\cvAutoTrack\cvAutoTrack.sln 
