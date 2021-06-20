@@ -10,6 +10,10 @@ environment:
   opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
   myProject: C:\project\cvAutoTrack\
   myProjectLib: C:\project\opencv\
+  opencvstaticlib: C:\projects\opencv\x64\vc15\staticlib\lib
+  opencvstaticinc:
+      - 'C:\projects\opencv\include'
+      - 'C:\projects\opencv\include\opencv2'
 skip_tags: true
   
 install:
