@@ -5,11 +5,11 @@ platform:
     - x64
 
 environment:
-  opencvinc: C:\project\opencv\include
-  opencvlib: C:\project\opencv\x64\vc15\staticlib\lib
+  opencvinc: C:\projects\opencv\include
+  opencvlib: C:\projects\opencv\x64\vc15\staticlib\lib
   opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
-  myProject: C:\project\genshinimpact-autotrack-dll\
-  myProjectLib: C:\project\opencv\
+  myProject: C:\projects\genshinimpact-autotrack-dll\
+  myProjectLib: C:\projects\opencv\
 skip_tags: true
   
 install:
