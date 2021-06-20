@@ -11,9 +11,7 @@ environment:
   myProject: C:\projects\genshinimpact-autotrack-dll\
   myProjectLib: C:\projects\opencv\
   opencvstaticlib: C:\projects\opencv\x64\vc15\staticlib\lib
-  opencvstaticinc:
-      - 'C:\projects\opencv\include'
-      - 'C:\projects\opencv\include\opencv2'
+  opencvstaticinc: 'C:\projects\opencv\include;C:\projects\opencv\include\opencv2'
 skip_tags: true
   
 install:
