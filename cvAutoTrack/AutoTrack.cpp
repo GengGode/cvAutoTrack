@@ -80,18 +80,74 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
 
 			cv::Mat tmp;
-			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
 
-			double minVal, maxVal;
-			cv::Point minLoc, maxLoc;
+#ifdef _DEBUG
 
-			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+#define Mode1
 
-			if (minVal < 0.36 || maxVal == 1)
+#ifdef Mode1
+			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+
+#endif // Mode1
+
+#ifdef Mode2
+			cv::Ptr<cv::xfeatures2d::SURF> detectorPaimon = cv::xfeatures2d::SURF::create(minHessian);
+			std::vector<cv::KeyPoint> KeyPointPaimonTemplate, KeyPointPaimonRef;
+			cv::Mat DataPointPaimonTemplate, DataPointPaimonRef;
+
+			detectorPaimon->detectAndCompute(giPaimonRef, cv::noArray(), KeyPointPaimonRef, DataPointPaimonRef);
+			detectorPaimon->detectAndCompute(paimonTemplate, cv::noArray(), KeyPointPaimonTemplate, DataPointPaimonTemplate);
+			cv::Ptr<cv::DescriptorMatcher> matcherPaimonTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+			std::vector< std::vector<cv::DMatch> > KNN_PaimonmTmp;
+			std::vector<cv::DMatch> good_matchesPaimonTmp;
+
+			for (size_t i = 0; i < KNN_PaimonmTmp.size(); i++)
+			{
+				if (KNN_PaimonmTmp[i][0].distance < ratio_thresh * KNN_PaimonmTmp[i][1].distance)
+				{
+					good_matchesPaimonTmp.push_back(KNN_PaimonmTmp[i][0]);
+				}
+			}
+
+			cv::Mat img_matchesA, imgmapA, imgminmapA;
+			drawKeypoints(giPaimonRef, KeyPointPaimonRef, imgmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+			drawKeypoints(paimonTemplate, KeyPointPaimonTemplate, imgminmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+			drawMatches(paimonTemplate, KeyPointPaimonTemplate, giPaimonRef, KeyPointPaimonRef, good_matchesPaimonTmp, img_matchesA, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+
+			cv::imshow("asda", img_matchesA);
+
+			if (good_matchesPaimonTmp.size() < 7)
 			{
 				error_code = 6;//未能匹配到派蒙
 				return false;
 			}
+#endif // Mode2
+
+#endif
+
+#ifdef _DEBUG
+			cv::imshow("test", giPaimonRef);
+#endif
+
+#ifdef Mode1
+
+			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+
+			double minVal, maxVal;
+			cv::Point minLoc, maxLoc;
+			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+
+#ifdef _DEBUG
+			cv::imshow("test2", tmp);
+			std::cout << "Paimon Match: "<< minVal<<","<<maxVal << std::endl;
+#endif
+
+			if (maxVal < 0.36 || maxVal == 1)
+			{
+				error_code = 6;//未能匹配到派蒙
+				return false;
+			}
+#endif
 
 			getMiniMapRefMat();
 
@@ -229,7 +285,6 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 					pos = SPC(lisx, sumx, lisy, sumy);
 				}
 			}
-
 			hisP[0] = hisP[1];
 			hisP[1] = hisP[2];
 			hisP[2] = pos;
@@ -277,9 +332,14 @@ bool AutoTrack::GetUID(int &uid)
 
 			int bitCount = 1;
 			cv::Mat matchTmp;
-			cv::Mat checkUID = giMatchResource.UID;
 			cv::Mat Roi(giUIDRef);
-
+			cv::Mat checkUID = giMatchResource.UID;
+#ifdef _DEBUG
+			//if (checkUID.rows > Roi.rows)
+			//{
+			//	cv::resize(checkUID, checkUID, cv::Size(), Roi.rows/ checkUID.rows);
+			//}
+#endif
 			cv::matchTemplate(Roi, checkUID, matchTmp, cv::TM_CCOEFF_NORMED);
 
 			double minVal, maxVal;
@@ -367,6 +427,9 @@ int AutoTrack::GetLastError()
 bool AutoTrack::getGengshinImpactWnd()
 {
 	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
+#ifdef _DEBUG
+	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
+#endif
 	return (giHandle != NULL ? true : false);
 }
 
@@ -380,6 +443,10 @@ void AutoTrack::getGengshinImpactRect()
 
 	giClientSize.width = giClientRect.right - giClientRect.left;// -x_offset;
 	giClientSize.height = giClientRect.bottom - giClientRect.top;// -y_offset;
+
+#ifdef _DEBUG
+	std::cout << "GI Windows Size: "<<giClientSize.width<<","<<giClientSize.height << std::endl;
+#endif
 }
 
 void AutoTrack::getGengshinImpactScreen()
@@ -435,6 +502,11 @@ void AutoTrack::getPaimonRefMat()
 	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
 
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+#ifdef _DEBUG
+	cv::imshow("Paimon", giPaimonRef);
+	cv::waitKey(1);
+	std::cout << "Show Paimon" << std::endl;
+#endif
 }
 
 void AutoTrack::getMiniMapRefMat()
@@ -445,6 +517,11 @@ void AutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
+#ifdef _DEBUG
+	cv::imshow("MiniMap", giMiniMapRef);
+	cv::waitKey(1);
+	std::cout << "Show MiniMap" << std::endl;
+#endif
 }
 
 void AutoTrack::getUIDRefMat()
@@ -455,4 +532,9 @@ void AutoTrack::getUIDRefMat()
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
+#ifdef _DEBUG
+	cv::imshow("UID", giUIDRef);
+	cv::waitKey(1);
+	std::cout << "Show UID" << std::endl;
+#endif
 }
