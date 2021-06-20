@@ -21,33 +21,18 @@ install:
     - 7z x ./*.zip -y -o%myProjectLib%
     - rm -f ./*.zip
 
-before_build:
-    # test sdl and vcltl path
-    #- test -e %sdl%CMakeLists.txt && echo exist || echo %sdl%CMakeLists.txt Not exist && exit 1
-    #- test -e %vcltl%VC-LTL" helper for cmake.cmake" && echo exist || echo %vcltl%VC-LTL helper for cmake.cmake Not exist && exit 1
-    
-    # check file
-    #- tail -n 2 %sdl%CMakeLists.txt    
-	- dir  %myProject%
-	- dir  %myProjectLib%
+before_build: 
+    - dir  %myProject%
+    - dir  %myProjectLib%
 
-    
 build_script:
     - MSBuild C:\project\cvAutoTrack\cvAutoTrack.sln 
 
 after_build:
-    # remove unnecessary files
-    #- rm -f %sdl%x64/Release/*.exp
-    #- rm -f %sdl%x64/Release/*.pdb
-    #- rm -f %sdl%x64/Release/SDL2-static.lib
-    
     # copy include and source code files
     - mkdir %myProject%x64/build/
     - cp -r %myProject%x64/Release/*.dll %myProject%x64/build/
-    
-    #- cd %sdl%
-    #- set LatestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-    
+
     - 7z a cvautotrack-%TIME_STRING%.7z %myProject%x64/build/*
     - appveyor PushArtifact cvautotrack-%TIME_STRING%.7z
     
