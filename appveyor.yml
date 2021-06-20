@@ -17,6 +17,7 @@ install:
 
     # download opencv:
     - mkdir -p %myProjectLib%
+    - dir %myProjectLib%
     - appveyor DownloadFile %opencvURL%
     - 7z x ./*.zip -y -o%myProjectLib%
     - rm -f ./*.zip
