@@ -11,6 +11,8 @@ AutoTrack::AutoTrack()
 	_DataPointAllMap = new cv::Mat;
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
+
+	getScreenScale();
 }
 
 AutoTrack::~AutoTrack(void)
@@ -441,11 +443,12 @@ void AutoTrack::getGengshinImpactRect()
 	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
 	int y_offset = GetSystemMetrics(SM_CYDLGFRAME) + GetSystemMetrics(SM_CYCAPTION);
 
-	giClientSize.width = giClientRect.right - giClientRect.left;// -x_offset;
-	giClientSize.height = giClientRect.bottom - giClientRect.top;// -y_offset;
+	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));// -x_offset;
+	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));// -y_offset;
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Size: "<<giClientSize.width<<","<<giClientSize.height << std::endl;
+	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
+	std::cout << "GI Windows Scale: " << screen_scale << std::endl;
 #endif
 }
 
@@ -466,8 +469,8 @@ void AutoTrack::getGengshinImpactScreen()
 	HDC hCompDC = CreateCompatibleDC(hScreen);
 
 	//获取目标句柄的宽度和高度
-	int	nWidth = giRect.right - giRect.left;
-	int	nHeight = giRect.bottom - giRect.top;
+	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
+	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
 
 	//创建Bitmap对象
 	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//得到位图
@@ -504,7 +507,7 @@ void AutoTrack::getPaimonRefMat()
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("Paimon", giPaimonRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Paimon" << std::endl;
 #endif
 }
@@ -519,7 +522,7 @@ void AutoTrack::getMiniMapRefMat()
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("MiniMap", giMiniMapRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show MiniMap" << std::endl;
 #endif
 }
@@ -534,7 +537,31 @@ void AutoTrack::getUIDRefMat()
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("UID", giUIDRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show UID" << std::endl;
 #endif
+}
+
+void AutoTrack::getScreenScale()
+{
+	HWND hWnd = GetDesktopWindow();
+	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+
+	// 获取监视器逻辑宽度与高度
+	MONITORINFOEX miex;
+	miex.cbSize = sizeof(miex);
+	GetMonitorInfo(hMonitor, &miex);
+	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
+	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
+
+	// 获取监视器物理宽度与高度
+	DEVMODE dm;
+	dm.dmSize = sizeof(dm);
+	dm.dmDriverExtra = 0;
+	EnumDisplaySettings(miex.szDevice, ENUM_CURRENT_SETTINGS, &dm);
+	int cxPhysical = dm.dmPelsWidth;
+	int cyPhysical = dm.dmPelsHeight;
+
+	double horzScale = ((double)cxPhysical / (double)cxLogical);
+	screen_scale = horzScale;
 }
