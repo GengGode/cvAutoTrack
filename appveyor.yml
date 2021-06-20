@@ -35,6 +35,7 @@ build_script:
 
 after_build:
     # copy include and source code files
+    - ls
     - mkdir -p %myProject%x64/build/
     - cp -r %myProject%x64/Release/*.dll %myProject%x64/build/
 
