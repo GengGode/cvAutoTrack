@@ -37,7 +37,7 @@ after_build:
     # copy include and source code files
     - ls
     - mkdir %myProject%x64\build\
-    - ps: cp -r %myProject%x64\Release\*.dll %myProject%x64\build\
+    - COPY -r %myProject%x64\Release\*.dll %myProject%x64\build\
 
     - 7z a cvautotrack-%TIME_STRING%.7z %myProject%x64\build\*
     - appveyor PushArtifact cvautotrack-%TIME_STRING%.7z
