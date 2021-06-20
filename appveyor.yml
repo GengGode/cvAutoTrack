@@ -11,9 +11,6 @@ environment:
   myProject: C:\project\cvAutoTrack\
   myProjectLib: C:\project\opencv\
 skip_tags: true
-
-init:
-    - cmake --version
   
 install:
     - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
@@ -31,9 +28,12 @@ before_build:
     
     # check file
     #- tail -n 2 %sdl%CMakeLists.txt    
+	- dir  %myProject%
+	- dir  %myProjectLib%
+
     
 build_script:
-    - devenv C:\project\cvAutoTrack\cvAutoTrack.sln /Build
+    - MSBuild C:\project\cvAutoTrack\cvAutoTrack.sln 
 
 after_build:
     # remove unnecessary files
@@ -58,8 +58,8 @@ after_build:
 deploy:
     - provider: GitHub
       description: 'weekly build cvautotrack' 
-      auth_token:
-        secure: b7z/bl9MpzzCY+CYah15JF9aJbut5gtIWcpiZOoZpVc41W7NmKOOeB40RO7HiiK/
+      # auth_token:
+        # secure: b7z/bl9MpzzCY+CYah15JF9aJbut5gtIWcpiZOoZpVc41W7NmKOOeB40RO7HiiK/
       draft: false
       tag: cvautotrack-%TIME_STRING%
       on:  
