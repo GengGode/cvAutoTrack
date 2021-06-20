@@ -59,7 +59,7 @@ deploy:
     - provider: GitHub
       description: 'weekly build cvautotrack' 
       auth_token:
-         secure: b7z/bl9MpzzCY+CYah15JF9aJbut5gtIWcpiZOoZpVc41W7NmKOOeB40RO7HiiK/
+         secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
       tag: cvautotrack-%TIME_STRING%
       on:  
