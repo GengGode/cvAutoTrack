@@ -5,11 +5,11 @@ platform:
     - x64
 
 environment:
-  opencvinc: C:\project\opencv\include
-  opencvlib: C:\project\opencv\x64\vc15\staticlib\lib
+  opencvinc: C:\projects\opencv\include
+  opencvlib: C:\projects\opencv\x64\vc15\staticlib\lib
   opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
-  myProject: C:\project\cvAutoTrack\
-  myProjectLib: C:\project\opencv\
+  myProject: C:\projects\genshinimpact-autotrack-dll\
+  myProjectLib: C:\projects\opencv\
   opencvstaticlib: C:\projects\opencv\x64\vc15\staticlib\lib
   opencvstaticinc:
       - 'C:\projects\opencv\include'
@@ -20,18 +20,19 @@ install:
     - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
     # download opencv:
-    - mkdir %myProjectLib% -p
+    - mkdir -p %myProjectLib%
+    - dir %myProjectLib%
     - appveyor DownloadFile %opencvURL%
     - 7z x ./*.zip -y -o%myProjectLib%
     - rm -f ./*.zip
-	- dir %myProjectLib%
+    - dir %myProjectLib%
 
 before_build: 
-    #- dir  %myProject%
+    - dir  %myProject%
     #- dir  %myProjectLib%
 
 build_script:
-    - MSBuild C:\project\cvAutoTrack\cvAutoTrack.sln 
+    - MSBuild %myProject%cvAutoTrack.sln 
 
 after_build:
     # copy include and source code files
