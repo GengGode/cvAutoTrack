@@ -1,0 +1,57 @@
+version: 'cvautotrack.{build}'
+os: Visual Studio 2017
+configuration: Release
+platform:
+    - x64
+
+environment:
+  opencvinc: C:\projects\opencv\include\
+  opencvlib: C:\projects\opencv\x64\vc15\staticlib
+  opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
+  myProject: C:\projects\genshinimpact-autotrack-dll\
+  myProjectLib: C:\projects\opencv\
+  opencvstaticlib: C:\projects\opencv\x64\vc15\staticlib
+  opencvstaticinc: 'C:\projects\opencv\include\;C:\projects\opencv\include\opencv2\'
+skip_tags: true
+  
+install:
+    - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+
+    # download opencv:
+    - mkdir %myProjectLib%
+    - dir %myProjectLib%
+    - appveyor DownloadFile %opencvURL%
+    - 7z x ./*.zip -y -o%myProjectLib%
+    - rm -f ./*.zip
+    - dir %myProjectLib%
+    - dir %myProjectLib%x64\vc15\staticlib
+    
+before_build: 
+    - dir  %myProject%
+    #- dir  %myProjectLib%
+
+build_script:
+    - MSBuild %myProject%cvAutoTrack.sln 
+
+after_build:
+    # copy include and source code files
+    - ls
+    - mkdir %myProject%x64\build\
+    - ps: cp -r $env:myProject\x64\Release\*.dll $env:myProject\x64\build\
+
+    - 7z a cvautotrack-%TIME_STRING%.7z %myProject%x64\build\*
+    - appveyor PushArtifact cvautotrack-%TIME_STRING%.7z
+    
+#artifacts:
+    #- path: build/Release
+    #artifacts path name must be appveyor API
+  
+deploy:
+    - provider: GitHub
+      description: 'weekly build cvautotrack' 
+      auth_token:
+         secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
+      draft: false
+      tag: cvautotrack-%TIME_STRING%
+      on:  
+        APPVEYOR_REPO_TAG: false
