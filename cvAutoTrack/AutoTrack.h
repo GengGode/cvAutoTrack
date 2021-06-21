@@ -8,7 +8,9 @@
 
 #include "LoadGiMatchResource.h"
 
-// ´ËÀàÊÇ²»µ¼³öµÄ
+#define AUTO_TRACK_DEBUG_DELAY 1
+
+// æ­¤ç±»æ˜¯ä¸å¯¼å‡ºçš„
 class AutoTrack {
 public:
 	AutoTrack(void);
@@ -78,4 +80,8 @@ private:
 	void getPaimonRefMat();
 	void getMiniMapRefMat();
 	void getUIDRefMat();
+
+private:
+	double screen_scale = 1;
+	void getScreenScale();
 };
