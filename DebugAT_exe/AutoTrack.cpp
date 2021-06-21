@@ -633,7 +633,7 @@ void AutoTrack::testLocalImg(std::string path)
 void AutoTrack::testSaveGiScreen(std::string path)
 {
 	getGengshinImpactScreen();
-	if (giFrame.empty())
+	if (!giFrame.empty())
 	{
 		cv::imwrite(path, giFrame);
 		std::cout<<"Save path: "<<path<<std::endl;
