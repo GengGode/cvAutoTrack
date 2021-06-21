@@ -7,6 +7,9 @@ int main()
 {
 	AutoTrack at;
 	at.testLocalImg("./testImage/OutputPNG.png");
+
+	at.testSaveGiScreen("./testImage/Output.png");
+
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
