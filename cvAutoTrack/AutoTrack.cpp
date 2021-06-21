@@ -11,8 +11,6 @@ AutoTrack::AutoTrack()
 	_DataPointAllMap = new cv::Mat;
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
-
-	getScreenScale();
 }
 
 AutoTrack::~AutoTrack(void)
@@ -429,9 +427,11 @@ int AutoTrack::GetLastError()
 bool AutoTrack::getGengshinImpactWnd()
 {
 	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
+
 #ifdef _DEBUG
 	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
 #endif
+
 	return (giHandle != NULL ? true : false);
 }
 
@@ -495,6 +495,8 @@ void AutoTrack::getGengshinImpactScreen()
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
+	
+	getScreenScale();
 }
 
 void AutoTrack::getPaimonRefMat()
@@ -505,6 +507,7 @@ void AutoTrack::getPaimonRefMat()
 	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
 
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+
 #ifdef _DEBUG
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
@@ -520,6 +523,7 @@ void AutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
+
 #ifdef _DEBUG
 	cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
@@ -535,6 +539,7 @@ void AutoTrack::getUIDRefMat()
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
+
 #ifdef _DEBUG
 	cv::imshow("UID", giUIDRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
