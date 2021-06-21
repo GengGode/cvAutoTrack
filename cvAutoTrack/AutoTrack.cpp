@@ -11,6 +11,8 @@ AutoTrack::AutoTrack()
 	_DataPointAllMap = new cv::Mat;
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
+
+	getScreenScale();
 }
 
 AutoTrack::~AutoTrack(void)
@@ -61,10 +63,10 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 {
 	if (!is_init_end)
 	{
-		error_code = 1;//Î´³õÊ¼»¯
+		error_code = 1;//æœªåˆå§‹åŒ–
 		return false;
 	}
-	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
+	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
 	if (getGengshinImpactWnd())
 	{
 		getGengshinImpactRect();
@@ -118,7 +120,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (good_matchesPaimonTmp.size() < 7)
 			{
-				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
 				return false;
 			}
 #endif // Mode2
@@ -144,7 +146,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (maxVal < 0.36 || maxVal == 1)
 			{
-				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
 				return false;
 			}
 #endif
@@ -158,7 +160,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (img_object.empty())
 			{
-				error_code = 5;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
+				error_code = 5;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
 				return false;
 			}
 
@@ -205,14 +207,14 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 								good_matchesTmp.push_back(KNN_mTmp[i][0]);
 								try 
 								{
-									// ÕâÀïÓĞ¸öbug»Ø¿¨½øÀ´£¬½øÈë¸±±¾»òÕßÇĞ»»·Å´óÕĞÊ±Å¼¶û´¥·¢
+									// è¿™é‡Œæœ‰ä¸ªbugå›å¡è¿›æ¥ï¼Œè¿›å…¥å‰¯æœ¬æˆ–è€…åˆ‡æ¢æ”¾å¤§æ‹›æ—¶å¶å°”è§¦å‘
 									lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
 									lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 
 								}
 								catch (...)
 								{
-									error_code = 7;//ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç£¬ÊÇ¸öbug
+									error_code = 7;//ç‰¹å¾ç‚¹æ•°ç»„è®¿é—®è¶Šç•Œï¼Œæ˜¯ä¸ªbug
 									return false;
 								}
 								sumx += lisx.back();
@@ -231,8 +233,8 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 						}
 						else
 						{
-							double meanx = sumx / lisx.size(); //¾ùÖµ
-							double meany = sumy / lisy.size(); //¾ùÖµ
+							double meanx = sumx / lisx.size(); //å‡å€¼
+							double meany = sumy / lisy.size(); //å‡å€¼
 							cv::Point2f p = SPC(lisx, sumx, lisy, sumy);
 
 							float x = (float)meanx;
@@ -277,7 +279,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 				}
 				if (lisx.size() == 0 || lisy.size() == 0)
 				{
-					error_code = 4;//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
+					error_code = 4;//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
 					return false;
 				}
 				else
@@ -299,20 +301,20 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 		}
 		else
 		{
-			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
+		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
 		return false;
 	}
 }
 
 bool AutoTrack::GetUID(int &uid)
 {
-	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
+	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
 	if (getGengshinImpactWnd())
 	{
 		getGengshinImpactRect();
@@ -344,7 +346,7 @@ bool AutoTrack::GetUID(int &uid)
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
-			//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+			//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 			if (maxVal > 0.75)
 			{
@@ -370,7 +372,7 @@ bool AutoTrack::GetUID(int &uid)
 
 						double minVali, maxVali;
 						cv::Point minLoci, maxLoci;
-						//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+						//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 
 						tmplis[i] = maxVali;
@@ -398,7 +400,7 @@ bool AutoTrack::GetUID(int &uid)
 
 			if (_uid == 0)
 			{
-				error_code = 8;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
+				error_code = 8;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
 				return false;
 			}
 
@@ -408,13 +410,13 @@ bool AutoTrack::GetUID(int &uid)
 		}
 		else
 		{
-			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
+		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
 		return false;
 	}
 }
@@ -426,7 +428,7 @@ int AutoTrack::GetLastError()
 
 bool AutoTrack::getGengshinImpactWnd()
 {
-	giHandle = FindWindowA("UnityWndClass", "Ô­Éñ");/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	giHandle = FindWindowA("UnityWndClass", "åŸç¥");/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 #ifdef _DEBUG
 	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
 #endif
@@ -441,11 +443,12 @@ void AutoTrack::getGengshinImpactRect()
 	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
 	int y_offset = GetSystemMetrics(SM_CYDLGFRAME) + GetSystemMetrics(SM_CYCAPTION);
 
-	giClientSize.width = giClientRect.right - giClientRect.left;// -x_offset;
-	giClientSize.height = giClientRect.bottom - giClientRect.top;// -y_offset;
+	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));// -x_offset;
+	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));// -y_offset;
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Size: "<<giClientSize.width<<","<<giClientSize.height << std::endl;
+	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
+	std::cout << "GI Windows Scale: " << screen_scale << std::endl;
 #endif
 }
 
@@ -458,35 +461,35 @@ void AutoTrack::getGengshinImpactScreen()
 
 	if (giHandle == NULL)return;
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ´°¿Ú´óĞ¡RECT
-	GetWindowRect(giHandle, &giRect);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„çª—å£å¤§å°RECT
+	GetWindowRect(giHandle, &giRect);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄDC
-	HDC hScreen = GetDC(giHandle);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„DC
+	HDC hScreen = GetDC(giHandle);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 	HDC hCompDC = CreateCompatibleDC(hScreen);
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ¿í¶ÈºÍ¸ß¶È
-	int	nWidth = giRect.right - giRect.left;
-	int	nHeight = giRect.bottom - giRect.top;
+	//è·å–ç›®æ ‡å¥æŸ„çš„å®½åº¦å’Œé«˜åº¦
+	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
+	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
 
-	//´´½¨Bitmap¶ÔÏó
-	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//µÃµ½Î»Í¼
+	//åˆ›å»ºBitmapå¯¹è±¡
+	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//å¾—åˆ°ä½å›¾
 
-	SelectObject(hCompDC, hBmp); //²»Ğ´¾ÍÈ«ºÚ
+	SelectObject(hCompDC, hBmp); //ä¸å†™å°±å…¨é»‘
 	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
 
-	//ÊÍ·Å¶ÔÏó
+	//é‡Šæ”¾å¯¹è±¡
 	DeleteDC(hScreen);
 	DeleteDC(hCompDC);
 
-	//ÀàĞÍ×ª»»
-	//ÕâÀï»ñÈ¡Î»Í¼µÄ´óĞ¡ĞÅÏ¢,ÊÂÊµÉÏÒ²ÊÇ¼æÈİDC»æÍ¼Êä³öµÄ·¶Î§
+	//ç±»å‹è½¬æ¢
+	//è¿™é‡Œè·å–ä½å›¾çš„å¤§å°ä¿¡æ¯,äº‹å®ä¸Šä¹Ÿæ˜¯å…¼å®¹DCç»˜å›¾è¾“å‡ºçš„èŒƒå›´
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
 
-	//mat²Ù×÷
+	//matæ“ä½œ
 	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
 
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
@@ -504,7 +507,7 @@ void AutoTrack::getPaimonRefMat()
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("Paimon", giPaimonRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Paimon" << std::endl;
 #endif
 }
@@ -519,7 +522,7 @@ void AutoTrack::getMiniMapRefMat()
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("MiniMap", giMiniMapRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show MiniMap" << std::endl;
 #endif
 }
@@ -534,7 +537,31 @@ void AutoTrack::getUIDRefMat()
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 #ifdef _DEBUG
 	cv::imshow("UID", giUIDRef);
-	cv::waitKey(1);
+	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show UID" << std::endl;
 #endif
+}
+
+void AutoTrack::getScreenScale()
+{
+	HWND hWnd = GetDesktopWindow();
+	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+
+	// è·å–ç›‘è§†å™¨é€»è¾‘å®½åº¦ä¸é«˜åº¦
+	MONITORINFOEX miex;
+	miex.cbSize = sizeof(miex);
+	GetMonitorInfo(hMonitor, &miex);
+	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
+	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
+
+	// è·å–ç›‘è§†å™¨ç‰©ç†å®½åº¦ä¸é«˜åº¦
+	DEVMODE dm;
+	dm.dmSize = sizeof(dm);
+	dm.dmDriverExtra = 0;
+	EnumDisplaySettings(miex.szDevice, ENUM_CURRENT_SETTINGS, &dm);
+	int cxPhysical = dm.dmPelsWidth;
+	int cyPhysical = dm.dmPelsHeight;
+
+	double horzScale = ((double)cxPhysical / (double)cxLogical);
+	screen_scale = horzScale;
 }
