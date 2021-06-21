@@ -8,41 +8,37 @@ branches:
     - master
 
 environment:
-  opencvinc: C:\projects\opencv\include\
-  opencvlib: C:\projects\opencv\x64\vc15\staticlib
-  opencvURL: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
-  myProject: C:\projects\genshinimpact-autotrack-dll\
-  myProjectLib: C:\projects\opencv\
-  opencvstaticlib: C:\projects\opencv\x64\vc15\staticlib
-  opencvstaticinc: 'C:\projects\opencv\include\;C:\projects\opencv\include\opencv2\'
+  MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+  OpenCvDir: C:\projects\opencv\
+  OpenCvUrl: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
 skip_tags: true
   
 install:
     - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
     # download opencv:
-    - mkdir %myProjectLib%
-    - dir %myProjectLib%
-    - appveyor DownloadFile %opencvURL%
-    - 7z x ./*.zip -y -o%myProjectLib%
+    - mkdir %OpenCvDir%
+    - dir %OpenCvDir%
+    - appveyor DownloadFile %OpenCvUrl%
+    - 7z x ./*.zip -y -o%OpenCvDir%
     - rm -f ./*.zip
-    - dir %myProjectLib%
-    - dir %myProjectLib%x64\vc15\staticlib
+    - dir %OpenCvDir%
+    - dir %OpenCvDir%x64\vc15\staticlib
     
 before_build: 
-    - dir  %myProject%
-    #- dir  %myProjectLib%
+    - dir  %MyProjectDir%
+    #- dir  %OpenCvDir%
 
 build_script:
-    - MSBuild %myProject%cvAutoTrack.sln 
+    - MSBuild %MyProjectDir%cvAutoTrack.sln
 
 after_build:
     # copy include and source code files
     - ls
-    - mkdir %myProject%x64\build\
-    - ps: cp -r $env:myProject\x64\Release\*.dll $env:myProject\x64\build\
+    - mkdir %MyProjectDir%x64\build\
+    - ps: cp -r $env:MyProjectDir\x64\Release\*.dll $env:MyProjectDir\x64\build\
 
-    - 7z a cvautotrack-%TIME_STRING%.7z %myProject%x64\build\*
+    - 7z a cvautotrack-%TIME_STRING%.7z %MyProjectDir%x64\build\*
     - appveyor PushArtifact cvautotrack-%TIME_STRING%.7z
     
 #artifacts:
