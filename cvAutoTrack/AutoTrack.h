@@ -84,4 +84,12 @@ private:
 private:
 	double screen_scale = 1;
 	void getScreenScale();
+
+#ifdef _DEBUG
+
+public: 
+
+	void testLocalImg(std::string path);
+
+#endif
 };

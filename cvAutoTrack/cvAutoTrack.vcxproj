@@ -81,14 +81,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>CVAUTOTRACK</TargetName>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(OpenCvDir)\$(Platform)\vc15\staticlib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(opencvStaticInc);$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(opencvStaticLib);$(OpenCvDir)\$(Platform)\vc15\staticlib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>CVAUTOTRACK</TargetName>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(OpenCvDir)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(OpenCvDir)\$(Platform)\vc15\staticlib;;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(opencvStaticInc);$(OpenCvDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(opencvStaticLib);$(OpenCvDir)\$(Platform)\vc15\staticlib;;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
