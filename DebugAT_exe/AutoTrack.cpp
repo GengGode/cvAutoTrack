@@ -629,4 +629,19 @@ void AutoTrack::testLocalImg(std::string path)
 		error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
 	}
 }
+
+void AutoTrack::testSaveGiScreen(std::string path)
+{
+	getGengshinImpactScreen();
+	if (giFrame.empty())
+	{
+		cv::imwrite(path, giFrame);
+		std::cout<<"Save path: "<<path<<std::endl;
+	}
+	else
+	{
+		std::cout << "Save Faile!" << path << std::endl;
+	}
+
+}
 #endif

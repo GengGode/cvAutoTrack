@@ -90,6 +90,7 @@ private:
 public:
 
 	void testLocalImg(std::string path);
+	void testSaveGiScreen(std::string path);
 
 #endif
 };
