@@ -1,4 +1,4 @@
-﻿// DebugAT_exe.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+// DebugAT_exe.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
 #include <iostream>
@@ -6,9 +6,14 @@
 int main()
 {
 	AutoTrack at;
-	at.testLocalImg("./testImage/OutputPNG.png");
+	while (1) 
+	{
+		at.testLocalImg("./testImage/OutputPNG.png");
 
-	at.testSaveGiScreen("./testImage/Output.png");
+		//at.testSaveGiScreen("./testImage/Output.png");
+
+		//at.sleep(10);
+	}
 
 }
 
