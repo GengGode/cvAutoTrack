@@ -72,6 +72,7 @@ private:
 	cv::Mat giPaimonRef;
 	cv::Mat giMiniMapRef;
 	cv::Mat giUIDRef;
+	cv::Mat giAvatarRef;
 
 private:
 	bool getGengshinImpactWnd();
@@ -80,7 +81,7 @@ private:
 	void getPaimonRefMat();
 	void getMiniMapRefMat();
 	void getUIDRefMat();
-
+	void getAvatarRefMat();
 private:
 	double screen_scale = 1;
 	void getScreenScale();
@@ -91,6 +92,6 @@ public:
 
 	void testLocalImg(std::string path);
 	void testSaveGiScreen(std::string path);
-
+	void sleep(int s);
 #endif
 };
