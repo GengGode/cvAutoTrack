@@ -11,8 +11,6 @@ AutoTrack::AutoTrack()
 	_DataPointAllMap = new cv::Mat;
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
-
-	getScreenScale();
 }
 
 AutoTrack::~AutoTrack(void)
@@ -84,12 +82,9 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			cv::Mat tmp;
 
 #ifdef _DEBUG
-
 #define Mode1
-
 #ifdef Mode1
 			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
-
 #endif // Mode1
 
 #ifdef Mode2
@@ -128,6 +123,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 #endif
 
 #ifdef _DEBUG
+			cv::namedWindow("test", cv::WINDOW_FREERATIO);
 			cv::imshow("test", giPaimonRef);
 #endif
 
@@ -140,6 +136,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 
 #ifdef _DEBUG
+			cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 			cv::imshow("test2", tmp);
 			std::cout << "Paimon Match: "<< minVal<<","<<maxVal << std::endl;
 #endif
@@ -221,12 +218,14 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 								sumy += lisy.back();
 							}
 						}
+
 #ifdef _DEBUG
 						cv::Mat img_matches, imgmap, imgminmap;
 						drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 						drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 						drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 #endif
+
 						if (lisx.size() <= 4 || lisy.size() <= 4)
 						{
 							isContinuity = false;
@@ -397,13 +396,11 @@ bool AutoTrack::GetUID(int &uid)
 				_uid += _NumBit[i] * bitCount;
 				bitCount = bitCount * 10;
 			}
-
 			if (_uid == 0)
 			{
 				error_code = 8;//未能在UID区域检测到有效UID
 				return false;
 			}
-
 			uid = _uid;
 			error_code = 0;
 			return true;
@@ -429,9 +426,11 @@ int AutoTrack::GetLastError()
 bool AutoTrack::getGengshinImpactWnd()
 {
 	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
+
 #ifdef _DEBUG
 	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
 #endif
+
 	return (giHandle != NULL ? true : false);
 }
 
@@ -450,6 +449,7 @@ void AutoTrack::getGengshinImpactRect()
 	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
 	std::cout << "GI Windows Scale: " << screen_scale << std::endl;
 #endif
+
 }
 
 void AutoTrack::getGengshinImpactScreen()
@@ -495,6 +495,8 @@ void AutoTrack::getGengshinImpactScreen()
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
+	
+	getScreenScale();
 }
 
 void AutoTrack::getPaimonRefMat()
@@ -505,11 +507,14 @@ void AutoTrack::getPaimonRefMat()
 	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
 
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+
 #ifdef _DEBUG
+	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO); 
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Paimon" << std::endl;
 #endif
+
 }
 
 void AutoTrack::getMiniMapRefMat()
@@ -520,11 +525,14 @@ void AutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
+
 #ifdef _DEBUG
+	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show MiniMap" << std::endl;
 #endif
+
 }
 
 void AutoTrack::getUIDRefMat()
@@ -535,11 +543,14 @@ void AutoTrack::getUIDRefMat()
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
+
 #ifdef _DEBUG
+	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
 	cv::imshow("UID", giUIDRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show UID" << std::endl;
 #endif
+
 }
 
 void AutoTrack::getScreenScale()
@@ -565,3 +576,58 @@ void AutoTrack::getScreenScale()
 	double horzScale = ((double)cxPhysical / (double)cxLogical);
 	screen_scale = horzScale;
 }
+
+#ifdef _DEBUG
+void AutoTrack::testLocalImg(std::string path)
+{
+	giFrame=cv::imread(path);
+
+	if (!giFrame.empty())
+	{
+		getPaimonRefMat();
+
+		cv::Mat paimonTemplate;
+
+		cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+		cv::Mat tmp;
+		giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+		
+		cv::namedWindow("test", cv::WINDOW_FREERATIO);
+		cv::imshow("test", giPaimonRef); 
+
+
+		cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+
+		double minVal, maxVal;
+		cv::Point minLoc, maxLoc;
+		cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+
+		cv::namedWindow("test2", cv::WINDOW_FREERATIO);
+		cv::imshow("test2", tmp);
+		std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+
+		if (maxVal < 0.36 || maxVal == 1)
+		{
+			error_code = 6;//未能匹配到派蒙
+		}
+
+		getMiniMapRefMat();
+
+		cv::Mat img_scene(giMatchResource.MapTemplate);
+		cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
+
+		cv::cvtColor(img_scene, img_scene, CV_RGBA2RGB);
+
+		if (img_object.empty())
+		{
+			error_code = 5;//原神小地图区域为空或者区域长宽小于60px
+		}
+		error_code = 0;
+	}
+	else
+	{
+		error_code = 3;//窗口画面为空
+	}
+}
+#endif
