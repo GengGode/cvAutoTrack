@@ -30,7 +30,7 @@ before_build:
     #- dir  %OpenCvDir%
 
 build_script:
-    - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.sln
+    - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj
 
 after_build:
     # copy include and source code files
