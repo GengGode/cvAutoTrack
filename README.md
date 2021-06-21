@@ -2,6 +2,8 @@
 
 能够从原神中获取角色在地图上的位置，通过opencv的图像匹配算法。
 
+[![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll)
+
 cvAutoTrack dll工程
 
 cvAT_dllTest C++下调用dll的测试工程
