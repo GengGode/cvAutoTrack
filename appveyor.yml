@@ -1,8 +1,11 @@
-version: 'cvautotrack.{build}'
+version: '3.1.{build}'
 os: Visual Studio 2017
 configuration: Release
 platform:
     - x64
+branches:
+  only:
+    - master
 
 environment:
   opencvinc: C:\projects\opencv\include\
@@ -52,6 +55,6 @@ deploy:
       auth_token:
          secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
-      tag: cvautotrack-%TIME_STRING%
+      tag: 3.1-AutoBuild-%TIME_STRING%
       on:  
         APPVEYOR_REPO_TAG: false
