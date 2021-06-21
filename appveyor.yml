@@ -3,6 +3,9 @@ os: Visual Studio 2017
 configuration: Release
 platform:
     - x64
+branches:
+  only:
+    - master
 
 environment:
   opencvinc: C:\projects\opencv\include\
