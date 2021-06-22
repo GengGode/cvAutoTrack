@@ -427,7 +427,7 @@ bool AutoTrack::getGengshinImpactWnd()
 	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Handle Find is " << giHandle << std::endl;
+	std::cout << "GI 原神 Windows Handle Find is " << giHandle << std::endl;
 #endif
 
 	return (giHandle != NULL ? true : false);
