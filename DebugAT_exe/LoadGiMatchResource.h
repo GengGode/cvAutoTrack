@@ -31,3 +31,5 @@ double dis(cv::Point p);
 cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 int getMaxID(double lis[], int len);
 int getMinID(double lis[], int len);
+
+double Line2Angle(cv::Point p);

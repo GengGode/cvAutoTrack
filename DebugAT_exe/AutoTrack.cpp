@@ -500,10 +500,10 @@ void AutoTrack::getGengshinImpactScreen()
 
 void AutoTrack::getPaimonRefMat()
 {
-	int Paimon_Rect_x = cvCeil(giFrame.cols*0.0135);
-	int Paimon_Rect_y = cvCeil(giFrame.cols*0.006075);
-	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
-	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
+	int Paimon_Rect_x = cvRound(giFrame.cols*0.0135);
+	int Paimon_Rect_y = cvRound(giFrame.cols*0.006075);
+	int Paimon_Rect_w = cvRound(giFrame.cols*0.035);
+	int Paimon_Rect_h = cvRound(giFrame.cols*0.0406);
 
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 
@@ -518,10 +518,10 @@ void AutoTrack::getPaimonRefMat()
 
 void AutoTrack::getMiniMapRefMat()
 {
-	int MiniMap_Rect_x = cvCeil(giFrame.cols*0.032-1);
-	int MiniMap_Rect_y = cvCeil(giFrame.cols*0.01);
-	int MiniMap_Rect_w = cvCeil(giFrame.cols*0.11);
-	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
+	int MiniMap_Rect_x = cvRound(giFrame.cols*0.03125);
+	int MiniMap_Rect_y = cvRound(giFrame.cols*0.009);
+	int MiniMap_Rect_w = cvRound(giFrame.cols*0.1125);
+	int MiniMap_Rect_h = cvRound(giFrame.cols*0.1125);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
@@ -536,10 +536,10 @@ void AutoTrack::getMiniMapRefMat()
 
 void AutoTrack::getUIDRefMat()
 {
-	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
-	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
-	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
-	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+	int UID_Rect_x = cvRound(giFrame.cols*0.875);
+	int UID_Rect_y = cvRound(giFrame.rows*0.9755);
+	int UID_Rect_w = cvRound(giFrame.cols* 0.0938);
+	int UID_Rect_h = cvRound(UID_Rect_w*0.11);
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 
@@ -554,10 +554,10 @@ void AutoTrack::getUIDRefMat()
 
 void AutoTrack::getAvatarRefMat()
 {
-	int Avatar_Rect_x = cvCeil(giMiniMapRef.cols*0.4);
-	int Avatar_Rect_y = cvCeil(giMiniMapRef.rows*0.4);
-	int Avatar_Rect_w = cvCeil(giMiniMapRef.cols*0.2);
-	int Avatar_Rect_h = cvCeil(giMiniMapRef.rows*0.2);
+	int Avatar_Rect_x = cvRound(giMiniMapRef.cols*0.4);
+	int Avatar_Rect_y = cvRound(giMiniMapRef.rows*0.4);
+	int Avatar_Rect_w = cvRound(giMiniMapRef.cols*0.2);
+	int Avatar_Rect_h = cvRound(giMiniMapRef.rows*0.2);
 
 	giAvatarRef = giMiniMapRef(cv::Rect(Avatar_Rect_x, Avatar_Rect_y, Avatar_Rect_w, Avatar_Rect_h));
 
@@ -599,7 +599,12 @@ void AutoTrack::testLocalImg(std::string path)
 {
 	giFrame = cv::imread(path, cv::IMREAD_UNCHANGED);
 
-	getGengshinImpactWnd();
+	static bool is_frist_start = false;
+	if (!is_frist_start)
+	{
+		is_frist_start=getGengshinImpactWnd();
+	}
+
 	getGengshinImpactRect();
 	getGengshinImpactScreen();
 
@@ -612,7 +617,7 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
 
 		cv::Mat tmp;
-		giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+		giPaimonRef = giFrame(cv::Rect(0, 0, cvRound(giFrame.cols / 20), cvRound(giFrame.rows / 10)));
 
 		cv::namedWindow("test", cv::WINDOW_FREERATIO);
 		cv::imshow("test", giPaimonRef);
@@ -679,27 +684,215 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::bitwise_xor(gray1m, gray3m, and132m, gray0m);
 
 		cv::resize(and12, and12, cv::Size(), 1.2, 1.2,3);
+		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 23, cv::Scalar(255, 255, 255),-1);
+		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 2, cv::Scalar(128, 128, 128));
 
 		cv::namedWindow("test3", cv::WINDOW_FREERATIO);
 		cv::imshow("test3", gray1);
 
 		cv::Canny(and12, and12, 20, 3*20, 3);
 
+
+
+//#define mod1
+#ifndef mod1
+		cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0),-1);
+		//cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 2, cv::Scalar(255, 255, 255));
+		
+		cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+		cv::dilate(and12, and12, dilate_element);
+		cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+		cv::erode(and12, and12, erode_element);
+
+		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
+
+
+		std::vector<std::vector<cv::Point>> contours;
+		std::vector<cv::Vec4i> hierarcy;
+		cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+		std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
+		std::vector<cv::RotatedRect> box(contours.size()); //定义最小外接矩形集合
+		cv::Point2f rect[4];
+		std::vector<cv::Point> AvatarKeyPoint;
+		if (contours.size() > 3)
+		{
+			error_code = 9;
+			return;
+		}
+		for (int i = 0; i < contours.size(); i++)
+		{
+			box[i] = cv::minAreaRect(cv::Mat(contours[i]));  //计算每个轮廓最小外接矩形
+			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+			cv::circle(dstImage, cv::Point(box[i].center.x, box[i].center.y), 5, cv::Scalar(0, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+			box[i].points(rect);  //把最小外接矩形四个端点复制给rect数组
+			cv::rectangle(dstImage, cv::Point(boundRect[i].x, boundRect[i].y), cv::Point(boundRect[i].x + boundRect[i].width, boundRect[i].y + boundRect[i].height), cv::Scalar(0, 255, 0), 2, 8);
+			for (int j = 0; j < 4; j++)
+			{
+				line(dstImage, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 2, 8);  //绘制最小外接矩形每条边
+			}
+			AvatarKeyPoint.push_back( cv::Point(cvRound(boundRect[i].x + boundRect[i].width/2), cvRound(boundRect[i].y + boundRect[i].height/2)));
+
+		}
+		
+		double AvatarKeyPointLine[3] = { 0 };
+		cv::Point KeyLine;
+		if (AvatarKeyPoint.size() == 3)
+		{
+			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+
+			//ab
+			//bc
+			//ca
+
+			//abc
+			//acb
+			//bac
+			//bca
+			//cab
+			//cba
+			int keyMode = 0;
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1])
+			{
+				//a>b
+				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+				{
+					//a>b>c
+					keyMode = 1;
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+				}
+				else
+				{
+					//a>b,b<c
+					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
+					{
+						//a>c>b
+						keyMode = 3;
+						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+					}
+					else
+					{
+						//c>a>b
+						keyMode = 3;
+						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+					}
+				}
+			}
+			else
+			{
+				//b>a
+				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+				{
+					//b>a,b>c
+					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
+					{
+						//b>a>c
+						keyMode = 1;
+						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+					}
+					else
+					{
+						//b>c>a
+						keyMode = 2;
+						KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+					}
+				}
+				else
+				{
+					//c>b>a
+					keyMode = 2;
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+				}
+			}
+			switch (keyMode)
+			{
+			case 0:
+			{
+				break;
+			}
+			case 1:
+			{
+				cv::circle(dstImage, AvatarKeyPoint[0], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+				if ((AvatarKeyPoint[2].x + AvatarKeyPoint[1].x - AvatarKeyPoint[0].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[2];
+				}
+				break;
+			}
+			case 2:
+			{
+				cv::circle(dstImage, AvatarKeyPoint[1], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+				if ((AvatarKeyPoint[0].x + AvatarKeyPoint[2].x - AvatarKeyPoint[1].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
+				}
+				break;
+			}
+			case 3:
+			{				
+				cv::circle(dstImage, AvatarKeyPoint[2], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+				if ((AvatarKeyPoint[1].x + AvatarKeyPoint[0].x - AvatarKeyPoint[2].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[1];
+				}
+				break;
+			}
+			}
+			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			std::cout <<"angle point 3: "<< angle << std::endl;
+		}
+		else if (AvatarKeyPoint.size() == 2)
+		{
+			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			std::cout << "angle point 2: " << angle << std::endl;
+		}
+		else
+		{
+			error_code = 10;
+			return;
+		}
+
+
+
+		cv::namedWindow("test4", cv::WINDOW_FREERATIO);
+		cv::imshow("test4", dstImage);
+#endif // !mod1
+
+
+#ifdef mod1
 		std::vector<cv::Vec4i> lines;//定义一个矢量结构lines用于存放得到的线段矢量集合
-		cv::HoughLinesP(and12, lines, 1, CV_PI / 180,15,3, 100);
+		cv::HoughLinesP(and12, lines, 1, CV_PI / 180, 15, 3, 100);
 
 		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
 		for (size_t i = 0; i < lines.size(); i++)
 		{
 			cv::Vec4i l = lines[i];
-			cv::line(dstImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 1,1);
+			cv::line(dstImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 1, 1);
 		}
 
+		cv::circle(dstImage, cv::Point(cvCeil(dstImage.cols / 2), cvCeil(dstImage.rows / 2)), 24, cv::Scalar(0, 255, 0));
+		cv::circle(dstImage, cv::Point(cvCeil(dstImage.cols / 2), cvCeil(dstImage.rows / 2)), 2, cv::Scalar(0, 255, 0));
 		cv::namedWindow("test4", cv::WINDOW_FREERATIO);
 		cv::imshow("test4", dstImage);
 
 
-		cv::Mat color(and12.size(),CV_8UC3,cv::Scalar(128,128,128));
+		cv::Mat color(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
 		std::vector<std::vector<cv::Point>> contours;
 		std::vector<cv::Vec4i> hierarchy;
 		cv::findContours(and12, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
@@ -714,11 +907,17 @@ void AutoTrack::testLocalImg(std::string path)
 		{
 			error_code = 5;//原神小地图区域为空或者区域长宽小于60px
 		}
+#endif // mod1
+
+		
+
+
 		error_code = 0;
 	}
 	else
 	{
 		error_code = 3;//窗口画面为空
+		is_frist_start = false;
 	}
 }
 
