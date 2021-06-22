@@ -18,6 +18,7 @@ public:
 public:
 	cv::Mat PaimonTemplate;
 	cv::Mat MapTemplate;
+	cv::Mat AvatarTemplate;
 	cv::Mat UID;
 	cv::Mat UIDnumber[10];
 
