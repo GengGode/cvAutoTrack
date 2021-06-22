@@ -161,3 +161,24 @@ int getMinID(double lis[], int len)
 	}
 	return maxId;
 }
+
+double Line2Angle(cv::Point p) 
+{
+	const double rad2degScale = 180/CV_PI ;
+	return atan2(p.y, p.x)*rad2degScale + 90;
+
+	//double arg = 0;
+	//if (p.x > 0)
+	//{
+	//	
+	//}
+	//else if(p.x==0)
+	//{
+	//	
+	//}
+	//else if(p.x<0)
+	//{
+
+	//}
+	//return 0;
+}
