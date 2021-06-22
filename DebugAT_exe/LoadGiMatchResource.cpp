@@ -22,6 +22,9 @@ LoadGiMatchResource::LoadGiMatchResource()
 	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP2));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, MapTemplate);
+	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP3));
+	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
+	HBitmap2Mat(gHmp, AvatarTemplate);
 
 	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP_UID_));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
