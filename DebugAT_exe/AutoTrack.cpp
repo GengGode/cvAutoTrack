@@ -1,4 +1,4 @@
-﻿#include "AutoTrack.h"
+#include "AutoTrack.h"
 
 AutoTrack::AutoTrack()
 {

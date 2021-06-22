@@ -87,8 +87,8 @@ double dis(cv::Point p)
 cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
 {
 	cv::Point pos;
-	double meanx = sumx / lisx.size(); //¾ùÖµ
-	double meany = sumy / lisy.size(); //¾ùÖµ
+	double meanx = sumx / lisx.size(); //å‡å€¼
+	double meany = sumy / lisy.size(); //å‡å€¼
 	int x = (int)meanx;
 	int y = (int)meany;
 	if (lisx.size() > 3 && lisy.size() > 3)
@@ -101,8 +101,8 @@ cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, d
 			accumy += (lisy[i] - meany)*(lisy[i] - meany);
 		}
 
-		double stdevx = sqrt(accumx / (lisx.size() - 1)); //±ê×¼²î
-		double stdevy = sqrt(accumy / (lisy.size() - 1)); //±ê×¼²î
+		double stdevx = sqrt(accumx / (lisx.size() - 1)); //æ ‡å‡†å·®
+		double stdevy = sqrt(accumy / (lisy.size() - 1)); //æ ‡å‡†å·®
 
 		sumx = 0;
 		sumy = 0;
