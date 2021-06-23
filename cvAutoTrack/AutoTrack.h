@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/types_c.h>
 #include <opencv2/xfeatures2d.hpp>
@@ -34,11 +34,7 @@ private:
 private:
 	int minHessian = 400;
 	float ratio_thresh = 0.66f;
-
-
 	float mapScale = 1.3f;//1.3;
-
-
 	int someSizeR = 106;
 	float MatchMatScale = 2.0;
 private:
@@ -72,6 +68,7 @@ private:
 	cv::Mat giPaimonRef;
 	cv::Mat giMiniMapRef;
 	cv::Mat giUIDRef;
+	cv::Mat giAvatarRef;
 
 private:
 	bool getGengshinImpactWnd();
@@ -80,8 +77,10 @@ private:
 	void getPaimonRefMat();
 	void getMiniMapRefMat();
 	void getUIDRefMat();
+	void getAvatarRefMat();
 
 private:
 	double screen_scale = 1;
 	void getScreenScale();
+	double getAvatarAngle();
 };
