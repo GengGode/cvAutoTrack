@@ -207,7 +207,6 @@
   <ItemGroup>
     <Image Include="MatchResource\GIMAP.bmp" />
     <Image Include="MatchResource\PaimonDefault.bmp" />
-    <Image Include="MatchResource\PaimonDefault0.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
