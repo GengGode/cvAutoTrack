@@ -32,5 +32,5 @@ cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, d
 int getMaxID(double lis[], int len);
 int getMinID(double lis[], int len);
 
-std::vector<cv::Point> Vector2UnitVector(std::vector<cv::Point> pLis);
-double Line2Angle(cv::Point p);
+std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
+double Line2Angle(cv::Point2f p);

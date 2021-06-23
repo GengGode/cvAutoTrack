@@ -672,7 +672,7 @@ void AutoTrack::testLocalImg(std::string path)
 		std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 		std::vector<cv::RotatedRect> box(contours.size()); //定义最小外接矩形集合
 		cv::Point2f rect[4];
-		std::vector<cv::Point> AvatarKeyPoint;
+		std::vector<cv::Point2d> AvatarKeyPoint;
 		if (contours.size() > 3)
 		{
 			error_code = 9;
@@ -698,39 +698,24 @@ void AutoTrack::testLocalImg(std::string path)
 //#define mod1
 #ifndef mod1
 
-
-
-
-
-
-		
 		
 		double AvatarKeyPointLine[3] = { 0 };
-		cv::Point KeyLine;
+		std::vector<cv::Point2f> AvatarKeyLine;
+		cv::Point2f KeyLine;
 		if (AvatarKeyPoint.size() == 3)
 		{
 			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
 			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
 			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
 
-			//ab
-			//bc
-			//ca
-
-			//abc
-			//acb
-			//bac
-			//bca
-			//cab
-			//cba
-			int keyMode = 0;
+			int keyMode = -1;
 			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1])
 			{
 				//a>b
 				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 				{
 					//a>b>c
-					keyMode = 3;
+					keyMode = 2;
 					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
 				}
 				else
@@ -739,13 +724,13 @@ void AutoTrack::testLocalImg(std::string path)
 					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
 					{
 						//a>c>b
-						keyMode = 2;
+						keyMode = 1;
 						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
 					}
 					else
 					{
 						//c>a>b
-						keyMode = 2;
+						keyMode = 1;
 						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
 					}
 				}
@@ -759,80 +744,57 @@ void AutoTrack::testLocalImg(std::string path)
 					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
 					{
 						//b>a>c
-						keyMode = 3;
+						keyMode = 2;
 						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
 					}
 					else
 					{
 						//b>c>a
-						keyMode = 1;
+						keyMode = 0;
 						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
 					}
 				}
 				else
 				{
 					//c>b>a
-					keyMode = 1;
+					keyMode = 0;
 					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[1];
 				}
 			}
+
+			
+
 			switch (keyMode)
 			{
+			case -1:
+			{
+				break;
+			}
 			case 0:
 			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
 				break;
 			}
 			case 1:
 			{
-				cv::circle(dstImage, AvatarKeyPoint[0], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
-				if ((AvatarKeyPoint[2].x + AvatarKeyPoint[1].x - AvatarKeyPoint[0].x * 2) > 0)
-				{
-					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
-
-				}
-				else
-				{
-					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[2];
-				}
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
 				break;
 			}
 			case 2:
 			{
-				cv::circle(dstImage, AvatarKeyPoint[1], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
-				if ((AvatarKeyPoint[0].x + AvatarKeyPoint[2].x - AvatarKeyPoint[1].x * 2) > 0)
-				{
-					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
-
-				}
-				else
-				{
-					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
-				}
-				break;
-			}
-			case 3:
-			{				
-				cv::circle(dstImage, AvatarKeyPoint[2], 5, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
-				if ((AvatarKeyPoint[1].x + AvatarKeyPoint[0].x - AvatarKeyPoint[2].x * 2) > 0)
-				{
-					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
-
-				}
-				else
-				{
-					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[1];
-				}
+				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
 				break;
 			}
 			}
-			cv::circle(dstImage, KeyLine+cv::Point(50,50), 2, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+
+			AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
+			KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
+			cv::circle(dstImage, KeyLine*10+cv::Point2f(50,50), 2, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
 			double angle = Line2Angle(KeyLine);
 			std::cout <<"angle point 3: "<< angle << std::endl;
-		}
-		else if (AvatarKeyPoint.size() == 2)
-		{
-			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-			std::cout << "angle point 2: " << angle << std::endl;
 		}
 		else
 		{
