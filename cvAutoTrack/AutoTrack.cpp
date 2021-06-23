@@ -429,7 +429,7 @@ bool AutoTrack::getGengshinImpactWnd()
 	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
+	std::cout << "原神 Windows Handle Find is "<< giHandle << std::endl;
 #endif
 
 	return (giHandle != NULL ? true : false);
@@ -650,6 +650,8 @@ double AutoTrack::getAvatarAngle()
 	AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
 	AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
 
+
+
 	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 	{
 		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
@@ -664,11 +666,6 @@ double AutoTrack::getAvatarAngle()
 	{
 		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
 		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-	}
-	if (AvatarKeyLine.size() != 2)
-	{
-		error_code = 10;
-		return 0;
 	}
 
 	AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
