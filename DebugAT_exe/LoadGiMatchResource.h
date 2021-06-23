@@ -8,7 +8,7 @@
 
 #include "resource.h"
 
-// ´ËÀàÊÇ²»µ¼³öµÄ
+// æ­¤ç±»æ˜¯ä¸å¯¼å‡ºçš„
 class LoadGiMatchResource
 {
 public:

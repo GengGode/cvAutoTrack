@@ -10,7 +10,7 @@
 
 #define AUTO_TRACK_DEBUG_DELAY 1
 
-// ´ËÀàÊÇ²»µ¼³öµÄ
+// æ­¤ç±»æ˜¯ä¸å¯¼å‡ºçš„
 class AutoTrack {
 public:
 	AutoTrack(void);
