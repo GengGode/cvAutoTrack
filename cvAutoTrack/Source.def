@@ -2,12 +2,12 @@ LIBRARY CVAUTOTRACK
 
 EXPORTS
 
-init=init @1
+init @1
 
-GetTransform=GetTransform @2
+GetTransform @2
 
-GetUID=GetUID @3
+GetUID @3
 
-GetLastErr=GetLastErr @4
+GetLastErr @4
 
-uninit=uninit @5
+uninit @5

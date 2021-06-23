@@ -159,3 +159,21 @@ int getMinID(double lis[], int len)
 	}
 	return maxId;
 }
+std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis)
+{
+	double length = 1;
+	std::vector<cv::Point2f> res;
+	for (int i = 0; i < pLis.size(); i++)
+	{
+		length = sqrt(pLis[i].x*pLis[i].x + pLis[i].y*pLis[i].y);
+		res.push_back(cv::Point2f(pLis[i].x / length, pLis[i].y / length));
+	}
+	return res;
+}
+double Line2Angle(cv::Point2f p)
+{
+	const double rad2degScale = 180 / CV_PI;
+	double res = atan2(-p.y, p.x)*rad2degScale;
+	res = res - 90;
+	return res;
+}

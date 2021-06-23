@@ -289,10 +289,12 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			hisP[1] = hisP[2];
 			hisP[2] = pos;
 
-			/******************************/
+			
+
 
 			x = (float)(pos.x);
 			y = (float)(pos.y);
+			
 
 			error_code = 0;
 			return true;
@@ -665,36 +667,31 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::dilate(and12, and12, dilate_element);
 		cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 		cv::erode(and12, and12, erode_element);
+
 		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
+
 		std::vector<std::vector<cv::Point>> contours;
 		std::vector<cv::Vec4i> hierarcy;
+		
 		cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+
 		std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 		std::vector<cv::RotatedRect> box(contours.size()); //定义最小外接矩形集合
 		cv::Point2f rect[4];
 		std::vector<cv::Point2d> AvatarKeyPoint;
-		if (contours.size() > 3)
+		if (contours.size() == 3)
 		{
 			error_code = 9;
 			return;
 		}
 
-		for (int i = 0; i < contours.size(); i++)
+		for (int i = 0; i < 3; i++)
 		{
 			box[i] = cv::minAreaRect(cv::Mat(contours[i]));  //计算每个轮廓最小外接矩形
 			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-#ifdef _DEBUG
-			cv::circle(dstImage, cv::Point(box[i].center.x, box[i].center.y), 5, cv::Scalar(0, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
-			box[i].points(rect);  //把最小外接矩形四个端点复制给rect数组
-			cv::rectangle(dstImage, cv::Point(boundRect[i].x, boundRect[i].y), cv::Point(boundRect[i].x + boundRect[i].width, boundRect[i].y + boundRect[i].height), cv::Scalar(0, 255, 0), 2, 8);
-			for (int j = 0; j < 4; j++)
-			{
-				line(dstImage, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 2, 8);  //绘制最小外接矩形每条边
-			}
-#endif
 			AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
-
 		}
+
 //#define mod1
 #ifndef mod1
 
