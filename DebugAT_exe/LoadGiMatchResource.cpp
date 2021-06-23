@@ -22,6 +22,9 @@ LoadGiMatchResource::LoadGiMatchResource()
 	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP2));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, MapTemplate);
+	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP3));
+	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
+	HBitmap2Mat(gHmp, AvatarTemplate);
 
 	gHmp = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_BITMAP_UID_));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
@@ -157,4 +160,25 @@ int getMinID(double lis[], int len)
 		}
 	}
 	return maxId;
+}
+
+double Line2Angle(cv::Point p) 
+{
+	const double rad2degScale = 180/CV_PI ;
+	return atan2(p.y, p.x)*rad2degScale + 90;
+
+	//double arg = 0;
+	//if (p.x > 0)
+	//{
+	//	
+	//}
+	//else if(p.x==0)
+	//{
+	//	
+	//}
+	//else if(p.x<0)
+	//{
+
+	//}
+	//return 0;
 }

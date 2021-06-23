@@ -60,10 +60,10 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 {
 	if (!is_init_end)
 	{
-		error_code = 1;//æœªåˆå§‹åŒ–
+		error_code = 1;//Î´³õÊ¼»¯
 		return false;
 	}
-	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
+	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
 	if (getGengshinImpactWnd())
 	{
 		getGengshinImpactRect();
@@ -114,7 +114,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (good_matchesPaimonTmp.size() < 7)
 			{
-				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
+				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
 				return false;
 			}
 #endif // Mode2
@@ -142,7 +142,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (maxVal < 0.36 || maxVal == 1)
 			{
-				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
+				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
 				return false;
 			}
 #endif
@@ -156,7 +156,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 			if (img_object.empty())
 			{
-				error_code = 5;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
+				error_code = 5;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
 				return false;
 			}
 
@@ -203,14 +203,14 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 								good_matchesTmp.push_back(KNN_mTmp[i][0]);
 								try
 								{
-									// è¿™é‡Œæœ‰ä¸ªbugå›å¡è¿›æ¥ï¼Œè¿›å…¥å‰¯æœ¬æˆ–è€…åˆ‡æ¢æ”¾å¤§æ‹›æ—¶å¶å°”è§¦å‘
+									// ÕâÀïÓĞ¸öbug»Ø¿¨½øÀ´£¬½øÈë¸±±¾»òÕßÇĞ»»·Å´óÕĞÊ±Å¼¶û´¥·¢
 									lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
 									lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 
 								}
 								catch (...)
 								{
-									error_code = 7;//ç‰¹å¾ç‚¹æ•°ç»„è®¿é—®è¶Šç•Œï¼Œæ˜¯ä¸ªbug
+									error_code = 7;//ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç£¬ÊÇ¸öbug
 									return false;
 								}
 								sumx += lisx.back();
@@ -231,8 +231,8 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 						}
 						else
 						{
-							double meanx = sumx / lisx.size(); //å‡å€¼
-							double meany = sumy / lisy.size(); //å‡å€¼
+							double meanx = sumx / lisx.size(); //¾ùÖµ
+							double meany = sumy / lisy.size(); //¾ùÖµ
 							cv::Point2f p = SPC(lisx, sumx, lisy, sumy);
 
 							float x = (float)meanx;
@@ -277,7 +277,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 				}
 				if (lisx.size() == 0 || lisy.size() == 0)
 				{
-					error_code = 4;//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
+					error_code = 4;//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
 					return false;
 				}
 				else
@@ -299,20 +299,20 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 		}
 		else
 		{
-			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
+			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
+		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
 		return false;
 	}
 }
 
 bool AutoTrack::GetUID(int &uid)
 {
-	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
+	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
 	if (getGengshinImpactWnd())
 	{
 		getGengshinImpactRect();
@@ -344,7 +344,7 @@ bool AutoTrack::GetUID(int &uid)
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
-			//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+			//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 			if (maxVal > 0.75)
 			{
@@ -370,7 +370,7 @@ bool AutoTrack::GetUID(int &uid)
 
 						double minVali, maxVali;
 						cv::Point minLoci, maxLoci;
-						//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+						//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 
 						tmplis[i] = maxVali;
@@ -397,7 +397,7 @@ bool AutoTrack::GetUID(int &uid)
 			}
 			if (_uid == 0)
 			{
-				error_code = 8;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
+				error_code = 8;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
 				return false;
 			}
 			uid = _uid;
@@ -406,13 +406,13 @@ bool AutoTrack::GetUID(int &uid)
 		}
 		else
 		{
-			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
+			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
+		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
 		return false;
 	}
 }
@@ -424,10 +424,10 @@ int AutoTrack::GetLastError()
 
 bool AutoTrack::getGengshinImpactWnd()
 {
-	giHandle = FindWindowA("UnityWndClass", "åŸç¥");/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
+	giHandle = FindWindowA("UnityWndClass", "Ô­Éñ");/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Handle Find is " << giHandle << std::endl;
+	std::cout << "GI Ô­Éñ Windows Handle Find is " << giHandle << std::endl;
 #endif
 
 	return (giHandle != NULL ? true : false);
@@ -460,35 +460,35 @@ void AutoTrack::getGengshinImpactScreen()
 
 	if (giHandle == NULL)return;
 
-	//è·å–ç›®æ ‡å¥æŸ„çš„çª—å£å¤§å°RECT
-	GetWindowRect(giHandle, &giRect);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
+	//»ñÈ¡Ä¿±ê¾ä±úµÄ´°¿Ú´óĞ¡RECT
+	GetWindowRect(giHandle, &giRect);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
 
-	//è·å–ç›®æ ‡å¥æŸ„çš„DC
-	HDC hScreen = GetDC(giHandle);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
+	//»ñÈ¡Ä¿±ê¾ä±úµÄDC
+	HDC hScreen = GetDC(giHandle);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
 	HDC hCompDC = CreateCompatibleDC(hScreen);
 
-	//è·å–ç›®æ ‡å¥æŸ„çš„å®½åº¦å’Œé«˜åº¦
+	//»ñÈ¡Ä¿±ê¾ä±úµÄ¿í¶ÈºÍ¸ß¶È
 	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
 	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
 
-	//åˆ›å»ºBitmapå¯¹è±¡
-	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//å¾—åˆ°ä½å›¾
+	//´´½¨Bitmap¶ÔÏó
+	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//µÃµ½Î»Í¼
 
-	SelectObject(hCompDC, hBmp); //ä¸å†™å°±å…¨é»‘
+	SelectObject(hCompDC, hBmp); //²»Ğ´¾ÍÈ«ºÚ
 	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
 
-	//é‡Šæ”¾å¯¹è±¡
+	//ÊÍ·Å¶ÔÏó
 	DeleteDC(hScreen);
 	DeleteDC(hCompDC);
 
-	//ç±»å‹è½¬æ¢
-	//è¿™é‡Œè·å–ä½å›¾çš„å¤§å°ä¿¡æ¯,äº‹å®ä¸Šä¹Ÿæ˜¯å…¼å®¹DCç»˜å›¾è¾“å‡ºçš„èŒƒå›´
+	//ÀàĞÍ×ª»»
+	//ÕâÀï»ñÈ¡Î»Í¼µÄ´óĞ¡ĞÅÏ¢,ÊÂÊµÉÏÒ²ÊÇ¼æÈİDC»æÍ¼Êä³öµÄ·¶Î§
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
 
-	//matæ“ä½œ
+	//mat²Ù×÷
 	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
 
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
@@ -500,10 +500,10 @@ void AutoTrack::getGengshinImpactScreen()
 
 void AutoTrack::getPaimonRefMat()
 {
-	int Paimon_Rect_x = cvCeil(giFrame.cols*0.0135);
-	int Paimon_Rect_y = cvCeil(giFrame.cols*0.006075);
-	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
-	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
+	int Paimon_Rect_x = cvRound(giFrame.cols*0.0135);
+	int Paimon_Rect_y = cvRound(giFrame.cols*0.006075);
+	int Paimon_Rect_w = cvRound(giFrame.cols*0.035);
+	int Paimon_Rect_h = cvRound(giFrame.cols*0.0406);
 
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 
@@ -518,10 +518,10 @@ void AutoTrack::getPaimonRefMat()
 
 void AutoTrack::getMiniMapRefMat()
 {
-	int MiniMap_Rect_x = cvCeil(giFrame.cols*0.032-1);
-	int MiniMap_Rect_y = cvCeil(giFrame.cols*0.01);
-	int MiniMap_Rect_w = cvCeil(giFrame.cols*0.11);
-	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
+	int MiniMap_Rect_x = cvRound(giFrame.cols*0.03125);
+	int MiniMap_Rect_y = cvRound(giFrame.cols*0.009);
+	int MiniMap_Rect_w = cvRound(giFrame.cols*0.1125);
+	int MiniMap_Rect_h = cvRound(giFrame.cols*0.1125);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
@@ -536,10 +536,10 @@ void AutoTrack::getMiniMapRefMat()
 
 void AutoTrack::getUIDRefMat()
 {
-	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
-	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
-	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
-	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+	int UID_Rect_x = cvRound(giFrame.cols*0.875);
+	int UID_Rect_y = cvRound(giFrame.rows*0.9755);
+	int UID_Rect_w = cvRound(giFrame.cols* 0.0938);
+	int UID_Rect_h = cvRound(UID_Rect_w*0.11);
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 
@@ -554,10 +554,10 @@ void AutoTrack::getUIDRefMat()
 
 void AutoTrack::getAvatarRefMat()
 {
-	int Avatar_Rect_x = cvCeil(giMiniMapRef.cols*0.4);
-	int Avatar_Rect_y = cvCeil(giMiniMapRef.rows*0.4);
-	int Avatar_Rect_w = cvCeil(giMiniMapRef.cols*0.2);
-	int Avatar_Rect_h = cvCeil(giMiniMapRef.rows*0.2);
+	int Avatar_Rect_x = cvRound(giMiniMapRef.cols*0.4);
+	int Avatar_Rect_y = cvRound(giMiniMapRef.rows*0.4);
+	int Avatar_Rect_w = cvRound(giMiniMapRef.cols*0.2);
+	int Avatar_Rect_h = cvRound(giMiniMapRef.rows*0.2);
 
 	giAvatarRef = giMiniMapRef(cv::Rect(Avatar_Rect_x, Avatar_Rect_y, Avatar_Rect_w, Avatar_Rect_h));
 
@@ -575,14 +575,14 @@ void AutoTrack::getScreenScale()
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
-	// è·å–ç›‘è§†å™¨é€»è¾‘å®½åº¦ä¸é«˜åº¦
+	// »ñÈ¡¼àÊÓÆ÷Âß¼­¿í¶ÈÓë¸ß¶È
 	MONITORINFOEX miex;
 	miex.cbSize = sizeof(miex);
 	GetMonitorInfo(hMonitor, &miex);
 	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
 	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
 
-	// è·å–ç›‘è§†å™¨ç‰©ç†å®½åº¦ä¸é«˜åº¦
+	// »ñÈ¡¼àÊÓÆ÷ÎïÀí¿í¶ÈÓë¸ß¶È
 	DEVMODE dm;
 	dm.dmSize = sizeof(dm);
 	dm.dmDriverExtra = 0;
@@ -599,7 +599,12 @@ void AutoTrack::testLocalImg(std::string path)
 {
 	giFrame = cv::imread(path, cv::IMREAD_UNCHANGED);
 
-	getGengshinImpactWnd();
+	static bool is_frist_start = false;
+	if (!is_frist_start)
+	{
+		is_frist_start=getGengshinImpactWnd();
+	}
+
 	getGengshinImpactRect();
 	getGengshinImpactScreen();
 
@@ -612,7 +617,7 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
 
 		cv::Mat tmp;
-		giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+		giPaimonRef = giFrame(cv::Rect(0, 0, cvRound(giFrame.cols / 20), cvRound(giFrame.rows / 10)));
 
 		cv::namedWindow("test", cv::WINDOW_FREERATIO);
 		cv::imshow("test", giPaimonRef);
@@ -631,7 +636,7 @@ void AutoTrack::testLocalImg(std::string path)
 
 		if (maxVal < 0.36 || maxVal == 1)
 		{
-			error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
+			error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
 		}
 
 		getMiniMapRefMat();
@@ -640,8 +645,9 @@ void AutoTrack::testLocalImg(std::string path)
 
 		cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2,2);
 
-		std::vector<cv::Mat> lis;
+		std::vector<cv::Mat> lis,lismod;
 		cv::split(giAvatarRef, lis);
+		cv::split(giMatchResource.AvatarTemplate, lismod);
 
 		cv::Mat gray0;
 		cv::Mat gray1;
@@ -652,6 +658,15 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
 		cv::threshold(lis[3], gray3, 230, 255, cv::THRESH_BINARY);
 
+		cv::Mat gray0m;
+		cv::Mat gray1m;
+		cv::Mat gray2m;
+		cv::Mat gray3m;
+		cv::threshold(lismod[0], gray0m, 240, 255, cv::THRESH_BINARY);
+		cv::threshold(lismod[1], gray1m, 212, 255, cv::THRESH_BINARY);
+		cv::threshold(lismod[2], gray2m, 25, 255, cv::THRESH_BINARY_INV);
+		cv::threshold(lismod[3], gray3m, 230, 255, cv::THRESH_BINARY);
+
 		cv::Mat and12;
 		cv::Mat and13;
 		cv::Mat and132;
@@ -660,28 +675,224 @@ void AutoTrack::testLocalImg(std::string path)
 		cv::bitwise_and(gray1, gray3, and13, gray0);
 		cv::bitwise_xor(gray1, gray3, and132,gray0);
 
+		cv::Mat and12m;
+		cv::Mat and13m;
+		cv::Mat and132m;
+
+		cv::bitwise_and(gray1m, gray2m, and12m, gray0m);
+		cv::bitwise_and(gray1m, gray3m, and13m, gray0m);
+		cv::bitwise_xor(gray1m, gray3m, and132m, gray0m);
+
 		cv::resize(and12, and12, cv::Size(), 1.2, 1.2,3);
+		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 23, cv::Scalar(255, 255, 255),-1);
+		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 2, cv::Scalar(128, 128, 128));
 
 		cv::namedWindow("test3", cv::WINDOW_FREERATIO);
 		cv::imshow("test3", gray1);
 
 		cv::Canny(and12, and12, 20, 3*20, 3);
 
-		std::vector<cv::Vec4i> lines;//å®šä¹‰ä¸€ä¸ªçŸ¢é‡ç»“æ„linesç”¨äºå­˜æ”¾å¾—åˆ°çš„çº¿æ®µçŸ¢é‡é›†åˆ
-		cv::HoughLinesP(and12, lines, 1, CV_PI / 180,15,3, 100);
+
+
+//#define mod1
+#ifndef mod1
+		cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0),-1);
+		//cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 2, cv::Scalar(255, 255, 255));
+		
+		cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+		cv::dilate(and12, and12, dilate_element);
+		cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+		cv::erode(and12, and12, erode_element);
+
+		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
+
+
+		std::vector<std::vector<cv::Point>> contours;
+		std::vector<cv::Vec4i> hierarcy;
+		cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+		std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+		std::vector<cv::RotatedRect> box(contours.size()); //¶¨Òå×îĞ¡Íâ½Ó¾ØĞÎ¼¯ºÏ
+		cv::Point2f rect[4];
+		std::vector<cv::Point> AvatarKeyPoint;
+		if (contours.size() > 3)
+		{
+			error_code = 9;
+			return;
+		}
+		for (int i = 0; i < contours.size(); i++)
+		{
+			box[i] = cv::minAreaRect(cv::Mat(contours[i]));  //¼ÆËãÃ¿¸öÂÖÀª×îĞ¡Íâ½Ó¾ØĞÎ
+			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+			cv::circle(dstImage, cv::Point(box[i].center.x, box[i].center.y), 5, cv::Scalar(0, 255, 0), -1, 8);  //»æÖÆ×îĞ¡Íâ½Ó¾ØĞÎµÄÖĞĞÄµã
+			box[i].points(rect);  //°Ñ×îĞ¡Íâ½Ó¾ØĞÎËÄ¸ö¶Ëµã¸´ÖÆ¸ørectÊı×é
+			cv::rectangle(dstImage, cv::Point(boundRect[i].x, boundRect[i].y), cv::Point(boundRect[i].x + boundRect[i].width, boundRect[i].y + boundRect[i].height), cv::Scalar(0, 255, 0), 2, 8);
+			for (int j = 0; j < 4; j++)
+			{
+				line(dstImage, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 2, 8);  //»æÖÆ×îĞ¡Íâ½Ó¾ØĞÎÃ¿Ìõ±ß
+			}
+			AvatarKeyPoint.push_back( cv::Point(cvRound(boundRect[i].x + boundRect[i].width/2), cvRound(boundRect[i].y + boundRect[i].height/2)));
+
+		}
+		
+		double AvatarKeyPointLine[3] = { 0 };
+		cv::Point KeyLine;
+		if (AvatarKeyPoint.size() == 3)
+		{
+			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+
+			//ab
+			//bc
+			//ca
+
+			//abc
+			//acb
+			//bac
+			//bca
+			//cab
+			//cba
+			int keyMode = 0;
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1])
+			{
+				//a>b
+				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+				{
+					//a>b>c
+					keyMode = 1;
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+				}
+				else
+				{
+					//a>b,b<c
+					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
+					{
+						//a>c>b
+						keyMode = 3;
+						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+					}
+					else
+					{
+						//c>a>b
+						keyMode = 3;
+						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+					}
+				}
+			}
+			else
+			{
+				//b>a
+				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+				{
+					//b>a,b>c
+					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
+					{
+						//b>a>c
+						keyMode = 1;
+						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+					}
+					else
+					{
+						//b>c>a
+						keyMode = 2;
+						KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+					}
+				}
+				else
+				{
+					//c>b>a
+					keyMode = 2;
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+				}
+			}
+			switch (keyMode)
+			{
+			case 0:
+			{
+				break;
+			}
+			case 1:
+			{
+				cv::circle(dstImage, AvatarKeyPoint[0], 5, cv::Scalar(255, 255, 0), -1, 8);  //»æÖÆ×îĞ¡Íâ½Ó¾ØĞÎµÄÖĞĞÄµã
+				if ((AvatarKeyPoint[2].x + AvatarKeyPoint[1].x - AvatarKeyPoint[0].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[2];
+				}
+				break;
+			}
+			case 2:
+			{
+				cv::circle(dstImage, AvatarKeyPoint[1], 5, cv::Scalar(255, 255, 0), -1, 8);  //»æÖÆ×îĞ¡Íâ½Ó¾ØĞÎµÄÖĞĞÄµã
+				if ((AvatarKeyPoint[0].x + AvatarKeyPoint[2].x - AvatarKeyPoint[1].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
+				}
+				break;
+			}
+			case 3:
+			{				
+				cv::circle(dstImage, AvatarKeyPoint[2], 5, cv::Scalar(255, 255, 0), -1, 8);  //»æÖÆ×îĞ¡Íâ½Ó¾ØĞÎµÄÖĞĞÄµã
+				if ((AvatarKeyPoint[1].x + AvatarKeyPoint[0].x - AvatarKeyPoint[2].x * 2) > 0)
+				{
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+
+				}
+				else
+				{
+					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[1];
+				}
+				break;
+			}
+			}
+			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			std::cout <<"angle point 3: "<< angle << std::endl;
+		}
+		else if (AvatarKeyPoint.size() == 2)
+		{
+			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			std::cout << "angle point 2: " << angle << std::endl;
+		}
+		else
+		{
+			error_code = 10;
+			return;
+		}
+
+
+
+		cv::namedWindow("test4", cv::WINDOW_FREERATIO);
+		cv::imshow("test4", dstImage);
+#endif // !mod1
+
+
+#ifdef mod1
+		std::vector<cv::Vec4i> lines;//¶¨ÒåÒ»¸öÊ¸Á¿½á¹¹linesÓÃÓÚ´æ·ÅµÃµ½µÄÏß¶ÎÊ¸Á¿¼¯ºÏ
+		cv::HoughLinesP(and12, lines, 1, CV_PI / 180, 15, 3, 100);
 
 		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
 		for (size_t i = 0; i < lines.size(); i++)
 		{
 			cv::Vec4i l = lines[i];
-			cv::line(dstImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 1,1);
+			cv::line(dstImage, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 1, 1);
 		}
 
+		cv::circle(dstImage, cv::Point(cvCeil(dstImage.cols / 2), cvCeil(dstImage.rows / 2)), 24, cv::Scalar(0, 255, 0));
+		cv::circle(dstImage, cv::Point(cvCeil(dstImage.cols / 2), cvCeil(dstImage.rows / 2)), 2, cv::Scalar(0, 255, 0));
 		cv::namedWindow("test4", cv::WINDOW_FREERATIO);
 		cv::imshow("test4", dstImage);
 
 
-		cv::Mat color(and12.size(),CV_8UC3,cv::Scalar(128,128,128));
+		cv::Mat color(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
 		std::vector<std::vector<cv::Point>> contours;
 		std::vector<cv::Vec4i> hierarchy;
 		cv::findContours(and12, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
@@ -694,13 +905,19 @@ void AutoTrack::testLocalImg(std::string path)
 
 		if (img_object.empty())
 		{
-			error_code = 5;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
+			error_code = 5;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
 		}
+#endif // mod1
+
+		
+
+
 		error_code = 0;
 	}
 	else
 	{
-		error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
+		error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+		is_frist_start = false;
 	}
 }
 
