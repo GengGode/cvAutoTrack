@@ -41,6 +41,22 @@ bool AutoTrack::init()
 	return is_init_end;
 }
 
+bool AutoTrack::SetHandle(long long int handle)
+{
+	if (handle == 0)
+	{
+		is_Auto_getHandle = true;
+		return true;
+	}
+	else
+	{
+		is_Auto_getHandle = false;
+		giHandle = (HWND)handle;
+	}
+
+	return IsWindow(giHandle);
+}
+
 bool AutoTrack::uninit()
 {
 	if (is_init_end)
@@ -58,6 +74,25 @@ bool AutoTrack::uninit()
 }
 
 bool AutoTrack::GetTransform(float & x, float & y, float & a)
+{
+	double x2 = 0, y2 = 0, a2 = 0;
+	bool PositionState = GetPosition(x2, y2);
+	bool DirectionState= GetDirection(a2);
+	if (!is_init_end)
+	{
+		init();//初始化
+	}
+	if (DirectionState && PositionState)
+	{
+		x = (float)x2;
+		y = (float)y2;
+		a = (float)a2;
+		return true;
+	}
+	return false;
+}
+
+bool AutoTrack::GetPosition(double & x, double & y)
 {
 	if (!is_init_end)
 	{
@@ -138,7 +173,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 #ifdef _DEBUG
 			cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 			cv::imshow("test2", tmp);
-			std::cout << "Paimon Match: "<< minVal<<","<<maxVal << std::endl;
+			std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
 
 			if (maxVal < 0.36 || maxVal == 1)
@@ -202,7 +237,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 							if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
 							{
 								good_matchesTmp.push_back(KNN_mTmp[i][0]);
-								try 
+								try
 								{
 									// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
 									lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
@@ -291,10 +326,144 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 			hisP[2] = pos;
 
 			/******************************/
-			getAvatarRefMat();
 			x = (float)(pos.x);
 			y = (float)(pos.y);
-			a = (float)getAvatarAngle();
+
+			error_code = 0;
+			return true;
+		}
+		else
+		{
+			error_code = 3;//窗口画面为空
+			return false;
+		}
+	}
+	else
+	{
+		error_code = 2;//未能找到原神窗口句柄
+		return false;
+	}
+}
+
+bool AutoTrack::GetDirection(double & a)
+{
+	// 判断原神窗口不存在直接返回false，不对参数做任何修改
+	if (getGengshinImpactWnd())
+	{
+		getGengshinImpactRect();
+		getGengshinImpactScreen();
+
+		if (!giFrame.empty())
+		{
+			getPaimonRefMat();
+
+			cv::Mat paimonTemplate;
+
+			cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+			cv::Mat tmp;
+
+			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+
+			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+
+			double minVal, maxVal;
+			cv::Point minLoc, maxLoc;
+			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+
+			if (maxVal < 0.36 || maxVal == 1)
+			{
+				error_code = 6;//未能匹配到派蒙
+				return false;
+			}
+
+			getMiniMapRefMat();
+
+			if (giMiniMapRef.empty())
+			{
+				error_code = 5;//原神小地图区域为空或者区域长宽小于60px
+				return false;
+			}
+
+			getAvatarRefMat();
+
+			if (giAvatarRef.empty())
+			{
+				error_code = 11;//未能取到小箭头区域
+				return false;
+			}
+
+			cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
+			std::vector<cv::Mat> lis;
+			cv::split(giAvatarRef, lis);
+
+			cv::Mat gray0;
+			cv::Mat gray1;
+			cv::Mat gray2;
+
+			cv::threshold(lis[0], gray0, 240, 255, cv::THRESH_BINARY);
+			cv::threshold(lis[1], gray1, 212, 255, cv::THRESH_BINARY);
+			cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
+
+			cv::Mat and12;
+			cv::bitwise_and(gray1, gray2, and12, gray0);
+			cv::resize(and12, and12, cv::Size(), 1.2, 1.2, 3);
+			cv::Canny(and12, and12, 20, 3 * 20, 3);
+			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0), -1);
+			cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+			cv::dilate(and12, and12, dilate_element);
+			cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+			cv::erode(and12, and12, erode_element);
+
+			std::vector<std::vector<cv::Point>> contours;
+			std::vector<cv::Vec4i> hierarcy;
+
+			cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+
+			std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
+			cv::Point2f rect[4];
+
+			std::vector<cv::Point2d> AvatarKeyPoint;
+			double AvatarKeyPointLine[3] = { 0 };
+			std::vector<cv::Point2f> AvatarKeyLine;
+			cv::Point2f KeyLine;
+
+			if (contours.size() != 3)
+			{
+				error_code = 9;//提取小箭头特征误差过大
+				return false;
+			}
+
+			for (int i = 0; i < 3; i++)
+			{
+				boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+				AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
+			}
+
+			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+			}
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
+			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
+			}
+			if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
+			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+			}
+
+			AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
+			KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
+
+			 a = Line2Angle(KeyLine);
 
 			error_code = 0;
 			return true;
@@ -426,26 +595,40 @@ int AutoTrack::GetLastError()
 
 bool AutoTrack::getGengshinImpactWnd()
 {
-	LPCSTR giWindowName = "";
-	/* 对原神窗口的操作 */
-	giWindowName = "原神";
-	giHandle = FindWindowA("UnityWndClass", giWindowName);
-	if (giHandle == NULL) {
-		giWindowName = "Genshin Impact";
-		giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：原神 */
-	}
-	if (giHandle == NULL) {
-		giWindowName = "원신";
-		giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：원신 */
-	}
-	if (giHandle == NULL) {
-		giWindowName = "";
-	}
-
+	if (is_Auto_getHandle)
+	{
+		LPCSTR giWindowName = "";
+		/* 对原神窗口的操作 */
+		giWindowName = "原神";
+		giHandle = FindWindowA("UnityWndClass", giWindowName);
+		if (giHandle == NULL) {
+			giWindowName = "Genshin Impact";
+			giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：原神 */
+		}
+		if (giHandle == NULL) {
+			giWindowName = "원신";
+			giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：원신 */
+		}
+		if (giHandle == NULL) {
+			giWindowName = "";
+		}
 #ifdef _DEBUG
-	std::cout << "GI Window Name Find is " << giWindowName << std::endl;
-	std::cout << "GI Window Handle Find is " << giHandle << std::endl;
+		std::cout << "GI Window Name Find is " << giWindowName << std::endl;
+		std::cout << "GI Window Handle Find is " << giHandle << std::endl;
 #endif
+	}
+	else
+	{
+		if (IsWindow(giHandle))
+		{
+			return true;
+		}
+		else
+		{
+			error_code = 10; //无效句柄或指定句柄所指向窗口不存在
+			return false;
+		}
+	}
 
 	return (giHandle != NULL ? true : false);
 }
@@ -650,7 +833,7 @@ double AutoTrack::getAvatarAngle()
 
 	if (contours.size() != 3)
 	{
-		error_code = 9;
+		error_code = 9;//提取小箭头特征误差过大
 		return 0;
 	}
 
