@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ ���ɵİ����ļ���
-// �� DebugAT_exe.rc ʹ��
+// Microsoft Visual C++ 生成的包含文件。
+// 供 DebugAT_exe.rc 使用
 //
 #define IDB_BITMAP1                     102
 #define IDB_BITMAP2                     103
