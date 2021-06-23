@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AutoTrack.h"
 
 AutoTrack::AutoTrack()
@@ -428,10 +428,27 @@ int AutoTrack::GetLastError()
 
 bool AutoTrack::getGengshinImpactWnd()
 {
-	giHandle = FindWindowA("UnityWndClass", "原神");/* 对原神窗口的操作 */
+	LPCSTR giWindowName = "";
+	/* 对原神窗口的操作 */
+	giWindowName = "原神";
+	giHandle = FindWindowA("UnityWndClass", giWindowName);
+	if (giHandle == NULL) {
+		giWindowName = "Genshin Impact";
+		giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：原神 */
+	}
+	if (giHandle == NULL) {
+		giWindowName = "원신";
+		giHandle = FindWindowA("UnityWndClass", giWindowName); /* 匹配名称：원신 */
+	}
+	if (giHandle == NULL) {
+		giWindowName = "";
+	}
+
 #ifdef _DEBUG
-	std::cout << "GI Windows Handle Find is "<< giHandle << std::endl;
+	std::cout << "GI Window Name Find is " << giWindowName << std::endl;
+	std::cout << "GI Window Handle Find is " << giHandle << std::endl;
 #endif
+
 	return (giHandle != NULL ? true : false);
 }
 
