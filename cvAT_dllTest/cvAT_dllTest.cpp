@@ -2,25 +2,20 @@
 //
 
 #include <iostream>
-#include <AutoTrack.h>
+#include <cvAutoTrack.h>
 
-#include <AutoTrack.cpp>
 
 int main()
 {
 	// 静态方法调用
 	// 初始化
-	AutoTrack a();
-	int _uid = 0;
-	a.GetUID(_uid);
-
+	init();
 	// 准备变量
 	float x = 0;
 	float y = 0;
 	float a = 0;
 	int uid = 0;
 	// 调用循环
-	/**
 	while (1)
 	{
 		// 调用获取方法
@@ -40,7 +35,7 @@ int main()
 		{
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
-	}*/
+	}
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
