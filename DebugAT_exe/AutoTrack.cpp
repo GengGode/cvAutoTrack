@@ -645,68 +645,27 @@ void AutoTrack::testLocalImg(std::string path)
 
 		cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2,2);
 
-		std::vector<cv::Mat> lis,lismod;
+		std::vector<cv::Mat> lis;
 		cv::split(giAvatarRef, lis);
-		cv::split(giMatchResource.AvatarTemplate, lismod);
 
 		cv::Mat gray0;
 		cv::Mat gray1;
 		cv::Mat gray2;
-		cv::Mat gray3;
+
 		cv::threshold(lis[0], gray0, 240, 255, cv::THRESH_BINARY);
 		cv::threshold(lis[1], gray1, 212, 255, cv::THRESH_BINARY);
 		cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
-		cv::threshold(lis[3], gray3, 230, 255, cv::THRESH_BINARY);
-
-		cv::Mat gray0m;
-		cv::Mat gray1m;
-		cv::Mat gray2m;
-		cv::Mat gray3m;
-		cv::threshold(lismod[0], gray0m, 240, 255, cv::THRESH_BINARY);
-		cv::threshold(lismod[1], gray1m, 212, 255, cv::THRESH_BINARY);
-		cv::threshold(lismod[2], gray2m, 25, 255, cv::THRESH_BINARY_INV);
-		cv::threshold(lismod[3], gray3m, 230, 255, cv::THRESH_BINARY);
 
 		cv::Mat and12;
-		cv::Mat and13;
-		cv::Mat and132;
-
 		cv::bitwise_and(gray1, gray2, and12, gray0);
-		cv::bitwise_and(gray1, gray3, and13, gray0);
-		cv::bitwise_xor(gray1, gray3, and132,gray0);
-
-		cv::Mat and12m;
-		cv::Mat and13m;
-		cv::Mat and132m;
-
-		cv::bitwise_and(gray1m, gray2m, and12m, gray0m);
-		cv::bitwise_and(gray1m, gray3m, and13m, gray0m);
-		cv::bitwise_xor(gray1m, gray3m, and132m, gray0m);
-
 		cv::resize(and12, and12, cv::Size(), 1.2, 1.2,3);
-		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 23, cv::Scalar(255, 255, 255),-1);
-		cv::circle(gray1, cv::Point(cvRound(gray1.cols / 2), cvRound(gray1.rows / 2)), 2, cv::Scalar(128, 128, 128));
-
-		cv::namedWindow("test3", cv::WINDOW_FREERATIO);
-		cv::imshow("test3", gray1);
-
 		cv::Canny(and12, and12, 20, 3*20, 3);
-
-
-
-//#define mod1
-#ifndef mod1
-		cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0),-1);
-		//cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 2, cv::Scalar(255, 255, 255));
-		
+		cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0), -1);
 		cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 		cv::dilate(and12, and12, dilate_element);
 		cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 		cv::erode(and12, and12, erode_element);
-
 		cv::Mat dstImage(and12.size(), CV_8UC3, cv::Scalar(128, 128, 128));
-
-
 		std::vector<std::vector<cv::Point>> contours;
 		std::vector<cv::Vec4i> hierarcy;
 		cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
@@ -719,10 +678,12 @@ void AutoTrack::testLocalImg(std::string path)
 			error_code = 9;
 			return;
 		}
+
 		for (int i = 0; i < contours.size(); i++)
 		{
 			box[i] = cv::minAreaRect(cv::Mat(contours[i]));  //计算每个轮廓最小外接矩形
 			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+#ifdef _DEBUG
 			cv::circle(dstImage, cv::Point(box[i].center.x, box[i].center.y), 5, cv::Scalar(0, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
 			box[i].points(rect);  //把最小外接矩形四个端点复制给rect数组
 			cv::rectangle(dstImage, cv::Point(boundRect[i].x, boundRect[i].y), cv::Point(boundRect[i].x + boundRect[i].width, boundRect[i].y + boundRect[i].height), cv::Scalar(0, 255, 0), 2, 8);
@@ -730,17 +691,27 @@ void AutoTrack::testLocalImg(std::string path)
 			{
 				line(dstImage, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 2, 8);  //绘制最小外接矩形每条边
 			}
-			AvatarKeyPoint.push_back( cv::Point(cvRound(boundRect[i].x + boundRect[i].width/2), cvRound(boundRect[i].y + boundRect[i].height/2)));
+#endif
+			AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
 
 		}
+//#define mod1
+#ifndef mod1
+
+
+
+
+
+
+		
 		
 		double AvatarKeyPointLine[3] = { 0 };
 		cv::Point KeyLine;
 		if (AvatarKeyPoint.size() == 3)
 		{
-			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
 
 			//ab
 			//bc
@@ -759,8 +730,8 @@ void AutoTrack::testLocalImg(std::string path)
 				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 				{
 					//a>b>c
-					keyMode = 1;
-					KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+					keyMode = 3;
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
 				}
 				else
 				{
@@ -768,14 +739,14 @@ void AutoTrack::testLocalImg(std::string path)
 					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
 					{
 						//a>c>b
-						keyMode = 3;
-						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+						keyMode = 2;
+						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
 					}
 					else
 					{
 						//c>a>b
-						keyMode = 3;
-						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
+						keyMode = 2;
+						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
 					}
 				}
 			}
@@ -788,21 +759,21 @@ void AutoTrack::testLocalImg(std::string path)
 					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
 					{
 						//b>a>c
-						keyMode = 1;
-						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
+						keyMode = 3;
+						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
 					}
 					else
 					{
 						//b>c>a
-						keyMode = 2;
-						KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+						keyMode = 1;
+						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
 					}
 				}
 				else
 				{
 					//c>b>a
-					keyMode = 2;
-					KeyLine = AvatarKeyPoint[0] - AvatarKeyPoint[2];
+					keyMode = 1;
+					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[1];
 				}
 			}
 			switch (keyMode)
@@ -854,7 +825,8 @@ void AutoTrack::testLocalImg(std::string path)
 				break;
 			}
 			}
-			double angle = Line2Angle(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			cv::circle(dstImage, KeyLine+cv::Point(50,50), 2, cv::Scalar(255, 255, 0), -1, 8);  //绘制最小外接矩形的中心点
+			double angle = Line2Angle(KeyLine);
 			std::cout <<"angle point 3: "<< angle << std::endl;
 		}
 		else if (AvatarKeyPoint.size() == 2)
