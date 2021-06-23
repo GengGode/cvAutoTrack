@@ -161,6 +161,7 @@ int getMinID(double lis[], int len)
 	}
 	return maxId;
 }
+
 std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis)
 {
 	double length = 1;
@@ -172,6 +173,7 @@ std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis)
 	}
 	return res;
 }
+
 double Line2Angle(cv::Point2f p) 
 {
 	const double rad2degScale = 180/CV_PI ;

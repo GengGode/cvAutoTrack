@@ -705,86 +705,20 @@ void AutoTrack::testLocalImg(std::string path)
 			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
 			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
 
-			int keyMode = -1;
-			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1])
-			{
-				//a>b
-				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
-				{
-					//a>b>c
-					keyMode = 2;
-					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
-				}
-				else
-				{
-					//a>b,b<c
-					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
-					{
-						//a>c>b
-						keyMode = 1;
-						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
-					}
-					else
-					{
-						//c>a>b
-						keyMode = 1;
-						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[0];
-					}
-				}
-			}
-			else
-			{
-				//b>a
-				if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
-				{
-					//b>a,b>c
-					if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2])
-					{
-						//b>a>c
-						keyMode = 2;
-						KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[0];
-					}
-					else
-					{
-						//b>c>a
-						keyMode = 0;
-						KeyLine = AvatarKeyPoint[2] - AvatarKeyPoint[1];
-					}
-				}
-				else
-				{
-					//c>b>a
-					keyMode = 0;
-					KeyLine = AvatarKeyPoint[1] - AvatarKeyPoint[1];
-				}
-			}
-
-			
-
-			switch (keyMode)
-			{
-			case -1:
-			{
-				break;
-			}
-			case 0:
-			{
-				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
-				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-				break;
-			}
-			case 1:
-			{
-				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
-				break;
-			}
-			case 2:
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 			{
 				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
 				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-				break;
 			}
+			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
+			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
+			}
+			if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
+			{
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
 			}
 
 			AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);

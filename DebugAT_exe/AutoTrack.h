@@ -34,13 +34,10 @@ private:
 private:
 	int minHessian = 400;
 	float ratio_thresh = 0.66f;
-
-
 	float mapScale = 1.3f;//1.3;
-
-
 	int someSizeR = 106;
 	float MatchMatScale = 2.0;
+
 private:
 	//cv::Ptr<cv::xfeatures2d::SURF>
 	void* _detectorAllMap = nullptr;
@@ -82,6 +79,7 @@ private:
 	void getMiniMapRefMat();
 	void getUIDRefMat();
 	void getAvatarRefMat();
+
 private:
 	double screen_scale = 1;
 	void getScreenScale();
@@ -89,9 +87,9 @@ private:
 #ifdef _DEBUG
 
 public:
-
 	void testLocalImg(std::string path);
 	void testSaveGiScreen(std::string path);
 	void sleep(int s);
+
 #endif
 };
