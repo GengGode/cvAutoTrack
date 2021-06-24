@@ -1,4 +1,4 @@
-version: '3.1.{build}'
+version: '4.0.{build}'
 os: Visual Studio 2017
 configuration: Release
 platform:
@@ -47,11 +47,11 @@ after_build:
   
 deploy:
     - provider: GitHub
-      description: 'weekly build cvautotrack' 
+      description: '4.0 Updata Api' 
       auth_token:
          secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
-      tag: 3.1-AutoBuild-%TIME_STRING%
+      tag: 4.0-AutoTrack-%TIME_STRING%
       force_update: true
       on:  
         APPVEYOR_REPO_TAG: false
