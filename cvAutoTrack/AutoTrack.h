@@ -17,7 +17,10 @@ public:
 	~AutoTrack(void);
 
 	bool init();
+	bool SetHandle(long long int handle);
 	bool GetTransform(float &x, float &y, float &a);
+	bool GetPosition(double &x, double &y);
+	bool GetDirection(double &a);
 	bool GetUID(int &uid);
 	int GetLastError();
 	bool uninit();
@@ -58,6 +61,7 @@ private:
 private:
 	bool isContinuity = false;
 	cv::Point2f _TransformHistory[3];
+	bool is_Auto_getHandle = true;
 
 private:
 	HWND giHandle;

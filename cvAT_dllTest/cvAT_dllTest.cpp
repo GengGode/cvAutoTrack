@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cvAutoTrack.h>
 
+#include <Windows.h>
 
 int main()
 {
@@ -14,6 +15,9 @@ int main()
 	float x = 0;
 	float y = 0;
 	float a = 0;
+	double x2 = 0;
+	double y2 = 0;
+	double a2 = 0;
 	int uid = 0;
 	// 调用循环
 	while (1)
@@ -27,6 +31,22 @@ int main()
 		{
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
+		if (GetPosition(x2, y2))
+		{
+			std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
+		if (GetDirection(a2))
+		{
+			std::cout << "Now Angle: " << " " << a2 << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
 		if (GetUID(uid))
 		{
 			std::cout << "Now UID: " << " " << uid << " " << "\n";
@@ -35,6 +55,8 @@ int main()
 		{
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
+
+		Sleep(1);
 	}
 }
 
