@@ -102,9 +102,16 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	// 判断原神窗口不存在直接返回false，不对参数做任何修改
 	if (getGengshinImpactWnd())
 	{
-		getGengshinImpactRect();
-		getGengshinImpactScreen();
-
+		if (!getGengshinImpactRect())
+		{
+			error_code = error_code;
+			return false;
+		}
+		if (getGengshinImpactScreen())
+		{
+			error_code = error_code;
+			return false;
+		}
 
 		if (!giFrame.empty())
 		{
@@ -350,8 +357,16 @@ bool AutoTrack::GetDirection(double & a)
 	// 判断原神窗口不存在直接返回false，不对参数做任何修改
 	if (getGengshinImpactWnd())
 	{
-		getGengshinImpactRect();
-		getGengshinImpactScreen();
+		if (!getGengshinImpactRect())
+		{
+			error_code = error_code;
+			return false;
+		}
+		if (getGengshinImpactScreen())
+		{
+			error_code = error_code;
+			return false;
+		}
 
 		if (!giFrame.empty())
 		{
@@ -486,8 +501,16 @@ bool AutoTrack::GetUID(int &uid)
 	// 判断原神窗口不存在直接返回false，不对参数做任何修改
 	if (getGengshinImpactWnd())
 	{
-		getGengshinImpactRect();
-		getGengshinImpactScreen();
+		if (!getGengshinImpactRect())
+		{
+			error_code = error_code;
+			return false;
+		}
+		if (getGengshinImpactScreen())
+		{
+			error_code = error_code;
+			return false;
+		}
 
 		if (!giFrame.empty())
 		{
@@ -633,15 +656,17 @@ bool AutoTrack::getGengshinImpactWnd()
 	return (giHandle != NULL ? true : false);
 }
 
-void AutoTrack::getGengshinImpactRect()
+bool AutoTrack::getGengshinImpactRect()
 {
 	if (!GetWindowRect(giHandle, &giRect))
 	{
 		error_code = 12;//窗口句柄失效
+		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
 		error_code = 12;//窗口句柄失效
+		return false;
 	}
 
 	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
@@ -655,9 +680,10 @@ void AutoTrack::getGengshinImpactRect()
 	std::cout << "GI Windows Scale: " << screen_scale << std::endl;
 #endif
 
+	return true;
 }
 
-void AutoTrack::getGengshinImpactScreen()
+bool AutoTrack::getGengshinImpactScreen()
 {
 	static HBITMAP	hBmp;
 	BITMAP bmp;
@@ -666,11 +692,13 @@ void AutoTrack::getGengshinImpactScreen()
 
 	if (giHandle == NULL) 
 	{ 
-		return; 
+		error_code = 12;//窗口句柄失效
+		return false; 
 	}
 	if (!IsWindow(giHandle))
 	{
-		return;
+		error_code = 12;//窗口句柄失效
+		return false;
 	}
 	//获取目标句柄的窗口大小RECT
 	GetWindowRect(giHandle, &giRect);/* 对原神窗口的操作 */
@@ -708,6 +736,8 @@ void AutoTrack::getGengshinImpactScreen()
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
 	
 	getScreenScale();
+
+	return true;
 }
 
 void AutoTrack::getPaimonRefMat()
@@ -803,84 +833,4 @@ void AutoTrack::getScreenScale()
 
 	double horzScale = ((double)cxPhysical / (double)cxLogical);
 	screen_scale = horzScale;
-}
-
-double AutoTrack::getAvatarAngle()
-{
-	cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
-	std::vector<cv::Mat> lis;
-	cv::split(giAvatarRef, lis);
-
-	cv::Mat gray0;
-	cv::Mat gray1;
-	cv::Mat gray2;
-
-	cv::threshold(lis[0], gray0, 240, 255, cv::THRESH_BINARY);
-	cv::threshold(lis[1], gray1, 212, 255, cv::THRESH_BINARY);
-	cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
-
-	cv::Mat and12;
-	cv::bitwise_and(gray1, gray2, and12, gray0);
-	cv::resize(and12, and12, cv::Size(), 1.2, 1.2, 3);
-	cv::Canny(and12, and12, 20, 3 * 20, 3);
-	cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0), -1);
-	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-	cv::dilate(and12, and12, dilate_element);
-	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-	cv::erode(and12, and12, erode_element);
-
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Vec4i> hierarcy;
-
-	cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-
-	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
-	//std::vector<cv::RotatedRect> box(contours.size()); //定义最小外接矩形集合
-	cv::Point2f rect[4];
-
-	std::vector<cv::Point2d> AvatarKeyPoint;
-	double AvatarKeyPointLine[3] = { 0 };
-	std::vector<cv::Point2f> AvatarKeyLine;
-	cv::Point2f KeyLine;
-
-	if (contours.size() != 3)
-	{
-		error_code = 9;//提取小箭头特征误差过大
-		return 0;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		//box[i] = cv::minAreaRect(cv::Mat(contours[i]));  //计算每个轮廓最小外接矩形
-		boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
-	}
-
-	AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-	AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-	AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-
-
-
-	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-	}
-	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
-	}
-	if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-	}
-
-	AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
-	KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
-	double angle = Line2Angle(KeyLine);
-
-	return angle;
 }

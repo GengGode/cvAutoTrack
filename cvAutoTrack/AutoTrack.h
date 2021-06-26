@@ -76,8 +76,8 @@ private:
 
 private:
 	bool getGengshinImpactWnd();
-	void getGengshinImpactRect();
-	void getGengshinImpactScreen();
+	bool getGengshinImpactRect();
+	bool getGengshinImpactScreen();
 	void getPaimonRefMat();
 	void getMiniMapRefMat();
 	void getUIDRefMat();
@@ -86,5 +86,4 @@ private:
 private:
 	double screen_scale = 1;
 	void getScreenScale();
-	double getAvatarAngle();
 };
