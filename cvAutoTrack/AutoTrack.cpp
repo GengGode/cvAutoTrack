@@ -80,7 +80,7 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 	bool DirectionState= GetDirection(a2);
 	if (!is_init_end)
 	{
-		init();//³õÊ¼»¯
+		init();//åˆå§‹åŒ–
 	}
 	if (DirectionState && PositionState)
 	{
@@ -96,10 +96,10 @@ bool AutoTrack::GetPosition(double & x, double & y)
 {
 	if (!is_init_end)
 	{
-		error_code = 1;//Î´³õÊ¼»¯
+		error_code = 1;//æœªåˆå§‹åŒ–
 		return false;
 	}
-	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
+	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
 	if (getGengshinImpactWnd())
 	{
 		if (!getGengshinImpactRect())
@@ -157,7 +157,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (good_matchesPaimonTmp.size() < 7)
 			{
-				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
 				return false;
 			}
 #endif // Mode2
@@ -185,7 +185,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (maxVal < 0.36 || maxVal == 1)
 			{
-				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
 				return false;
 			}
 #endif
@@ -199,7 +199,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (img_object.empty())
 			{
-				error_code = 5;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
+				error_code = 5;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
 				return false;
 			}
 
@@ -246,14 +246,14 @@ bool AutoTrack::GetPosition(double & x, double & y)
 								good_matchesTmp.push_back(KNN_mTmp[i][0]);
 								try
 								{
-									// ÕâÀïÓĞ¸öbug»Ø¿¨½øÀ´£¬½øÈë¸±±¾»òÕßÇĞ»»·Å´óÕĞÊ±Å¼¶û´¥·¢
+									// è¿™é‡Œæœ‰ä¸ªbugå›å¡è¿›æ¥ï¼Œè¿›å…¥å‰¯æœ¬æˆ–è€…åˆ‡æ¢æ”¾å¤§æ‹›æ—¶å¶å°”è§¦å‘
 									lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
 									lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 
 								}
 								catch (...)
 								{
-									error_code = 7;//ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç£¬ÊÇ¸öbug
+									error_code = 7;//ç‰¹å¾ç‚¹æ•°ç»„è®¿é—®è¶Šç•Œï¼Œæ˜¯ä¸ªbug
 									return false;
 								}
 								sumx += lisx.back();
@@ -274,8 +274,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 						}
 						else
 						{
-							double meanx = sumx / lisx.size(); //¾ùÖµ
-							double meany = sumy / lisy.size(); //¾ùÖµ
+							double meanx = sumx / lisx.size(); //å‡å€¼
+							double meany = sumy / lisy.size(); //å‡å€¼
 							cv::Point2f p = SPC(lisx, sumx, lisy, sumy);
 
 							float x = (float)meanx;
@@ -320,7 +320,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 				}
 				if (lisx.size() == 0 || lisy.size() == 0)
 				{
-					error_code = 4;//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
+					error_code = 4;//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
 					return false;
 				}
 				else
@@ -341,20 +341,20 @@ bool AutoTrack::GetPosition(double & x, double & y)
 		}
 		else
 		{
-			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
+		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
 		return false;
 	}
 }
 
 bool AutoTrack::GetDirection(double & a)
 {
-	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
+	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
 	if (getGengshinImpactWnd())
 	{
 		if (!getGengshinImpactRect())
@@ -388,7 +388,7 @@ bool AutoTrack::GetDirection(double & a)
 
 			if (maxVal < 0.36 || maxVal == 1)
 			{
-				error_code = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+				error_code = 6;//æœªèƒ½åŒ¹é…åˆ°æ´¾è’™
 				return false;
 			}
 
@@ -396,7 +396,7 @@ bool AutoTrack::GetDirection(double & a)
 
 			if (giMiniMapRef.empty())
 			{
-				error_code = 5;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
+				error_code = 5;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
 				return false;
 			}
 
@@ -404,7 +404,7 @@ bool AutoTrack::GetDirection(double & a)
 
 			if (giAvatarRef.empty())
 			{
-				error_code = 11;//Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò
+				error_code = 11;//æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ
 				return false;
 			}
 
@@ -435,7 +435,7 @@ bool AutoTrack::GetDirection(double & a)
 
 			cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 
-			std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+			std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
 			cv::Point2f rect[4];
 
 			std::vector<cv::Point2d> AvatarKeyPoint;
@@ -445,7 +445,7 @@ bool AutoTrack::GetDirection(double & a)
 
 			if (contours.size() != 3)
 			{
-				error_code = 9;//ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó
+				error_code = 9;//æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§
 				return false;
 			}
 
@@ -485,20 +485,20 @@ bool AutoTrack::GetDirection(double & a)
 		}
 		else
 		{
-			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
+		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
 		return false;
 	}
 }
 
 bool AutoTrack::GetUID(int &uid)
 {
-	// ÅĞ¶ÏÔ­Éñ´°¿Ú²»´æÔÚÖ±½Ó·µ»Øfalse£¬²»¶Ô²ÎÊı×öÈÎºÎĞŞ¸Ä
+	// åˆ¤æ–­åŸç¥çª—å£ä¸å­˜åœ¨ç›´æ¥è¿”å›falseï¼Œä¸å¯¹å‚æ•°åšä»»ä½•ä¿®æ”¹
 	if (getGengshinImpactWnd())
 	{
 		if (!getGengshinImpactRect())
@@ -538,7 +538,7 @@ bool AutoTrack::GetUID(int &uid)
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
-			//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+			//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 			if (maxVal > 0.75)
 			{
@@ -564,7 +564,7 @@ bool AutoTrack::GetUID(int &uid)
 
 						double minVali, maxVali;
 						cv::Point minLoci, maxLoci;
-						//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+						//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 
 						tmplis[i] = maxVali;
@@ -591,7 +591,7 @@ bool AutoTrack::GetUID(int &uid)
 			}
 			if (_uid == 0)
 			{
-				error_code = 8;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
+				error_code = 8;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
 				return false;
 			}
 			uid = _uid;
@@ -600,13 +600,13 @@ bool AutoTrack::GetUID(int &uid)
 		}
 		else
 		{
-			error_code = 3;//´°¿Ú»­ÃæÎª¿Õ
+			error_code = 3;//çª—å£ç”»é¢ä¸ºç©º
 			return false;
 		}
 	}
 	else
 	{
-		error_code = 2;//Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú
+		error_code = 2;//æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„
 		return false;
 	}
 }
@@ -620,23 +620,24 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCSTR giWindowName = "";
-		/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
-		giWindowName = "Ô­Éñ";
-		giHandle = FindWindowA("UnityWndClass", giWindowName);
+		LPCWSTR giWindowName = L"";
+		/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
+		giWindowName = L"åŸç¥";
+		giHandle = FindWindowW(L"UnityWndClass",giWindowName);
 		if (giHandle == NULL) {
-			giWindowName = "Genshin Impact";
-			giHandle = FindWindowA("UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£ºÔ­Éñ */
+			giWindowName = L"Genshin Impact";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼šåŸç¥ */
 		}
 		if (giHandle == NULL) {
-			giWindowName = "??";
-			giHandle = FindWindowA("UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£º?? */
+			giWindowName = L"ì›ì‹ ";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼šì›ì‹  */
 		}
 		if (giHandle == NULL) {
-			giWindowName = "";
+			error_code = 10; //æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨
+			return false;
 		}
 #ifdef _DEBUG
-		std::cout << "GI Ô­Éñ Window Name Find is " << giWindowName << std::endl;
+		std::cout << "GI åŸç¥ Genshin Impact ì›ì‹  Window Name Find is " << giWindowName << std::endl;
 		std::cout << "GI Window Handle Find is " << giHandle << std::endl;
 #endif
 	}
@@ -648,7 +649,7 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		else
 		{
-			error_code = 10; //ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ
+			error_code = 10; //æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨
 			return false;
 		}
 	}
@@ -660,12 +661,12 @@ bool AutoTrack::getGengshinImpactRect()
 {
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		error_code = 12;//´°¿Ú¾ä±úÊ§Ğ§
+		error_code = 12;//çª—å£å¥æŸ„å¤±æ•ˆ
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		error_code = 12;//´°¿Ú¾ä±úÊ§Ğ§
+		error_code = 12;//çª—å£å¥æŸ„å¤±æ•ˆ
 		return false;
 	}
 
@@ -692,43 +693,43 @@ bool AutoTrack::getGengshinImpactScreen()
 
 	if (giHandle == NULL) 
 	{ 
-		error_code = 12;//´°¿Ú¾ä±úÊ§Ğ§
+		error_code = 12;//çª—å£å¥æŸ„å¤±æ•ˆ
 		return false; 
 	}
 	if (!IsWindow(giHandle))
 	{
-		error_code = 12;//´°¿Ú¾ä±úÊ§Ğ§
+		error_code = 12;//çª—å£å¥æŸ„å¤±æ•ˆ
 		return false;
 	}
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ´°¿Ú´óĞ¡RECT
-	GetWindowRect(giHandle, &giRect);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„çª—å£å¤§å°RECT
+	GetWindowRect(giHandle, &giRect);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄDC
-	HDC hScreen = GetDC(giHandle);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„DC
+	HDC hScreen = GetDC(giHandle);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 	HDC hCompDC = CreateCompatibleDC(hScreen);
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ¿í¶ÈºÍ¸ß¶È
+	//è·å–ç›®æ ‡å¥æŸ„çš„å®½åº¦å’Œé«˜åº¦
 	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
 	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
 
-	//´´½¨Bitmap¶ÔÏó
-	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//µÃµ½Î»Í¼
+	//åˆ›å»ºBitmapå¯¹è±¡
+	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//å¾—åˆ°ä½å›¾
 
-	SelectObject(hCompDC, hBmp); //²»Ğ´¾ÍÈ«ºÚ
+	SelectObject(hCompDC, hBmp); //ä¸å†™å°±å…¨é»‘
 	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
 
-	//ÊÍ·Å¶ÔÏó
+	//é‡Šæ”¾å¯¹è±¡
 	DeleteDC(hScreen);
 	DeleteDC(hCompDC);
 
-	//ÀàĞÍ×ª»»
-	//ÕâÀï»ñÈ¡Î»Í¼µÄ´óĞ¡ĞÅÏ¢,ÊÂÊµÉÏÒ²ÊÇ¼æÈİDC»æÍ¼Êä³öµÄ·¶Î§
+	//ç±»å‹è½¬æ¢
+	//è¿™é‡Œè·å–ä½å›¾çš„å¤§å°ä¿¡æ¯,äº‹å®ä¸Šä¹Ÿæ˜¯å…¼å®¹DCç»˜å›¾è¾“å‡ºçš„èŒƒå›´
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
 
-	//mat²Ù×÷
+	//matæ“ä½œ
 	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
 
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
@@ -816,14 +817,14 @@ void AutoTrack::getScreenScale()
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
-	// »ñÈ¡¼àÊÓÆ÷Âß¼­¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨é€»è¾‘å®½åº¦ä¸é«˜åº¦
 	MONITORINFOEX miex;
 	miex.cbSize = sizeof(miex);
 	GetMonitorInfo(hMonitor, &miex);
 	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
 	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
 
-	// »ñÈ¡¼àÊÓÆ÷ÎïÀí¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨ç‰©ç†å®½åº¦ä¸é«˜åº¦
 	DEVMODE dm;
 	dm.dmSize = sizeof(dm);
 	dm.dmDriverExtra = 0;
