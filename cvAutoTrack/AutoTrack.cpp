@@ -718,6 +718,9 @@ bool AutoTrack::getGengshinImpactScreen()
 	//获取目标句柄的窗口大小RECT
 	GetWindowRect(giHandle, &giRect);/* 对原神窗口的操作 */
 
+	//获取屏幕缩放比例
+	getScreenScale();
+
 	//获取目标句柄的DC
 	HDC hScreen = GetDC(giHandle);/* 对原神窗口的操作 */
 	HDC hCompDC = CreateCompatibleDC(hScreen);
@@ -749,8 +752,6 @@ bool AutoTrack::getGengshinImpactScreen()
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
-	
-	getScreenScale();
 
 	return true;
 }
