@@ -636,12 +636,12 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = L"\x539F\x795E";
+			giWindowName = L"\u539F\u795E";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = L"\xC6D0\xC2E0";
+			giWindowName = L"\uC6D0\uC2E0";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << L"原神" <<" "<< L"原神" << std::endl;
