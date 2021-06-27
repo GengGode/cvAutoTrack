@@ -17,45 +17,45 @@ BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 LoadGiMatchResource::LoadGiMatchResource()
 {
 	HBITMAP gHmp;
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP1));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP1));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile"; 
 	HBitmap2Mat(gHmp, PaimonTemplate);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP2));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP2));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, MapTemplate);
 
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID_));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID_));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UID);
 
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID0));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID0));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[0]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID1));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID1));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[1]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID2));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID2));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[2]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID3));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID3));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[3]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID4));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID4));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[4]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID5));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID5));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[5]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID6));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID6));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[6]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID7));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID7));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[7]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID8));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID8));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[8]);
-	gHmp = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID9));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID9));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[9]);
 

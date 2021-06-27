@@ -107,7 +107,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			error_code = error_code;
 			return false;
 		}
-		if (getGengshinImpactScreen())
+		if (!getGengshinImpactScreen())
 		{
 			error_code = error_code;
 			return false;
@@ -362,7 +362,7 @@ bool AutoTrack::GetDirection(double & a)
 			error_code = error_code;
 			return false;
 		}
-		if (getGengshinImpactScreen())
+		if (!getGengshinImpactScreen())
 		{
 			error_code = error_code;
 			return false;
@@ -506,7 +506,7 @@ bool AutoTrack::GetUID(int &uid)
 			error_code = error_code;
 			return false;
 		}
-		if (getGengshinImpactScreen())
+		if (!getGengshinImpactScreen())
 		{
 			error_code = error_code;
 			return false;
@@ -620,26 +620,40 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCWSTR giWindowName = L"";
+		LPCWSTR giWindowName = { L"原神" };
 		/* 对原神窗口的操作 */
-		giWindowName = L"原神";
-		giHandle = FindWindowW(L"UnityWndClass",giWindowName);
-		if (giHandle == NULL) {
+		giWindowName =  L"原神";
+		giHandle = FindWindowW(L"UnityWndClass", giWindowName);
+		if (giHandle == NULL) 
+		{
 			giWindowName = L"Genshin Impact";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
-		if (giHandle == NULL) {
+		if (giHandle == NULL)
+		{
 			giWindowName = L"원신";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
-		if (giHandle == NULL) {
+		if (giHandle == NULL)
+		{
+			giWindowName = L"\x539F\x795E";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+		}
+		if (giHandle == NULL)
+		{
+			giWindowName = L"\xC6D0\xC2E0";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
+		}
+		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << L"原神" <<" "<< L"原神" << std::endl;
+#ifdef _DEBUG
+		std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << giWindowName << std::endl;
+		std::cout << "GI 原神 Genshin Impact 원신 Window Handle Find is " << giHandle << std::endl;
+#endif
+		if (giHandle == NULL)
+		{
 			error_code = 10; //无效句柄或指定句柄所指向窗口不存在
 			return false;
 		}
-#ifdef _DEBUG
-		std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << giWindowName << std::endl;
-		std::cout << "GI Window Handle Find is " << giHandle << std::endl;
-#endif
 	}
 	else
 	{
