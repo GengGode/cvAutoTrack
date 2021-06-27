@@ -39,7 +39,7 @@ after_build:
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
 
     - 7z a cvautotrack-$(APPVEYOR_BUILD_VERSION).7z %MyProjectDir%x64\build\*
-    - appveyor PushArtifact cvautotrack-%TIME_STRING%.7z
+    - appveyor PushArtifact cvAutoTrack-$(APPVEYOR_BUILD_VERSION).7z
     
 #artifacts:
     #- path: build/Release
