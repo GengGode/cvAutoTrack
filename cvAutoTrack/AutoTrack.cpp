@@ -171,7 +171,17 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 #ifdef Mode1
 
-			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+			std::vector<cv::Mat> lisT,lisR;
+			cv::split(paimonTemplate, lisT);
+			cv::split(giPaimonRef, lisR);
+
+			cv::Mat Template,Ref;
+			cv::cvtColor(paimonTemplate, Template, cv::COLOR_RGBA2GRAY);
+			cv::cvtColor(giPaimonRef, Ref, cv::COLOR_RGBA2GRAY);
+
+			//cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+			//cv::matchTemplate(Template, Ref, tmp, cv::TM_CCOEFF_NORMED);
+			cv::matchTemplate(lisT[3], lisR[3], tmp, cv::TM_CCOEFF_NORMED);
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
@@ -684,11 +694,15 @@ bool AutoTrack::getGengshinImpactRect()
 		return false;
 	}
 
+	//获取屏幕缩放比例
+	getScreenScale();
+
 	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
 	int y_offset = GetSystemMetrics(SM_CYDLGFRAME) + GetSystemMetrics(SM_CYCAPTION);
 
 	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));// -x_offset;
 	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));// -y_offset;
+
 
 #ifdef _DEBUG
 	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
@@ -717,9 +731,6 @@ bool AutoTrack::getGengshinImpactScreen()
 	}
 	//获取目标句柄的窗口大小RECT
 	GetWindowRect(giHandle, &giRect);/* 对原神窗口的操作 */
-
-	//获取屏幕缩放比例
-	getScreenScale();
 
 	//获取目标句柄的DC
 	HDC hScreen = GetDC(giHandle);/* 对原神窗口的操作 */
@@ -829,6 +840,9 @@ void AutoTrack::getAvatarRefMat()
 }
 void AutoTrack::getScreenScale()
 {
+#ifdef _DEBUG
+	std::cout << "-> getScreenScale()" << std::endl;
+#endif
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
