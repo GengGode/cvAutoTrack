@@ -697,11 +697,8 @@ bool AutoTrack::getGengshinImpactRect()
 	//获取屏幕缩放比例
 	getScreenScale();
 
-	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
-	int y_offset = GetSystemMetrics(SM_CYDLGFRAME) + GetSystemMetrics(SM_CYCAPTION);
-
-	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));// -x_offset;
-	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));// -y_offset;
+	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));
+	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));
 
 
 #ifdef _DEBUG
