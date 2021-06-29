@@ -38,8 +38,10 @@ after_build:
     - mkdir %MyProjectDir%x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
 
-    - 7z a cvautotrack-$(APPVEYOR_BUILD_VERSION).7z %MyProjectDir%x64\build\*
-    - appveyor PushArtifact cvAutoTrack-$(APPVEYOR_BUILD_VERSION).7z
+    - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
+    - echo $(APPVEYOR_BUILD_VERSION) >version.tag
+    - appveyor PushArtifact version.tag
+    - appveyor PushArtifact cvAutoTrack.7z
     
 #artifacts:
     #- path: build/Release
@@ -51,7 +53,7 @@ deploy:
       auth_token:
          secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
-      tag: $(APPVEYOR_BUILD_VERSION)-AutoTrack-%TIME_STRING%
+      tag: $(APPVEYOR_BUILD_VERSION)
       force_update: true
       on:  
         APPVEYOR_REPO_TAG: false
