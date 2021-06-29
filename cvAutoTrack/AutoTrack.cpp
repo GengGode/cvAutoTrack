@@ -432,9 +432,9 @@ bool AutoTrack::GetDirection(double & a)
 
 			cv::Mat and12;
 			cv::bitwise_and(gray1, gray2, and12, gray0);
-			cv::resize(and12, and12, cv::Size(), 1.2, 1.2, 3);
+			cv::resize(and12, and12, cv::Size(), 2, 2, 3);
 			cv::Canny(and12, and12, 20, 3 * 20, 3);
-			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0), -1);
+			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), cvCeil(and12.cols / 4.5), cv::Scalar(0, 0, 0), -1);
 			cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 			cv::dilate(and12, and12, dilate_element);
 			cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
@@ -784,10 +784,10 @@ void AutoTrack::getPaimonRefMat()
 
 void AutoTrack::getMiniMapRefMat()
 {
-	int MiniMap_Rect_x = cvCeil(giFrame.cols*0.032);
-	int MiniMap_Rect_y = cvCeil(giFrame.cols*0.01);
-	int MiniMap_Rect_w = cvCeil(giFrame.cols*0.11);
-	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
+	int MiniMap_Rect_x = cvRound(giFrame.cols*0.033);
+	int MiniMap_Rect_y = cvRound(giFrame.cols*0.01);
+	int MiniMap_Rect_w = cvRound(giFrame.cols*0.11);
+	int MiniMap_Rect_h = cvRound(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
