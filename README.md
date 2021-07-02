@@ -44,19 +44,19 @@ cvAT_dllTest C++下调用dll的测试工程
 
 > `bool GetTransform(float &x, float &y, float &a);`
 
-获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
 
 > `bool GetPosition(double &x, double &y);`
 
-获取当前位置，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+获取当前位置，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（需要手动初始化）
 
 > `bool GetDirection(double &a);`
 
-获取当前角度，返回True为成功得到数据，返回False为未成功匹配到角度，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+获取当前角度，返回True为成功得到数据，返回False为未成功匹配到角度，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
 
 > `bool GetUID(int &uid);`
 
-获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要手动初始化）
 
 > `int GetLastErr();`
 
