@@ -68,7 +68,7 @@ cvAT_dllTest C++下调用dll的测试工程
 
 获取当前UID，返回True为成功得到UID，返回False为未成功获取UID。
 
-调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要手动初始化）
+调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
 
 > `int GetLastErr();`
 
