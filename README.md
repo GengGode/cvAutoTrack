@@ -36,27 +36,39 @@ cvAT_dllTest C++下调用dll的测试工程
 
 > `bool init();`
 
-初始化函数，初始化之后才能调用 GetPosition 函数。GetTransform 会自动调用初始化，不需要手动初始化。整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
+初始化函数，初始化之后才能调用 GetPosition 函数。GetTransform 会自动调用初始化，不需要手动初始化。
+
+整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
 
 > `bool SetHandle(long long int handle);`
 
-设置原神窗口句柄，当由于编码问题无法自动获得原神窗口句柄时，可以通过该函数手动设置原神窗口句柄。当传入0时则恢复自动获取模式。
+设置原神窗口句柄，当由于编码问题无法自动获得原神窗口句柄时，可以通过该函数手动设置原神窗口句柄。
+
+当传入0时则恢复自动获取模式。
 
 > `bool GetTransform(float &x, float &y, float &a);`
 
-获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
+获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置。
+
+调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
 
 > `bool GetPosition(double &x, double &y);`
 
-获取当前位置，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（需要手动初始化）
+获取当前位置，返回True为成功得到数据，返回False为未成功匹配到位置。
+
+调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（需要手动初始化）
 
 > `bool GetDirection(double &a);`
 
-获取当前角度，返回True为成功得到数据，返回False为未成功匹配到角度，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
+获取当前角度，返回True为成功得到数据，返回False为未成功匹配到角度。
+
+调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要初始化）
 
 > `bool GetUID(int &uid);`
 
-获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要手动初始化）
+获取当前UID，返回True为成功得到UID，返回False为未成功获取UID。
+
+调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。（不需要手动初始化）
 
 > `int GetLastErr();`
 
