@@ -76,20 +76,27 @@ bool AutoTrack::uninit()
 bool AutoTrack::GetTransform(float & x, float & y, float & a)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
-	bool PositionState = GetPosition(x2, y2);
-	bool DirectionState= GetDirection(a2);
 	if (!is_init_end)
 	{
 		init();//初始化
 	}
-	if (DirectionState && PositionState)
+
+	/*
+	分别判断是否成功获取，避免前一个error_code被后一个error_code覆盖
+	而导致本函数返回false（表示失败）但error_code为0（表示成功）。
+	*/
+	if (!GetPosition(x2, y2))
 	{
-		x = (float)x2;
-		y = (float)y2;
-		a = (float)a2;
-		return true;
+		return false;
 	}
-	return false;
+	if (!GetDirection(a2))
+	{
+		return false;
+	}
+	x = (float)x2;
+	y = (float)y2;
+	a = (float)a2;
+	return true;
 }
 
 bool AutoTrack::GetPosition(double & x, double & y)
