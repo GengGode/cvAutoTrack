@@ -8,9 +8,11 @@ branches:
     - master
 
 environment:
-  MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
-  OpenCvDir: C:\projects\opencv\
-  OpenCvUrl: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
+    MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+    OpenCvDir: C:\projects\opencv\
+    OpenCvUrl: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
+    ProjectName: cvAutoTrack
+    ProJectExeName: cvAutoTrack
 skip_tags: true
   
 install:
@@ -38,8 +40,9 @@ after_build:
     - mkdir %MyProjectDir%x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
 
-    - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
     - echo %APPVEYOR_BUILD_VERSION% >version.tag
+    - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
+
     - appveyor PushArtifact version.tag
     - appveyor PushArtifact cvAutoTrack.7z
     
@@ -49,7 +52,7 @@ after_build:
   
 deploy:
     - provider: GitHub
-      description: '$(APPVEYOR_BUILD_VERSION) Updata Dll' 
+      description: '$(APPVEYOR_PROJECT_SLUG): cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)' 
       auth_token:
          secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
@@ -63,8 +66,8 @@ notifications:
     to:
       - ysx20201030@163.com
       - aymb00@126.com
-    subject: '{{APPVEYOR_BUILD_VERSION}} Updata Dll'                  # optional
-    message: "{{APPVEYOR_BUILD_VERSION}}-AutoTrack-{{TIME_STRING}}"    # optional
+    subject: '{{status}}: {{projectName}} {{buildVersion}}'                  # optional
+    message: "Commit #{{commitId}} by {{commitAuthor}} on {{commitDate}}: {{commitMessage}}"    # optional
     on_build_success: true
     on_build_failure: false
     on_build_status_changed: false
