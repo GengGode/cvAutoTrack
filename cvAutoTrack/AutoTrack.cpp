@@ -76,20 +76,27 @@ bool AutoTrack::uninit()
 bool AutoTrack::GetTransform(float & x, float & y, float & a)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
-	bool PositionState = GetPosition(x2, y2);
-	bool DirectionState= GetDirection(a2);
 	if (!is_init_end)
 	{
 		init();//初始化
 	}
-	if (DirectionState && PositionState)
+
+	/*
+	分别判断是否成功获取，避免前一个error_code被后一个error_code覆盖
+	而导致本函数返回false（表示失败）但error_code为0（表示成功）。
+	*/
+	if (!GetPosition(x2, y2))
 	{
-		x = (float)x2;
-		y = (float)y2;
-		a = (float)a2;
-		return true;
+		return false;
 	}
-	return false;
+	if (!GetDirection(a2))
+	{
+		return false;
+	}
+	x = (float)x2;
+	y = (float)y2;
+	a = (float)a2;
+	return true;
 }
 
 bool AutoTrack::GetPosition(double & x, double & y)
@@ -171,7 +178,17 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 #ifdef Mode1
 
-			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+			std::vector<cv::Mat> lisT,lisR;
+			cv::split(paimonTemplate, lisT);
+			cv::split(giPaimonRef, lisR);
+
+			cv::Mat Template,Ref;
+			cv::cvtColor(paimonTemplate, Template, cv::COLOR_RGBA2GRAY);
+			cv::cvtColor(giPaimonRef, Ref, cv::COLOR_RGBA2GRAY);
+
+			//cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+			//cv::matchTemplate(Template, Ref, tmp, cv::TM_CCOEFF_NORMED);
+			cv::matchTemplate(lisT[3], lisR[3], tmp, cv::TM_CCOEFF_NORMED);
 
 			double minVal, maxVal;
 			cv::Point minLoc, maxLoc;
@@ -422,9 +439,9 @@ bool AutoTrack::GetDirection(double & a)
 
 			cv::Mat and12;
 			cv::bitwise_and(gray1, gray2, and12, gray0);
-			cv::resize(and12, and12, cv::Size(), 1.2, 1.2, 3);
+			cv::resize(and12, and12, cv::Size(), 2, 2, 3);
 			cv::Canny(and12, and12, 20, 3 * 20, 3);
-			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), 24, cv::Scalar(0, 0, 0), -1);
+			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), cvCeil(and12.cols / 4.5), cv::Scalar(0, 0, 0), -1);
 			cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 			cv::dilate(and12, and12, dilate_element);
 			cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
@@ -684,11 +701,12 @@ bool AutoTrack::getGengshinImpactRect()
 		return false;
 	}
 
-	int x_offset = GetSystemMetrics(SM_CXDLGFRAME);
-	int y_offset = GetSystemMetrics(SM_CYDLGFRAME) + GetSystemMetrics(SM_CYCAPTION);
+	//获取屏幕缩放比例
+	getScreenScale();
 
-	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));// -x_offset;
-	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));// -y_offset;
+	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));
+	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));
+
 
 #ifdef _DEBUG
 	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
@@ -749,8 +767,6 @@ bool AutoTrack::getGengshinImpactScreen()
 	GetBitmapBits(hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, giFrame.data);
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
-	
-	getScreenScale();
 
 	return true;
 }
@@ -775,10 +791,10 @@ void AutoTrack::getPaimonRefMat()
 
 void AutoTrack::getMiniMapRefMat()
 {
-	int MiniMap_Rect_x = cvCeil(giFrame.cols*0.032);
-	int MiniMap_Rect_y = cvCeil(giFrame.cols*0.01);
-	int MiniMap_Rect_w = cvCeil(giFrame.cols*0.11);
-	int MiniMap_Rect_h = cvCeil(giFrame.cols*0.11);
+	int MiniMap_Rect_x = cvRound(giFrame.cols*0.033);
+	int MiniMap_Rect_y = cvRound(giFrame.cols*0.01);
+	int MiniMap_Rect_w = cvRound(giFrame.cols*0.11);
+	int MiniMap_Rect_h = cvRound(giFrame.cols*0.11);
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
@@ -828,6 +844,9 @@ void AutoTrack::getAvatarRefMat()
 }
 void AutoTrack::getScreenScale()
 {
+#ifdef _DEBUG
+	std::cout << "-> getScreenScale()" << std::endl;
+#endif
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 

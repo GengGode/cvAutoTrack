@@ -1,5 +1,6 @@
 // cvAT_dllTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
+//#pragma execution_character_set("utf-8")
 
 #include <iostream>
 #include <cvAutoTrack.h>
@@ -8,6 +9,8 @@
 
 int main()
 {
+	system("chcp 65001");
+
 	// 静态方法调用
 	// 初始化
 	init();

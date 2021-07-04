@@ -4,8 +4,6 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-
-
 ## 使用
 
 编译文件下载链接：
@@ -18,20 +16,15 @@
 Windows 规定 64位进程/DLL 与 32位进程/DLL 不能相互调用（但可以相互通信），因而动态链接库的调用方也须是 **64位进程** 。
 
 
-
 ## 其它仓库位置
 
 - gitee：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
-
 
 
 ## 项目结构
 
 - **cvAutoTrack**，dll工程
 - **cvAT_dllTest**，C++下调用dll的测试工程
-
-
-
 
 
 # 函数手册
@@ -244,4 +237,3 @@ bool GetUID(
 ### 说明
 
 无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
-
