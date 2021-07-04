@@ -39,6 +39,12 @@
     <ClInclude Include="AutoTrack.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Base_SURF.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Base_Thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cvAutoTrack.cpp">
@@ -54,6 +60,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="AutoTrack.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_SURF.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Base_Thread.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

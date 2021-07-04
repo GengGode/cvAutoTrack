@@ -190,6 +190,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoTrack.h" />
+    <ClInclude Include="Base_SURF.h" />
+    <ClInclude Include="Base_Thread.h" />
     <ClInclude Include="cvAutoTrack.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
@@ -198,6 +200,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoTrack.cpp" />
+    <ClCompile Include="Base_SURF.cpp" />
+    <ClCompile Include="Base_Thread.cpp" />
     <ClCompile Include="cvAutoTrack.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="LoadGiMatchResource.cpp" />
