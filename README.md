@@ -1,79 +1,247 @@
-# GenshinImpact_AutoTrack_DLL
+# GenshinImpact AutoTrack DLL
 
-能够从原神中获取角色在地图上的位置，通过opencv的图像匹配算法。
+一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll)
+[![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-cvAutoTrack dll工程
 
-cvAT_dllTest C++下调用dll的测试工程
 
-| type | link |
-| --- | --- |
-| 国内访问 gitee | [https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll) |
+## 使用
 
-下载链接
+编译文件下载链接：
 
-国内 链接：https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ 提取码：e7zv 
+- 国内：https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ（提取码：e7zv）
+- 国外：https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
 
-国外 链接：https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
+目前只编译了 Windows x64 平台上的动态链接库（.dll），对于其它平台，如 Windows x86（.dll）或 Linux 平台（.so），需要下载源代码另行编译。
 
-# 接口
+Windows 规定 64位进程/DLL 与 32位进程/DLL 不能相互调用（但可以相互通信），因而动态链接库的调用方也须是 **64位进程** 。
 
+
+
+## 其它仓库位置
+
+- gitee：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
+
+
+
+## 项目结构
+
+- **cvAutoTrack**，dll工程
+- **cvAT_dllTest**，C++下调用dll的测试工程
+
+
+
+
+
+# 函数手册
+
+## init
+
+```C++
 bool init();
+```
 
-初始化函数，初始化之后才能调用 GetPosition 函数。GetTransform 会自动调用初始化，不需要手动初始化。整个过程大概会持续1-10s，内存占用峰值1GB，之后稳定占用270MB左右。
+初始化运行环境。
 
-bool SetHandle(long long int handle);
+### 返回值
 
-设置原神窗口句柄，当由于编码问题无法自动获得原神窗口句柄时，可以通过该函数手动设置原神窗口句柄。当传入0时则恢复自动获取模式。
+- `true` 表示初始化完毕。当前处在 **已初始化** 状态。
+- `false` 表示初始化失败。当前处在 **未初始化** 状态。
 
-bool GetTransform(float &x, float &y, float &a);
+### 说明
 
-获取当前所在位置以及箭头朝向，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+部分函数需要初始化后才能调用，具体见 [函数手册](#函数手册) 其它函数。
 
-bool GetPosition(double &x, double &y);
+经过简单测试，初始化的过程大概会持续1-10秒，内存占用峰值约为 1 GB，之后稳定在 270 MB 左右。
 
-获取当前位置，返回True为成功得到数据，返回False为未成功匹配到位置，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
+已经处在 **已初始化** 状态则不会进行任何操作。
 
-bool GetDirection(double &a);
 
-获取当前角度，返回True为成功得到数据，返回False为未成功匹配到角度，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
 
-bool GetUID(int &uid);
+## uninit
 
-获取当前UID，返回True为成功得到UID，返回False为未成功获取UID，调用 GetlastErr 获取错误码查看细节，此时数据不会被改变。
-
-int GetLastErr();
-
-返回最后一次错误的错误码，如果此前没有错误，将返回0。
-
+```C++
 bool uninit();
+```
 
-卸载初始化时所占用的内存，此后需要再次初始化才能继续调用 GetPosition 函数。
+卸载初始化时所占用的内存。
 
-# 错误码
+### 返回值
 
-error_code = 1; //未初始化
+- `true` 表示卸载成功，所有需要初始化后才能调用的函数此时不能再被调用。当前处在 **未初始化** 状态。
+- `false` 表示卸载失败。当前处在 **已初始化** 状态。
 
-error_code = 2; //未能找到原神窗口句柄
+### 说明
 
-error_code = 3; //窗口画面为空
+已经处在 **未初始化** 状态则不会进行任何操作。
 
-error_code = 4; //未能匹配到特征点
 
-error_code = 5; //原神小地图区域为空或者区域长宽小于60px
 
-error_code = 6; //未能匹配到派蒙
+## GetLastErr
 
-error_code = 7; //特征点数组访问越界，是个bug
+```C++
+int GetLastErr();
+```
 
-error_code = 8; //未能在UID区域检测到有效UID
+获取最后设置的错误码。
 
-error_code = 9; //提取小箭头特征误差过大
+### 返回值
 
-error_code = 10; //无效句柄或指定句柄所指向窗口不存在
+返回一个整数，表示错误码。错误码含义如下：
 
-error_code = 11; //未能取到小箭头区域
+| 错误码 | 含义                                     | 可能的原因 |
+| ------ | ---------------------------------------- | ---------- |
+| `0`    | 执行成功/正常退出。                      |            |
+| `1`    | 未初始化（当前处在 **未初始化** 状态）。 |            |
+| `2`    | 未能找到原神窗口句柄。                   |            |
+| `3`    | 窗口画面为空。                           |            |
+| `4`    | 未能匹配到特征点。                       |            |
+| `5`    | 原神小地图区域为空或者区域长宽小于60px。 |            |
+| `6`    | 未能匹配到派蒙。                         |            |
+| `7`    | 特征点数组访问越界，是个bug。            |            |
+| `8`    | 未能在UID区域检测到有效UID。             |            |
+| `9`    | 提取小箭头特征误差过大。                 |            |
+| `10`   | 无效句柄或指定句柄所指向窗口不存在。     |            |
+| `11`   | 未能取到小箭头区域。                     |            |
+| `12`   | 窗口句柄失效。                           |            |
 
-error_code = 12; //窗口句柄失效
+### 说明
+
+由于函数成功执行后可能不会将错误码设为 `0` ，以及一些函数不会设置错误码，因此取出的错误码不一定代表前一条函数产生/引发的错误。
+
+
+
+## SetHandle
+
+```C++
+bool SetHandle(
+    long long int handle
+);
+```
+
+设置原神客户端的窗口句柄。
+
+### 参数
+
+- `handle` 原神客户端的窗口句柄。如果提供非零值，则程序不再自动获取窗口句柄，如果提供 `0`，则自动获取。
+
+### 返回值
+
+- `true` 表示提供的值是窗口句柄。
+- `false` 表示提供的值并不是窗口句柄。
+
+### 说明
+
+某些原神数据的获取是基于原神客户端的，因此需要一个客户端的窗口句柄。默认情况下此句柄由程序自动获取，但有可能会因为编码问题或其它未知的原因而获取不到，此时就需要手动指定客户端的窗口句柄。
+
+注意，不论本函数返回何值，`handle` 只要不是 `0`，就会被设置为窗口句柄，并禁止自动获取窗口句柄。
+
+
+
+## GetTransform
+
+```C++
+bool GetTransform(
+    float &x,
+    float &y,
+    float &a
+);
+```
+
+获取当前人物所在位置以及角度（箭头朝向）。
+
+### 参数
+
+- `x` 获取到的人物的x轴坐标位置。
+- `y` 获取到的人物的y轴坐标位置。
+- `a` 获取到的角度。
+
+### 返回值
+
+- `true` 表示获取成功。
+- `false` 表示获取失败，此时三个参数均不会被改变。
+
+### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+
+
+## GetPosition
+
+```C++
+bool GetPosition(
+    double &x,
+    double &y
+);
+```
+
+获取当前人物所在位置。
+
+### 参数
+
+- `x` 获取到的人物的x轴坐标位置。
+- `y` 获取到的人物的y轴坐标位置。
+
+### 返回值
+
+- `true` 表示坐标位置获取成功。
+- `false` 表示坐标位置获取失败，此时两个参数均不会被改变。
+
+### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+调用本函数前，如果没有初始化过，或最后一次初始化返回失败，则需要调用 [`init()`](#init) 函数进行初始化。
+
+
+
+## GetDirection
+
+```C++
+bool GetDirection(
+    double &a
+);
+```
+
+获取当前角度（箭头朝向）。
+
+### 参数
+
+- `a` 获取到的角度。
+
+### 返回值
+
+- `true` 表示获取成功。
+- `false` 表示获取失败，此时参数不会被改变。
+
+### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+
+
+## GetUID
+
+```C++
+bool GetUID(
+    int &uid
+);
+```
+
+获取在屏幕右下角显示的玩家的UID。
+
+### 参数
+
+- `uid` 获取到的玩家UID。
+
+### 返回值
+
+- `true` 表示获取成功。
+- `false` 表示获取失败，此时参数不会被改变。
+
+### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
