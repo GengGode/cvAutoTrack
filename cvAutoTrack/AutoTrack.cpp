@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "AutoTrack.h"
+#include "ErrorCode.h"
 
 AutoTrack::AutoTrack()
 {

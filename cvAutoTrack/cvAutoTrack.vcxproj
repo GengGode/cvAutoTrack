@@ -191,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="AutoTrack.h" />
     <ClInclude Include="cvAutoTrack.h" />
+    <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
     <ClInclude Include="pch.h" />
