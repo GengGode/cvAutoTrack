@@ -193,6 +193,8 @@
     <ClInclude Include="Base_SURF.h" />
     <ClInclude Include="Base_Thread.h" />
     <ClInclude Include="cvAutoTrack.h" />
+    <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="FlowWork.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
     <ClInclude Include="pch.h" />
@@ -204,6 +206,8 @@
     <ClCompile Include="Base_Thread.cpp" />
     <ClCompile Include="cvAutoTrack.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ErrorCode.cpp" />
+    <ClCompile Include="FlowWork.cpp" />
     <ClCompile Include="LoadGiMatchResource.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

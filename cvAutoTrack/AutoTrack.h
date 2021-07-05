@@ -7,6 +7,8 @@
 #include <Windows.h>
 
 #include "LoadGiMatchResource.h"
+#include "FlowWork.h"
+#include "ErrorCode.h"
 
 #define AUTO_TRACK_DEBUG_DELAY 1
 
@@ -27,6 +29,8 @@ public:
 
 private:
 	LoadGiMatchResource giMatchResource;
+	ErrorCode& err=ErrorCode::getInstance();
+	FlowWork wAvatar;
 
 private:
 	int error_code = 0;
@@ -40,6 +44,9 @@ private:
 	float mapScale = 1.3f;//1.3;
 	int someSizeR = 106;
 	float MatchMatScale = 2.0;
+
+	double screen_scale = 1;
+
 private:
 	//cv::Ptr<cv::xfeatures2d::SURF>
 	void* _detectorAllMap = nullptr;
@@ -77,13 +84,15 @@ private:
 private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactRect();
+	bool getGengshinImpactScale();
 	bool getGengshinImpactScreen();
-	void getPaimonRefMat();
-	void getMiniMapRefMat();
-	void getUIDRefMat();
-	void getAvatarRefMat();
+
+	bool getPaimonRefMat();
+	bool getMiniMapRefMat();
+	bool getUIDRefMat();
+	bool getAvatarRefMat();
+
 
 private:
-	double screen_scale = 1;
-	void getScreenScale();
+
 };
