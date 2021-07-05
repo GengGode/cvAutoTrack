@@ -2,6 +2,8 @@
 
 一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
+该dll使用源自窗口截图的游戏画面进行图像处理算法实现，不会对游戏内存进行读写，不会有封号的风险，因而效果也具备一定的局限性。
+
 [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
 ## 使用
@@ -15,6 +17,14 @@
 
 Windows 规定 64位进程/DLL 与 32位进程/DLL 不能相互调用（但可以相互通信），因而动态链接库的调用方也须是 **64位进程** 。
 
+## 原神要求
+
+目前想要准确无误的正常运行，需要以下两点：
+
+- 原神设置 > 抗锯齿：SAMM
+- 原神设置 > 分辨率：1920x1080
+
+以上是确保能够正常运行的因素，其他情况下不保证能够正常得到结果。
 
 ## 其它仓库位置
 
