@@ -13,7 +13,7 @@ int main()
 
 	// 静态方法调用
 	// 初始化
-	init();
+	//init();
 	// 准备变量
 	float x = 0;
 	float y = 0;
@@ -26,22 +26,22 @@ int main()
 	while (1)
 	{
 		// 调用获取方法
-		if (GetTransform(x, y, a))
-		{
-			std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
-		}
-		else
-		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
-		}
-		if (GetPosition(x2, y2))
-		{
-			std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
-		}
-		else
-		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
-		}
+		//if (GetTransform(x, y, a))
+		//{
+		//	std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
+		//if (GetPosition(x2, y2))
+		//{
+		//	std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
 		if (GetDirection(a2))
 		{
 			std::cout << "Now Angle: " << " " << a2 << "\n";
