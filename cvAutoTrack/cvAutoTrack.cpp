@@ -37,6 +37,10 @@ int __stdcall GetLastErr()
 {
 	return _at->GetLastError();
 }
+const char * GetLastErrStr()
+{
+	return _at->GetLastErrorStr();
+}
 bool __stdcall uninit()
 {
 	return _at->uninit();

@@ -634,6 +634,11 @@ int AutoTrack::GetLastError()
 	return error_code;
 }
 
+const char * AutoTrack::GetLastErrorStr()
+{
+	return nullptr;
+}
+
 bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)

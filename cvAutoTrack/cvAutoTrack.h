@@ -18,4 +18,5 @@ extern "C" CVAUTOTRACK_API bool GetPosition(double &x, double &y);
 extern "C" CVAUTOTRACK_API bool GetDirection(double &a);
 extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
 extern "C" CVAUTOTRACK_API int GetLastErr();
+extern "C" CVAUTOTRACK_API const char* GetLastErrStr();
 extern "C" CVAUTOTRACK_API bool uninit();
