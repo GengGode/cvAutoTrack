@@ -7,6 +7,7 @@
 #include <Windows.h>
 
 #include "LoadGiMatchResource.h"
+#include "ErrorCode.h"
 
 #define AUTO_TRACK_DEBUG_DELAY 1
 
@@ -23,11 +24,12 @@ public:
 	bool GetDirection(double &a);
 	bool GetUID(int &uid);
 	int GetLastError();
+	const char* GetLastErrorStr();
 	bool uninit();
 
 private:
 	LoadGiMatchResource giMatchResource;
-
+	ErrorCode giErrorCode;
 private:
 	int error_code = 0;
 
