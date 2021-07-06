@@ -31,6 +31,7 @@ private:
 	LoadGiMatchResource giMatchResource;
 	ErrorCode& err=ErrorCode::getInstance();
 	FlowWork wAvatar;
+	FlowWork wForAfter;
 
 private:
 	int error_code = 0;

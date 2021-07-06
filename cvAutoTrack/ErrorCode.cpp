@@ -32,7 +32,14 @@ ErrorCode & ErrorCode::getInstance()
 ErrorCode & ErrorCode::operator=(const int & code)
 {
 	this->errorCode = code;
-	push(code);
+	if (code == 0)
+	{
+		errCodeList.clear();
+	}
+	else
+	{
+		push(code);
+	}
 
 	return *this;
 }
@@ -78,8 +85,14 @@ void ErrorCode::push(int code)
 
 ostream & operator<<(ostream & os, const ErrorCode & err)
 {
-	for (int i = 0; i < err.errCodeList.size(); i++)
+	for (int i = err.errCodeList.size()-1; i >= 0; i--)
 	{
+		for (int j = 1; j < err.errCodeList.size() - i; j++)
+		{
+			os << "    ";
+		}
+		os << "\u2514 \u2500 \u252C \u2500>";
+
 		if (err.errCodeList[i] < err.errCodeMsg.size())
 		{
 			os << err.errCodeMsg[err.errCodeList[i]] << endl;
