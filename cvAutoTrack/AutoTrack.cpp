@@ -12,10 +12,15 @@ AutoTrack::AutoTrack()
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
 
-	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 14);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 15);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 16);
-	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 17);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 14);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 15);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 16);
+
+	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 17);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 18);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 19);
+	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 20);
+
 }
 
 AutoTrack::~AutoTrack(void)
@@ -104,20 +109,11 @@ bool AutoTrack::GetPosition(double & x, double & y)
 		err = 1;//未初始化
 		return false;
 	}
-	// 判断原神窗口不存在直接返回false，不对参数做任何修改
-	if (getGengshinImpactWnd())
-	{
-		if (!getGengshinImpactRect())
-		{
-			return false;
-		}
-		if (!getGengshinImpactScreen())
-		{
-			return false;
-		}
 
-		if (!giFrame.empty())
-		{
+	if (wForAfter.run() == false)
+	{
+		return false;
+	}
 			getPaimonRefMat();
 
 			cv::Mat paimonTemplate;
@@ -351,18 +347,6 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			err = 0;
 			return true;
-		}
-		else
-		{
-			err = 3;//窗口画面为空
-			return false;
-		}
-	}
-	else
-	{
-		err = 2;//未能找到原神窗口句柄
-		return false;
-	}
 }
 
 bool AutoTrack::GetDirection(double & a)
@@ -488,20 +472,11 @@ bool AutoTrack::GetDirection(double & a)
 
 bool AutoTrack::GetUID(int &uid)
 {
-	// 判断原神窗口不存在直接返回false，不对参数做任何修改
-	if (getGengshinImpactWnd())
+	if (wForAfter.run()==false)
 	{
-		if (!getGengshinImpactRect())
-		{
-			return false;
-		}
-		if (!getGengshinImpactScreen())
-		{
-			return false;
-		}
-
-		if (!giFrame.empty())
-		{
+		err = 300;
+		return false;
+	}
 			getUIDRefMat();
 
 			std::vector<cv::Mat> channels;
@@ -585,18 +560,7 @@ bool AutoTrack::GetUID(int &uid)
 			uid = _uid;
 			err = 0;
 			return true;
-		}
-		else
-		{
-			err = 3;//窗口画面为空
-			return false;
-		}
-	}
-	else
-	{
-		err = 2;//未能找到原神窗口句柄
-		return false;
-	}
+
 }
 
 int AutoTrack::GetLastError()
@@ -836,6 +800,11 @@ bool AutoTrack::getUIDRefMat()
 
 bool AutoTrack::getAvatarRefMat()
 {
+	if (giMiniMapRef.empty())
+	{
+		err = 21;
+		return false;
+	}
 	int Avatar_Rect_x = cvRound(giMiniMapRef.cols*0.4);
 	int Avatar_Rect_y = cvRound(giMiniMapRef.rows*0.4);
 	int Avatar_Rect_w = cvRound(giMiniMapRef.cols*0.2);
