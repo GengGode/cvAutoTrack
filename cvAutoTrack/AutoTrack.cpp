@@ -784,6 +784,19 @@ void AutoTrack::getPaimonRefMat()
 	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
 	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
 
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		Paimon_Rect_x = cvCeil(1920 * 0.0135);
+		Paimon_Rect_y = cvCeil(1920 * 0.006075);
+		Paimon_Rect_w = cvCeil(1920 * 0.035);
+		Paimon_Rect_h = cvCeil(1920 * 0.0406);
+	}
+
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 
 #ifdef _DEBUG
@@ -802,6 +815,19 @@ void AutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_w = cvRound(giFrame.cols*0.11);
 	int MiniMap_Rect_h = cvRound(giFrame.cols*0.11);
 
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		MiniMap_Rect_x = cvRound(1920 * 0.033);
+		MiniMap_Rect_y = cvRound(1920 * 0.01);
+		MiniMap_Rect_w = cvRound(1920 * 0.11);
+		MiniMap_Rect_h = cvRound(1920 * 0.11);
+	}
+
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
 #ifdef _DEBUG
@@ -819,6 +845,19 @@ void AutoTrack::getUIDRefMat()
 	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
 	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		UID_Rect_x = cvCeil(1920 * 0.875 + 640);
+		UID_Rect_y = cvCeil(1080 * 0.9755);
+		UID_Rect_w = cvCeil(1920 * 0.0938);
+		UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+	}
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 
