@@ -12,14 +12,30 @@ AutoTrack::AutoTrack()
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
 
-	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 14);
-	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 15);
-	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 16);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103);
 
-	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 17);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 18);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 19);
-	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 20);
+	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
+	wPaimon.append(this, &AutoTrack::getGengshinImpactRect, 105);
+	wPaimon.append(this, &AutoTrack::getGengshinImpactScreen, 106);
+	wPaimon.append(this, &AutoTrack::getPaimonRefMat, 107);
+
+	wMiniMap.append(this, &AutoTrack::getAutoTrackIsInit, 108);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactWnd, 109);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactRect, 110);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactScreen, 111);
+	wMiniMap.append(this, &AutoTrack::getMiniMapRefMat, 112);
+
+	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 113);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 114);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 115);
+	wAvatar.append(this, &AutoTrack::getUIDRefMat, 116);
+
+	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 117);
+	wUID.append(this, &AutoTrack::getGengshinImpactRect, 118);
+	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 119);
+	wUID.append(this, &AutoTrack::getAvatarRefMat, 120);
 
 }
 
@@ -104,11 +120,6 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 bool AutoTrack::GetPosition(double & x, double & y)
 {
-	if (!is_init_end)
-	{
-		err = 1;//未初始化
-		return false;
-	}
 
 	if (wForAfter.run() == false)
 	{
@@ -477,7 +488,10 @@ bool AutoTrack::GetUID(int &uid)
 		err = 300;
 		return false;
 	}
-			getUIDRefMat();
+	if (getUIDRefMat() == false)
+	{
+		return false;
+			}
 
 			std::vector<cv::Mat> channels;
 
@@ -569,6 +583,19 @@ int AutoTrack::GetLastError()
 	std::cout << err;
 #endif
 	return err;
+}
+
+bool AutoTrack::getAutoTrackIsInit()
+{
+	if (is_init_end)
+	{
+		err = 1;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 bool AutoTrack::getGengshinImpactWnd()
@@ -786,6 +813,14 @@ bool AutoTrack::getUIDRefMat()
 	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
 	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		UID_Rect_x = cvCeil(1920 * 0.875 + 640);
+		UID_Rect_y = cvCeil(1080 * 0.9755);
+		UID_Rect_w = cvCeil(1920 * 0.0938);
+		UID_Rect_h = cvCeil(UID_Rect_w*0.11);
+	}
 
 	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
 

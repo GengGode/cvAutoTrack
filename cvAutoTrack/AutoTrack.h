@@ -30,7 +30,12 @@ public:
 private:
 	LoadGiMatchResource giMatchResource;
 	ErrorCode& err=ErrorCode::getInstance();
+	FlowWork wPaimon;
+	FlowWork wMiniMap;
 	FlowWork wAvatar;
+
+	FlowWork wUID;
+
 	FlowWork wForAfter;
 
 private:
@@ -83,6 +88,7 @@ private:
 	cv::Mat giAvatarRef;
 
 private:
+	bool getAutoTrackIsInit();
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactRect();
 	bool getGengshinImpactScale();
