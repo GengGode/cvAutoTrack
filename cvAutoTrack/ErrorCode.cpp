@@ -53,7 +53,14 @@ ErrorCode::operator int()
 void ErrorCode::setError(int code)
 {
 	this->errorCode = code;
-	push(code);
+	if (code == 0)
+	{
+		errCodeList.clear();
+	}
+	else
+	{
+		push(code);
+	}
 }
 
 int ErrorCode::getLastError()
@@ -91,7 +98,7 @@ ostream & operator<<(ostream & os, const ErrorCode & err)
 		{
 			os << "    ";
 		}
-		os << "\u2514 \u2500 \u252C \u2500>";
+		os << "\u2514 \u2500 \u252C \u2500 \u2192";
 
 		if (err.errCodeList[i] < err.errCodeMsg.size())
 		{

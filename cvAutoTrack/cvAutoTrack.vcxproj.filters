@@ -51,6 +51,9 @@
     <ClInclude Include="ErrorCode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GenshinImpactScreen.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cvAutoTrack.cpp">
@@ -78,6 +81,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ErrorCode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GenshinImpactScreen.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

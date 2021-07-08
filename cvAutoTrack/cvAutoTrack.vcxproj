@@ -196,6 +196,7 @@
     <ClInclude Include="ErrorCode.h" />
     <ClInclude Include="FlowWork.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GenshinImpactScreen.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ErrorCode.cpp" />
     <ClCompile Include="FlowWork.cpp" />
+    <ClCompile Include="GenshinImpactScreen.cpp" />
     <ClCompile Include="LoadGiMatchResource.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
