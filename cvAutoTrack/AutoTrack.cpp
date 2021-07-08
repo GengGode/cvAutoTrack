@@ -136,7 +136,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #ifdef _DEBUG
 #define Mode1
 #ifdef Mode1
-			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
 #endif // Mode1
 
 #ifdef Mode2
@@ -778,10 +778,23 @@ bool AutoTrack::getPaimonRefMat()
 	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
 	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
 
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		Paimon_Rect_x = cvCeil(1920 * 0.0135+72);
+		Paimon_Rect_y = cvCeil(1920 * 0.006075);
+		Paimon_Rect_w = cvCeil(1920 * 0.035);
+		Paimon_Rect_h = cvCeil(1920 * 0.0406);
+	}
+
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 
 #ifdef _DEBUG
-	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO); 
+	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Paimon" << std::endl;
@@ -795,6 +808,19 @@ bool AutoTrack::getMiniMapRefMat()
 	int MiniMap_Rect_y = cvRound(giFrame.cols*0.01);
 	int MiniMap_Rect_w = cvRound(giFrame.cols*0.11);
 	int MiniMap_Rect_h = cvRound(giFrame.cols*0.11);
+
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		MiniMap_Rect_x = cvRound(1920 * 0.033+72);
+		MiniMap_Rect_y = cvRound(1920 * 0.01);
+		MiniMap_Rect_w = cvRound(1920 * 0.11);
+		MiniMap_Rect_h = cvRound(1920 * 0.11);
+	}
 
 	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
 
@@ -814,9 +840,14 @@ bool AutoTrack::getUIDRefMat()
 	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
 
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
 	if (giFrame.cols == 2560 && giFrame.rows == 1080)
 	{
-		UID_Rect_x = cvCeil(1920 * 0.875 + 640);
+		UID_Rect_x = cvCeil(1920 * 0.875 + 550);
 		UID_Rect_y = cvCeil(1080 * 0.9755);
 		UID_Rect_w = cvCeil(1920 * 0.0938);
 		UID_Rect_h = cvCeil(UID_Rect_w*0.11);
