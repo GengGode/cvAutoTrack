@@ -65,13 +65,27 @@ class AutoTracker:
         return ret, uid.value
 
 
+# 以下是对被封装的类的简单演示。
+# 使用命令行 `python ./main.py` 直接运行本文件即可。
 if __name__ == '__main__':
+
+    # 等待五秒钟以便切换到原神窗口：
     sleep(5)
+
+    # 加载同一目录下的DLL：
     tracker = AutoTracker(r'./CVAUTOTRACK.dll')
+
+    # 初始化并打印错误：
     tracker.init()
     print('1) err', tracker.get_last_error(), '\n')
+
+    # 获取当前人物所在位置以及角度（箭头朝向）并打印错误：
     print(tracker.get_transform())
     print('2) err', tracker.get_last_error(), '\n')
+
+    # 获取UID并打印错误：
     print(tracker.get_uid())
     print('3) err', tracker.get_last_error(), '\n')
+
+    # 卸载相关内存：（这一步不是必须的，但还是建议手动调用）
     tracker.uninit()
