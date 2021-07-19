@@ -12,6 +12,32 @@ AutoTrack::AutoTrack()
 	_DataPointAllMap = new cv::Mat;
 	_DataPointSomeMap = new cv::Mat;
 	_DataPointMiniMap = new cv::Mat;
+
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102);
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103);
+
+	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
+	wPaimon.append(this, &AutoTrack::getGengshinImpactRect, 105);
+	wPaimon.append(this, &AutoTrack::getGengshinImpactScreen, 106);
+	wPaimon.append(this, &AutoTrack::getPaimonRefMat, 107);
+
+	wMiniMap.append(this, &AutoTrack::getAutoTrackIsInit, 108);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactWnd, 109);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactRect, 110);
+	wMiniMap.append(this, &AutoTrack::getGengshinImpactScreen, 111);
+	wMiniMap.append(this, &AutoTrack::getMiniMapRefMat, 112);
+
+	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 113);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 114);
+	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 115);
+	wAvatar.append(this, &AutoTrack::getUIDRefMat, 116);
+
+	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 117);
+	wUID.append(this, &AutoTrack::getGengshinImpactRect, 118);
+	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 119);
+	wUID.append(this, &AutoTrack::getAvatarRefMat, 120);
+
 }
 
 AutoTrack::~AutoTrack(void)
@@ -102,27 +128,11 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 
 bool AutoTrack::GetPosition(double & x, double & y)
 {
-	if (!is_init_end)
+
+	if (wForAfter.run() == false)
 	{
-		error_code = 1;//未初始化
 		return false;
 	}
-	// 判断原神窗口不存在直接返回false，不对参数做任何修改
-	if (getGengshinImpactWnd())
-	{
-		if (!getGengshinImpactRect())
-		{
-			error_code = error_code;
-			return false;
-		}
-		if (!getGengshinImpactScreen())
-		{
-			error_code = error_code;
-			return false;
-		}
-
-		if (!giFrame.empty())
-		{
 			getPaimonRefMat();
 
 			cv::Mat paimonTemplate;
@@ -134,7 +144,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #ifdef _DEBUG
 #define Mode1
 #ifdef Mode1
-			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
 #endif // Mode1
 
 #ifdef Mode2
@@ -165,7 +175,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (good_matchesPaimonTmp.size() < 7)
 			{
-				error_code = 6;//未能匹配到派蒙
+				err = 6;//未能匹配到派蒙
 				return false;
 			}
 #endif // Mode2
@@ -203,7 +213,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (maxVal < 0.36 || maxVal == 1)
 			{
-				error_code = 6;//未能匹配到派蒙
+				err = 6;//未能匹配到派蒙
 				return false;
 			}
 #endif
@@ -217,7 +227,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 			if (img_object.empty())
 			{
-				error_code = 5;//原神小地图区域为空或者区域长宽小于60px
+				err = 5;//原神小地图区域为空或者区域长宽小于60px
 				return false;
 			}
 
@@ -271,7 +281,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 								}
 								catch (...)
 								{
-									error_code = 7;//特征点数组访问越界，是个bug
+									err = 7;//特征点数组访问越界，是个bug
 									return false;
 								}
 								sumx += lisx.back();
@@ -338,7 +348,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 				}
 				if (lisx.size() == 0 || lisy.size() == 0)
 				{
-					error_code = 4;//未能匹配到特征点
+					err = 4;//未能匹配到特征点
 					return false;
 				}
 				else
@@ -354,185 +364,142 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			x = (float)(pos.x);
 			y = (float)(pos.y);
 
-			error_code = 0;
+			err = 0;
 			return true;
-		}
-		else
-		{
-			error_code = 3;//窗口画面为空
-			return false;
-		}
-	}
-	else
-	{
-		error_code = 2;//未能找到原神窗口句柄
-		return false;
-	}
 }
 
 bool AutoTrack::GetDirection(double & a)
 {
-	// 判断原神窗口不存在直接返回false，不对参数做任何修改
-	if (getGengshinImpactWnd())
+	if (wAvatar.run() == false)
 	{
-		if (!getGengshinImpactRect())
-		{
-			error_code = error_code;
-			return false;
-		}
-		if (!getGengshinImpactScreen())
-		{
-			error_code = error_code;
-			return false;
-		}
-
-		if (!giFrame.empty())
-		{
-			getPaimonRefMat();
-
-			cv::Mat paimonTemplate;
-
-			cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
-
-			cv::Mat tmp;
-
-			giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
-
-			cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
-
-			double minVal, maxVal;
-			cv::Point minLoc, maxLoc;
-			cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-
-			if (maxVal < 0.36 || maxVal == 1)
-			{
-				error_code = 6;//未能匹配到派蒙
-				return false;
-			}
-
-			getMiniMapRefMat();
-
-			if (giMiniMapRef.empty())
-			{
-				error_code = 5;//原神小地图区域为空或者区域长宽小于60px
-				return false;
-			}
-
-			getAvatarRefMat();
-
-			if (giAvatarRef.empty())
-			{
-				error_code = 11;//未能取到小箭头区域
-				return false;
-			}
-
-			cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
-			std::vector<cv::Mat> lis;
-			cv::split(giAvatarRef, lis);
-
-			cv::Mat gray0;
-			cv::Mat gray1;
-			cv::Mat gray2;
-
-			cv::threshold(lis[0], gray0, 240, 255, cv::THRESH_BINARY);
-			cv::threshold(lis[1], gray1, 212, 255, cv::THRESH_BINARY);
-			cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
-
-			cv::Mat and12;
-			cv::bitwise_and(gray1, gray2, and12, gray0);
-			cv::resize(and12, and12, cv::Size(), 2, 2, 3);
-			cv::Canny(and12, and12, 20, 3 * 20, 3);
-			cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), cvCeil(and12.cols / 4.5), cv::Scalar(0, 0, 0), -1);
-			cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-			cv::dilate(and12, and12, dilate_element);
-			cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-			cv::erode(and12, and12, erode_element);
-
-			std::vector<std::vector<cv::Point>> contours;
-			std::vector<cv::Vec4i> hierarcy;
-
-			cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-
-			std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
-			cv::Point2f rect[4];
-
-			std::vector<cv::Point2d> AvatarKeyPoint;
-			double AvatarKeyPointLine[3] = { 0 };
-			std::vector<cv::Point2f> AvatarKeyLine;
-			cv::Point2f KeyLine;
-
-			if (contours.size() != 3)
-			{
-				error_code = 9;//提取小箭头特征误差过大
-				return false;
-			}
-
-			for (int i = 0; i < 3; i++)
-			{
-				boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-				AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
-			}
-
-			AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-			AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-			AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-
-			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
-			{
-				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-				AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-			}
-			if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
-			{
-				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-				AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
-			}
-			if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
-			{
-				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
-				AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-			}
-
-			AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
-			KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
-
-			 a = Line2Angle(KeyLine);
-
-			error_code = 0;
-			return true;
-		}
-		else
-		{
-			error_code = 3;//窗口画面为空
-			return false;
-		}
-	}
-	else
-	{
-		error_code = 2;//未能找到原神窗口句柄
 		return false;
 	}
+
+	getPaimonRefMat();
+
+	cv::Mat paimonTemplate;
+
+	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+	cv::Mat tmp;
+
+	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+
+	cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+
+	double minVal, maxVal;
+	cv::Point minLoc, maxLoc;
+	cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+
+	if (maxVal < 0.36 || maxVal == 1)
+	{
+		err = 6;//未能匹配到派蒙
+		return false;
+	}
+
+	getMiniMapRefMat();
+
+	if (giMiniMapRef.empty())
+	{
+		err = 5;//原神小地图区域为空或者区域长宽小于60px
+		return false;
+	}
+
+	getAvatarRefMat();
+
+	if (giAvatarRef.empty())
+	{
+		err = 11;//未能取到小箭头区域
+		return false;
+	}
+
+	cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
+	std::vector<cv::Mat> lis;
+	cv::split(giAvatarRef, lis);
+
+	cv::Mat gray0;
+	cv::Mat gray1;
+	cv::Mat gray2;
+
+	cv::threshold(lis[0], gray0, 240, 255, cv::THRESH_BINARY);
+	cv::threshold(lis[1], gray1, 212, 255, cv::THRESH_BINARY);
+	cv::threshold(lis[2], gray2, 25, 255, cv::THRESH_BINARY_INV);
+
+	cv::Mat and12;
+	cv::bitwise_and(gray1, gray2, and12, gray0);
+	cv::resize(and12, and12, cv::Size(), 2, 2, 3);
+	cv::Canny(and12, and12, 20, 3 * 20, 3);
+	cv::circle(and12, cv::Point(cvCeil(and12.cols / 2), cvCeil(and12.rows / 2)), cvCeil(and12.cols / 4.5), cv::Scalar(0, 0, 0), -1);
+	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+	cv::dilate(and12, and12, dilate_element);
+	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+	cv::erode(and12, and12, erode_element);
+
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarcy;
+
+	cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+
+	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
+	cv::Point2f rect[4];
+
+	std::vector<cv::Point2d> AvatarKeyPoint;
+	double AvatarKeyPointLine[3] = { 0 };
+	std::vector<cv::Point2f> AvatarKeyLine;
+	cv::Point2f KeyLine;
+
+	if (contours.size() != 3)
+	{
+		err = 9;//提取小箭头特征误差过大
+		return false;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
+	}
+
+	AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+	AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+	AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+
+	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+	{
+		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+	}
+	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
+	{
+		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
+	}
+	if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
+	{
+		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+	}
+
+	AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
+	KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
+
+	a = Line2Angle(KeyLine);
+
+	err = 0;
+	return true;
 }
 
 bool AutoTrack::GetUID(int &uid)
 {
-	// 判断原神窗口不存在直接返回false，不对参数做任何修改
-	if (getGengshinImpactWnd())
+	if (wForAfter.run()==false)
 	{
-		if (!getGengshinImpactRect())
-		{
-			error_code = error_code;
-			return false;
-		}
-		if (!getGengshinImpactScreen())
-		{
-			error_code = error_code;
-			return false;
-		}
-
-		if (!giFrame.empty())
-		{
-			getUIDRefMat();
+		err = 300;
+		return false;
+	}
+	if (getUIDRefMat() == false)
+	{
+		return false;
+			}
 
 			std::vector<cv::Mat> channels;
 
@@ -609,29 +576,34 @@ bool AutoTrack::GetUID(int &uid)
 			}
 			if (_uid == 0)
 			{
-				error_code = 8;//未能在UID区域检测到有效UID
+				err = 8;//未能在UID区域检测到有效UID
 				return false;
 			}
 			uid = _uid;
-			error_code = 0;
+			err = 0;
 			return true;
-		}
-		else
-		{
-			error_code = 3;//窗口画面为空
-			return false;
-		}
-	}
-	else
-	{
-		error_code = 2;//未能找到原神窗口句柄
-		return false;
-	}
+
 }
 
 int AutoTrack::GetLastError()
 {
-	return error_code;
+#ifdef _DEBUG
+	std::cout << err;
+#endif
+	return err;
+}
+
+bool AutoTrack::getAutoTrackIsInit()
+{
+	if (is_init_end)
+	{
+		err = 1;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 const char * AutoTrack::GetLastErrorStr()
@@ -674,7 +646,7 @@ bool AutoTrack::getGengshinImpactWnd()
 #endif
 		if (giHandle == NULL)
 		{
-			error_code = 10; //无效句柄或指定句柄所指向窗口不存在
+			err = 10; //无效句柄或指定句柄所指向窗口不存在
 			return false;
 		}
 	}
@@ -686,7 +658,7 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		else
 		{
-			error_code = 10; //无效句柄或指定句柄所指向窗口不存在
+			err = 10; //无效句柄或指定句柄所指向窗口不存在
 			return false;
 		}
 	}
@@ -698,17 +670,17 @@ bool AutoTrack::getGengshinImpactRect()
 {
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		error_code = 12;//窗口句柄失效
+		err = 12;//窗口句柄失效
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		error_code = 12;//窗口句柄失效
+		err = 12;//窗口句柄失效
 		return false;
 	}
 
 	//获取屏幕缩放比例
-	getScreenScale();
+	getGengshinImpactScale();
 
 	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));
 	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));
@@ -722,6 +694,36 @@ bool AutoTrack::getGengshinImpactRect()
 	return true;
 }
 
+bool AutoTrack::getGengshinImpactScale()
+{
+#ifdef _DEBUG
+	std::cout << "-> getGengshinImpactScale()" << std::endl;
+#endif
+	HWND hWnd = GetDesktopWindow();
+	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+
+	// 获取监视器逻辑宽度与高度
+	MONITORINFOEX miex;
+	miex.cbSize = sizeof(miex);
+	GetMonitorInfo(hMonitor, &miex);
+	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
+	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
+
+	// 获取监视器物理宽度与高度
+	DEVMODE dm;
+	dm.dmSize = sizeof(dm);
+	dm.dmDriverExtra = 0;
+	EnumDisplaySettings(miex.szDevice, ENUM_CURRENT_SETTINGS, &dm);
+	int cxPhysical = dm.dmPelsWidth;
+	int cyPhysical = dm.dmPelsHeight;
+
+	double horzScale = ((double)cxPhysical / (double)cxLogical);
+	screen_scale = horzScale;
+
+	return true;
+}
+
+
 bool AutoTrack::getGengshinImpactScreen()
 {
 	static HBITMAP	hBmp;
@@ -731,12 +733,12 @@ bool AutoTrack::getGengshinImpactScreen()
 
 	if (giHandle == NULL) 
 	{ 
-		error_code = 12;//窗口句柄失效
+		err = 12;//窗口句柄失效
 		return false; 
 	}
 	if (!IsWindow(giHandle))
 	{
-		error_code = 12;//窗口句柄失效
+		err = 12;//窗口句柄失效
 		return false;
 	}
 	//获取目标句柄的窗口大小RECT
@@ -774,10 +776,15 @@ bool AutoTrack::getGengshinImpactScreen()
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
 
+	if (giFrame.empty())
+	{
+		err=3;
+		return false;
+	}
 	return true;
 }
 
-void AutoTrack::getPaimonRefMat()
+bool AutoTrack::getPaimonRefMat()
 {
 	int Paimon_Rect_x = cvCeil(giFrame.cols*0.0135);
 	int Paimon_Rect_y = cvCeil(giFrame.cols*0.006075);
@@ -791,7 +798,7 @@ void AutoTrack::getPaimonRefMat()
 
 	if (giFrame.cols == 2560 && giFrame.rows == 1080)
 	{
-		Paimon_Rect_x = cvCeil(1920 * 0.0135);
+		Paimon_Rect_x = cvCeil(1920 * 0.0135+72);
 		Paimon_Rect_y = cvCeil(1920 * 0.006075);
 		Paimon_Rect_w = cvCeil(1920 * 0.035);
 		Paimon_Rect_h = cvCeil(1920 * 0.0406);
@@ -800,15 +807,15 @@ void AutoTrack::getPaimonRefMat()
 	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
 
 #ifdef _DEBUG
-	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO); 
+	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Paimon" << std::endl;
 #endif
-
+	return true;
 }
 
-void AutoTrack::getMiniMapRefMat()
+bool AutoTrack::getMiniMapRefMat()
 {
 	int MiniMap_Rect_x = cvRound(giFrame.cols*0.033);
 	int MiniMap_Rect_y = cvRound(giFrame.cols*0.01);
@@ -822,7 +829,7 @@ void AutoTrack::getMiniMapRefMat()
 
 	if (giFrame.cols == 2560 && giFrame.rows == 1080)
 	{
-		MiniMap_Rect_x = cvRound(1920 * 0.033);
+		MiniMap_Rect_x = cvRound(1920 * 0.033+72);
 		MiniMap_Rect_y = cvRound(1920 * 0.01);
 		MiniMap_Rect_w = cvRound(1920 * 0.11);
 		MiniMap_Rect_h = cvRound(1920 * 0.11);
@@ -836,10 +843,10 @@ void AutoTrack::getMiniMapRefMat()
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show MiniMap" << std::endl;
 #endif
-
+	return true;
 }
 
-void AutoTrack::getUIDRefMat()
+bool AutoTrack::getUIDRefMat()
 {
 	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
 	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
@@ -853,7 +860,7 @@ void AutoTrack::getUIDRefMat()
 
 	if (giFrame.cols == 2560 && giFrame.rows == 1080)
 	{
-		UID_Rect_x = cvCeil(1920 * 0.875 + 640);
+		UID_Rect_x = cvCeil(1920 * 0.875 + 550);
 		UID_Rect_y = cvCeil(1080 * 0.9755);
 		UID_Rect_w = cvCeil(1920 * 0.0938);
 		UID_Rect_h = cvCeil(UID_Rect_w*0.11);
@@ -867,11 +874,16 @@ void AutoTrack::getUIDRefMat()
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show UID" << std::endl;
 #endif
-
+	return true;
 }
 
-void AutoTrack::getAvatarRefMat()
+bool AutoTrack::getAvatarRefMat()
 {
+	if (giMiniMapRef.empty())
+	{
+		err = 21;
+		return false;
+	}
 	int Avatar_Rect_x = cvRound(giMiniMapRef.cols*0.4);
 	int Avatar_Rect_y = cvRound(giMiniMapRef.rows*0.4);
 	int Avatar_Rect_w = cvRound(giMiniMapRef.cols*0.2);
@@ -885,31 +897,6 @@ void AutoTrack::getAvatarRefMat()
 	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
 	std::cout << "Show Avatar" << std::endl;
 #endif
-
+	return true;
 }
-void AutoTrack::getScreenScale()
-{
-#ifdef _DEBUG
-	std::cout << "-> getScreenScale()" << std::endl;
-#endif
-	HWND hWnd = GetDesktopWindow();
-	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
-	// 获取监视器逻辑宽度与高度
-	MONITORINFOEX miex;
-	miex.cbSize = sizeof(miex);
-	GetMonitorInfo(hMonitor, &miex);
-	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
-	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
-
-	// 获取监视器物理宽度与高度
-	DEVMODE dm;
-	dm.dmSize = sizeof(dm);
-	dm.dmDriverExtra = 0;
-	EnumDisplaySettings(miex.szDevice, ENUM_CURRENT_SETTINGS, &dm);
-	int cxPhysical = dm.dmPelsWidth;
-	int cyPhysical = dm.dmPelsHeight;
-
-	double horzScale = ((double)cxPhysical / (double)cxLogical);
-	screen_scale = horzScale;
-}

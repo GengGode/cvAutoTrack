@@ -190,17 +190,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AutoTrack.h" />
+    <ClInclude Include="Base_SURF.h" />
+    <ClInclude Include="Base_Thread.h" />
     <ClInclude Include="cvAutoTrack.h" />
     <ClInclude Include="ErrorCode.h" />
+    <ClInclude Include="FlowWork.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GenshinImpactScreen.h" />
     <ClInclude Include="LoadGiMatchResource.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AutoTrack.cpp" />
+    <ClCompile Include="Base_SURF.cpp" />
+    <ClCompile Include="Base_Thread.cpp" />
     <ClCompile Include="cvAutoTrack.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ErrorCode.cpp" />
+    <ClCompile Include="FlowWork.cpp" />
+    <ClCompile Include="GenshinImpactScreen.cpp" />
     <ClCompile Include="LoadGiMatchResource.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

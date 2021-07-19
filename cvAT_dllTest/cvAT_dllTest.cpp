@@ -13,7 +13,7 @@ int main()
 
 	// 静态方法调用
 	// 初始化
-	init();
+	//init();
 	// 准备变量
 	float x = 0;
 	float y = 0;
