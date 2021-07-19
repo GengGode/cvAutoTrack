@@ -2,29 +2,35 @@
 
 一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
+[![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-## 使用
+## 如何使用
 
-编译文件下载链接：
+1. 下载编译好的动态链接库。
+   - https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ（提取码：e7zv）
+   - https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
+2. 装载动态链接库后，根据[函数手册](#函数手册)对相关函数进行调用或封装。
+3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
 
-- 国内：https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ（提取码：e7zv）
-- 国外：https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
+## 注意事项
 
-目前只编译了 Windows x64 平台上的动态链接库（.dll），对于其它平台，如 Windows x86（.dll）或 Linux 平台（.so），需要下载源代码另行编译。
+- 目前只编译了 Windows x64 平台上的动态链接库（.dll），对于 Windows x86 或其它平台，如 Linux 平台（.so），需要下载源代码另行编译。
+- Windows 规定 64位 进程/DLL与 32位 进程/DLL之间不能相互调用/加载，因此调用动态链接库前，请务必确保调用进程是 **64位进程** 。
+- 本项目借游戏画面的窗口截图进行图像处理算法以实现所有功能，其不会对游戏内存进行读写，因而不会有封号的风险，但效果也因此具备一定的局限。
+- 项目仅在有限的条件下测试过，如需排查错误，强烈建议按照以下描述进行环境配置。
+  - 原神客户端 > 右上角派蒙 > 设置 > 抗锯齿，设置为 `SMAA`
+  - 原神客户端 > 右上角派蒙 > 设置 > 分辨率，设置为 `1920x1080`
 
-Windows 规定 64位进程/DLL 与 32位进程/DLL 不能相互调用（但可以相互通信），因而动态链接库的调用方也须是 **64位进程** 。
+## 对于开发者
 
-
-## 其它仓库位置
-
-- gitee：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
+- 码云上的仓库：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
 
 
 ## 项目结构
 
 - **cvAutoTrack**，dll工程
 - **cvAT_dllTest**，C++下调用dll的测试工程
+- **impl**，部分语言的调用示例。
 
 
 # 函数手册
