@@ -12,6 +12,8 @@
 
 + ## 错误码
 
++ ## 即将更新
+
 # 介绍
 
 cvAutoTrack dll工程
@@ -83,3 +85,17 @@ cvAT_dllTest C++下调用dll的测试工程
 | 10 | 无效句柄或指定句柄所指向窗口不存在 |
 | 11 | 未能取到小箭头区域 |
 | 12 | 窗口句柄失效 |
+
+# 即将更新
+
+> `bool startSever();`
+
+开始服务，开启循环检测线程。
+
+> `bool stopSever();`
+
+停止服务，停止循环检测线程
+
+> `bool getAllInfo(double &x,double &y,double &a,int &uid);`
+
+获取所有信息，得到最新的状态数据
