@@ -237,3 +237,18 @@ bool GetUID(
 ### 说明
 
 无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+
+# 即将更新
+
+> `bool startSever();`
+
+开始服务，开启循环检测线程。
+
+> `bool stopSever();`
+
+停止服务，停止循环检测线程
+
+> `bool getAllInfo(double &x,double &y,double &a,int &uid);`
+
+获取所有信息，得到最新的状态数据
