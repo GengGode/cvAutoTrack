@@ -17,6 +17,18 @@ bool SetHandle(long long int handle)
 {
 	return _at->SetHandle(handle);
 }
+bool SetWorldCenter(double x, double y)
+{
+	return _at->SetWorldCenter(x, y);
+}
+bool SetWorldScale(double scale)
+{
+	return _at->SetWorldScale(scale);
+}
+bool GetInfoFromLocalPic(char * path, int & uid, double & x, double & y, double & a)
+{
+	return false;
+}
 bool __stdcall GetTransform(float &x, float &y, float &a)
 {
 	return _at->GetTransform(x, y, a);
