@@ -20,6 +20,8 @@ public:
 
 	bool init();
 	bool SetHandle(long long int handle);
+	bool SetWorldCenter(double x, double y);
+	bool SetWorldScale(double scale);
 	bool GetTransform(float &x, float &y, float &a);
 	bool GetPosition(double &x, double &y);
 	bool GetDirection(double &a);
