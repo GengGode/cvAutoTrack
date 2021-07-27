@@ -296,14 +296,14 @@ bool AutoTrack::GetPosition(double & x, double & y)
 							sumy += lisy.back();
 						}
 					}
+#ifdef _DEBUG
+					cv::Mat img_matches, imgmap, imgminmap;
+					drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+					drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+					drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+#endif
 				}
 
-#ifdef _DEBUG
-				cv::Mat img_matches, imgmap, imgminmap;
-				drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-				drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-				drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-#endif
 
 				if (lisx.size() <= 4 || lisy.size() <= 4)
 				{
@@ -377,13 +377,20 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			}
 		}
 	}
+
+	//pos.x += 8866;// -4096;// 8866 - 4096;//5352;
+	//pos.y += 11457;//-4096;//11457 - 4096;// 9431;
+
+	//pos.x = pos.x * 6144.0 / 18432.0;
+	//pos.y = pos.y * 6144.0 / 18432.0;
+
 	hisP[0] = hisP[1];
 	hisP[1] = hisP[2];
 	hisP[2] = pos;
 
 	/******************************/
-	x = (float)(pos.x);
-	y = (float)(pos.y);
+	x = (float)(((pos.x) * 2 + 3412));// / 0.5 * 6144.0 / 18432.0);//+8866-5352
+	y = (float)(((pos.y) * 2 + 2025));// / 0.5 * 6144.0 / 18432.0);//+11457 - 9432
 
 	err = 0;
 	return true;
@@ -545,7 +552,7 @@ bool AutoTrack::GetUID(int &uid)
 
 	if (checkUID.rows > Roi.rows)
 	{
-		cv::resize(Roi, Roi, cv::Size(cvRound(1.0 * checkUID.rows / Roi.rows * Roi.cols), checkUID.rows),2);
+		cv::resize(Roi, Roi, cv::Size(cvRound(1.0 * checkUID.rows / Roi.rows * Roi.cols), checkUID.rows),0);
 	}
 
 	cv::matchTemplate(Roi, checkUID, matchTmp, cv::TM_CCOEFF_NORMED);
