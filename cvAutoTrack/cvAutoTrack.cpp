@@ -43,7 +43,7 @@ bool __stdcall GetUID(int &uid)
 }
 bool GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
 {
-	return false;
+	return _at->GetInfoLoadPicture(path, uid, x, y, a);
 }
 int __stdcall GetLastErr()
 {
