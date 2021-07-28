@@ -7,6 +7,11 @@
 
 #include <Windows.h>
 
+#define TestVideo
+#ifdef TestVideo
+#include <vector>
+#endif
+
 int main()
 {
 	system("chcp 65001");
@@ -23,8 +28,29 @@ int main()
 	double a2 = 0;
 	int uid = 0;
 	// 调用循环
+
+#ifdef TestVideo
+	
+	std::vector<std::vector<double>> his;
+	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/000.png" };
+	
+#endif
+
 	while (1)
 	{
+#ifdef TestVideo
+		
+		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
+		{
+			std::cout << "Now Coor and Angle: "<<" " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
+#endif
+#ifndef TestVideo
+
 		// 调用获取方法
 		if (GetTransform(x, y, a))
 		{
@@ -60,6 +86,7 @@ int main()
 		}
 
 		Sleep(1);
+#endif
 	}
 }
 

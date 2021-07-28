@@ -665,6 +665,12 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	cv::imshow("test", giPaimonRef);
 #endif
 
+	if (giPaimonRef.channels() != 4)
+	{
+		cv::cvtColor(paimonTemplate, paimonTemplate, cv::COLOR_RGBA2GRAY);
+		cv::cvtColor(giPaimonRef, giPaimonRef, cv::COLOR_RGB2GRAY);
+	}
+
 	cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
 
 	double minVal, maxVal;
@@ -740,39 +746,43 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	if (contours.size() != 3)
 	{
 		err = 205;//提取小箭头特征误差过大
-		return false;
+		//return false;
 	}
-
-	for (int i = 0; i < 3; i++)
+	else
 	{
-		boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
+		for (int i = 0; i < 3; i++)
+		{
+			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+			AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
+		}
+
+		AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+		AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+		AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+
+		if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
+		{
+			AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+			AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+		}
+		if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
+		{
+			AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
+		}
+		if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
+		{
+			AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+			AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+		}
+
+		AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
+		KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
+
+		a = Line2Angle(KeyLine);
 	}
 
-	AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-	AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-	AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-
-	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-	}
-	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
-	}
-	if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
-	{
-		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
-		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
-	}
-
-	AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
-	KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
-
-	a = Line2Angle(KeyLine);
+	
 
 	if (getUIDRefMat() == false)
 	{
@@ -783,7 +793,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	std::vector<cv::Mat> channels;
 
 	split(giUIDRef, channels);
-	giUIDRef = channels[3];
+	giUIDRef = channels[0];
 
 	int _uid = 0;
 	int _NumBit[9] = { 0 };
