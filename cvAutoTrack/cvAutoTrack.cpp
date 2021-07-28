@@ -25,10 +25,6 @@ bool SetWorldScale(double scale)
 {
 	return _at->SetWorldScale(scale);
 }
-bool GetInfoFromLocalPic(char * path, int & uid, double & x, double & y, double & a)
-{
-	return false;
-}
 bool __stdcall GetTransform(float &x, float &y, float &a)
 {
 	return _at->GetTransform(x, y, a);
@@ -44,6 +40,10 @@ bool GetDirection(double & a)
 bool __stdcall GetUID(int &uid)
 {
 	return _at->GetUID(uid);
+}
+bool GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
+{
+	return false;
 }
 int __stdcall GetLastErr()
 {

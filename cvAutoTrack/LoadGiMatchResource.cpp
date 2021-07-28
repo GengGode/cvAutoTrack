@@ -81,13 +81,13 @@ double dis(std::vector<cv::Point> &TransfornHistory)
 {
 	return 0;
 }
-double dis(cv::Point p)
+double dis(cv::Point2d p)
 {
 	return sqrt(p.x*p.x + p.y*p.y);
 }
-cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
+cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
 {
-	cv::Point pos;
+	cv::Point2d pos;
 	double meanx = sumx / lisx.size(); //均值
 	double meany = sumy / lisy.size(); //均值
 	int x = (int)meanx;
@@ -178,4 +178,14 @@ double Line2Angle(cv::Point2f p)
 	double res = atan2(-p.y, p.x)*rad2degScale;
 	res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
 	return res;
+}
+
+cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale)
+{
+	return cv::Point((pos + origin)*scale);
+}
+
+cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale)
+{
+	return cv::Point((pos.x + x)*scale, (pos.y + y)*scale);
 }
