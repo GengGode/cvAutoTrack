@@ -8,7 +8,7 @@
 
 #include "resource.h"
 
-// 此类是不导出的
+//
 class LoadGiMatchResource
 {
 public:
@@ -26,10 +26,12 @@ private:
 };
 
 double dis(std::vector<cv::Point> &TransfornHistory);
-double dis(cv::Point p);
-cv::Point SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
+double dis(cv::Point2d p);
+cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 int getMaxID(double lis[], int len); 
 int getMinID(double lis[], int len);
 
 std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
 double Line2Angle(cv::Point2f p);
+cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale);
+cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale);

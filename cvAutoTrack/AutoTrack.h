@@ -26,6 +26,7 @@ public:
 	bool GetPosition(double &x, double &y);
 	bool GetDirection(double &a);
 	bool GetUID(int &uid);
+	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 	int GetLastError();
 	const char* GetLastErrorStr();
 	bool uninit();
@@ -55,6 +56,28 @@ private:
 	float MatchMatScale = 2.0;
 
 	double screen_scale = 1;
+
+	double UserWorldOrigin_X = 0;
+	double UserWorldOrigin_Y = 0;
+	double UserWorldScale = 1.0;
+
+	//World Center on AbsAllMap Coor
+	double WorldCenter_X = 5452;
+	double WorldCenter_Y = 9432;
+	double WorldScale = 1.0;
+
+	//Map Origin Point on AbsAllMap Coor.
+	double MapWorldAbsOrigin_X = 8866;
+	double MapWorldAbsOrigin_Y = 11457;
+
+	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
+	double MapAbsScale = 2;
+
+	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025);
+	double MapWorldOffset_X = 3412;
+	double MapWorldOffset_Y = 2025;
+
+	double MapWorldScale = 1.0;
 
 private:
 	//cv::Ptr<cv::xfeatures2d::SURF>
