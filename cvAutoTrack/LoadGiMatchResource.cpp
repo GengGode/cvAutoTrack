@@ -182,10 +182,10 @@ double Line2Angle(cv::Point2f p)
 
 cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale)
 {
-	return cv::Point((pos + origin)*scale);
+	return cv::Point2d((pos + origin)*scale);
 }
 
 cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale)
 {
-	return cv::Point((pos.x + x)*scale, (pos.y + y)*scale);
+	return cv::Point2d((pos.x + x)*scale, (pos.y + y)*scale);
 }
