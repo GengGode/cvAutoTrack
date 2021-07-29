@@ -46,7 +46,7 @@ Mat GenshinImpactScreen::getGenshinImpactScreen_GetAfter()
 Mat GenshinImpactScreen::getGenshinImpactScreen_NewGet()
 {
 	static HBITMAP	hBmp;
-	BITMAP bmp;
+	//BITMAP bmp;
 	Mat giFrame;
 
 	DeleteObject(hBmp);
