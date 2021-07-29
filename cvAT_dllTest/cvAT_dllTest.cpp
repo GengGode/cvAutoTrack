@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-#define TestVideo
+//#define TestVideo
 #ifdef TestVideo
 #include <vector>
 #endif
@@ -33,8 +33,16 @@ int main()
 	
 	std::vector<std::vector<double>> his;
 	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/000.png" };
+	char pathV[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.mp4" };
 	
+	char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.json" };
+	
+	//char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.txt" };
+	GetInfoLoadVideo(pathV, pathTxt);
+	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 #endif
+
+
 
 	while (1)
 	{

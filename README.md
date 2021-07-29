@@ -2,6 +2,8 @@
 
 一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
+支持原神2.0稻妻地图，扩展了城镇中的稳定性，为此定位的整体稳定性略有下降。
+
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__cdecl-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
 ## 如何使用
@@ -327,6 +329,38 @@ bool GetInfoLoadPicture(
 - `false` 表示获取失败，此时四个输出参数均不会被改变。
 
 ### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+
+
+## GetInfoLoadPicture
+
+```C++
+bool GetInfoLoadVideo(
+    char* path,
+	char * pathOutFile
+);
+```
+
+获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。
+
+### 参数
+
+- `path` 输入视频文件路径
+- `pathOutFile` 输出的路径数据保存文件路径
+
+### 返回值
+
+- `true` 表示写入成功。
+- `false` 表示写入失败。
+
+### 说明
+
+写入文本格式如下：
+```
+| int Time | int uid | double x | double y| double a | 
+```
 
 无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
 

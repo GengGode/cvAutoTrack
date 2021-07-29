@@ -45,6 +45,10 @@ bool GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double &
 {
 	return _at->GetInfoLoadPicture(path, uid, x, y, a);
 }
+bool GetInfoLoadVideo(char * path, char * pathOutFile)
+{
+	return _at->GetInfoLoadVideo(path, pathOutFile);
+}
 int __stdcall GetLastErr()
 {
 	return _at->GetLastError();

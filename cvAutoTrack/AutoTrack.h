@@ -27,6 +27,7 @@ public:
 	bool GetDirection(double &a);
 	bool GetUID(int &uid);
 	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
+	bool GetInfoLoadVideo(char * path, char * pathOutFile);
 	int GetLastError();
 	const char* GetLastErrorStr();
 	bool uninit();
