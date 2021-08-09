@@ -1,16 +1,16 @@
-// ä¸‹åˆ— ifdef å—æ˜¯åˆ›å»ºä½¿ä»Ž DLL å¯¼å‡ºæ›´ç®€å•çš„
-// å®çš„æ ‡å‡†æ–¹æ³•ã€‚æ­¤ DLL ä¸­çš„æ‰€æœ‰æ–‡ä»¶éƒ½æ˜¯ç”¨å‘½ä»¤è¡Œä¸Šå®šä¹‰çš„ CVAUTOTRACK_EXPORTS
-// ç¬¦å·ç¼–è¯‘çš„ã€‚åœ¨ä½¿ç”¨æ­¤ DLL çš„
-// ä»»ä½•é¡¹ç›®ä¸Šä¸åº”å®šä¹‰æ­¤ç¬¦å·ã€‚è¿™æ ·ï¼Œæºæ–‡ä»¶ä¸­åŒ…å«æ­¤æ–‡ä»¶çš„ä»»ä½•å…¶ä»–é¡¹ç›®éƒ½ä¼šå°†
-// CVAUTOTRACK_API å‡½æ•°è§†ä¸ºæ˜¯ä»Ž DLL å¯¼å…¥çš„ï¼Œè€Œæ­¤ DLL åˆ™å°†ç”¨æ­¤å®å®šä¹‰çš„
-// ç¬¦å·è§†ä¸ºæ˜¯è¢«å¯¼å‡ºçš„ã€‚
+// ÏÂÁÐ ifdef ¿éÊÇ´´½¨Ê¹´Ó DLL µ¼³ö¸ü¼òµ¥µÄ
+// ºêµÄ±ê×¼·½·¨¡£´Ë DLL ÖÐµÄËùÓÐÎÄ¼þ¶¼ÊÇÓÃÃüÁîÐÐÉÏ¶¨ÒåµÄ CVAUTOTRACK_EXPORTS
+// ·ûºÅ±àÒëµÄ¡£ÔÚÊ¹ÓÃ´Ë DLL µÄ
+// ÈÎºÎÏîÄ¿ÉÏ²»Ó¦¶¨Òå´Ë·ûºÅ¡£ÕâÑù£¬Ô´ÎÄ¼þÖÐ°üº¬´ËÎÄ¼þµÄÈÎºÎÆäËûÏîÄ¿¶¼»á½«
+// CVAUTOTRACK_API º¯ÊýÊÓÎªÊÇ´Ó DLL µ¼ÈëµÄ£¬¶ø´Ë DLL Ôò½«ÓÃ´Ëºê¶¨ÒåµÄ
+// ·ûºÅÊÓÎªÊÇ±»µ¼³öµÄ¡£
 #ifdef CVAUTOTRACK_EXPORTS
 #define CVAUTOTRACK_API __declspec(dllexport)
 #else
 #define CVAUTOTRACK_API __declspec(dllimport)
 #endif
 
-// è¿™æ˜¯å·²å¯¼å‡ºçš„å‡½æ•°ã€‚
+// ÕâÊÇÒÑµ¼³öµÄº¯Êý¡£
 extern "C" CVAUTOTRACK_API bool init();
 extern "C" CVAUTOTRACK_API bool SetHandle(long long int handle);
 extern "C" CVAUTOTRACK_API bool SetWorldCenter(double x, double y);
@@ -18,6 +18,7 @@ extern "C" CVAUTOTRACK_API bool SetWorldScale(double scale);
 extern "C" CVAUTOTRACK_API bool GetTransform(float &x, float &y, float &a);
 extern "C" CVAUTOTRACK_API bool GetPosition(double &x, double &y);
 extern "C" CVAUTOTRACK_API bool GetDirection(double &a);
+extern "C" CVAUTOTRACK_API bool GetRotation(double &a);
 extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
 
 extern "C" CVAUTOTRACK_API bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);

@@ -25,6 +25,7 @@ public:
 	bool GetTransform(float &x, float &y, float &a);
 	bool GetPosition(double &x, double &y);
 	bool GetDirection(double &a);
+	bool GetRotation(double &a);
 	bool GetUID(int &uid);
 	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 	bool GetInfoLoadVideo(char * path, char * pathOutFile);
@@ -38,6 +39,7 @@ private:
 	FlowWork wPaimon;
 	FlowWork wMiniMap;
 	FlowWork wAvatar;
+	FlowWork wRotating;
 
 	FlowWork wUID;
 

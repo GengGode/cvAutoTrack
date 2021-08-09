@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "AutoTrack.h"
 #include "ErrorCode.h"
 
@@ -35,12 +35,18 @@ AutoTrack::AutoTrack()
 	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 113);
 	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 114);
 	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 115);
-	wAvatar.append(this, &AutoTrack::getUIDRefMat, 116);
+	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 116);
 
-	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 117);
-	wUID.append(this, &AutoTrack::getGengshinImpactRect, 118);
-	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 119);
-	wUID.append(this, &AutoTrack::getAvatarRefMat, 120);
+	
+	wRotating.append(this, &AutoTrack::getGengshinImpactWnd, 117);
+	wRotating.append(this, &AutoTrack::getGengshinImpactRect, 118);
+	wRotating.append(this, &AutoTrack::getGengshinImpactScreen, 119);
+	wRotating.append(this, &AutoTrack::getMiniMapRefMat, 120);
+
+	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 121);
+	wUID.append(this, &AutoTrack::getGengshinImpactRect, 122);
+	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 123);
+	wUID.append(this, &AutoTrack::getUIDRefMat, 124);
 
 }
 
@@ -150,6 +156,13 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	{
 		return false;
 	}
+	if (!is_init_end)
+	{
+		err = 1;
+		return false;
+	}
+
+
 	getPaimonRefMat();
 
 	cv::Mat paimonTemplate;
@@ -729,6 +742,235 @@ bool AutoTrack::GetDirection(double & a)
 	a = Line2Angle(KeyLine);
 
 	err = 0;
+	return true;
+}
+
+bool AutoTrack::GetRotation(double & a)
+{
+	if (wForAfter.run() == false)
+	{
+		return false;
+	}
+	getPaimonRefMat();
+
+	cv::Mat paimonTemplate;
+
+	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+	cv::Mat tmp;
+
+#define Mode1
+
+#ifdef Mode1
+	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
+#endif // Mode1
+
+#ifdef _DEBUG
+
+#ifdef Mode2
+	cv::Ptr<cv::xfeatures2d::SURF> detectorPaimon = cv::xfeatures2d::SURF::create(minHessian);
+	std::vector<cv::KeyPoint> KeyPointPaimonTemplate, KeyPointPaimonRef;
+	cv::Mat DataPointPaimonTemplate, DataPointPaimonRef;
+
+	detectorPaimon->detectAndCompute(giPaimonRef, cv::noArray(), KeyPointPaimonRef, DataPointPaimonRef);
+	detectorPaimon->detectAndCompute(paimonTemplate, cv::noArray(), KeyPointPaimonTemplate, DataPointPaimonTemplate);
+	cv::Ptr<cv::DescriptorMatcher> matcherPaimonTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+	std::vector< std::vector<cv::DMatch> > KNN_PaimonmTmp;
+	std::vector<cv::DMatch> good_matchesPaimonTmp;
+
+	for (size_t i = 0; i < KNN_PaimonmTmp.size(); i++)
+	{
+		if (KNN_PaimonmTmp[i][0].distance < ratio_thresh * KNN_PaimonmTmp[i][1].distance)
+		{
+			good_matchesPaimonTmp.push_back(KNN_PaimonmTmp[i][0]);
+		}
+	}
+
+	cv::Mat img_matchesA, imgmapA, imgminmapA;
+	drawKeypoints(giPaimonRef, KeyPointPaimonRef, imgmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	drawKeypoints(paimonTemplate, KeyPointPaimonTemplate, imgminmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+	drawMatches(paimonTemplate, KeyPointPaimonTemplate, giPaimonRef, KeyPointPaimonRef, good_matchesPaimonTmp, img_matchesA, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+
+	cv::imshow("asda", img_matchesA);
+
+	if (good_matchesPaimonTmp.size() < 7)
+	{
+		err = 6;//未能匹配到派蒙
+		return false;
+	}
+#endif // Mode2
+
+#endif
+
+#ifdef _DEBUG
+	cv::namedWindow("test", cv::WINDOW_FREERATIO);
+	cv::imshow("test", giPaimonRef);
+#endif
+
+#ifdef Mode1
+
+	std::vector<cv::Mat> lisT, lisR;
+	cv::split(paimonTemplate, lisT);
+	cv::split(giPaimonRef, lisR);
+
+	cv::Mat Template, Ref;
+	cv::cvtColor(paimonTemplate, Template, cv::COLOR_RGBA2GRAY);
+	cv::cvtColor(giPaimonRef, Ref, cv::COLOR_RGBA2GRAY);
+
+	//cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
+	//cv::matchTemplate(Template, Ref, tmp, cv::TM_CCOEFF_NORMED);
+	cv::matchTemplate(lisT[3], lisR[3], tmp, cv::TM_CCOEFF_NORMED);
+
+	double minVal, maxVal;
+	cv::Point minLoc, maxLoc;
+	cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+
+#ifdef _DEBUG
+	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
+	cv::imshow("test2", tmp);
+	std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+#endif
+
+	if (maxVal < 0.36 || maxVal == 1)
+	{
+		err = 6;//未能匹配到派蒙
+		return false;
+	}
+#endif
+
+	getMiniMapRefMat();
+
+	//cv::Mat img_scene(giMatchResource.MapTemplate);
+	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
+
+	cv::Mat img(img_object);
+	cv::Mat imgGray;
+
+	//cvtColor(img, img, cv::COLOR_RGBA2RGB);
+
+	cv::Mat backgroundImage(img.size(), CV_8UC4, cv::Scalar(255, 255, 255, 255));
+
+	std::vector<cv::Mat>scr_channels;
+	std::vector<cv::Mat>dstt_channels;
+	split(img, scr_channels);
+	split(backgroundImage, dstt_channels);
+
+	cv::Mat Alpha = scr_channels[3];
+	//Mat Alpha = Mat(scr_channels[0].size(), CV_8UC1, Scalar(255));
+
+	for (int i = 0; i < 3; i++)
+	{
+		dstt_channels[i] = dstt_channels[i].mul(~Alpha, 1.0 / 255.0);
+		dstt_channels[i] += scr_channels[i].mul(Alpha, 1.0 / 255.0);
+	}
+	merge(dstt_channels, backgroundImage);
+
+	cvtColor(backgroundImage, img, cv::COLOR_RGBA2RGB);
+
+	//透明部分叠白色
+	cv::cvtColor(img, imgGray, 7);
+
+
+	cv::Mat img2, imgGraydst;
+
+	cv::cvtColor(img, imgGray, 7);
+	cv::threshold(imgGray, imgGraydst, 230, 255, cv::THRESH_BINARY);
+
+	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
+	cv::dilate(imgGraydst, imgGraydst, dilate_element);
+	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8));
+	cv::erode(imgGraydst, imgGraydst, erode_element);
+
+	imgGray = imgGray - imgGraydst;
+	cvtColor(imgGraydst, imgGraydst, cv::COLOR_GRAY2RGB);
+
+	img = img - imgGraydst;
+
+	/*******************************************************************/
+	int blockSize = 2;
+	cv::Mat image(img);
+	if (image.channels() == 3) cvtColor(image, image, 7);
+	if (image.channels() == 4) cvtColor(image, image, cv::COLOR_RGBA2GRAY);
+	double average = mean(image)[0];
+	int rows_new = ceil(double(image.rows) / double(blockSize));
+	int cols_new = ceil(double(image.cols) / double(blockSize));
+	cv::Mat blockImage;
+	blockImage = cv::Mat::zeros(rows_new, cols_new, CV_32FC1);
+	for (int i = 0; i < rows_new; i++)
+	{
+		for (int j = 0; j < cols_new; j++)
+		{
+			int rowmin = i * blockSize;
+			int rowmax = (i + 1)*blockSize;
+			if (rowmax > image.rows) rowmax = image.rows;
+			int colmin = j * blockSize;
+			int colmax = (j + 1)*blockSize;
+			if (colmax > image.cols) colmax = image.cols;
+			cv::Mat imageROI = image(cv::Range(rowmin, rowmax), cv::Range(colmin, colmax));
+			double temaver = mean(imageROI)[0];
+			blockImage.at<float>(i, j) = temaver;
+		}
+	}
+	blockImage = blockImage - average;
+	cv::Mat blockImage2;
+	resize(blockImage, blockImage2, image.size(), (0, 0), (0, 0), cv::INTER_CUBIC);
+	cv::Mat image2;
+	image.convertTo(image2, CV_32FC1);
+	cv::Mat dst = image2 - blockImage2;
+	dst.convertTo(image, CV_8UC1);
+
+	img = image;
+
+
+	cv::Mat out = (imgGray - img) * 5;
+
+	cv::threshold(out, out, 130, 255, cv::THRESH_BINARY);
+
+	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
+	cv::dilate(out, out, dilate_element);
+	erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(20, 20));
+	cv::erode(out, out, erode_element);
+
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarcy;
+
+	cv::findContours(out, contours, hierarcy, 0, 1);
+
+	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
+	cv::Point2f rect[4];
+
+	std::vector<cv::Point2d> AvatarKeyPoint;
+	double AvatarKeyPointLine[3] = { 0 };
+	std::vector<cv::Point2f> AvatarKeyLine;
+	cv::Point2f KeyLine;
+
+	cv::Point p;
+
+	for (int i = 0; i < contours.size(); i++)
+	{
+		boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
+		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
+
+		p = cv::Point(boundRect[i].x + boundRect[i].width / 2, boundRect[i].y + boundRect[i].height / 2);
+
+		//circle(out, p, 3, cv::Scalar(0));
+
+	}
+
+
+	double res;
+
+	//circle(imgOri, p, 3, Scalar(255, 0, 0));
+	//line(imgOri, p, Point(img.cols / 2, img.rows / 2), Scalar(0, 255, 0));
+	//cv::imshow("Img", imgOri);
+	p = p - cv::Point(img.cols / 2, img.rows / 2);
+	const double rad2degScale = 180 / CV_PI;
+	res = atan2(-p.y, p.x)*rad2degScale;
+	res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
+	//std::cout << res;
+
+	a = res;
+
 	return true;
 }
 
