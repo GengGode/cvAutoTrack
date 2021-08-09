@@ -259,7 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-*.rar
+# *.rar
 /cvAutoTrack/Map/Map bicubic.bmp
 /cvAutoTrack/Map/Map bicubic.jpg
 /cvAutoTrack/Map/Map bicubic.png
@@ -274,3 +274,5 @@ __pycache__/
 /cvAutoTrack/Picture/000.mp4_20210729_092344.066.png
 /cvAutoTrack/Video/000.json
 /cvAutoTrack/Video/000.txt
+/cvAutoTrack/Picture/001.png
+/cvAutoTrack/MatchResource/*

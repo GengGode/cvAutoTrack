@@ -90,8 +90,8 @@ cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy,
 	cv::Point2d pos;
 	double meanx = sumx / lisx.size(); //均值
 	double meany = sumy / lisy.size(); //均值
-	int x = (int)meanx;
-	int y = (int)meany;
+	double x = meanx;
+	double y = meany;
 	if (lisx.size() > 3 && lisy.size() > 3)
 	{
 		double accumx = 0.0;
@@ -107,8 +107,8 @@ cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy,
 
 		sumx = 0;
 		sumy = 0;
-		int numx = 0;
-		int numy = 0;
+		double numx = 0;
+		double numy = 0;
 		for (int i = 0; i < (lisx.size() > lisy.size() ? lisy.size() : lisx.size()); i++)
 		{
 			if (abs(lisx[i] - meanx) < 1 * stdevx)
@@ -123,13 +123,13 @@ cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy,
 				numy++;
 			}
 		}
-		int x = (int)(sumx / numx);
-		int y = (int)(sumy / numy);
-		pos = cv::Point(x, y);
+		double x = sumx / numx;
+		double y = sumy / numy;
+		pos = cv::Point2d(x, y);
 	}
 	else
 	{
-		pos = cv::Point(x, y);
+		pos = cv::Point2d(x, y);
 	}
 	return pos;
 }
