@@ -160,11 +160,11 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 #define Mode1
 
-#ifdef _DEBUG
-
 #ifdef Mode1
 	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
 #endif // Mode1
+
+#ifdef _DEBUG
 
 #ifdef Mode2
 	cv::Ptr<cv::xfeatures2d::SURF> detectorPaimon = cv::xfeatures2d::SURF::create(minHessian);
@@ -312,8 +312,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 									continue;
 								}
 								// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
-								lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-								lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+								lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
+								lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 
 								sumx += lisx.back();
 								sumy += lisy.back();
@@ -374,8 +374,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 											continue;
 										}
 
-										lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-										lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+										lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
+										lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 										sumx += lisx.back();
 										sumy += lisy.back();
 									}
@@ -409,8 +409,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 									//int x = (int)meanx;
 									//int y = (int)meany;
 
-									int x = cvRound((p.x - someMap.cols / 2) / 2);
-									int y = cvRound((p.y - someMap.rows / 2) / 2);
+									double x = (p.x - someMap.cols / 2.0) / 2.0;
+									double y = (p.y - someMap.rows / 2.0) / 2.0;
 
 									pos = cv::Point2d(x + hisP[2].x, y + hisP[2].y);
 								}
@@ -481,8 +481,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 									continue;
 								}
 
-								lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-								lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+								lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
+								lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
 								sumx += lisx.back();
 								sumy += lisy.back();
 							}
@@ -513,8 +513,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 							double meany = sumy / lisy.size(); //均值
 							cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
-							int x = cvRound((p.x - someMap.cols / 2) / 2);
-							int y = cvRound((p.y - someMap.rows / 2) / 2);
+							double x = (p.x - someMap.cols / 2.0) / 2.0;
+							double y = (p.y - someMap.rows / 2.0) / 2.0;
 
 							pos = cv::Point2d(x + hisP[2].x, y + hisP[2].y);
 						}
@@ -570,8 +570,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					{
 						continue;
 					}
-					lisx.push_back(((img_object.cols / 2 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.x)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.x));
-					lisy.push_back(((img_object.rows / 2 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.y)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.y));
+					lisx.push_back(((img_object.cols / 2.0 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.x)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.x));
+					lisy.push_back(((img_object.rows / 2.0 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.y)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.y));
 					sumx += lisx.back();
 					sumy += lisy.back();
 				}
@@ -855,12 +855,12 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
 
 	cv::Mat tmp;
-	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
-
-#ifdef _DEBUG
-	cv::namedWindow("test", cv::WINDOW_FREERATIO);
-	cv::imshow("test", giPaimonRef);
-#endif
+//	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
+//
+//#ifdef _DEBUG
+//	cv::namedWindow("test", cv::WINDOW_FREERATIO);
+//	cv::imshow("test", giPaimonRef);
+//#endif
 
 	if (giPaimonRef.channels() != 4)
 	{
@@ -878,7 +878,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	cv::imshow("test2", tmp);
 	std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
-	if (maxVal < 0.36 || maxVal == 1)
+	if (maxVal < 0.34 || maxVal == 1)
 	{
 		err=202;
 		return false;
@@ -984,99 +984,102 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	if (getUIDRefMat() == false)
 	{
 		err = 206;
-		return false;
+		//return false;
 	}
+	else
+	{
+		std::vector<cv::Mat> channels;
 
-	std::vector<cv::Mat> channels;
+		split(giUIDRef, channels);
+		giUIDRef = channels[0];
 
-	split(giUIDRef, channels);
-	giUIDRef = channels[0];
+		int _uid = 0;
+		int _NumBit[9] = { 0 };
 
-	int _uid = 0;
-	int _NumBit[9] = { 0 };
-
-	int bitCount = 1;
-	cv::Mat matchTmp;
-	cv::Mat Roi;
-	cv::Mat checkUID = giMatchResource.UID;
+		int bitCount = 1;
+		cv::Mat matchTmp;
+		cv::Mat Roi;
+		cv::Mat checkUID = giMatchResource.UID;
 
 #ifdef _DEBUG
-	//if (checkUID.rows > Roi.rows)
-	//{
-	//	cv::resize(checkUID, checkUID, cv::Size(), Roi.rows/ checkUID.rows);
-	//}
+		//if (checkUID.rows > Roi.rows)
+		//{
+		//	cv::resize(checkUID, checkUID, cv::Size(), Roi.rows/ checkUID.rows);
+		//}
 #endif
-	giUIDRef.copyTo(Roi);
+		giUIDRef.copyTo(Roi);
 
-	if (checkUID.rows > Roi.rows)
-	{
-		cv::resize(Roi, Roi, cv::Size(cvRound(1.0 * checkUID.rows / Roi.rows * Roi.cols), checkUID.rows), 0);
-	}
-
-	cv::matchTemplate(Roi, checkUID, matchTmp, cv::TM_CCOEFF_NORMED);
-
-	minVal = 0;
-	maxVal = 0;
-	minLoc = cv::Point(0, 0);
-	maxLoc = cv::Point(0, 0);
-	//寻找最佳匹配位置
-	cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
-	if (maxVal > 0.75)
-	{
-		int x = maxLoc.x + checkUID.cols + 7;
-		int y = 0;
-		double tmplis[10] = { 0 };
-		int tmplisx[10] = { 0 };
-		for (int p = 8; p >= 0; p--)
+		if (checkUID.rows > Roi.rows)
 		{
-			_NumBit[p] = 0;
-			for (int i = 0; i < 10; i++)
+			cv::resize(Roi, Roi, cv::Size(cvRound(1.0 * checkUID.rows / Roi.rows * Roi.cols), checkUID.rows), 0);
+		}
+
+		cv::matchTemplate(Roi, checkUID, matchTmp, cv::TM_CCOEFF_NORMED);
+
+		minVal = 0;
+		maxVal = 0;
+		minLoc = cv::Point(0, 0);
+		maxLoc = cv::Point(0, 0);
+		//寻找最佳匹配位置
+		cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
+		if (maxVal > 0.75)
+		{
+			int x = maxLoc.x + checkUID.cols + 7;
+			int y = 0;
+			double tmplis[10] = { 0 };
+			int tmplisx[10] = { 0 };
+			for (int p = 8; p >= 0; p--)
 			{
-				cv::Rect r(x, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
-				if (x + r.width > giUIDRef.cols)
+				_NumBit[p] = 0;
+				for (int i = 0; i < 10; i++)
 				{
-					r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
-				}
+					cv::Rect r(x, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
+					if (x + r.width > giUIDRef.cols)
+					{
+						r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
+					}
 
-				cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
-				Roi = giUIDRef(r);
+					cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
+					Roi = giUIDRef(r);
 
-				cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
+					cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
 
-				double minVali, maxVali;
-				cv::Point minLoci, maxLoci;
-				//寻找最佳匹配位置
-				cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
+					double minVali, maxVali;
+					cv::Point minLoci, maxLoci;
+					//寻找最佳匹配位置
+					cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 
-				tmplis[i] = maxVali;
-				tmplisx[i] = maxLoci.x + numCheckUID.cols - 1;
-				if (maxVali > 0.91)
-				{
-					_NumBit[p] = i;
-					x = x + maxLoci.x + numCheckUID.cols - 1;
-					break;
-				}
-				if (i == 10 - 1)
-				{
-					_NumBit[p] = getMaxID(tmplis, 10);
-					x = x + tmplisx[_NumBit[p]];
+					tmplis[i] = maxVali;
+					tmplisx[i] = maxLoci.x + numCheckUID.cols - 1;
+					if (maxVali > 0.91)
+					{
+						_NumBit[p] = i;
+						x = x + maxLoci.x + numCheckUID.cols - 1;
+						break;
+					}
+					if (i == 10 - 1)
+					{
+						_NumBit[p] = getMaxID(tmplis, 10);
+						x = x + tmplisx[_NumBit[p]];
+					}
 				}
 			}
 		}
+
+		_uid = 0;
+		for (int i = 0; i < 9; i++)
+		{
+			_uid += _NumBit[i] * bitCount;
+			bitCount = bitCount * 10;
+		}
+		if (_uid == 0)
+		{
+			err = 207;//未能在UID区域检测到有效UID
+			//return false;
+		}
+		uid = _uid;
 	}
 
-	_uid = 0;
-	for (int i = 0; i < 9; i++)
-	{
-		_uid += _NumBit[i] * bitCount;
-		bitCount = bitCount * 10;
-	}
-	if (_uid == 0)
-	{
-		err = 207;//未能在UID区域检测到有效UID
-		return false;
-	}
-	uid = _uid;
 
 
 

@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-//#define TestVideo
+#define TestVideo
 #ifdef TestVideo
 #include <vector>
 #endif
@@ -32,14 +32,14 @@ int main()
 #ifdef TestVideo
 	
 	std::vector<std::vector<double>> his;
-	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/000.png" };
+	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/001.png" };
 	char pathV[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.mp4" };
 	
 	char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.json" };
 	
 	//char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.txt" };
-	GetInfoLoadVideo(pathV, pathTxt);
-	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+	/*GetInfoLoadVideo(pathV, pathTxt);
+	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";*/
 #endif
 
 
@@ -47,10 +47,19 @@ int main()
 	while (1)
 	{
 #ifdef TestVideo
-		
+		SetWorldScale(0.666667);
 		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
 		{
 			std::cout << "Now Coor and Angle: "<<" " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
+		}
+		else
+		{
+			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		}
+		SetWorldScale(1.0);
+		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
+		{
+			std::cout << "Now Coor and Angle: " << " " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
 		}
 		else
 		{

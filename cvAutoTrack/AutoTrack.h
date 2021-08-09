@@ -115,16 +115,16 @@ private:
 
 
 	//World Center on AbsAllMap Coor
-	double WorldCenter_X = 5452;
+	double WorldCenter_X = 5352;
 	double WorldCenter_Y = 9432;
 	double WorldScale = 1.0;
 
 	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOrigin_X = 1690;
-	double MapWorldAbsOrigin_Y = 1911;
+	double MapWorldAbsOrigin_X = 1703;// 1690;
+	double MapWorldAbsOrigin_Y = 1924;// 1911;
 
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2.56;
+	double MapAbsScale = 2.557;
 
 	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025);
 	//double MapWorldOffset_X = 3412;
