@@ -392,7 +392,7 @@ $$
 $$
 \left \{ 
 \begin{matrix} 
-X\in \left [ -5452 , 12980\right)\\
+X\in \left [ -5352 , 13080\right)\\
 Y\in \left [-9432 , 9000\right)
 \end{matrix} 
 \right.
