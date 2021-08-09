@@ -18,15 +18,15 @@ skip_tags: true
 install:
     - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
-    # download opencv:
     - mkdir %OpenCvDir%
-    #- dir %OpenCvDir%
     - appveyor DownloadFile %OpenCvUrl%
     - 7z x ./*.zip -y -o%OpenCvDir%
     - rm -f ./*.zip
     #- dir %OpenCvDir%
     #- dir %OpenCvDir%x64\vc15\staticlib
-    
+
+    - cd %MyProjectDir%\%ProjectName%\
+    - 7z x ./MatchResource.rar -y -o%MyProjectDir%\%ProjectName%\
 before_build: 
     #- dir  %MyProjectDir%
     #- dir  %OpenCvDir%
