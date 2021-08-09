@@ -1,4 +1,4 @@
-// cvAutoTrack.cpp : å®šä¹‰ DLL çš„å¯¼å‡ºå‡½æ•°ã€‚
+// cvAutoTrack.cpp : ¶¨Òå DLL µÄµ¼³öº¯Êý¡£
 //
 
 #include "pch.h"
@@ -37,7 +37,11 @@ bool __stdcall GetDirection(double & a)
 {
 	return _at->GetDirection(a);
 }
-bool __stdcall GetUID(int &uid)
+bool __stdcall GetRotation(double & a)
+{
+	return _at->GetRotation(a);
+}
+bool __stdcall GetUID(int & uid)
 {
 	return _at->GetUID(uid);
 }

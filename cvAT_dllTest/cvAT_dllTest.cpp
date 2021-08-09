@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-#define TestVideo
+//#define TestVideo
 #ifdef TestVideo
 #include <vector>
 #endif
@@ -26,6 +26,7 @@ int main()
 	double x2 = 0;
 	double y2 = 0;
 	double a2 = 0;
+	double aa2 = 0;
 	int uid = 0;
 	// 调用循环
 
@@ -69,22 +70,22 @@ int main()
 #ifndef TestVideo
 
 		// 调用获取方法
-		if (GetTransform(x, y, a))
-		{
-			std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
-		}
-		else
-		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
-		}
-		if (GetPosition(x2, y2))
-		{
-			std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
-		}
-		else
-		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
-		}
+		//if (GetTransform(x, y, a))
+		//{
+		//	std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
+		//if (GetPosition(x2, y2))
+		//{
+		//	std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
 		if (GetDirection(a2))
 		{
 			std::cout << "Now Angle: " << " " << a2 << "\n";
@@ -93,14 +94,22 @@ int main()
 		{
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
-		if (GetUID(uid))
+		if (GetRotation(aa2))
 		{
-			std::cout << "Now UID: " << " " << uid << " " << "\n";
+			std::cout << "Now Rotation: " << " " << aa2 << "\n";
 		}
 		else
 		{
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
+		//if (GetUID(uid))
+		//{
+		//	std::cout << "Now UID: " << " " << uid << " " << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
 
 		Sleep(1);
 #endif
