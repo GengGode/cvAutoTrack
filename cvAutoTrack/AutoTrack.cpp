@@ -846,116 +846,66 @@ bool AutoTrack::GetRotation(double & a)
 	cv::Mat img(img_object);
 	cv::Mat imgGray;
 
-	//cvtColor(img, img, cv::COLOR_RGBA2RGB);
 
-	cv::Mat backgroundImage(img.size(), CV_8UC4, cv::Scalar(255, 255, 255, 255));
 
 	std::vector<cv::Mat>scr_channels;
 	std::vector<cv::Mat>dstt_channels;
 	split(img, scr_channels);
-	split(backgroundImage, dstt_channels);
 
 	cv::Mat Alpha = scr_channels[3];
-	//Mat Alpha = Mat(scr_channels[0].size(), CV_8UC1, Scalar(255));
 
-	for (int i = 0; i < 3; i++)
-	{
-		dstt_channels[i] = dstt_channels[i].mul(~Alpha, 1.0 / 255.0);
-		dstt_channels[i] += scr_channels[i].mul(Alpha, 1.0 / 255.0);
-	}
-	merge(dstt_channels, backgroundImage);
+	Alpha = 255.0 - Alpha;
 
-	cvtColor(backgroundImage, img, cv::COLOR_RGBA2RGB);
+	Alpha = Alpha * 2;
 
-	//透明部分叠白色
-	cv::cvtColor(img, imgGray, 7);
+	cv::threshold(Alpha, Alpha, 150, 0, cv::THRESH_TOZERO_INV);
+	cv::threshold(Alpha, Alpha, 50, 0, cv::THRESH_TOZERO);
+	cv::threshold(Alpha, Alpha, 50, 255, cv::THRESH_BINARY);
+
+	cv::circle(Alpha, cv::Point(Alpha.cols / 2, Alpha.rows / 2), min(Alpha.cols / 2, Alpha.rows / 2)*1.21, cv::Scalar(0, 0, 0), min(Alpha.cols / 2, Alpha.rows / 2)*0.42);
+	cv::circle(Alpha, cv::Point(Alpha.cols / 2, Alpha.rows / 2), min(Alpha.cols / 2, Alpha.rows / 2)*0.3, cv::Scalar(0, 0, 0),-1);
 
 
-	cv::Mat img2, imgGraydst;
+	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
+	cv::dilate(Alpha, Alpha, dilate_element);
+	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
+	cv::erode(Alpha, Alpha, erode_element);
 
-	cv::cvtColor(img, imgGray, 7);
-	cv::threshold(imgGray, imgGraydst, 230, 255, cv::THRESH_BINARY);
+	erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
+	cv::erode(Alpha, Alpha, erode_element);
+	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
+	cv::dilate(Alpha, Alpha, dilate_element);
 
-	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(10, 10));
-	cv::dilate(imgGraydst, imgGraydst, dilate_element);
-	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8));
-	cv::erode(imgGraydst, imgGraydst, erode_element);
-
-	imgGray = imgGray - imgGraydst;
-	cvtColor(imgGraydst, imgGraydst, cv::COLOR_GRAY2RGB);
-
-	img = img - imgGraydst;
-
-	/*******************************************************************/
-	int blockSize = 2;
-	cv::Mat image(img);
-	if (image.channels() == 3) cvtColor(image, image, 7);
-	if (image.channels() == 4) cvtColor(image, image, cv::COLOR_RGBA2GRAY);
-	double average = mean(image)[0];
-	int rows_new = ceil(double(image.rows) / double(blockSize));
-	int cols_new = ceil(double(image.cols) / double(blockSize));
-	cv::Mat blockImage;
-	blockImage = cv::Mat::zeros(rows_new, cols_new, CV_32FC1);
-	for (int i = 0; i < rows_new; i++)
-	{
-		for (int j = 0; j < cols_new; j++)
-		{
-			int rowmin = i * blockSize;
-			int rowmax = (i + 1)*blockSize;
-			if (rowmax > image.rows) rowmax = image.rows;
-			int colmin = j * blockSize;
-			int colmax = (j + 1)*blockSize;
-			if (colmax > image.cols) colmax = image.cols;
-			cv::Mat imageROI = image(cv::Range(rowmin, rowmax), cv::Range(colmin, colmax));
-			double temaver = mean(imageROI)[0];
-			blockImage.at<float>(i, j) = temaver;
-		}
-	}
-	blockImage = blockImage - average;
-	cv::Mat blockImage2;
-	resize(blockImage, blockImage2, image.size(), (0, 0), (0, 0), cv::INTER_CUBIC);
-	cv::Mat image2;
-	image.convertTo(image2, CV_32FC1);
-	cv::Mat dst = image2 - blockImage2;
-	dst.convertTo(image, CV_8UC1);
-
-	img = image;
+	cv::Mat out = Alpha;
 
 
-	cv::Mat out = (imgGray - img) * 5;
 
-	cv::threshold(out, out, 130, 255, cv::THRESH_BINARY);
-
-	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5));
-	cv::dilate(out, out, dilate_element);
-	erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(20, 20));
-	cv::erode(out, out, erode_element);
-
+	//传入黑白图
+	//根据白块部分计算视角中心坐标
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 
 	cv::findContours(out, contours, hierarcy, 0, 1);
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
-	cv::Point2f rect[4];
-
-	std::vector<cv::Point2d> AvatarKeyPoint;
-	double AvatarKeyPointLine[3] = { 0 };
-	std::vector<cv::Point2f> AvatarKeyLine;
-	cv::Point2f KeyLine;
 
 	cv::Point p;
+	int maxBlack = 0;
+	int maxId = 0;
 
 	for (int i = 0; i < contours.size(); i++)
 	{
+		if (contours[i].size() > maxBlack)
+		{
+			maxBlack = contours[i].size();
+			maxId = i;
+		}
 		boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
-
-		p = cv::Point(boundRect[i].x + boundRect[i].width / 2, boundRect[i].y + boundRect[i].height / 2);
-
-		//circle(out, p, 3, cv::Scalar(0));
-
+		
 	}
+
+	p = cv::Point(boundRect[maxId].x + boundRect[maxId].width / 2, boundRect[maxId].y + boundRect[maxId].height / 2);
+
 
 
 	double res;

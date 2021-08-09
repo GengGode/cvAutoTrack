@@ -86,14 +86,14 @@ int main()
 		//{
 		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		//}
-		if (GetDirection(a2))
-		{
-			std::cout << "Now Angle: " << " " << a2 << "\n";
-		}
-		else
-		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
-		}
+		//if (GetDirection(a2))
+		//{
+		//	std::cout << "Now Angle: " << " " << a2 << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+		//}
 		if (GetRotation(aa2))
 		{
 			std::cout << "Now Rotation: " << " " << aa2 << "\n";
