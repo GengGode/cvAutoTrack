@@ -276,6 +276,31 @@ bool GetDirection(
 
 
 
+## GetRotation
+
+```C++
+bool GetRotation(
+    double &a
+);
+```
+
+获取当前视角方位（视角朝向）。
+
+### 参数
+
+- `a` 获取到的角度。
+
+### 返回值
+
+- `true` 表示获取成功。
+- `false` 表示获取失败，此时参数不会被改变。
+
+### 说明
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+
+
 ## GetUID
 
 ```C++
