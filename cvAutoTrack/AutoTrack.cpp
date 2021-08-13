@@ -843,14 +843,15 @@ bool AutoTrack::GetRotation(double & a)
 	//cv::Mat img_scene(giMatchResource.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
 
-	cv::Mat img(img_object);
-	cv::Mat imgGray;
-
-
+	if (img_object.channels() != 4)
+	{
+		err = 401;
+		return false;
+	}
 
 	std::vector<cv::Mat>scr_channels;
-	std::vector<cv::Mat>dstt_channels;
-	split(img, scr_channels);
+
+	split(img_object, scr_channels);
 
 	cv::Mat Alpha = scr_channels[3];
 
@@ -876,16 +877,13 @@ bool AutoTrack::GetRotation(double & a)
 	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
 	cv::dilate(Alpha, Alpha, dilate_element);
 
-	cv::Mat out = Alpha;
-
-
 
 	//传入黑白图
 	//根据白块部分计算视角中心坐标
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 
-	cv::findContours(out, contours, hierarcy, 0, 1);
+	cv::findContours(Alpha, contours, hierarcy, 0, 1);
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 
@@ -909,15 +907,16 @@ bool AutoTrack::GetRotation(double & a)
 
 
 	double res;
+#ifdef _DEBUG
+	circle(Alpha, p, 3, cv::Scalar(255, 0, 0));
+	line(Alpha, p, cv::Point(img_object.cols / 2, img_object.rows / 2), cv::Scalar(0, 255, 0));
+	cv::imshow("Img", Alpha);
+#endif
+	p = p - cv::Point(img_object.cols / 2, img_object.rows / 2);
 
-	//circle(imgOri, p, 3, Scalar(255, 0, 0));
-	//line(imgOri, p, Point(img.cols / 2, img.rows / 2), Scalar(0, 255, 0));
-	//cv::imshow("Img", imgOri);
-	p = p - cv::Point(img.cols / 2, img.rows / 2);
 	const double rad2degScale = 180 / CV_PI;
 	res = atan2(-p.y, p.x)*rad2degScale;
 	res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
-	//std::cout << res;
 
 	a = res;
 
