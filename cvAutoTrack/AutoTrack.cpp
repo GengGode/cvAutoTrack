@@ -887,6 +887,12 @@ bool AutoTrack::GetRotation(double & a)
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 
+	if (contours.size() == 0)
+	{
+		err = 402;//
+		return false;
+	}
+
 	cv::Point p;
 	int maxBlack = 0;
 	int maxId = 0;
