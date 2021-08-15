@@ -475,6 +475,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #ifdef _DEBUG
 						std::vector<cv::DMatch> good_matchesTmp;
 #endif
+						KNN_mTmp.clear();
 						matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
 						std::vector<double> lisx;
 						std::vector<double> lisy;
