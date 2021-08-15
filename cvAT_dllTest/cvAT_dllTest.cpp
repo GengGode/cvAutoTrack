@@ -15,6 +15,7 @@
 int main()
 {
 	system("chcp 65001");
+	std::ios::sync_with_stdio(false);
 
 	// 静态方法调用
 	// 初始化
@@ -111,7 +112,9 @@ int main()
 			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
 		}
 
-		Sleep(1);
+		Sleep(42);
+		system("cls");
+		//std::cout << "\r\r\r\r\r";
 #endif
 	}
 }
