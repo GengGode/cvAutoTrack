@@ -26,7 +26,9 @@ extern "C" CVAUTOTRACK_API bool GetInfoLoadVideo(char* path, char* pathOutFile);
 
 extern "C" CVAUTOTRACK_API int GetLastErr();
 extern "C" CVAUTOTRACK_API const char* GetLastErrStr();
-extern "C" CVAUTOTRACK_API bool uninit();
+
+extern "C" CVAUTOTRACK_API bool startServe();
+extern "C" CVAUTOTRACK_API bool stopServe();
 
 #ifdef _DEBUG
 

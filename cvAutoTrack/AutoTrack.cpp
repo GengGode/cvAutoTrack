@@ -4,14 +4,14 @@
 
 AutoTrack::AutoTrack()
 {
-	_detectorAllMap = new cv::Ptr<cv::xfeatures2d::SURF>;
-	_detectorSomeMap = new cv::Ptr<cv::xfeatures2d::SURF>;
-	_KeyPointAllMap = new std::vector<cv::KeyPoint>;
-	_KeyPointSomeMap = new std::vector<cv::KeyPoint>;
-	_KeyPointMiniMap = new std::vector<cv::KeyPoint>;
-	_DataPointAllMap = new cv::Mat;
-	_DataPointSomeMap = new cv::Mat;
-	_DataPointMiniMap = new cv::Mat;
+	//_detectorAllMap = new cv::Ptr<cv::xfeatures2d::SURF>;
+	//_detectorSomeMap = new cv::Ptr<cv::xfeatures2d::SURF>;
+	//_KeyPointAllMap = new std::vector<cv::KeyPoint>;
+	//_KeyPointSomeMap = new std::vector<cv::KeyPoint>;
+	//_KeyPointMiniMap = new std::vector<cv::KeyPoint>;
+	//_DataPointAllMap = new cv::Mat;
+	//_DataPointSomeMap = new cv::Mat;
+	//_DataPointMiniMap = new cv::Mat;
 
 	MapWorldOffset.x = MapWorldAbsOrigin_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOrigin_Y - WorldCenter_Y;
@@ -52,26 +52,26 @@ AutoTrack::AutoTrack()
 
 AutoTrack::~AutoTrack(void)
 {
-	delete _detectorAllMap;
-	delete _detectorSomeMap;
-	delete _KeyPointAllMap;
-	delete _KeyPointSomeMap;
-	delete _KeyPointMiniMap;
-	delete _DataPointAllMap;
-	delete _DataPointSomeMap;
-	delete _DataPointMiniMap;
+	//delete _detectorAllMap;
+	//delete _detectorSomeMap;
+	//delete _KeyPointAllMap;
+	//delete _KeyPointSomeMap;
+	//delete _KeyPointMiniMap;
+	//delete _DataPointAllMap;
+	//delete _DataPointSomeMap;
+	//delete _DataPointMiniMap;
 }
 
 bool AutoTrack::init()
 {
 	if (!is_init_end)
 	{
-		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*) _detectorAllMap;
-		std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-		cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
+		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*) _detectorAllMap;
+		//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
+		//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
 
-		detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
-		detectorAllMap->detectAndCompute(giMatchResource.MapTemplate, cv::noArray(), KeyPointAllMap, DataPointAllMap);
+		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
+		_detectorAllMap->detectAndCompute(giMatchResource.MapTemplate, cv::noArray(), _KeyPointAllMap, _DataPointAllMap);
 
 		is_init_end = true;
 	}
@@ -107,20 +107,14 @@ bool AutoTrack::SetWorldScale(double scale)
 	return true;
 }
 
-bool AutoTrack::uninit()
+bool AutoTrack::startServe()
 {
-	if (is_init_end)
-	{
-		delete _detectorAllMap;
-		_detectorAllMap = nullptr;
-		delete _KeyPointAllMap;
-		_KeyPointAllMap = nullptr;
-		delete _DataPointAllMap;
-		_DataPointAllMap = nullptr;
+	return false;
+}
 
-		is_init_end = false;
-	}
-	return !is_init_end;
+bool AutoTrack::stopServe()
+{
+	return false;
 }
 
 bool AutoTrack::GetTransform(float & x, float & y, float & a)
@@ -284,11 +278,17 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					//resize(someMap, someMap, Size(), MatchMatScale, MatchMatScale, 1);
 					//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
 
-					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+					cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+					cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 					detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
 					detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
@@ -454,11 +454,17 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 					cv::Mat minMap(img_object);
 
-					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+					cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+					cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 
 					resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
@@ -547,11 +553,17 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	}
 	if (!isContinuity)
 	{
-		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
-		std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-		cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
-		std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-		cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
+		//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
+		//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
+		//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+		//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = _detectorAllMap;
+		std::vector<cv::KeyPoint>& KeyPointAllMap = _KeyPointAllMap;
+		cv::Mat& DataPointAllMap = _DataPointAllMap;
+		std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+		cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 		detectorAllMap->detectAndCompute(img_object, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
 		
@@ -615,6 +627,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	hisP[2] = pos;
 
 	pos = TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+
+	pos = posFilter.filterting(pos);
 
 	pos = TransferUserAxes(pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 
@@ -1312,11 +1326,17 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 					//resize(someMap, someMap, Size(), MatchMatScale, MatchMatScale, 1);
 					//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
 
-					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+					cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+					cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 					detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
 					detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
@@ -1482,11 +1502,17 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 					cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 					cv::Mat minMap(img_object);
 
-					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+					cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+					std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+					cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 
 					resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
@@ -1574,11 +1600,17 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	}
 	if (!isContinuity)
 	{
-		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
-		std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-		cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
-		std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-		cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
+		//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
+		//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
+		//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+		//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = _detectorAllMap;
+		std::vector<cv::KeyPoint>& KeyPointAllMap = _KeyPointAllMap;
+		cv::Mat& DataPointAllMap = _DataPointAllMap;
+		std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+		cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 		detectorAllMap->detectAndCompute(img_object, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
 
@@ -1967,11 +1999,17 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 						//resize(someMap, someMap, Size(), MatchMatScale, MatchMatScale, 1);
 						//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
 
-						cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-						std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-						cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-						std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-						cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+						//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+						//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+						//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+						//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+						//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+						cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+						std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+						cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+						std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+						cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 						detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
 						detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
@@ -2137,11 +2175,17 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 						cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 						cv::Mat minMap(img_object);
 
-						cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-						std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-						cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-						std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-						cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+						//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
+						//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
+						//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
+						//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+						//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+						cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
+						std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
+						cv::Mat& DataPointSomeMap = _DataPointSomeMap;
+						std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+						cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 
 						resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
@@ -2229,11 +2273,17 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 		}
 		if (!isContinuity)
 		{
-			cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
-			std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-			cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
-			std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-			cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+			//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
+			//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
+			//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
+			//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
+			//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+
+			cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = _detectorAllMap;
+			std::vector<cv::KeyPoint>& KeyPointAllMap = _KeyPointAllMap;
+			cv::Mat& DataPointAllMap = _DataPointAllMap;
+			std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
+			cv::Mat& DataPointMiniMap = _DataPointMiniMap;
 
 			detectorAllMap->detectAndCompute(img_object, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
 
