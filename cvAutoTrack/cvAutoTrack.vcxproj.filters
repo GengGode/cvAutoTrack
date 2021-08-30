@@ -54,6 +54,12 @@
     <ClInclude Include="GenshinImpactScreen.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cvAT_SAerialization.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Kalmanfilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cvAutoTrack.cpp">
@@ -84,6 +90,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GenshinImpactScreen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cvAT_SAerialization.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Kalmanfilter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

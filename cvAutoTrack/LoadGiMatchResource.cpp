@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LoadGiMatchResource.h"
 
+
 BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 {
 	BITMAP bmp;

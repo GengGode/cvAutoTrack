@@ -9,6 +9,7 @@
 #include "LoadGiMatchResource.h"
 #include "FlowWork.h"
 #include "ErrorCode.h"
+#include "Kalmanfilter.h"
 
 #define AUTO_TRACK_DEBUG_DELAY 1
 
@@ -31,7 +32,8 @@ public:
 	bool GetInfoLoadVideo(char * path, char * pathOutFile);
 	int GetLastError();
 	const char* GetLastErrorStr();
-	bool uninit();
+	bool startServe();
+	bool stopServe();
 
 private:
 	LoadGiMatchResource giMatchResource;
@@ -45,6 +47,7 @@ private:
 
 	FlowWork wForAfter;
 
+	Kalmanfilter posFilter;
 private:
 	int error_code = 0;
 
@@ -140,6 +143,7 @@ private:
 
 
 private:
+#ifdef oldValue
 	//cv::Ptr<cv::xfeatures2d::SURF>
 	void* _detectorAllMap = nullptr;
 	//cv::Ptr<cv::xfeatures2d::SURF>
@@ -156,6 +160,24 @@ private:
 	void* _DataPointSomeMap = nullptr;
 	//cv::Mat
 	void* _DataPointMiniMap = nullptr;
+#else
+	//
+	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
+	//
+	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap ;
+	//
+	std::vector<cv::KeyPoint> _KeyPointAllMap;
+	//std::vector<cv::KeyPoint>
+	std::vector<cv::KeyPoint> _KeyPointSomeMap;
+	//std::vector<cv::KeyPoint>
+	std::vector<cv::KeyPoint> _KeyPointMiniMap;
+	//cv::Mat
+	cv::Mat _DataPointAllMap;
+	//cv::Mat
+	cv::Mat _DataPointSomeMap;
+	//cv::Mat
+	cv::Mat _DataPointMiniMap;
+#endif
 
 private:
 	bool isOnCity = false;

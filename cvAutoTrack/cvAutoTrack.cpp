@@ -61,7 +61,11 @@ const char * __stdcall GetLastErrStr()
 {
 	return _at->GetLastErrorStr();
 }
-bool __stdcall uninit()
+bool startServe()
 {
-	return _at->uninit();
+	return _at->startServe();
+}
+bool stopServe()
+{
+	return _at->stopServe();
 }
