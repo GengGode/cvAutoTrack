@@ -18,6 +18,7 @@ public:
 
 public:
 	cv::Point2d filterting(cv::Point2d p);
+	cv::Point2d reinitfilterting(cv::Point2d p);
 
 };
 

@@ -57,3 +57,30 @@ cv::Point2d Kalmanfilter::filterting(cv::Point2d p)
 	/***************/
 	return resP;
 }
+
+cv::Point2d Kalmanfilter::reinitfilterting(cv::Point2d p)
+{
+	cv::Point2d resP;
+	/***************/
+	resP = p;
+
+	KF.init(stateNum, measureNum, 0);
+
+	KF.statePost.at<float>(0) = static_cast<float>(p.x);
+	KF.statePost.at<float>(1) = static_cast<float>(p.y);
+
+	cv::Mat prediction = KF.predict();
+	cv::Point2d predictPt = cv::Point2d(prediction.at<float>(0), prediction.at<float>(1));
+
+	//3.update measurement
+	measurement.at<float>(0, 0) = static_cast<float>(p.x);
+	measurement.at<float>(1, 0) = static_cast<float>(p.y);
+
+	//4.update
+	KF.correct(measurement);
+
+	resP = cv::Point2d(KF.statePost.at<float>(0), KF.statePost.at<float>(1));
+
+	/***************/
+	return resP;
+}
