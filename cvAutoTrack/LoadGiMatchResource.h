@@ -8,7 +8,7 @@
 
 #include "resource.h"
 
-//
+//图片资源 加载类
 class LoadGiMatchResource
 {
 public:
@@ -20,6 +20,9 @@ public:
 	cv::Mat MapTemplate;
 	cv::Mat UID;
 	cv::Mat UIDnumber[10];
+
+	void install();
+	void release();
 
 private:
 	void UIDnumberRGBA2A();

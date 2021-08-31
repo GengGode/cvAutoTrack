@@ -61,7 +61,7 @@ bool init();
 
 
 
-## uninit (5.0以上已剔除)
+## uninit
 
 ```C++
 bool uninit();

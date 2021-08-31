@@ -12,6 +12,7 @@
 
 // 这是已导出的函数。
 extern "C" CVAUTOTRACK_API bool init();
+extern "C" CVAUTOTRACK_API bool uninit();
 extern "C" CVAUTOTRACK_API bool SetHandle(long long int handle);
 extern "C" CVAUTOTRACK_API bool SetWorldCenter(double x, double y);
 extern "C" CVAUTOTRACK_API bool SetWorldScale(double scale);
