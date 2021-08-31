@@ -20,6 +20,7 @@ public:
 	~AutoTrack(void);
 
 	bool init();
+	bool uninit();
 	bool SetHandle(long long int handle);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);

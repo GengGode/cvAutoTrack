@@ -7,65 +7,78 @@
 
 #include "AutoTrack.h"
 
-AutoTrack* _at = new AutoTrack();
+AutoTrack* _at = nullptr;// new AutoTrack();
+
+AutoTrack* getInstance()
+{
+	if (_at == nullptr)
+	{
+		_at = new AutoTrack();
+	}
+	return _at;
+}
 
 bool __stdcall init()
 {
-	return _at->init();
+	return getInstance()->init();
+}
+bool __stdcall uninit()
+{
+	return getInstance()->uninit();
 }
 bool __stdcall SetHandle(long long int handle)
 {
-	return _at->SetHandle(handle);
+	return getInstance()->SetHandle(handle);
 }
 bool __stdcall SetWorldCenter(double x, double y)
 {
-	return _at->SetWorldCenter(x, y);
+	return getInstance()->SetWorldCenter(x, y);
 }
 bool __stdcall SetWorldScale(double scale)
 {
-	return _at->SetWorldScale(scale);
+	return getInstance()->SetWorldScale(scale);
 }
 bool __stdcall GetTransform(float &x, float &y, float &a)
 {
-	return _at->GetTransform(x, y, a);
+	return getInstance()->GetTransform(x, y, a);
 }
 bool __stdcall GetPosition(double & x, double & y)
 {
-	return _at->GetPosition(x, y);
+	return getInstance()->GetPosition(x, y);
 }
 bool __stdcall GetDirection(double & a)
 {
-	return _at->GetDirection(a);
+	return getInstance()->GetDirection(a);
 }
 bool __stdcall GetRotation(double & a)
 {
-	return _at->GetRotation(a);
+	return getInstance()->GetRotation(a);
 }
 bool __stdcall GetUID(int & uid)
 {
-	return _at->GetUID(uid);
+	return getInstance()->GetUID(uid);
 }
 bool __stdcall GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
 {
-	return _at->GetInfoLoadPicture(path, uid, x, y, a);
+	return getInstance()->GetInfoLoadPicture(path, uid, x, y, a);
 }
 bool __stdcall GetInfoLoadVideo(char * path, char * pathOutFile)
 {
-	return _at->GetInfoLoadVideo(path, pathOutFile);
+	return getInstance()->GetInfoLoadVideo(path, pathOutFile);
 }
 int __stdcall GetLastErr()
 {
-	return _at->GetLastError();
+	return getInstance()->GetLastError();
 }
 const char * __stdcall GetLastErrStr()
 {
-	return _at->GetLastErrorStr();
+	return getInstance()->GetLastErrorStr();
 }
-bool startServe()
+bool __stdcall startServe()
 {
-	return _at->startServe();
+	return getInstance()->startServe();
 }
-bool stopServe()
+bool __stdcall stopServe()
 {
-	return _at->stopServe();
+	return getInstance()->stopServe();
 }

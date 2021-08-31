@@ -44,13 +44,17 @@ int main()
 	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";*/
 #endif
 
+	Sleep(1000);
+
 	if (init())
 	{
-		Sleep(10000);
 
-		Sleep(20000);
+		Sleep(2000);
 
 	}
+	uninit();
+
+	Sleep(10000);
 
 
 

@@ -4,14 +4,6 @@
 
 AutoTrack::AutoTrack()
 {
-	//_detectorAllMap = new cv::Ptr<cv::xfeatures2d::SURF>;
-	//_detectorSomeMap = new cv::Ptr<cv::xfeatures2d::SURF>;
-	//_KeyPointAllMap = new std::vector<cv::KeyPoint>;
-	//_KeyPointSomeMap = new std::vector<cv::KeyPoint>;
-	//_KeyPointMiniMap = new std::vector<cv::KeyPoint>;
-	//_DataPointAllMap = new cv::Mat;
-	//_DataPointSomeMap = new cv::Mat;
-	//_DataPointMiniMap = new cv::Mat;
 
 	MapWorldOffset.x = MapWorldAbsOrigin_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOrigin_Y - WorldCenter_Y;
@@ -52,23 +44,13 @@ AutoTrack::AutoTrack()
 
 AutoTrack::~AutoTrack(void)
 {
-	//delete _detectorAllMap;
-	//delete _detectorSomeMap;
-	//delete _KeyPointAllMap;
-	//delete _KeyPointSomeMap;
-	//delete _KeyPointMiniMap;
-	//delete _DataPointAllMap;
-	//delete _DataPointSomeMap;
-	//delete _DataPointMiniMap;
 }
 
 bool AutoTrack::init()
 {
 	if (!is_init_end)
 	{
-		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*) _detectorAllMap;
-		//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-		//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
+		giMatchResource.install();
 
 		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
 		_detectorAllMap->detectAndCompute(giMatchResource.MapTemplate, cv::noArray(), _KeyPointAllMap, _DataPointAllMap);
@@ -77,6 +59,23 @@ bool AutoTrack::init()
 	}
 	return is_init_end;
 }
+
+bool AutoTrack::uninit()
+{
+	if (is_init_end)
+	{
+		_detectorAllMap.release();
+		_KeyPointAllMap.resize(0);
+		_KeyPointAllMap.reserve(0);
+		_DataPointAllMap.release();
+
+		giMatchResource.release();
+
+		is_init_end = false;
+	}
+	return !is_init_end;
+}
+
 
 bool AutoTrack::SetHandle(long long int handle)
 {

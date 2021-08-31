@@ -17,9 +17,19 @@ BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 
 LoadGiMatchResource::LoadGiMatchResource()
 {
+	//install();
+}
+
+LoadGiMatchResource::~LoadGiMatchResource()
+{
+	release();
+}
+
+void LoadGiMatchResource::install()
+{
 	HBITMAP gHmp;
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP1));
-	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile"; 
+	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, PaimonTemplate);
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP2));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
@@ -61,12 +71,23 @@ LoadGiMatchResource::LoadGiMatchResource()
 	HBitmap2Mat(gHmp, UIDnumber[9]);
 
 	UIDnumberRGBA2A();
-
 }
 
-LoadGiMatchResource::~LoadGiMatchResource()
+void LoadGiMatchResource::release()
 {
-
+	PaimonTemplate.release();
+	MapTemplate.release();
+	UID.release();
+	UIDnumber[0].release();
+	UIDnumber[1].release();
+	UIDnumber[2].release();
+	UIDnumber[3].release();
+	UIDnumber[4].release();
+	UIDnumber[5].release();
+	UIDnumber[6].release();
+	UIDnumber[7].release();
+	UIDnumber[8].release();
+	UIDnumber[9].release();
 }
 
 void LoadGiMatchResource::UIDnumberRGBA2A()
