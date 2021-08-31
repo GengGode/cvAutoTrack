@@ -262,7 +262,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 	cv::Point2d pos;
 
-	if ((dis(hisP[1] - hisP[0]) + dis(hisP[2] - hisP[1])) < 2000)
+	if (dis(hisP[2] - hisP[1]) < 1000)
 	{
 		if (hisP[2].x > someSizeR && hisP[2].x < img_scene.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < img_scene.rows - someSizeR)
 		{
@@ -550,6 +550,10 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			}
 		}
 	}
+	else
+	{
+		isConveying = true;
+	}
 	if (!isContinuity)
 	{
 		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
@@ -620,14 +624,22 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			}
 		}
 	}
+	
+	if (isConveying)
+	{
+		pos = posFilter.reinitfilterting(pos);
+		//isConveying = false;
+	}
+	else
+	{
+		pos = posFilter.filterting(pos);
+	}
 
 	hisP[0] = hisP[1];
 	hisP[1] = hisP[2];
 	hisP[2] = pos;
 
 	pos = TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
-
-	pos = posFilter.filterting(pos);
 
 	pos = TransferUserAxes(pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 

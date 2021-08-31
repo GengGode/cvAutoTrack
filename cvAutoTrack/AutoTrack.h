@@ -183,6 +183,7 @@ private:
 private:
 	bool isOnCity = false;
 	bool isContinuity = false;
+	bool isConveying = false;
 	cv::Point2d _TransformHistory[3];
 	bool is_Auto_getHandle = true;
 
