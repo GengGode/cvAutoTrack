@@ -57,16 +57,7 @@ private:
 
 private:
 
-#define MAP_2_0
-
-#ifndef MAP_2_0
-#define MAP_1_7_2
-#ifndef MAP_1_7_2
-#define MAP_1_7_1
-#endif
-#endif
-
-
+#define MAP_2_1
 
 #ifdef MAP_1_7_1
 	int minHessian = 400;
@@ -136,6 +127,43 @@ private:
 	//double MapWorldOffset_X = 3412;
 	//double MapWorldOffset_Y = 2025;
 
+	double MapWorldScale = 1.0;
+
+#endif
+
+#ifdef MAP_2_1
+	int minHessian = 400;
+	double ratio_thresh = 0.66;
+	double mapScale = 1.3;//1.3;
+	int someSizeR = 106;
+	double MatchMatScale = 2.0;
+
+	//用户定义映射关系参数
+	double UserWorldOrigin_X = 0;
+	double UserWorldOrigin_Y = 0;
+	double UserWorldScale = 1.0;
+
+	// 绝对世界中心 绝对世界缩放系数
+	//World Center on AbsAllMap Coor
+	double WorldCenter_X = 5352; //Abs
+	double WorldCenter_Y = 9432; //Abs
+	double WorldScale = 1.0; //Abs
+
+	//相对绝对空间原点坐标
+	//Map Origin Point on AbsAllMap Coor.
+	double MapWorldAbsOrigin_X = 1703; //from diff Image
+	double MapWorldAbsOrigin_Y = 1718; //from diff Image
+
+	//相对绝对空间缩放系数
+	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
+	double MapAbsScale = 2.557; //from diff Image
+
+	//忘了是啥了，记得明天推导
+	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025); // ? forget
+	//double MapWorldOffset_X = 3412;
+	//double MapWorldOffset_Y = 2025;
+
+	//也忘了
 	double MapWorldScale = 1.0;
 
 #endif

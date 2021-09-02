@@ -13,10 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 涓枃(绠�浣擄紝涓浗) resources
+// 中文(简体，中国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -49,9 +50,9 @@ END
 // Bitmap
 //
 
-IDB_BITMAP1             BITMAP                  "MatchResource\\PaimonDefault.bmp"
+IDB_BITMAP_PAIMON       BITMAP                  "MatchResource\\PaimonDefault.bmp"
 
-IDB_BITMAP2             BITMAP                  "MatchResource\\GIMAP.bmp"
+IDB_BITMAP_GIMAP        BITMAP                  "MatchResource\\GIMAP.bmp"
 
 IDB_BITMAP_UID_         BITMAP                  "MatchResource\\png\\uid_.bmp"
 
@@ -75,7 +76,15 @@ IDB_BITMAP_UID8         BITMAP                  "MatchResource\\png\\uid8.bmp"
 
 IDB_BITMAP_UID9         BITMAP                  "MatchResource\\png\\uid9.bmp"
 
-#endif    // 涓枃(绠�浣擄紝涓浗) resources
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDB_PNG_GIMAP           PNG                     "MatchResource\\GIMAP.png"
+
+#endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
