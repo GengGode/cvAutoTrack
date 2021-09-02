@@ -226,7 +226,6 @@
     <ResourceCompile Include="cvAutoTrack.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="MatchResource\GIMAP.bmp" />
     <Image Include="MatchResource\GIMAP.png" />
     <Image Include="MatchResource\PaimonDefault.bmp" />
     <Image Include="matchresource\png\png1.png" />

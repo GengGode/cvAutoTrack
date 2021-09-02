@@ -3,7 +3,6 @@
 // π© cvAutoTrack.rc  π”√
 //
 #define IDB_BITMAP_PAIMON               102
-#define IDB_BITMAP_GIMAP                103
 #define IDB_BITMAP_UID_                 104
 #define IDB_BITMAP_UID0                 105
 #define IDB_BITMAP_UID1                 106
