@@ -52,8 +52,6 @@ END
 
 IDB_BITMAP_PAIMON       BITMAP                  "MatchResource\\PaimonDefault.bmp"
 
-IDB_BITMAP_GIMAP        BITMAP                  "MatchResource\\GIMAP.bmp"
-
 IDB_BITMAP_UID_         BITMAP                  "MatchResource\\png\\uid_.bmp"
 
 IDB_BITMAP_UID0         BITMAP                  "MatchResource\\png\\uid0.bmp"

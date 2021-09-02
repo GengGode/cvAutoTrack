@@ -108,9 +108,6 @@
     <Image Include="MatchResource\PaimonDefault.bmp">
       <Filter>资源文件</Filter>
     </Image>
-    <Image Include="MatchResource\GIMAP.bmp">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="MatchResource\GIMAP.png">
       <Filter>资源文件</Filter>
     </Image>
