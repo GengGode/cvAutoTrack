@@ -94,7 +94,7 @@ BOOL LoadPNG2Mat(cv::Mat& _mat)
 
 LoadGiMatchResource::LoadGiMatchResource()
 {
-	//install();
+	install();
 }
 
 LoadGiMatchResource::~LoadGiMatchResource()
@@ -113,12 +113,7 @@ void LoadGiMatchResource::install()
 	//if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	//HBitmap2Mat(gHmp, MapTemplate);
 
-	if (LoadPNG2Mat(MapTemplate))
-	{
-		//throw"LoadSource Get Resource From Dll HBitmap faile";
-		int i = 10;
-		i++;
-	}
+	if (LoadPNG2Mat(MapTemplate) == false)throw"LoadSource Get Resource From Dll HBitmap faile";
 
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID_));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
