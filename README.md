@@ -406,7 +406,7 @@ bool GetInfoLoadVideo(
 根据该尺寸将其他贴图一同缩放到相同比例下，最后拼合成为总图，此时的缩放系数即为天理坐标模型的缩放系数。
 
 在该缩放系数下，原神2.0版本中，总图尺寸为
-[![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/tree/master/doc/page1.svg)]
+[![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page1.svg)]
 之后选择位于璃月的请仙典仪祭坛中心作为世界原点，即`( 0 , 0 )`。
 
 之后为了便于Opencv的坐标计算，设定为地图从蒙德到璃月，是横坐标正方向。
