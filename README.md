@@ -414,9 +414,8 @@ bool GetInfoLoadVideo(
 地图从璃月到稻妻，是纵坐标正方向。
 
 即
+
 ![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page2.svg)
-
-
 
 # 即将更新
 
