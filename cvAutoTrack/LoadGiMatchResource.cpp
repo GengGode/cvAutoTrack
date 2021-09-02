@@ -15,6 +15,83 @@ BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 	return FALSE;
 }
 
+BOOL LoadPNG2Mat(cv::Mat& _mat)
+{
+	//HRESULT hr = S_OK;
+	HMODULE hModu = NULL;
+	IWICStream *pIWICStream = NULL;
+	IWICBitmapDecoder *pIDecoder = NULL;
+	IWICBitmapFrameDecode *pIDecoderFrame = NULL;
+	IWICImagingFactory *m_pIWICFactory = NULL;
+	IWICBitmapSource *bitmap_source = NULL; //
+	HRSRC imageResHandle = NULL;
+	HGLOBAL imageResDataHandle = NULL;
+	void *pImageFile = NULL;
+	DWORD imageFileSize = 0;
+
+	hModu = GetModuleHandleW(L"CVAUTOTRACK.dll");
+
+	if (hModu == NULL) throw "Get Dll Instance Fail!";
+
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+	CoCreateInstance(
+		CLSID_WICImagingFactory,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_PPV_ARGS(&m_pIWICFactory)
+	);
+
+	imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB_PNG_GIMAP), L"PNG");
+	imageResDataHandle = LoadResource(hModu, imageResHandle);
+	pImageFile = LockResource(imageResDataHandle);
+	imageFileSize = SizeofResource(hModu, imageResHandle);
+	m_pIWICFactory->CreateStream(&pIWICStream);
+
+	pIWICStream->InitializeFromMemory(
+		reinterpret_cast<BYTE*>(pImageFile),
+		imageFileSize);
+	m_pIWICFactory->CreateDecoderFromStream(
+		pIWICStream,                   // The stream to use to create the decoder
+		NULL,                          // Do not prefer a particular vendor
+		WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
+		&pIDecoder);                   // Pointer to the decoder
+	pIDecoder->GetFrame(0, &pIDecoderFrame);
+
+	bitmap_source = pIDecoderFrame;
+
+	UINT width = 0, height = 0, depht = 4;
+	bitmap_source->GetSize(&width, &height);
+
+	{
+		std::vector<BYTE> buffer(width * height * depht);
+		bitmap_source->CopyPixels(NULL, width * depht, buffer.size(), buffer.data());
+
+		HBITMAP bitmap = CreateBitmap(width, height, 1, 8 * depht, buffer.data());
+
+		HBitmap2Mat(bitmap, _mat);
+
+		buffer.resize(0);
+		buffer.reserve(0);
+
+		DeleteObject(bitmap);
+	}
+	DeleteObject(bitmap_source);
+	CoUninitialize();
+
+
+	if (_mat.empty())
+	{
+		return false;
+	}
+	cv::cvtColor(_mat, _mat, cv::COLOR_RGBA2RGB);
+	if (_mat.empty())
+	{
+		return false;
+	}
+	return true;
+}
+
 LoadGiMatchResource::LoadGiMatchResource()
 {
 	//install();
@@ -28,17 +105,24 @@ LoadGiMatchResource::~LoadGiMatchResource()
 void LoadGiMatchResource::install()
 {
 	HBITMAP gHmp;
-	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP1));
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_PAIMON));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, PaimonTemplate);
-	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP2));
-	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
-	HBitmap2Mat(gHmp, MapTemplate);
+
+	//gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_GIMAP));
+	//if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
+	//HBitmap2Mat(gHmp, MapTemplate);
+
+	if (LoadPNG2Mat(MapTemplate))
+	{
+		//throw"LoadSource Get Resource From Dll HBitmap faile";
+		int i = 10;
+		i++;
+	}
 
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID_));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UID);
-
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID0));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[0]);

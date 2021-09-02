@@ -111,5 +111,44 @@
     <Image Include="MatchResource\GIMAP.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="MatchResource\GIMAP.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid_.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid0.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid2.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid3.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid5.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid6.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid7.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid8.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MatchResource\png\uid9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="matchresource\png\png1.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
