@@ -6,6 +6,8 @@
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
+地图目前支持至原神2.1版
+
 ## 如何使用
 
 1. 下载编译好的动态链接库。
@@ -404,9 +406,7 @@ bool GetInfoLoadVideo(
 根据该尺寸将其他贴图一同缩放到相同比例下，最后拼合成为总图，此时的缩放系数即为天理坐标模型的缩放系数。
 
 在该缩放系数下，原神2.0版本中，总图尺寸为
-$$
-18432px * 18432px
-$$
+[![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/doc/page1.svg)]
 之后选择位于璃月的请仙典仪祭坛中心作为世界原点，即`( 0 , 0 )`。
 
 之后为了便于Opencv的坐标计算，设定为地图从蒙德到璃月，是横坐标正方向。
@@ -414,14 +414,7 @@ $$
 地图从璃月到稻妻，是纵坐标正方向。
 
 即
-$$
-\left \{ 
-\begin{matrix} 
-X\in \left [ -5352 , 13080\right)\\
-Y\in \left [-9432 , 9000\right)
-\end{matrix} 
-\right.
-$$
+[![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/doc/page2.svg)]
 
 
 
