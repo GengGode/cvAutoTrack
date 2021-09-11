@@ -26,7 +26,7 @@ install:
     #- dir %OpenCvDir%x64\vc15\staticlib
 
     - cd %MyProjectDir%\%ProjectName%\
-    - 7z x ./MatchResource.rar -y -o%MyProjectDir%\%ProjectName%\
+    - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
 before_build: 
     #- dir  %MyProjectDir%
     #- dir  %OpenCvDir%

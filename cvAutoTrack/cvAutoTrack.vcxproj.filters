@@ -13,104 +13,98 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source.def">
-      <Filter>resource</Filter>
-    </None>
     <None Include="cpp.hint">
       <Filter>resource</Filter>
     </None>
+    <None Include="resource\Source.def">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AutoTrack.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Base_SURF.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Base_Thread.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="cvAT_SAerialization.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="ErrorCode.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="FlowWork.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="GenshinImpactScreen.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Kalmanfilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadGiMatchResource.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\C\cvAutoTrack.h">
+    <ClInclude Include="include\cvAutoTrack.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\C\cvPort.h">
-      <Filter>include</Filter>
+    <ClInclude Include="src\AutoTrack.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base_SURF.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Base_Thread.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\cvAT_SAerialization.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ErrorCode.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FlowWork.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\framework.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GenshinImpactScreen.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kalmanfilter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LoadGiMatchResource.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AutoTrack.cpp">
+    <ClCompile Include="src\AutoTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Base_SURF.cpp">
+    <ClCompile Include="src\Base_SURF.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Base_Thread.cpp">
+    <ClCompile Include="src\Base_Thread.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="cvAT_SAerialization.cpp">
+    <ClCompile Include="src\cvAT_SAerialization.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="cvAutoTrack.cpp">
+    <ClCompile Include="src\cvAutoTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorCode.cpp">
+    <ClCompile Include="src\ErrorCode.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="FlowWork.cpp">
+    <ClCompile Include="src\FlowWork.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="GenshinImpactScreen.cpp">
+    <ClCompile Include="src\GenshinImpactScreen.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Kalmanfilter.cpp">
+    <ClCompile Include="src\Kalmanfilter.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="LoadGiMatchResource.cpp">
+    <ClCompile Include="src\LoadGiMatchResource.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="cvAutoTrack.rc">
+    <ResourceCompile Include="resource\cvAutoTrack.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="MatchResource\PaimonDefault.bmp">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="MatchResource\GIMAP.png">
       <Filter>resource</Filter>
     </Image>
@@ -147,10 +141,82 @@
     <Image Include="MatchResource\png\uid9.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="matchresource\png\png1.png">
+    <Image Include="MatchResource\GISTARTEMPLATE.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="MatchResource\GISTARTEMPLATE.bmp">
+    <Image Include="resource\GIMAP.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\GIPAIMON.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\GISTARTEMPLATE.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\UID_.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\UID_.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\UID0.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid0.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid1.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid1.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid2.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid2.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid3.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid3.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid4.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid4.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid5.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid5.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid6.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid6.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid7.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid7.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid8.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid8.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid9.bmp">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\png\uid9.png">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>

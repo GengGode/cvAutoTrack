@@ -50,38 +50,38 @@ END
 // Bitmap
 //
 
-IDB_BITMAP_STAR         BITMAP                  "MatchResource\\GISTARTEMPLATE.bmp"
+IDB_BITMAP_STAR         BITMAP                  "resource\\GISTARTEMPLATE.bmp"
 
-IDB_BITMAP_PAIMON       BITMAP                  "MatchResource\\PaimonDefault.bmp"
+IDB_BITMAP_PAIMON       BITMAP                  "resource\\GIPAIMON.bmp"
 
-IDB_BITMAP_UID_         BITMAP                  "MatchResource\\png\\uid_.bmp"
+IDB_BITMAP_UID_         BITMAP                  "resource\\png\\uid_.bmp"
 
-IDB_BITMAP_UID0         BITMAP                  "MatchResource\\png\\uid0.bmp"
+IDB_BITMAP_UID0         BITMAP                  "resource\\png\\uid0.bmp"
 
-IDB_BITMAP_UID1         BITMAP                  "MatchResource\\png\\uid1.bmp"
+IDB_BITMAP_UID1         BITMAP                  "resource\\png\\uid1.bmp"
 
-IDB_BITMAP_UID2         BITMAP                  "MatchResource\\png\\uid2.bmp"
+IDB_BITMAP_UID2         BITMAP                  "resource\\png\\uid2.bmp"
 
-IDB_BITMAP_UID3         BITMAP                  "MatchResource\\png\\uid3.bmp"
+IDB_BITMAP_UID3         BITMAP                  "resource\\png\\uid3.bmp"
 
-IDB_BITMAP_UID4         BITMAP                  "MatchResource\\png\\uid4.bmp"
+IDB_BITMAP_UID4         BITMAP                  "resource\\png\\uid4.bmp"
 
-IDB_BITMAP_UID5         BITMAP                  "MatchResource\\png\\uid5.bmp"
+IDB_BITMAP_UID5         BITMAP                  "resource\\png\\uid5.bmp"
 
-IDB_BITMAP_UID6         BITMAP                  "MatchResource\\png\\uid6.bmp"
+IDB_BITMAP_UID6         BITMAP                  "resource\\png\\uid6.bmp"
 
-IDB_BITMAP_UID7         BITMAP                  "MatchResource\\png\\uid7.bmp"
+IDB_BITMAP_UID7         BITMAP                  "resource\\png\\uid7.bmp"
 
-IDB_BITMAP_UID8         BITMAP                  "MatchResource\\png\\uid8.bmp"
+IDB_BITMAP_UID8         BITMAP                  "resource\\png\\uid8.bmp"
 
-IDB_BITMAP_UID9         BITMAP                  "MatchResource\\png\\uid9.bmp"
+IDB_BITMAP_UID9         BITMAP                  "resource\\png\\uid9.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // PNG
 //
 
-IDB_PNG_GIMAP           PNG                     "MatchResource\\GIMAP.png"
+IDB_PNG_GIMAP           PNG                     "resource\\GIMAP.png"
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////

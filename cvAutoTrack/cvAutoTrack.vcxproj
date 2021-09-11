@@ -81,13 +81,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>CVAUTOTRACK</TargetName>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\include\C;$(opencvstaticinc);$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)include;$(ProjectDir)..\include\C;$(opencvstaticinc);$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(opencvstaticlib);$(OpenCvDir)\$(Platform)\vc15\staticlib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>CVAUTOTRACK</TargetName>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\include\C;$(opencvstaticinc);$(OpenCvDir)\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)include;$(ProjectDir)..\include\C;$(opencvstaticinc);$(OpenCvDir)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(opencvstaticlib);$(OpenCvDir)\$(Platform)\vc15\staticlib;;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,7 +111,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -131,6 +131,9 @@
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -156,7 +159,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
@@ -183,54 +186,49 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>./src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
-    <None Include="Source.def" />
+    <None Include="resource\Source.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\C\cvAutoTrack.h" />
-    <ClInclude Include="..\include\C\cvPort.h" />
-    <ClInclude Include="AutoTrack.h" />
-    <ClInclude Include="Base_SURF.h" />
-    <ClInclude Include="Base_Thread.h" />
-    <ClInclude Include="cvAT_SAerialization.h" />
-    <ClInclude Include="ErrorCode.h" />
-    <ClInclude Include="FlowWork.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="GenshinImpactScreen.h" />
-    <ClInclude Include="Kalmanfilter.h" />
-    <ClInclude Include="LoadGiMatchResource.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="include\cvAutoTrack.h" />
+    <ClInclude Include="src\AutoTrack.h" />
+    <ClInclude Include="src\Base_SURF.h" />
+    <ClInclude Include="src\Base_Thread.h" />
+    <ClInclude Include="src\cvAT_SAerialization.h" />
+    <ClInclude Include="src\ErrorCode.h" />
+    <ClInclude Include="src\FlowWork.h" />
+    <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\GenshinImpactScreen.h" />
+    <ClInclude Include="src\Kalmanfilter.h" />
+    <ClInclude Include="src\LoadGiMatchResource.h" />
+    <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AutoTrack.cpp" />
-    <ClCompile Include="Base_SURF.cpp" />
-    <ClCompile Include="Base_Thread.cpp" />
-    <ClCompile Include="cvAT_SAerialization.cpp" />
-    <ClCompile Include="cvAutoTrack.cpp" />
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="ErrorCode.cpp" />
-    <ClCompile Include="FlowWork.cpp" />
-    <ClCompile Include="GenshinImpactScreen.cpp" />
-    <ClCompile Include="Kalmanfilter.cpp" />
-    <ClCompile Include="LoadGiMatchResource.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="src\AutoTrack.cpp" />
+    <ClCompile Include="src\Base_SURF.cpp" />
+    <ClCompile Include="src\Base_Thread.cpp" />
+    <ClCompile Include="src\cvAT_SAerialization.cpp" />
+    <ClCompile Include="src\cvAutoTrack.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\ErrorCode.cpp" />
+    <ClCompile Include="src\FlowWork.cpp" />
+    <ClCompile Include="src\GenshinImpactScreen.cpp" />
+    <ClCompile Include="src\Kalmanfilter.cpp" />
+    <ClCompile Include="src\LoadGiMatchResource.cpp" />
+    <ClCompile Include="src\pch.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="cvAutoTrack.rc" />
+    <ResourceCompile Include="resource\cvAutoTrack.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="MatchResource\GIMAP.png" />
     <Image Include="MatchResource\GISTARTEMPLATE.bmp" />
-    <Image Include="MatchResource\PaimonDefault.bmp" />
-    <Image Include="matchresource\png\png1.png" />
     <Image Include="MatchResource\png\uid0.bmp" />
     <Image Include="MatchResource\png\uid1.bmp" />
     <Image Include="MatchResource\png\uid2.bmp" />
@@ -242,6 +240,31 @@
     <Image Include="MatchResource\png\uid8.bmp" />
     <Image Include="MatchResource\png\uid9.bmp" />
     <Image Include="MatchResource\png\uid_.bmp" />
+    <Image Include="resource\GIMAP.png" />
+    <Image Include="resource\GIPAIMON.bmp" />
+    <Image Include="resource\GISTARTEMPLATE.bmp" />
+    <Image Include="resource\png\UID0.bmp" />
+    <Image Include="resource\png\uid0.png" />
+    <Image Include="resource\png\uid1.bmp" />
+    <Image Include="resource\png\uid1.png" />
+    <Image Include="resource\png\uid2.bmp" />
+    <Image Include="resource\png\uid2.png" />
+    <Image Include="resource\png\uid3.bmp" />
+    <Image Include="resource\png\uid3.png" />
+    <Image Include="resource\png\uid4.bmp" />
+    <Image Include="resource\png\uid4.png" />
+    <Image Include="resource\png\uid5.bmp" />
+    <Image Include="resource\png\uid5.png" />
+    <Image Include="resource\png\uid6.bmp" />
+    <Image Include="resource\png\uid6.png" />
+    <Image Include="resource\png\uid7.bmp" />
+    <Image Include="resource\png\uid7.png" />
+    <Image Include="resource\png\uid8.bmp" />
+    <Image Include="resource\png\uid8.png" />
+    <Image Include="resource\png\uid9.bmp" />
+    <Image Include="resource\png\uid9.png" />
+    <Image Include="resource\png\UID_.bmp" />
+    <Image Include="resource\png\UID_.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

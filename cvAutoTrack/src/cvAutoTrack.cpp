@@ -81,6 +81,7 @@ bool stopServe()
 {
 	return _at.stopServe();
 }
+
 #ifdef _DEBUG
 
 bool test(char* str)
