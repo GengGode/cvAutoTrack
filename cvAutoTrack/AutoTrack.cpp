@@ -973,6 +973,7 @@ bool AutoTrack::GetStar(char * jsonBuff)
 	double minVal, maxVal;
 	cv::Point minLoc, maxLoc;
 	vector<cv::Point2d> pos;
+	double scale = 1.3;
 
 
 	if (wStar.run() == false)
@@ -1026,6 +1027,11 @@ bool AutoTrack::GetStar(char * jsonBuff)
 		MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
 	}
 
+	if (isOnCity)
+	{
+		scale = 0.8667;
+	}
+
 	if (isStarVisible == true)
 	{
 		
@@ -1035,11 +1041,11 @@ bool AutoTrack::GetStar(char * jsonBuff)
 			char buff[99];
 			if (i == 0)
 			{
-				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x, pos[i].y);
+				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x*scale, pos[i].y*scale);
 			}
 			else
 			{
-				sprintf_s(buff,99, ",[ %lf , %lf ]", pos[i].x, pos[i].y);
+				sprintf_s(buff,99, ",[ %lf , %lf ]", pos[i].x*scale, pos[i].y*scale);
 			}
 			strncat_s(jsonBuff,1024, buff,99);
 		}
