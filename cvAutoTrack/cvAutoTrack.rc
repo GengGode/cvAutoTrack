@@ -50,6 +50,8 @@ END
 // Bitmap
 //
 
+IDB_BITMAP_STAR         BITMAP                  "MatchResource\\GISTARTEMPLATE.bmp"
+
 IDB_BITMAP_PAIMON       BITMAP                  "MatchResource\\PaimonDefault.bmp"
 
 IDB_BITMAP_UID_         BITMAP                  "MatchResource\\png\\uid_.bmp"
@@ -73,7 +75,6 @@ IDB_BITMAP_UID7         BITMAP                  "MatchResource\\png\\uid7.bmp"
 IDB_BITMAP_UID8         BITMAP                  "MatchResource\\png\\uid8.bmp"
 
 IDB_BITMAP_UID9         BITMAP                  "MatchResource\\png\\uid9.bmp"
-
 
 /////////////////////////////////////////////////////////////////////////////
 //

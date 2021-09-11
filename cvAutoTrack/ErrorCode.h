@@ -21,6 +21,7 @@ using namespace std;
 
 class ErrorCode
 {
+	FILE * fptr ;
 private:
 	ErrorCode();
 

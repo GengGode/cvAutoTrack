@@ -18,6 +18,7 @@ public:
 
 public:
 	cv::Mat PaimonTemplate;
+	cv::Mat StarTemplate;
 	cv::Mat MapTemplate;
 	cv::Mat UID;
 	cv::Mat UIDnumber[10];
@@ -26,6 +27,7 @@ public:
 	void release();
 
 private:
+	void StarRGBA2A();
 	void UIDnumberRGBA2A();
 };
 

@@ -41,20 +41,20 @@ int main()
 	
 	//char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.txt" };
 	/*GetInfoLoadVideo(pathV, pathTxt);
-	std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";*/
+	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";*/
 #endif
 
-	Sleep(1000);
+	//Sleep(1000);
 
-	if (init())
-	{
+	//if (init())
+	//{
 
-		Sleep(2000);
+	//	Sleep(2000);
 
-	}
-	uninit();
+	//}
+	//uninit();
 
-	Sleep(1000);
+	//Sleep(1000);
 
 
 
@@ -62,70 +62,92 @@ int main()
 	while (1)
 	{
 #ifdef TestVideo
-		SetWorldScale(0.666667);
+		//SetWorldScale(0.666667);
 		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
 		{
 			std::cout << "Now Coor and Angle: "<<" " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
-		SetWorldScale(1.0);
+		//SetWorldScale(1.0);
 		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
 		{
 			std::cout << "Now Coor and Angle: " << " " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		}
+#endif
+#ifdef _DEBUG
+		char buff[1024] = {};
+		char* abc = buff;
+		if (GetStar(abc))
+		{
+			//坐标需要映射 p * 1.33 + AvatarPos
+			std::cout << buff << "\n";
 		}
 #endif
 #ifndef TestVideo
 
+
+
 		// 调用获取方法
 		if (GetTransform(x, y, a))
 		{
-			std::cout << "Now Coor and Angle: " << " " << x << " " << y << " " << a << "\n";
+			std::cout << "坐标和角度     : " << " " << x << " " << y << " " << a << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 		if (GetPosition(x2, y2))
 		{
-			std::cout << "Now Coor: " << " " << x2 << " " << y2 << "\n";
+			std::cout << "坐标         : " << " " << x2 << " " << y2 << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 		if (GetDirection(a2))
 		{
-			std::cout << "Now Angle: " << " " << a2 << "\n";
+			std::cout << "角度         : " << " " << a2 << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 		if (GetRotation(aa2))
 		{
-			std::cout << "Now Rotation: " << " " << aa2 << "\n";
+			std::cout << "视角朝向     : " << " " << aa2 << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 		if (GetUID(uid))
 		{
-			std::cout << "Now UID: " << " " << uid << " " << "\n";
+			std::cout << "当前UID      : " << " " << uid << " " << "\n";
 		}
 		else
 		{
-			std::cout << "ErrorCode: " << " " << GetLastErr() << " " << "\n";
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		}
+		char buff[1024] = {};
+		char* abc = buff;
+		if (GetStar(abc))
+		{
+			//坐标需要映射 p * 1.33 + AvatarPos
+			std::cout << "当前神瞳Json : " << buff << "\n";
+		}
+		else
+		{
+			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 
-		Sleep(42);
+		Sleep(300);
 		system("cls");
 		//std::cout << "\r\r\r\r\r";
 #endif

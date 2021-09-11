@@ -20,6 +20,8 @@ extern "C" CVAUTOTRACK_API bool GetTransform(float &x, float &y, float &a);
 extern "C" CVAUTOTRACK_API bool GetPosition(double &x, double &y);
 extern "C" CVAUTOTRACK_API bool GetDirection(double &a);
 extern "C" CVAUTOTRACK_API bool GetRotation(double &a);
+//extern "C" CVAUTOTRACK_API bool GetStar(double &x, double &y, bool &isEnd);
+extern "C" CVAUTOTRACK_API bool GetStar(char *jsonBuff);
 extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
 
 extern "C" CVAUTOTRACK_API bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
@@ -32,6 +34,8 @@ extern "C" CVAUTOTRACK_API bool startServe();
 extern "C" CVAUTOTRACK_API bool stopServe();
 
 #ifdef _DEBUG
+
+extern "C" CVAUTOTRACK_API bool test(char *str);
 
 	//void testLocalVideo(std::string path);
 
