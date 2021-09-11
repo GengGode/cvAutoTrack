@@ -1,4 +1,4 @@
-// cvAT_dllTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+﻿// cvAT_dllTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 //#pragma execution_character_set("utf-8")
 
@@ -81,10 +81,9 @@ int main()
 			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
 #endif
+		char buff[1024] = { 0 };
 #ifdef _DEBUG
-		char buff[1024] = {};
-		char* abc = buff;
-		if (GetStar(abc))
+		if (GetStar(buff))
 		{
 			//坐标需要映射 p * 1.33 + AvatarPos
 			std::cout << buff << "\n";
@@ -135,9 +134,7 @@ int main()
 		{
 			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
-		char buff[1024] = {};
-		char* abc = buff;
-		if (GetStar(abc))
+		if (GetStar(buff))
 		{
 			//坐标需要映射 p * 1.33 + AvatarPos
 			std::cout << "当前神瞳Json : " << buff << "\n";
