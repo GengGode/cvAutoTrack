@@ -1041,17 +1041,18 @@ bool AutoTrack::GetStar(char * jsonBuff)
 			char buff[99];
 			if (i == 0)
 			{
-				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x*scale, pos[i].y*scale);
+				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x * scale, pos[i].y * scale);
 			}
 			else
 			{
-				sprintf_s(buff,99, ",[ %lf , %lf ]", pos[i].x*scale, pos[i].y*scale);
+				sprintf_s(buff, 99, ",[ %lf , %lf ]", pos[i].x*scale, pos[i].y*scale);
 			}
 			strncat_s(jsonBuff,1024, buff,99);
 		}
 		strncat_s(jsonBuff,1024, "]}",3);
 		return true;
 	}
+	err = 501;
 	return false;
 }
 
