@@ -19,6 +19,7 @@ public:
 	AutoTrack(void);
 	~AutoTrack(void);
 
+
 	bool init();
 	bool uninit();
 	bool SetHandle(long long int handle);
@@ -28,6 +29,10 @@ public:
 	bool GetPosition(double &x, double &y);
 	bool GetDirection(double &a);
 	bool GetRotation(double &a);
+	//获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳
+	bool GetStar(double &x, double &y, bool &isEnd);
+	//获取发现的神瞳坐标，以json字符串格式
+	bool GetStar(char *jsonBuff);
 	bool GetUID(int &uid);
 	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 	bool GetInfoLoadVideo(char * path, char * pathOutFile);
@@ -43,6 +48,7 @@ private:
 	FlowWork wMiniMap;
 	FlowWork wAvatar;
 	FlowWork wRotating;
+	FlowWork wStar;
 
 	FlowWork wUID;
 
@@ -159,6 +165,7 @@ private:
 	double MapAbsScale = 2.557; //from diff Image
 
 	//忘了是啥了，记得明天推导
+	//09.07 是个固定值，不用变
 	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025); // ? forget
 	//double MapWorldOffset_X = 3412;
 	//double MapWorldOffset_Y = 2025;
@@ -168,6 +175,7 @@ private:
 
 #endif
 
+	// ???
 	double screen_scale = 1;
 
 
@@ -214,6 +222,8 @@ private:
 	bool isConveying = false;
 	cv::Point2d _TransformHistory[3];
 	bool is_Auto_getHandle = true;
+	bool isStarVisible = false;
+
 
 private:
 	HWND giHandle;
@@ -225,7 +235,8 @@ private:
 	cv::Mat giMiniMapRef;
 	cv::Mat giUIDRef;
 	cv::Mat giAvatarRef;
-
+	cv::Mat giStarRef;
+	
 private:
 	bool getAutoTrackIsInit();
 	bool getGengshinImpactWnd();

@@ -35,10 +35,15 @@ AutoTrack::AutoTrack()
 	wRotating.append(this, &AutoTrack::getGengshinImpactScreen, 119);
 	wRotating.append(this, &AutoTrack::getMiniMapRefMat, 120);
 
-	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 121);
-	wUID.append(this, &AutoTrack::getGengshinImpactRect, 122);
-	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 123);
-	wUID.append(this, &AutoTrack::getUIDRefMat, 124);
+	wStar.append(this, &AutoTrack::getGengshinImpactWnd, 121);
+	wStar.append(this, &AutoTrack::getGengshinImpactRect, 122);
+	wStar.append(this, &AutoTrack::getGengshinImpactScreen, 123);
+	wStar.append(this, &AutoTrack::getMiniMapRefMat, 124);
+
+	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 125);
+	wUID.append(this, &AutoTrack::getGengshinImpactRect, 126);
+	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 127);
+	wUID.append(this, &AutoTrack::getUIDRefMat, 128);
 
 }
 
@@ -953,6 +958,95 @@ bool AutoTrack::GetRotation(double & a)
 	a = res;
 
 	return true;
+}
+
+bool AutoTrack::GetStar(double & x, double & y, bool & isEnd)
+{
+	return false;
+}
+
+bool AutoTrack::GetStar(char * jsonBuff)
+{
+	int MAXLOOP = 0;
+	bool isLoopMatch = false;
+	cv::Mat tmp;
+	double minVal, maxVal;
+	cv::Point minLoc, maxLoc;
+	vector<cv::Point2d> pos;
+
+
+	if (wStar.run() == false)
+	{
+		return false;
+	}
+
+	getPaimonRefMat();
+
+	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
+		giStarRef, CV_RGBA2GRAY);
+
+
+	matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+	minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+#ifdef _DEBUG
+	cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+#endif
+	if (maxVal < 0.66)
+	{
+		isStarVisible = false;
+	}
+	else
+	{
+		isLoopMatch = true;
+		isStarVisible = true;
+		pos.push_back(cv::Point2d(maxLoc) - 
+			cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) + 
+			cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+	}
+
+	while (isLoopMatch)
+	{
+		giStarRef(cv::Rect(maxLoc.x, maxLoc.y, giMatchResource.StarTemplate.cols, giMatchResource.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
+		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
+#ifdef _DEBUG
+		cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+#endif
+		if (maxVal < 0.66)
+		{
+			isLoopMatch = false;
+		}
+		else
+		{
+			pos.push_back(cv::Point2d(maxLoc) - 
+				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) + 
+				cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+		}
+
+		MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
+	}
+
+	if (isStarVisible == true)
+	{
+		
+		sprintf_s(jsonBuff,1024,"{\"n\": %d ,\"list\":[",pos.size());//[123,12],[123,53]]}")
+		for (int i = 0; i < pos.size(); i++)
+		{
+			char buff[99];
+			if (i == 0)
+			{
+				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x, pos[i].y);
+			}
+			else
+			{
+				sprintf_s(buff,99, ",[ %lf , %lf ]", pos[i].x, pos[i].y);
+			}
+			strncat_s(jsonBuff,1024, buff,99);
+		}
+		strncat_s(jsonBuff,1024, "]}",3);
+		return true;
+	}
+	return false;
 }
 
 bool AutoTrack::GetUID(int &uid)

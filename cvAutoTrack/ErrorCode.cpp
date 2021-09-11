@@ -3,6 +3,8 @@
 
 ErrorCode::ErrorCode()
 {
+	fopen_s(&fptr, "./autoTrack.log", "w+");
+
 	errCodeMsg.push_back("0: ERR_SUCCESS");
 	errCodeMsg.push_back("1: ERR_UNINITIALIZED");
 	errCodeMsg.push_back("2: ERR_HWND_NO_FOUND");
@@ -21,6 +23,7 @@ ErrorCode::ErrorCode()
 
 ErrorCode::~ErrorCode()
 {
+	fclose(fptr);
 }
 
 ErrorCode & ErrorCode::getInstance()
@@ -34,12 +37,15 @@ ErrorCode & ErrorCode::operator=(const int & code)
 	this->errorCode = code;
 	if (code == 0)
 	{
+		fprintf_s(fptr,"Code = 0 \nClear Error List\n");
 		errCodeList.clear();
 	}
 	else
 	{
+		fprintf_s(fptr,"Code = %d\n",code);
 		push(code);
 	}
+	fflush(fptr);
 
 	return *this;
 }

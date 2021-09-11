@@ -227,6 +227,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="MatchResource\GIMAP.png" />
+    <Image Include="MatchResource\GISTARTEMPLATE.bmp" />
     <Image Include="MatchResource\PaimonDefault.bmp" />
     <Image Include="matchresource\png\png1.png" />
     <Image Include="MatchResource\png\uid0.bmp" />

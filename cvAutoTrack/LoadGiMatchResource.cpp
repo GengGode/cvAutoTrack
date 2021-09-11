@@ -109,6 +109,10 @@ void LoadGiMatchResource::install()
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, PaimonTemplate);
 
+	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_STAR));
+	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
+	HBitmap2Mat(gHmp, StarTemplate);
+
 	//gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_GIMAP));
 	//if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	//HBitmap2Mat(gHmp, MapTemplate);
@@ -148,13 +152,15 @@ void LoadGiMatchResource::install()
 	gHmp = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB_BITMAP_UID9));
 	if (gHmp == NULL)throw"LoadSource Get Resource From Dll HBitmap faile";
 	HBitmap2Mat(gHmp, UIDnumber[9]);
-
+	
+	StarRGBA2A();
 	UIDnumberRGBA2A();
 }
 
 void LoadGiMatchResource::release()
 {
 	PaimonTemplate.release();
+	StarTemplate.release();
 	MapTemplate.release();
 	UID.release();
 	UIDnumber[0].release();
@@ -167,6 +173,11 @@ void LoadGiMatchResource::release()
 	UIDnumber[7].release();
 	UIDnumber[8].release();
 	UIDnumber[9].release();
+}
+
+void LoadGiMatchResource::StarRGBA2A()
+{
+	cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGBA2GRAY);
 }
 
 void LoadGiMatchResource::UIDnumberRGBA2A()
