@@ -21,9 +21,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cvAutoTrack.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="AutoTrack.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -59,6 +56,12 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\C\cvAutoTrack.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\C\cvPort.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
