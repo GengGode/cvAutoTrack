@@ -1,4 +1,4 @@
-// cvAutoTrack.cpp : ¶¨Òå DLL µÄµ¼³öº¯Êý¡£
+ï»¿// cvAutoTrack.cpp : å®šä¹‰ DLL çš„å¯¼å‡ºå‡½æ•°ã€‚
 //
 
 #include "pch.h"
@@ -7,83 +7,83 @@
 
 #include "AutoTrack.h"
 
-AutoTrack* _at = new AutoTrack();
+static AutoTrack _at;
 
-bool __stdcall init()
+bool init()
 {
-	return _at->init();
+	return _at.init();
 }
-bool __stdcall uninit()
+bool uninit()
 {
-	return _at->uninit();
+	return _at.uninit();
 }
-bool __stdcall SetHandle(long long int handle)
+bool SetHandle(long long int handle)
 {
-	return _at->SetHandle(handle);
+	return _at.SetHandle(handle);
 }
-bool __stdcall SetWorldCenter(double x, double y)
+bool SetWorldCenter(double x, double y)
 {
-	return _at->SetWorldCenter(x, y);
+	return _at.SetWorldCenter(x, y);
 }
-bool __stdcall SetWorldScale(double scale)
+bool SetWorldScale(double scale)
 {
-	return _at->SetWorldScale(scale);
+	return _at.SetWorldScale(scale);
 }
-bool __stdcall GetTransform(float &x, float &y, float &a)
+bool GetTransform(float &x, float &y, float &a)
 {
-	return _at->GetTransform(x, y, a);
+	return _at.GetTransform(x, y, a);
 }
-bool __stdcall GetPosition(double & x, double & y)
+bool GetPosition(double & x, double & y)
 {
-	return _at->GetPosition(x, y);
+	return _at.GetPosition(x, y);
 }
-bool __stdcall GetDirection(double & a)
+bool GetDirection(double & a)
 {
-	return _at->GetDirection(a);
+	return _at.GetDirection(a);
 }
-bool __stdcall GetRotation(double & a)
+bool GetRotation(double & a)
 {
-	return _at->GetRotation(a);
+	return _at.GetRotation(a);
 }
-bool __stdcall GetStar(double &x, double &y, bool &isEnd)
+bool GetStar(double &x, double &y, bool &isEnd)
 {
-	return _at->GetStar(x, y, isEnd);
+	return _at.GetStar(x, y, isEnd);
 }
 bool GetStar(char * jsonBuff)
 {
-	return _at->GetStar(jsonBuff);
+	return _at.GetStar(jsonBuff);
 }
-bool __stdcall GetUID(int & uid)
+bool GetUID(int & uid)
 {
-	return _at->GetUID(uid);
+	return _at.GetUID(uid);
 }
-bool __stdcall GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
+bool GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
 {
-	return _at->GetInfoLoadPicture(path, uid, x, y, a);
+	return _at.GetInfoLoadPicture(path, uid, x, y, a);
 }
-bool __stdcall GetInfoLoadVideo(char * path, char * pathOutFile)
+bool GetInfoLoadVideo(char * path, char * pathOutFile)
 {
-	return _at->GetInfoLoadVideo(path, pathOutFile);
+	return _at.GetInfoLoadVideo(path, pathOutFile);
 }
-int __stdcall GetLastErr()
+int GetLastErr()
 {
-	return _at->GetLastError();
+	return _at.GetLastError();
 }
-const char * __stdcall GetLastErrStr()
+const char * GetLastErrStr()
 {
-	return _at->GetLastErrorStr();
+	return _at.GetLastErrorStr();
 }
-bool __stdcall startServe()
+bool startServe()
 {
-	return _at->startServe();
+	return _at.startServe();
 }
-bool __stdcall stopServe()
+bool stopServe()
 {
-	return _at->stopServe();
+	return _at.stopServe();
 }
 #ifdef _DEBUG
 
-bool __stdcall test(char* str)
+bool test(char* str)
 {
 	str[1024] = '2';
 	return true;
