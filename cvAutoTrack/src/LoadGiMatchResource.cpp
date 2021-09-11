@@ -289,7 +289,7 @@ double Line2Angle(cv::Point2f p)
 	const double rad2degScale = 180 / CV_PI;
 	double res = atan2(-p.y, p.x)*rad2degScale;
 	res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
-	if (res > 270.0)res = res - 360;
+	if (res < -180.0)res = res + 360;
 	return res;
 }
 

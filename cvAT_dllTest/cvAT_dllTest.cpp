@@ -57,7 +57,8 @@ int main()
 	//Sleep(1000);
 
 
-
+	FILE *fptr = NULL;
+	fopen_s(&fptr,"./Output.txt","w+");
 
 	while (1)
 	{
@@ -97,6 +98,8 @@ int main()
 		if (GetTransform(x, y, a))
 		{
 			std::cout << "坐标和角度   : " << " " << x << " " << y << " " << a << "\n";
+			fprintf(fptr, "%lf %lf %lf", x, y, a);
+			fflush(fptr);
 		}
 		else
 		{
@@ -149,6 +152,7 @@ int main()
 		//std::cout << "\r\r\r\r\r";
 #endif
 	}
+	fclose(fptr);
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

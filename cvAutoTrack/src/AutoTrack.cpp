@@ -951,11 +951,7 @@ bool AutoTrack::GetRotation(double & a)
 #endif
 	p = p - cv::Point(img_object.cols / 2, img_object.rows / 2);
 
-	const double rad2degScale = 180 / CV_PI;
-	res = atan2(-p.y, p.x)*rad2degScale;
-	res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
-
-	a = res;
+	a = Line2Angle(p);
 
 	return true;
 }
