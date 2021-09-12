@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ErrorCode.h"
 
+
+
 ErrorCode::ErrorCode()
 {
 	fopen_s(&fptr, "./autoTrack.log", "w+");
