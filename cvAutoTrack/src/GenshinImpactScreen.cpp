@@ -18,7 +18,6 @@ Mat GenshinImpactScreen::getGenshinImpactScreen()
 	getNowTimeMs();
 	if (NowTimeMs - LastTimeMs >= 24)
 	{
-		
 		return getGenshinImpactScreen_NewGet();
 	}
 	else
