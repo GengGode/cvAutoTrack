@@ -32,7 +32,7 @@ public:
 	//获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳
 	bool GetStar(double &x, double &y, bool &isEnd);
 	//获取发现的神瞳坐标，以json字符串格式
-	bool GetStar(char *jsonBuff);
+	bool GetStarJson(char *jsonBuff);
 	bool GetUID(int &uid);
 	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 	bool GetInfoLoadVideo(char * path, char * pathOutFile);

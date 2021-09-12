@@ -137,15 +137,17 @@ int main()
 		{
 			std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 		}
-		if (GetStar(buff))
+		if (GetStarJson(buff))
 		{
-			//×ø±êĞèÒªÓ³Éä p * 1.33 + AvatarPos
+			//×ø±êĞèÒªÓ³Éä p + AvatarPos
 			std::cout << "µ±Ç°ÉñÍ«Json : " << buff << "\n";
 		}
 		else
 		{
 			std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 		}
+		bool a;
+		GetStar(x2,y2,a);
 
 		Sleep(300);
 		system("cls");

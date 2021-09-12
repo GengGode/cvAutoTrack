@@ -49,9 +49,9 @@ bool GetStar(double &x, double &y, bool &isEnd)
 {
 	return _at.GetStar(x, y, isEnd);
 }
-bool GetStar(char * jsonBuff)
+bool GetStarJson(char * jsonBuff)
 {
-	return _at.GetStar(jsonBuff);
+	return _at.GetStarJson(jsonBuff);
 }
 bool GetUID(int & uid)
 {

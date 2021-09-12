@@ -16,9 +16,7 @@
     <None Include="cpp.hint">
       <Filter>resource</Filter>
     </None>
-    <None Include="resource\Source.def">
-      <Filter>resource</Filter>
-    </None>
+    <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h">
