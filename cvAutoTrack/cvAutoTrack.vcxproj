@@ -173,6 +173,9 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <StringPooling>true</StringPooling>
+      <BrowseInformation>false</BrowseInformation>
+      <CallingConvention>Cdecl</CallingConvention>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -181,9 +184,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>opencv_world450.lib;ade.lib;IlmImf.lib;ippicvmt.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;opencv_img_hash450.lib;quirc.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ModuleDefinitionFile>
-      </ModuleDefinitionFile>
+      <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <Version>2</Version>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -191,7 +194,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
-    <None Include="resource\Source.def" />
+    <None Include="Source.def" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h" />

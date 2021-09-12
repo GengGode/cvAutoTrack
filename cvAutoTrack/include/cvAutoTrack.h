@@ -7,10 +7,10 @@
 #define CVAUTOTRACK_PORT __declspec(dllimport)
 #endif
 
-#define CVAUTOTRACK_CALL __stdcall
+#define CVAUTOTRACK_CALL  
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
-extern "C" {
+//extern "C" {
 	// 这是已导出的函数。
 	bool CVAUTOTRACK_API init();
 	bool CVAUTOTRACK_API uninit();
@@ -21,8 +21,8 @@ extern "C" {
 	bool CVAUTOTRACK_API GetPosition(double& x, double& y);
 	bool CVAUTOTRACK_API GetDirection(double& a);
 	bool CVAUTOTRACK_API GetRotation(double& a);
-	// bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
-	bool CVAUTOTRACK_API GetStar(char* jsonBuff);
+	bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
+	bool CVAUTOTRACK_API GetStarJson(char* jsonBuff);
 	bool CVAUTOTRACK_API GetUID(int& uid);
 
 	bool CVAUTOTRACK_API GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
@@ -42,4 +42,4 @@ extern "C" {
 
 #endif
 
-}
+//}

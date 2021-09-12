@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 #define ERR_SUCCESS					0		//执行成功 / 正常退出。
