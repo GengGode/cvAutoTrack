@@ -39,7 +39,9 @@ after_build:
     #- ls
     - mkdir %MyProjectDir%x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
-
+    - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.lib $env:MyProjectDir\x64\build\
+    - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
+    
     - echo %APPVEYOR_BUILD_VERSION% >version.tag
     - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
 
