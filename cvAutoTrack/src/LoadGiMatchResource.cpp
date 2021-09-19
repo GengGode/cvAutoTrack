@@ -1,21 +1,24 @@
 #include "pch.h"
 #include "LoadGiMatchResource.h"
+#include "resource.h"
 
+#include <wincodec.h>
+//#include <Windows.h>
 
-BOOL HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
+bool HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 {
 	BITMAP bmp;
 	GetObject(_hBmp, sizeof(BITMAP), &bmp);
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
+	int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
 	cv::Mat v_mat;
-	v_mat.create(cvSize(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
+	v_mat.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
 	GetBitmapBits(_hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, v_mat.data);
 	_mat = v_mat;
-	return FALSE;
+	return false;
 }
 
-BOOL LoadPNG2Mat(cv::Mat& _mat)
+bool LoadPNG2Mat(cv::Mat& _mat)
 {
 	//HRESULT hr = S_OK;
 	HMODULE hModu = NULL;
@@ -76,7 +79,10 @@ BOOL LoadPNG2Mat(cv::Mat& _mat)
 
 		DeleteObject(bitmap);
 	}
+
 	DeleteObject(bitmap_source);
+
+	CoFreeUnusedLibraries();
 	CoUninitialize();
 
 
@@ -235,8 +241,8 @@ cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy,
 				numy++;
 			}
 		}
-		double x = sumx / numx;
-		double y = sumy / numy;
+		x = sumx / numx;
+		y = sumy / numy;
 		pos = cv::Point2d(x, y);
 	}
 	else
