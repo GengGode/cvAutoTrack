@@ -16,7 +16,9 @@
     <None Include="cpp.hint">
       <Filter>resource</Filter>
     </None>
-    <None Include="Source.def" />
+    <None Include="resource\Source.def">
+      <Filter>resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h">
@@ -103,118 +105,46 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="MatchResource\GIMAP.png">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid_.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid0.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid1.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid2.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid3.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid4.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid5.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid6.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid7.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid8.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\png\uid9.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="MatchResource\GISTARTEMPLATE.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\GIMAP.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\GIPAIMON.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\GISTARTEMPLATE.bmp">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\UID_.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\UID_.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\png\UID0.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid0.png">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\uid1.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\uid1.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\png\uid2.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid2.png">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\uid3.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\uid3.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\png\uid4.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid4.png">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\uid5.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\uid5.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\png\uid6.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid6.png">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\uid7.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\uid7.png">
-      <Filter>resource</Filter>
-    </Image>
     <Image Include="resource\png\uid8.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid8.png">
       <Filter>resource</Filter>
     </Image>
     <Image Include="resource\png\uid9.bmp">
       <Filter>resource</Filter>
     </Image>
-    <Image Include="resource\png\uid9.png">
+    <Image Include="resource\GIMAP.png">
+      <Filter>resource</Filter>
+    </Image>
+    <Image Include="resource\GISTARTEMPLATE.bmp">
       <Filter>resource</Filter>
     </Image>
   </ItemGroup>
