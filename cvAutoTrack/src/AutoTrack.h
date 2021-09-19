@@ -1,8 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include <opencv2/imgproc/types_c.h>
 #include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
+//#include <opencv2/xfeatures2d/nonfree.hpp>
 #include <iostream>
 #include <Windows.h>
 
@@ -11,7 +10,6 @@
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
 
-#define AUTO_TRACK_DEBUG_DELAY 1
 
 // 此类是不导出的
 class AutoTrack {

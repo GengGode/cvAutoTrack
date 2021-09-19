@@ -84,7 +84,7 @@ int main()
 #endif
 		char buff[1024] = { 0 };
 #ifdef _DEBUG
-		if (GetStar(buff))
+		if (GetStarJson(buff))
 		{
 			//×ø±êÐèÒªÓ³Éä p * 1.33 + AvatarPos
 			std::cout << buff << "\n";

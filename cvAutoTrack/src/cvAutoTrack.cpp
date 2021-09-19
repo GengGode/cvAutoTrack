@@ -2,50 +2,49 @@
 //
 
 #include "pch.h"
-#include "framework.h"
 #include "cvAutoTrack.h"
 
 #include "AutoTrack.h"
 
 static AutoTrack _at;
 
-bool init()
+bool __stdcall init()
 {
 	return _at.init();
 }
-bool uninit()
+bool __stdcall uninit()
 {
 	return _at.uninit();
 }
-bool SetHandle(long long int handle)
+bool __stdcall SetHandle(long long int handle)
 {
 	return _at.SetHandle(handle);
 }
-bool SetWorldCenter(double x, double y)
+bool __stdcall SetWorldCenter(double x, double y)
 {
 	return _at.SetWorldCenter(x, y);
 }
-bool SetWorldScale(double scale)
+bool __stdcall SetWorldScale(double scale)
 {
 	return _at.SetWorldScale(scale);
 }
-bool GetTransform(float &x, float &y, float &a)
+bool __stdcall GetTransform(float &x, float &y, float &a)
 {
 	return _at.GetTransform(x, y, a);
 }
-bool GetPosition(double & x, double & y)
+bool __stdcall GetPosition(double & x, double & y)
 {
 	return _at.GetPosition(x, y);
 }
-bool GetDirection(double & a)
+bool __stdcall GetDirection(double & a)
 {
 	return _at.GetDirection(a);
 }
-bool GetRotation(double & a)
+bool __stdcall GetRotation(double & a)
 {
 	return _at.GetRotation(a);
 }
-bool GetStar(double &x, double &y, bool &isEnd)
+bool __stdcall GetStar(double &x, double &y, bool &isEnd)
 {
 	return _at.GetStar(x, y, isEnd);
 }
@@ -53,38 +52,37 @@ bool GetStarJson(char * jsonBuff)
 {
 	return _at.GetStarJson(jsonBuff);
 }
-bool GetUID(int & uid)
+bool __stdcall GetUID(int & uid)
 {
 	return _at.GetUID(uid);
 }
-bool GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
+bool __stdcall GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
 {
 	return _at.GetInfoLoadPicture(path, uid, x, y, a);
 }
-bool GetInfoLoadVideo(char * path, char * pathOutFile)
+bool __stdcall GetInfoLoadVideo(char * path, char * pathOutFile)
 {
 	return _at.GetInfoLoadVideo(path, pathOutFile);
 }
-int GetLastErr()
+int __stdcall GetLastErr()
 {
 	return _at.GetLastError();
 }
-const char * GetLastErrStr()
+const char * __stdcall GetLastErrStr()
 {
 	return _at.GetLastErrorStr();
 }
-bool startServe()
+bool __stdcall startServe()
 {
 	return _at.startServe();
 }
-bool stopServe()
+bool __stdcall stopServe()
 {
 	return _at.stopServe();
 }
-
 #ifdef _DEBUG
 
-bool test(char* str)
+bool __stdcall test(char* str)
 {
 	str[1024] = '2';
 	return true;

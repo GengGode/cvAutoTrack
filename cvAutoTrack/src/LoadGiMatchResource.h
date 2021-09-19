@@ -1,13 +1,9 @@
 #pragma once
-#include <wincodec.h>
-#include <Windows.h>
+
 #include <opencv2/opencv.hpp>
-#include <opencv2/imgproc/types_c.h>
-#include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
 #include <vector>
 
-#include "resource.h"
+
 
 //图片资源 加载类
 class LoadGiMatchResource

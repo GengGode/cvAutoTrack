@@ -2,6 +2,9 @@
 #include "AutoTrack.h"
 #include "ErrorCode.h"
 
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
+
 AutoTrack::AutoTrack()
 {
 
@@ -253,7 +256,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	cv::Mat img_scene(giMatchResource.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
-	cv::cvtColor(img_scene, img_scene, CV_RGBA2RGB);
+	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
 
 	if (img_object.empty())
 	{
@@ -725,7 +728,7 @@ bool AutoTrack::GetDirection(double & a)
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 
-	cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 	cv::Point2f rect[4];
@@ -1003,7 +1006,7 @@ bool AutoTrack::GetStar(double & x, double & y, bool & isEnd)
 		getPaimonRefMat();
 
 		cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
-			giStarRef, CV_RGBA2GRAY);
+			giStarRef, cv::COLOR_RGBA2GRAY);
 
 
 		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
@@ -1095,7 +1098,7 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 	getPaimonRefMat();
 
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
-		giStarRef, CV_RGBA2GRAY);
+		giStarRef, cv::COLOR_RGBA2GRAY);
 
 
 	matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
@@ -1146,7 +1149,7 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 	if (isStarVisible == true)
 	{
 		
-		sprintf_s(jsonBuff,1024,"{\"n\": %d ,\"list\":[",pos.size());//[123,12],[123,53]]}")
+		sprintf_s(jsonBuff,1024,"{\"n\": %d ,\"list\":[",static_cast<int>(pos.size()));//[123,12],[123,53]]}")
 		for (int i = 0; i < pos.size(); i++)
 		{
 			char buff[99];
@@ -1324,7 +1327,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	cv::Mat img_scene(giMatchResource.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
-	cv::cvtColor(img_scene, img_scene, CV_RGBA2RGB);
+	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
 
 	if (img_object.empty())
 	{
@@ -1365,7 +1368,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 
-	cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 	cv::Point2f rect[4];
@@ -1995,7 +1998,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 		cv::Mat img_scene(giMatchResource.MapTemplate);
 		cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
-		cv::cvtColor(img_scene, img_scene, CV_RGBA2RGB);
+		cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
 
 		if (img_object.empty())
 		{
@@ -2036,7 +2039,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 			std::vector<std::vector<cv::Point>> contours;
 			std::vector<cv::Vec4i> hierarcy;
 
-			cv::findContours(and12, contours, hierarcy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+			cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 			std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
 			cv::Point2f rect[4];
@@ -2785,7 +2788,7 @@ bool AutoTrack::getGengshinImpactScreen()
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-	int depth = bmp.bmBitsPixel == 1 ? IPL_DEPTH_1U : IPL_DEPTH_8U;
+	int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
 
 	//mat操作
 	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
@@ -2827,7 +2830,7 @@ bool AutoTrack::getPaimonRefMat()
 #ifdef _DEBUG
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
 	cv::imshow("Paimon", giPaimonRef);
-	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
+	cv::waitKey(1);
 	std::cout << "Show Paimon" << std::endl;
 #endif
 	return true;
@@ -2858,7 +2861,7 @@ bool AutoTrack::getMiniMapRefMat()
 #ifdef _DEBUG
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
-	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
+	cv::waitKey(1);
 	std::cout << "Show MiniMap" << std::endl;
 #endif
 	return true;
@@ -2889,7 +2892,7 @@ bool AutoTrack::getUIDRefMat()
 #ifdef _DEBUG
 	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
 	cv::imshow("UID", giUIDRef);
-	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
+	cv::waitKey(1);
 	std::cout << "Show UID" << std::endl;
 #endif
 	return true;
@@ -2912,7 +2915,7 @@ bool AutoTrack::getAvatarRefMat()
 #ifdef _DEBUG
 	cv::namedWindow("Avatar", cv::WINDOW_FREERATIO);
 	cv::imshow("Avatar", giAvatarRef);
-	cv::waitKey(AUTO_TRACK_DEBUG_DELAY);
+	cv::waitKey(1);
 	std::cout << "Show Avatar" << std::endl;
 #endif
 	return true;
