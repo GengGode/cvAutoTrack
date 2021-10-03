@@ -1097,6 +1097,7 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 
 	getPaimonRefMat();
 
+	//一个bug 未开游戏而先开应用，开游戏时触发
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
 
@@ -1166,8 +1167,10 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 		strncat_s(jsonBuff,1024, "]}",3);
 		return true;
 	}
-	err = 501;
-	return false;
+	sprintf_s(jsonBuff, 99, "{\"n\": 0 ,\"list\":[]}");
+	return true;
+	//err = 501;
+	//return false;
 }
 
 bool AutoTrack::GetUID(int &uid)

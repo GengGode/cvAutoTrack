@@ -82,11 +82,11 @@ bool __stdcall stopServe()
 }
 #ifdef _DEBUG
 
-bool __stdcall test(char* str)
-{
-	str[1024] = '2';
-	return true;
-}
+//bool __stdcall test(char* str)
+//{
+//	str[1024] = '2';
+//	return true;
+//}
 
 //void testLocalVideo(std::string path);
 
