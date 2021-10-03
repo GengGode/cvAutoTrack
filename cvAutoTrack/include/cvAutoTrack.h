@@ -43,7 +43,7 @@ extern "C" CVAUTOTRACK_API bool stopServe();
 
 #ifdef _DEBUG
 
-extern "C" CVAUTOTRACK_API bool test(char *str);
+//extern "C" CVAUTOTRACK_API bool test(char *str);
 
 //void testLocalVideo(std::string path);
 
