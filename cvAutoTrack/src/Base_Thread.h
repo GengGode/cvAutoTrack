@@ -1,5 +1,6 @@
 #pragma once
 #include <thread>
+#include <functional>
 //#include <Windows.h>
 using namespace std;
 

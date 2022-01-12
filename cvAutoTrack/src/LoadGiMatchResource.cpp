@@ -64,6 +64,7 @@ bool LoadPNG2Mat(cv::Mat& _mat)
 	bitmap_source = pIDecoderFrame;
 
 	UINT width = 0, height = 0, depht = 4;
+	//UINT width = 0, height = 0, depht = 3;
 	bitmap_source->GetSize(&width, &height);
 
 	{

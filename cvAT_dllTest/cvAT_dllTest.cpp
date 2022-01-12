@@ -149,7 +149,7 @@ int main()
 		bool a;
 		GetStar(x2,y2,a);
 
-		Sleep(300);
+		Sleep(30);
 		system("cls");
 		//std::cout << "\r\r\r\r\r";
 #endif

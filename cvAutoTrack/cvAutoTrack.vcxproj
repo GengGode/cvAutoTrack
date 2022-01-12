@@ -365,6 +365,10 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <Lib>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
