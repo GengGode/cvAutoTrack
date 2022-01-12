@@ -160,7 +160,7 @@ private:
 
 	//相对绝对空间缩放系数
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2.557; //from diff Image
+	double MapAbsScale = 2.557; //from diff Image 67.40%
 
 	//忘了是啥了，记得明天推导
 	//09.07 是个固定值，不用变

@@ -319,7 +319,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #endif
 						matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
 
-
+						//长时间运行概率触发 有未经处理的异常: Microsoft C++ 异常: cv::Exception，位于内存位置 
 						for (size_t i = 0; i < KNN_mTmp.size(); i++)
 						{
 							if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
@@ -2800,9 +2800,16 @@ bool AutoTrack::getGengshinImpactScreen()
 
 	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
 
+
 	if (giFrame.empty())
 	{
 		err = 3;
+		return false;
+	}
+
+	if (giFrame.cols < 480 || giFrame.rows < 360)
+	{
+		err = 13;
 		return false;
 	}
 	return true;

@@ -2,11 +2,13 @@
 
 一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
-支持原神2.1稻妻地图，扩展了城镇中的稳定性，为此定位的整体稳定性略有下降。
+扩展了城镇中的稳定性，为此定位的整体稳定性略有下降。
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-地图目前支持至原神2.1版
+地图目前支持区域：
+
+| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) |
 
 ## 如何使用
 
@@ -129,6 +131,7 @@ int GetLastErr();
 | `10`   | 无效句柄或指定句柄所指向窗口不存在。     |            |
 | `11`   | 未能取到小箭头区域。                     |            |
 | `12`   | 窗口句柄失效。                           |            |
+| `13`   | 窗口大小小于480px * 360px。              |            |
 
 ### 说明
 
