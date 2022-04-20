@@ -54,7 +54,7 @@ after_build:
   
 deploy:
     - provider: GitHub
-      description: '$(APPVEYOR_PROJECT_SLUG): cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)  $(commitMessage)' 
+      description: '$(APPVEYOR_PROJECT_SLUG): cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)' 
       auth_token:
          secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
       draft: false
