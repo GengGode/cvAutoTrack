@@ -37,3 +37,6 @@ std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
 double Line2Angle(cv::Point2f p);
 cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale);
 cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale);
+cv::Point2d TransferTianLiAxes_Tr(cv::Point2d pos, cv::Point2d origin, double scale);
+cv::Point2d TransferUserAxes_Tr(cv::Point2d pos, double x, double y, double scale);
+

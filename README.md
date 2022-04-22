@@ -1,14 +1,12 @@
 # GenshinImpact AutoTrack DLL
-# 在重构（重写）了
-一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
-扩展了城镇中的稳定性，为此定位的整体稳定性略有下降。
+一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-地图目前支持区域：
+## 地图目前支持区域
 
-| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) |
+| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) | 稻妻IIII(渊下宫) | 层岩 | 地下层岩
 
 ## 如何使用
 
@@ -18,6 +16,13 @@
 2. 装载动态链接库后，根据[函数手册](#函数手册)对相关函数进行调用或封装。
 3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
 4. 由于默认接口输出的是[天理坐标模型](天理坐标模型)的坐标，所以使用者需要根据自身地图坐标系与天理坐标模型之间的映射关系，设置世界中心以及缩放系数或者后期手动换算。
+
+## 如何编译
+
+1. 环境需求，Visual Studio 2019 + 、Opencv 4.5.0
+2. Git Clone https://github.com/GengGode/GenshinImpact_AutoTrack_DLL
+3. cd .\cvAutoTrack | 7z -x resource.zip
+5. msbuild cvAutoTrack.sln
 
 ## 注意事项
 
@@ -44,6 +49,7 @@
 
 |        接口名称       |                                 接口功能                           |
 | -------------------- | ------------------------------------------------------------------ |
+| `verison`            | 获取Dll版本。                                                    |
 | `init`               | 初始化运行环境。                                                    |
 | `uninit`             | 卸载初始化时所占用的内存。                                           |
 | `GetLastErr`         | 获取最后设置的错误码。                                               |
@@ -52,6 +58,7 @@
 | `SetWorldScale`      | 设置映射目标地图坐标系缩放系数与所在天理坐标模型缩放系数的的比值。        |
 | `GetTransform`       | 获取当前人物所在位置以及角度（箭头朝向）。                              |
 | `GetPosition`        | 获取当前人物所在位置。                                                |
+| `GetPositionOfMap`   | 获取所在位置的所在地图区域并重映射坐标区域。                                                |
 | `GetDirection`       | 获取当前角度（箭头朝向）。                                            |
 | `GetRotation`        | 获取当前视角方位（视角朝向）。                                        |
 | `GetUID`             | 获取在屏幕右下角显示的玩家的UID。                                     |
@@ -278,6 +285,45 @@ bool GetPosition(
 
 
 
+## GetPositionOfMap
+
+```C++
+bool GetPositionOfMap(
+    double &x,
+    double &y,
+    int &mapId
+);
+```
+
+获取所在位置的所在地图区域并重映射坐标区域。
+
+### 参数
+
+- `x` 获取到的人物的x轴坐标位置。
+- `y` 获取到的人物的y轴坐标位置。
+- `mapId` 获取到的人物的所在地图区域。
+
+### 返回值
+
+- `true` 表示坐标位置获取成功。
+- `false` 表示坐标位置获取失败，此时三个参数均不会被改变。
+
+### 说明
+
+地图区域的值的解释
+
+| 地图编号 | 含义                     |
+| -------- | ------------------------ |
+| `0`      | 提瓦特大陆。             |
+| `1`      | 渊下宫                   |
+| `2`      | 地下层岩                 |
+
+无论成功与否都会设置 `LastErr` 值。调用 [`GetLastErr()`](#GetLastErr) 可以获取错误码。
+
+调用本函数前，如果没有初始化过，或最后一次初始化返回失败，则需要调用 [`init()`](#init) 函数进行初始化。
+
+
+
 ## GetDirection
 
 ```C++
@@ -441,6 +487,10 @@ bool GetInfoLoadVideo(
 即
 
 ![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page2.svg)
+
+### 渊下宫及地下层岩
+
+该部分区域未来会重做坐标映射，暂时只做简单说明，即地图右上角为原点，其他照例。
 
 # 即将更新
 

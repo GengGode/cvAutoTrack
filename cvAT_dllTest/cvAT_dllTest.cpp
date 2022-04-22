@@ -46,12 +46,12 @@ int main()
 
 	//Sleep(1000);
 
-	//if (init())
-	//{
+	if (init())
+	{
 
 	//	Sleep(2000);
 
-	//}
+	}
 	//uninit();
 
 	//Sleep(1000);
@@ -95,62 +95,65 @@ int main()
 
 
 		// 调用获取方法
-		if (GetTransform(x, y, a))
-		{
-			std::cout << "坐标和角度   : " << " " << x << " " << y << " " << a << "\n";
-			fprintf(fptr, "%lf %lf %lf", x, y, a);
-			fflush(fptr);
-		}
-		else
-		{
-			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
-		}
+		//if (GetTransform(x, y, a))
+		//{
+		//	std::cout << "坐标和角度   : " << " " << x << " " << y << " " << a << "\n";
+		//	fprintf(fptr, "%lf %lf %lf", x, y, a);
+		//	fflush(fptr);
+		//}
+		//else
+		//{
+		//	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		//}
 		if (GetPosition(x2, y2))
 		{
-			std::cout << "坐标         : " << " " << x2 << " " << y2 << "\n";
+		
+			int mapid = 0;
+			GetPositionOfMap(x2, y2, mapid);
+			std::cout << "坐标         : " << " " << x2 << " " << y2 <<" " << mapid<< "\n";
 		}
 		else
 		{
 			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
-		if (GetDirection(a2))
-		{
-			std::cout << "角度         : " << " " << a2 << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
-		}
-		if (GetRotation(aa2))
-		{
-			std::cout << "视角朝向     : " << " " << aa2 << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
-		}
-		if (GetUID(uid))
-		{
-			std::cout << "当前UID      : " << " " << uid << " " << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
-		}
-		if (GetStarJson(buff))
-		{
-			//坐标需要映射 p + AvatarPos
-			std::cout << "当前神瞳Json : " << buff << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
-		}
-		bool a;
-		GetStar(x2,y2,a);
-
+		//if (GetDirection(a2))
+		//{
+		//	std::cout << "角度         : " << " " << a2 << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		//}
+		//if (GetRotation(aa2))
+		//{
+		//	std::cout << "视角朝向     : " << " " << aa2 << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		//}
+		//if (GetUID(uid))
+		//{
+		//	std::cout << "当前UID      : " << " " << uid << " " << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		//}
+		//if (GetStarJson(buff))
+		//{
+		//	//坐标需要映射 p + AvatarPos
+		//	std::cout << "当前神瞳Json : " << buff << "\n";
+		//}
+		//else
+		//{
+		//	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
+		//}
+		//bool a;
+		//GetStar(x2,y2,a);
+		//
 		Sleep(30);
-		system("cls");
+		//system("cls");
 		//std::cout << "\r\r\r\r\r";
 #endif
 	}
