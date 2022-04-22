@@ -19,6 +19,8 @@
 //#define CVAUTOTRACK_API 
 
 // 这是已导出的函数。
+extern "C" CVAUTOTRACK_API bool verison(char* versionBuff);
+
 extern "C" CVAUTOTRACK_API bool init();
 extern "C" CVAUTOTRACK_API bool uninit();
 extern "C" CVAUTOTRACK_API bool SetHandle(long long int handle);
@@ -26,6 +28,7 @@ extern "C" CVAUTOTRACK_API bool SetWorldCenter(double x, double y);
 extern "C" CVAUTOTRACK_API bool SetWorldScale(double scale);
 extern "C" CVAUTOTRACK_API bool GetTransform(float& x, float& y, float& a);
 extern "C" CVAUTOTRACK_API bool GetPosition(double& x, double& y);
+extern "C" CVAUTOTRACK_API bool GetPositionOfMap(double& x,double& y,int& mapId);
 extern "C" CVAUTOTRACK_API bool GetDirection(double& a);
 extern "C" CVAUTOTRACK_API bool GetRotation(double& a);
 extern "C" CVAUTOTRACK_API bool GetStar(double &x, double &y, bool &isEnd);

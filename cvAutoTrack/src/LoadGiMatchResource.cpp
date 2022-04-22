@@ -309,3 +309,13 @@ cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale)
 {
 	return cv::Point2d((pos.x + x)*scale, (pos.y + y)*scale);
 }
+
+cv::Point2d TransferTianLiAxes_Tr(cv::Point2d pos, cv::Point2d origin, double scale)
+{
+	return cv::Point2d(pos / scale - origin);
+}
+
+cv::Point2d TransferUserAxes_Tr(cv::Point2d pos, double x, double y, double scale)
+{
+	return cv::Point2d(pos.x/ scale -  x, pos.y / scale - y);
+}

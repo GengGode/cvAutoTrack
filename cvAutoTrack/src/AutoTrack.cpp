@@ -241,7 +241,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #ifdef _DEBUG
 	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 	cv::imshow("test2", tmp);
-	std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+	// std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
 
 	if (maxVal < 0.36 || maxVal == 1)
@@ -658,6 +658,76 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	return true;
 }
 
+bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
+{
+	mapId = 0;
+	cv::Point2d pos_tr;
+	pos_tr = TransferUserAxes_Tr(cv::Point2d(x,y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	pos_tr = TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
+	pos_tr = pos_tr / MapAbsScale;
+
+	//cv::Size size_DiXiaCengYan(1250, 1016);
+	//cv::Size size_YuanXiaGong(2400, 2401);
+	//cv::Size size_YuanXiaGong_Un(800, 450);
+
+		int _x = pos_tr.x;
+		int _y = pos_tr.y;
+		// 渊下宫
+		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
+		{
+			if (_x > 2400 - 800 && _y < 5543 + 450)
+			{
+				mapId = 0;
+			}
+			else
+			{
+				mapId = 1;
+			}
+		}
+		// 地下层岩
+		if (_x > 0 && _x <= 0 + 1250 && _y > 4132 && _y <= 4132 + 1016)
+		{
+			mapId = 2;
+		
+		}
+		switch (mapId)
+		{
+		case 0:
+		{
+			break;
+		}
+		case 1:
+		{
+			_x = _x - 0;
+			_y = _y - 5543;
+			cv::Point2d pos=TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);//1433 6932-5543
+			pos = TransferUserAxes(pos, 0, 0, 1);
+			x = pos.x;
+			y = pos.y;
+			break;
+		}
+		case 2:
+		{
+			_x = _x - 0;
+			_y = _y - 4132;
+			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);//801 4765-4132
+			pos = TransferUserAxes(pos, 0, 0, 1);
+			x = pos.x;
+			y = pos.y;
+			break;
+		}
+		}
+
+#ifdef _DEBUG
+
+	//std::cout << pos_tr.x << " " << pos_tr.y<<"\n";
+
+#endif // _DEBUG
+
+
+	return true;
+}
+
 bool AutoTrack::GetDirection(double & a)
 {
 	if (wAvatar.run() == false)
@@ -862,7 +932,7 @@ bool AutoTrack::GetRotation(double & a)
 #ifdef _DEBUG
 	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 	cv::imshow("test2", tmp);
-	std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+	//std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
 
 	if (maxVal < 0.36 || maxVal == 1)
@@ -1012,7 +1082,7 @@ bool AutoTrack::GetStar(double & x, double & y, bool & isEnd)
 		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
-		cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+		//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
 #endif
 		if (maxVal < 0.66)
 		{
@@ -1033,7 +1103,7 @@ bool AutoTrack::GetStar(double & x, double & y, bool & isEnd)
 			matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 			minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
-			cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+			//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
 #endif
 
 			if (maxVal < 0.66)
@@ -1105,7 +1175,7 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 	matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 	minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
-	cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+	//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
 #endif
 	if (maxVal < 0.66)
 	{
@@ -1126,7 +1196,7 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
-		cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
+		//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
 #endif
 		if (maxVal < 0.66)
 		{
@@ -1317,7 +1387,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 #ifdef _DEBUG
 	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 	cv::imshow("test2", tmp);
-	std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+	//std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
 	if (maxVal < 0.34 || maxVal == 1)
 	{
@@ -1989,7 +2059,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 #ifdef _DEBUG
 		cv::namedWindow("test2", cv::WINDOW_FREERATIO);
 		cv::imshow("test2", tmp);
-		std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
+		//std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
 		if (maxVal < 0.36 || maxVal == 1)
 		{
@@ -2665,8 +2735,8 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << L"原神" <<" "<< L"原神" << std::endl;
 #ifdef _DEBUG
-		std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << giWindowName << std::endl;
-		std::cout << "GI 原神 Genshin Impact 원신 Window Handle Find is " << giHandle << std::endl;
+		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << giWindowName << std::endl;
+		//std::cout << "GI 原神 Genshin Impact 원신 Window Handle Find is " << giHandle << std::endl;
 #endif
 		if (giHandle == NULL)
 		{
@@ -2711,8 +2781,7 @@ bool AutoTrack::getGengshinImpactRect()
 
 
 #ifdef _DEBUG
-	std::cout << "GI Windows Size: " << giClientSize.width << "," << giClientSize.height << std::endl;
-	std::cout << "GI Windows Scale: " << screen_scale << std::endl;
+	std::cout << "GISize: " << giClientSize.width << "," << giClientSize.height << ", GIScale: " << screen_scale << "\n";
 #endif
 
 	return true;
@@ -2721,7 +2790,7 @@ bool AutoTrack::getGengshinImpactRect()
 bool AutoTrack::getGengshinImpactScale()
 {
 #ifdef _DEBUG
-	std::cout << "-> getGengshinImpactScale()" << std::endl;
+	//std::cout << "-> getGengshinImpactScale()" << std::endl;
 #endif
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
@@ -2841,7 +2910,7 @@ bool AutoTrack::getPaimonRefMat()
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(1);
-	std::cout << "Show Paimon" << std::endl;
+	//std::cout << "Show Paimon" << std::endl;
 #endif
 	return true;
 }
@@ -2872,13 +2941,14 @@ bool AutoTrack::getMiniMapRefMat()
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(1);
-	std::cout << "Show MiniMap" << std::endl;
+	//std::cout << "Show MiniMap" << std::endl;
 #endif
 	return true;
 }
 
 bool AutoTrack::getUIDRefMat()
 {
+
 	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
 	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
 	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
@@ -2903,7 +2973,7 @@ bool AutoTrack::getUIDRefMat()
 	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
 	cv::imshow("UID", giUIDRef);
 	cv::waitKey(1);
-	std::cout << "Show UID" << std::endl;
+	//std::cout << "Show UID" << std::endl;
 #endif
 	return true;
 }
@@ -2926,7 +2996,7 @@ bool AutoTrack::getAvatarRefMat()
 	cv::namedWindow("Avatar", cv::WINDOW_FREERATIO);
 	cv::imshow("Avatar", giAvatarRef);
 	cv::waitKey(1);
-	std::cout << "Show Avatar" << std::endl;
+	//std::cout << "Show Avatar" << std::endl;
 #endif
 	return true;
 }

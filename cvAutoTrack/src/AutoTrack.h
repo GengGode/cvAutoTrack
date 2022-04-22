@@ -25,6 +25,7 @@ public:
 	bool SetWorldScale(double scale);
 	bool GetTransform(float &x, float &y, float &a);
 	bool GetPosition(double &x, double &y);
+	bool GetPositionOfMap(double& x, double& y, int& mapId);
 	bool GetDirection(double &a);
 	bool GetRotation(double &a);
 	//获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳

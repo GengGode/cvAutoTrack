@@ -8,6 +8,14 @@
 
 static AutoTrack _at;
 
+
+bool __stdcall verison(char* versionBuff)
+{
+	const char version_cstr[] = "6.1.0";
+	strcpy_s(versionBuff,9, version_cstr);
+	return true;
+}
+
 bool __stdcall init()
 {
 	return _at.init();
@@ -35,6 +43,10 @@ bool __stdcall GetTransform(float &x, float &y, float &a)
 bool __stdcall GetPosition(double & x, double & y)
 {
 	return _at.GetPosition(x, y);
+}
+bool __stdcall GetPositionOfMap(double& x, double& y, int& mapId)
+{
+	return _at.GetPositionOfMap(x, y, mapId);
 }
 bool __stdcall GetDirection(double & a)
 {
