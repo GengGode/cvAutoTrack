@@ -2886,21 +2886,53 @@ bool AutoTrack::getGengshinImpactScreen()
 
 bool AutoTrack::getPaimonRefMat()
 {
-	int x, y;
-	if (x / y >= 16 / 9)
+	int &x= giFrame.cols, &y = giFrame.rows;
+	double f=1,fx = 1, fy = 1;
+	
+	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
 	{
+
+		//正常，不做处理
+		if (x != 1920 && y != 1080)
+		{
+			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
+		}
+	}
+	else if(static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
+	{
+
+		//高型，以宽为比例
+
+		// x = (y * 16) / 9;
+		f = y / 1080.0;
+		//将giFrame缩放到1920*1080的比例
+		fx = x / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
+
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
+	{
+
 		//宽型，以高为比例
 
+		// x = (y * 16) / 9;
+		f = x / 1920.0;
+		//将giFrame缩放到1920*1080的比例
+		fy = y / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(1920,static_cast<int>(fy)));
 	}
 	else
 	{
-		//高型，以宽为比例
+		//出错
 
 	}
-	int Paimon_Rect_x = cvCeil(giFrame.cols*0.0135);
-	int Paimon_Rect_y = cvCeil(giFrame.cols*0.006075);
-	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
-	int Paimon_Rect_h = cvCeil(giFrame.cols*0.0406);
+	
+	int Paimon_Rect_x = cvCeil(1920*0.0135);
+	int Paimon_Rect_y = cvCeil(1920*0.006075);
+	int Paimon_Rect_w = cvCeil(1920*0.035);
+	int Paimon_Rect_h = cvCeil(1920*0.0406);
 
 	if (giFrame.cols == 3440 && giFrame.rows == 1440)
 	{
@@ -2928,10 +2960,53 @@ bool AutoTrack::getPaimonRefMat()
 
 bool AutoTrack::getMiniMapRefMat()
 {
-	int MiniMap_Rect_x = cvRound(giFrame.cols*0.033);
-	int MiniMap_Rect_y = cvRound(giFrame.cols*0.01);
-	int MiniMap_Rect_w = cvRound(giFrame.cols*0.11);
-	int MiniMap_Rect_h = cvRound(giFrame.cols*0.11);
+	int& x = giFrame.cols, & y = giFrame.rows;
+	double f = 1, fx = 1, fy = 1;
+
+	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
+	{
+
+		//正常，不做处理
+		if (x != 1920 && y != 1080)
+		{
+			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
+		}
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
+	{
+
+		//高型，以宽为比例
+
+		// x = (y * 16) / 9;
+		f = y / 1080.0;
+		//将giFrame缩放到1920*1080的比例
+		fx = x / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
+
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
+	{
+
+		//宽型，以高为比例
+
+		// x = (y * 16) / 9;
+		f = x / 1920.0;
+		//将giFrame缩放到1920*1080的比例
+		fy = y / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
+	}
+	else
+	{
+		//出错
+
+	}
+	
+	int MiniMap_Rect_x = cvRound(1920 * 0.033);
+	int MiniMap_Rect_y = cvRound(1920 * 0.01);
+	int MiniMap_Rect_w = cvRound(1920 * 0.11);
+	int MiniMap_Rect_h = cvRound(1920 * 0.11);
 
 	if (giFrame.cols == 3440 && giFrame.rows == 1440)
 	{
@@ -2959,10 +3034,52 @@ bool AutoTrack::getMiniMapRefMat()
 
 bool AutoTrack::getUIDRefMat()
 {
+	int& x = giFrame.cols, & y = giFrame.rows;
+	double f = 1, fx = 1, fy = 1;
 
-	int UID_Rect_x = cvCeil(giFrame.cols*0.875);
-	int UID_Rect_y = cvCeil(giFrame.rows*0.9755);
-	int UID_Rect_w = cvCeil(giFrame.cols* 0.0938);
+	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
+	{
+
+		//正常，不做处理
+		if (x != 1920 && y != 1080)
+		{
+			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
+		}
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
+	{
+
+		//高型，以宽为比例
+
+		// x = (y * 16) / 9;
+		f = y / 1080.0;
+		//将giFrame缩放到1920*1080的比例
+		fx = x / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
+
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
+	{
+
+		//宽型，以高为比例
+
+		// x = (y * 16) / 9;
+		f = x / 1920.0;
+		//将giFrame缩放到1920*1080的比例
+		fy = y / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
+	}
+	else
+	{
+		//出错
+
+	}
+
+	int UID_Rect_x = cvCeil(giFrame.cols-1920.0*(1.0-0.875));
+	int UID_Rect_y = cvCeil(giFrame.rows-1080.0*(1.0-0.9755));
+	int UID_Rect_w = cvCeil(1920 * 0.0938);
 	int UID_Rect_h = cvCeil(UID_Rect_w*0.11);
 
 	if (giFrame.cols == 3440 && giFrame.rows == 1440)

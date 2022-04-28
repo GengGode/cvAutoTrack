@@ -204,7 +204,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -390,7 +390,9 @@
     <ClInclude Include="src\resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AutoTrack.cpp" />
+    <ClCompile Include="src\AutoTrack.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Base_SURF.cpp" />
     <ClCompile Include="src\Base_Thread.cpp" />
     <ClCompile Include="src\cvAT_SAerialization.cpp" />
