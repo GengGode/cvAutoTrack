@@ -2886,6 +2886,17 @@ bool AutoTrack::getGengshinImpactScreen()
 
 bool AutoTrack::getPaimonRefMat()
 {
+	int x, y;
+	if (x / y >= 16 / 9)
+	{
+		//宽型，以高为比例
+
+	}
+	else
+	{
+		//高型，以宽为比例
+
+	}
 	int Paimon_Rect_x = cvCeil(giFrame.cols*0.0135);
 	int Paimon_Rect_y = cvCeil(giFrame.cols*0.006075);
 	int Paimon_Rect_w = cvCeil(giFrame.cols*0.035);
