@@ -4,14 +4,14 @@
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
+## 目前支持任意分辨率，但尚不支持手柄模式
 ## 地图目前支持区域
 
-| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) | 稻妻IIII(渊下宫) | 层岩 | 地下层岩
+| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) | 稻妻IIII(渊下宫) | 璃月II(层岩) | 璃月III(地下层岩)
 
 ## 如何使用
 
 1. 下载编译好的动态链接库。
-   - https://pan.baidu.com/s/1y-lgkGiyIJPa3_y0aRlOnQ（提取码：e7zv）
    - https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
 2. 装载动态链接库后，根据[函数手册](#函数手册)对相关函数进行调用或封装。
 3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
@@ -31,7 +31,7 @@
 - 本项目借游戏画面的窗口截图进行图像处理算法以实现所有功能，其不会对游戏内存进行读写，因而不会有封号的风险，但效果也因此具备一定的局限。
 - 项目仅在有限的条件下测试过，如需排查错误，强烈建议按照以下描述进行环境配置。
   - 原神客户端 > 右上角派蒙 > 设置 > 抗锯齿，设置为 `SMAA`
-  - 原神客户端 > 右上角派蒙 > 设置 > 分辨率，设置为 `1920x1080`
+  - 原神客户端 > 右上角派蒙 > 设置 > 其他 > 小地图锁定，设置为 `锁定方向`
 
 ## 对于开发者
 
