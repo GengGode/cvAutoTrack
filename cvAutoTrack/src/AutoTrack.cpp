@@ -633,7 +633,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 		}
 	}
 	
-	if (isConveying)
+	if (!isConveying)
 	{
 		pos = posFilter.reinitfilterting(pos);
 		//isConveying = false;
