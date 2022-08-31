@@ -105,6 +105,7 @@ int main()
 		{
 			std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";
 		}
+#pragma warning(suppress : 4996)
 		if (GetPosition(x2, y2))
 		{
 		
