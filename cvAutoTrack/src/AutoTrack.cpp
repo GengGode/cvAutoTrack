@@ -777,7 +777,8 @@ bool AutoTrack::GetDirection(double & a)
 
 	cv::Mat paimonTemplate;
 
-	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
 
 	cv::Mat tmp;
 
@@ -897,7 +898,8 @@ bool AutoTrack::GetRotation(double & a)
 
 	cv::Mat paimonTemplate;
 
-	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
 
 	cv::Mat tmp;
 
@@ -1401,7 +1403,8 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 
 	cv::Mat paimonTemplate;
 
-	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+
+	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
 
 	cv::Mat tmp;
 //	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
@@ -2073,7 +2076,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 
 		cv::Mat paimonTemplate;
 
-		cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+		giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
 
 		cv::Mat tmp;
 		giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
