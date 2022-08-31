@@ -20,7 +20,9 @@ public:
 
 	bool init();
 	bool uninit();
-	bool SetHandle(long long int handle);
+	int  GetGpuCount();
+	bool SetGpuDevice(int deviceId = 0);
+	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
 	bool GetTransform(float &x, float &y, float &a);
@@ -62,7 +64,7 @@ private:
 
 private:
 
-#define MAP_2_1
+#define MAP_3_0
 
 #ifdef MAP_1_7_1
 	int minHessian = 400;
@@ -170,6 +172,46 @@ private:
 	//double MapWorldOffset_Y = 2025;
 
 	//也忘了
+	//2022.07.13 还是没想起来
+	double MapWorldScale = 1.0;
+
+#endif
+
+#ifdef MAP_3_0
+	int minHessian = 400;
+	double ratio_thresh = 0.66;
+	double mapScale = 1.3;//1.3;
+	int someSizeR = 106;
+	double MatchMatScale = 2.0;
+
+	//用户定义映射关系参数
+	double UserWorldOrigin_X = 0;
+	double UserWorldOrigin_Y = 0;
+	double UserWorldScale = 1.0;
+
+	// 绝对世界中心 绝对世界缩放系数
+	//World Center on AbsAllMap Coor
+	double WorldCenter_X = 7400; //Abs 2871   * MapAbsScale = 7392.2870
+	double WorldCenter_Y = 9432; //Abs 3015.5 * MapAbsScale = 7710.6335
+	double WorldScale = 1.0; //Abs
+
+	//相对绝对空间原点坐标
+	//Map Origin Point on AbsAllMap Coor.
+	double MapWorldAbsOrigin_X = 7.7130; // 7400 - 7392.2870
+	double MapWorldAbsOrigin_Y = 1721.3665; // 9432 - 7710.6335
+
+	//相对绝对空间缩放系数
+	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
+	double MapAbsScale = 2.557; //from diff Image 67.40%
+
+	//忘了是啥了，记得明天推导
+	//09.07 是个固定值，不用变
+	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025); // ? forget
+	//double MapWorldOffset_X = 3412;
+	//double MapWorldOffset_Y = 2025;
+
+	//也忘了
+	//2022.07.13 还是没想起来
 	double MapWorldScale = 1.0;
 
 #endif
@@ -223,6 +265,14 @@ private:
 	bool is_Auto_getHandle = true;
 	bool isStarVisible = false;
 
+private:
+	// GPU设备数量
+	int gpuDeviceNumber = 0;
+	// 使能GPU设备id
+	int gpuDeviceId = -1;
+	
+	// 界面处于手柄模式
+	bool isHandleGameMode = false;
 
 private:
 	HWND giHandle;

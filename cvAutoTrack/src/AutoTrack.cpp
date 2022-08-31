@@ -2,11 +2,19 @@
 #include "AutoTrack.h"
 #include "ErrorCode.h"
 
+#ifdef CV_CUDA_GPU
+#include <opencv2/core/cuda.hpp>
+#endif // CV_CUDA_GPU
+
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
 AutoTrack::AutoTrack()
 {
+
+#ifdef CV_CUDA_GPU	
+	gpuDeviceNumber = cv::cuda::getCudaEnabledDeviceCount();
+#endif // CV_CUDA_GPU
 
 	MapWorldOffset.x = MapWorldAbsOrigin_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOrigin_Y - WorldCenter_Y;
@@ -82,6 +90,40 @@ bool AutoTrack::uninit()
 		is_init_end = false;
 	}
 	return !is_init_end;
+}
+
+int AutoTrack::GetGpuCount()
+{
+	// 获取GPU设备数量
+	return gpuDeviceNumber;
+}
+
+bool AutoTrack::SetGpuDevice(int deviceId)
+{
+	// 如果GPU设备数量等于零，直接返回启用GPU失败，因为不存在GPU设备
+	if (gpuDeviceNumber == 0)
+	{
+		return false;
+	}
+#ifdef CV_CUDA_GPU	
+	else
+	{
+		if (gpuDeviceNumber > deviceId)
+		{
+			// 如果设备ID小于GPU设备数量，则启用指定GPU设备
+			cv::cuda::setDevice(deviceId);
+			gpuDeviceId = deviceId;
+			return true;
+		}
+		else
+		{
+			// 如果设备ID大于等于GPU设备数量，则启用最后一个GPU设备
+			cv::cuda::setDevice(gpuDeviceNumber - 1);
+			gpuDeviceId = gpuDeviceNumber - 1;
+			return true;
+		}
+	}
+#endif // CV_CUDA_GPU
 }
 
 
@@ -168,7 +210,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 	cv::Mat paimonTemplate;
 
-	cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
+	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
+	//cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
 
 	cv::Mat tmp;
 
@@ -662,34 +705,36 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 {
 	mapId = 0;
 	cv::Point2d pos_tr;
+
+	bool res_pos = GetPosition(x, y);
+	if (res_pos != true)
+	{
+		return false;
+	}
+
 	pos_tr = TransferUserAxes_Tr(cv::Point2d(x,y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 	pos_tr = TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
 
 	//cv::Size size_DiXiaCengYan(1250, 1016);
-	//cv::Size size_YuanXiaGong(2400, 2401);
+	//cv::Size size_YuanXiaGong(2400, 2401); 5544 
 	//cv::Size size_YuanXiaGong_Un(800, 450);
+	cv::Rect rect_DiXiaCengYan(0,0,1250,1016);
+	cv::Rect rect_YuanXiaGong(0,5543,2400,2401);
 
 		int _x = pos_tr.x;
 		int _y = pos_tr.y;
 		// 渊下宫
 		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
 		{
-			if (_x > 2400 - 800 && _y < 5543 + 450)
-			{
-				mapId = 0;
-			}
-			else
-			{
-				mapId = 1;
-			}
+			mapId = 1;
 		}
 		// 地下层岩
-		if (_x > 0 && _x <= 0 + 1250 && _y > 4132 && _y <= 4132 + 1016)
+		if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
 		{
 			mapId = 2;
-		
 		}
+
 		switch (mapId)
 		{
 		case 0:
@@ -700,7 +745,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 			_x = _x - 0;
 			_y = _y - 5543;
-			cv::Point2d pos=TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);//1433 6932-5543
+			cv::Point2d pos=TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
 			pos = TransferUserAxes(pos, 0, 0, 1);
 			x = pos.x;
 			y = pos.y;
@@ -709,21 +754,14 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		case 2:
 		{
 			_x = _x - 0;
-			_y = _y - 4132;
-			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);//801 4765-4132
+			_y = _y - 0;
+			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
 			pos = TransferUserAxes(pos, 0, 0, 1);
 			x = pos.x;
 			y = pos.y;
 			break;
 		}
 		}
-
-#ifdef _DEBUG
-
-	//std::cout << pos_tr.x << " " << pos_tr.y<<"\n";
-
-#endif // _DEBUG
-
 
 	return true;
 }
@@ -2947,7 +2985,20 @@ bool AutoTrack::getPaimonRefMat()
 		Paimon_Rect_h = cvCeil(1920 * 0.0406);
 	}
 
-	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+	// 派蒙可能性区域计算参数
+	int paimon_mayArea_left = 0;
+	int paimon_mayArea_top = 0;
+	int paimon_mayArea_width = static_cast<int>(x * 0.10);
+	int paimon_mayArea_height = static_cast<int>(y * 0.10);
+	// 派蒙可能性区域
+	cv::Rect Area_Paimon_mayArea(
+		paimon_mayArea_left,
+		paimon_mayArea_top,
+		paimon_mayArea_width,
+		paimon_mayArea_height);
+
+	//giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+	giPaimonRef = giFrame(Area_Paimon_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
