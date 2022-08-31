@@ -1,16 +1,34 @@
 # GenshinImpact AutoTrack DLL
 
-一个通过opencv图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库。
+通过图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-## 目前支持任意分辨率，但尚不支持手柄模式
-## 地图目前支持区域
-## 支持 NVIDA GPU 图形计算加速
+# 介绍 
 
-| 蒙德 | 雪山 | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) | 稻妻IIII(渊下宫) | 璃月II(层岩) | 璃月III(地下层岩)
 
-## 如何使用
+### 目前支持任意分辨率，但尚不支持手柄模式
+### 地图目前支持区域
+
+| 蒙德 | c | 璃月 | 稻妻I | 稻妻II() | 稻妻III(鹤观) | 稻妻IIII(渊下宫) | 璃月II(层岩) | 璃月III(地下层岩)
+
+| 原神版本 | 地图区域 | dll版本 |
+| -------- | ------ | ------ |
+|  1.0 |  蒙德               |   -   |
+|  -   |  雪山               |   -   |
+|  -   |  璃月               |   -   |
+|  -   |  稻妻I              |   -   |
+|  -   |  稻妻II             |   -   |
+|  -   |  稻妻III(鹤观)      |   -   |
+|  -   |  稻妻IIII(渊下宫)   |   -   |
+|  -   |  璃月II(层岩)       |   -   |
+|  -   |  璃月III(地下层岩)  |   -   |
+|  3.0 |  须弥              | 6.1.51 |
+
+## ~~支持 NVIDA GPU 图形计算加速~~ (远程编译不支持cuda，所以寄了)
+
+
+# 如何使用
 
 1. 下载编译好的动态链接库。
    - https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
@@ -18,12 +36,26 @@
 3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
 4. 由于默认接口输出的是[天理坐标模型](天理坐标模型)的坐标，所以使用者需要根据自身地图坐标系与天理坐标模型之间的映射关系，设置世界中心以及缩放系数或者后期手动换算。
 
-## 如何编译
+# 如何编译
 
-1. 环境需求，Visual Studio 2019 + 、Opencv 4.5.0
-2. Git Clone https://github.com/GengGode/GenshinImpact_AutoTrack_DLL
-3. cd .\cvAutoTrack | 7z -x resource.zip
-5. msbuild cvAutoTrack.sln
+1. 环境需求，[Visual Studio 2019 +](https://visualstudio.microsoft.com/zh-hans/vs/) 、[Opencv 4.5.0 static lib zip](https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip)
+2. 安装 Visual Studio 2019 +
+3. 创建 Opencv 库的环境变量，若不使用环境变量则需要手动修改 cvAutoTrack 项目的`附加包含目录`和`附加库目录`
+
+    ``` $OpenCvDir = C:\projects\opencv\ ```
+4. 下载 Opencv 4.5.0 static lib zip 并解压到任意目录
+
+    ``` 7z x ./*.zip -y -o%OpenCvDir% ```
+5. Clone 代码
+
+   ``` Git Clone https://github.com/GengGode/GenshinImpact_AutoTrack_DLL ```
+
+6. 进入项目文件夹解压资源文件
+
+    ``` cd .\cvAutoTrack | 7z -x resource.zip ```
+7. 编译项目
+
+    ``` msbuild cvAutoTrack.sln ```
 
 ## 注意事项
 
@@ -34,7 +66,7 @@
   - 原神客户端 > 右上角派蒙 > 设置 > 抗锯齿，设置为 `SMAA`
   - 原神客户端 > 右上角派蒙 > 设置 > 其他 > 小地图锁定，设置为 `锁定方向`
 
-## 对于开发者
+# 对于开发者
 
 - 码云上的仓库：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
 - Git上的仓库： [https://github.com/GengGode/GenshinImpact_AutoTrack_DLL](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL)
@@ -53,8 +85,8 @@
 | `verison`            | 获取Dll版本。                                                    |
 | `init`               | 初始化运行环境。                                                    |
 | `uninit`             | 卸载初始化时所占用的内存。                                           |
-| `GetGpuCount`        | 获取本机可用GPU设备数。                                           |
-| `SetGpuDevice`       | 设置启用GPU设备。                                                  |
+| `GetGpuCount`        | （无效）获取本机可用GPU设备数。                                           |
+| `SetGpuDevice`       | （无效）设置启用GPU设备。                                                  |
 | `GetLastErr`         | 获取最后设置的错误码。                                               |
 | `SetHandle`          | 设置原神客户端的窗口句柄。                                            |
 | `SetWorldCenter`     | 设置映射目标地图坐标系的原点中心所在天理坐标模型中的坐标。               |
