@@ -250,43 +250,6 @@ bool AutoTrack::GetPosition(double & x, double & y)
 #endif // Mode1
 
 #ifdef _DEBUG
-
-#ifdef Mode2
-	cv::Ptr<cv::xfeatures2d::SURF> detectorPaimon = cv::xfeatures2d::SURF::create(minHessian);
-	std::vector<cv::KeyPoint> KeyPointPaimonTemplate, KeyPointPaimonRef;
-	cv::Mat DataPointPaimonTemplate, DataPointPaimonRef;
-
-	detectorPaimon->detectAndCompute(giPaimonRef, cv::noArray(), KeyPointPaimonRef, DataPointPaimonRef);
-	detectorPaimon->detectAndCompute(paimonTemplate, cv::noArray(), KeyPointPaimonTemplate, DataPointPaimonTemplate);
-	cv::Ptr<cv::DescriptorMatcher> matcherPaimonTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_PaimonmTmp;
-	std::vector<cv::DMatch> good_matchesPaimonTmp;
-
-	for (size_t i = 0; i < KNN_PaimonmTmp.size(); i++)
-	{
-		if (KNN_PaimonmTmp[i][0].distance < ratio_thresh * KNN_PaimonmTmp[i][1].distance)
-		{
-			good_matchesPaimonTmp.push_back(KNN_PaimonmTmp[i][0]);
-		}
-	}
-
-	cv::Mat img_matchesA, imgmapA, imgminmapA;
-	drawKeypoints(giPaimonRef, KeyPointPaimonRef, imgmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	drawKeypoints(paimonTemplate, KeyPointPaimonTemplate, imgminmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	drawMatches(paimonTemplate, KeyPointPaimonTemplate, giPaimonRef, KeyPointPaimonRef, good_matchesPaimonTmp, img_matchesA, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-
-	cv::imshow("asda", img_matchesA);
-
-	if (good_matchesPaimonTmp.size() < 7)
-	{
-		err = 6;//未能匹配到派蒙
-		return false;
-	}
-#endif // Mode2
-
-#endif
-
-#ifdef _DEBUG
 	cv::namedWindow("test", cv::WINDOW_FREERATIO);
 	cv::imshow("test", giPaimonRef);
 #endif
@@ -3028,8 +2991,8 @@ bool AutoTrack::getPaimonRefMat()
 		paimon_mayArea_width,
 		paimon_mayArea_height);
 
-	//giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
-	giPaimonRef = giFrame(Area_Paimon_mayArea);
+	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+	//giPaimonRef = giFrame(Area_Paimon_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
