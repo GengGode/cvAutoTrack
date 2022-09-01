@@ -192,6 +192,34 @@ bool AutoTrack::GetTransform(float & x, float & y, float & a)
 	return true;
 }
 
+bool AutoTrack::GetTransformOfMap(float& x, float& y, float& a, int& mapId)
+{
+	double x2 = 0, y2 = 0, a2 = 0;
+	int mapId2 = 0;
+	if (!is_init_end)
+	{
+		init();//初始化
+	}
+
+	/*
+	分别判断是否成功获取，避免前一个error_code被后一个error_code覆盖
+	而导致本函数返回false（表示失败）但error_code为0（表示成功）。
+	*/
+	if (!GetPositionOfMap(x2, y2,mapId2))
+	{
+		return false;
+	}
+	if (!GetDirection(a2))
+	{
+		return false;
+	}
+	x = (float)x2;
+	y = (float)y2;
+	a = (float)a2;
+	mapId = mapId2;
+	return true;
+}
+
 bool AutoTrack::GetPosition(double & x, double & y)
 {
 
