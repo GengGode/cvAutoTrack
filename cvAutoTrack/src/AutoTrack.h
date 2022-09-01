@@ -26,6 +26,7 @@ public:
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
 	bool GetTransform(float &x, float &y, float &a);
+	bool GetTransformOfMap(float& x, float& y, float& a, int& mapId);
 	bool GetPosition(double &x, double &y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
 	bool GetDirection(double &a);

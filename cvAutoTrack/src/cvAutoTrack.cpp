@@ -48,6 +48,10 @@ bool __stdcall GetTransform(float &x, float &y, float &a)
 {
 	return _at.GetTransform(x, y, a);
 }
+bool __stdcall GetTransformOfMap(float& x, float& y, float& a, int& mapId)
+{
+	return _at.GetTransformOfMap(x, y, a, mapId);
+}
 bool __stdcall GetPosition(double & x, double & y)
 {
 	return _at.GetPosition(x, y);
