@@ -299,6 +299,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	}
 
 	isContinuity = false;
+	isConveying = false;
 
 	cv::Point2d *hisP = _TransformHistory;
 
@@ -596,6 +597,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	{
 		isConveying = true;
 	}
+
 	if (!isContinuity)
 	{
 		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
@@ -663,30 +665,32 @@ bool AutoTrack::GetPosition(double & x, double & y)
 			else
 			{
 				pos = SPC(lisx, sumx, lisy, sumy);
+				isConveying = true;
 			}
 		}
 	}
-	
-	if (!isConveying)
+	cv::Point2d filt_pos;
+	if (isConveying || !isContinuity)
 	{
-		pos = posFilter.reinitfilterting(pos);
+		filt_pos = posFilter.reinitfilterting(pos);
 		//isConveying = false;
 	}
 	else
 	{
-		pos = posFilter.filterting(pos);
+		filt_pos = posFilter.filterting(pos);
 	}
+	
 
 	hisP[0] = hisP[1];
 	hisP[1] = hisP[2];
-	hisP[2] = pos;
+	hisP[2] = filt_pos;
 
-	pos = TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+	cv::Point2d abs_pos = TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 
-	pos = TransferUserAxes(pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	cv::Point2d user_pos = TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 
-	x = (float)(pos.x);
-	y = (float)(pos.y);
+	x = (float)(user_pos.x);
+	y = (float)(user_pos.y);
 
 	err = 0;
 	return true;
