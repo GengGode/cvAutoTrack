@@ -94,7 +94,8 @@ int main()
 
 
 
-		 //调用获取方法
+		//调用获取方法
+#pragma warning(suppress : 4996)
 		if (GetTransform(x, y, a))
 		{
 			std::cout << "坐标和角度   : " << " " << x << " " << y << " " << a << "\n";
