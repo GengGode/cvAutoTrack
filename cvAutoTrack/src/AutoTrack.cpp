@@ -124,6 +124,7 @@ bool AutoTrack::SetGpuDevice(int deviceId)
 		}
 	}
 #endif // CV_CUDA_GPU
+	return true;
 }
 
 
