@@ -1,26 +1,24 @@
 #include "pch.h"
 #include "ErrorCode.h"
 
-
-
 ErrorCode::ErrorCode()
 {
 	fopen_s(&fptr, "./autoTrack.log", "w+");
 
-	errCodeMsg.push_back("0: ERR_SUCCESS");
-	errCodeMsg.push_back("1: ERR_UNINITIALIZED");
-	errCodeMsg.push_back("2: ERR_HWND_NO_FOUND");
-	errCodeMsg.push_back("3: ERR_SCREEN_EMPTY");
-	errCodeMsg.push_back("4: ERR_SURF_KEYPOINT_NO");
-	errCodeMsg.push_back("5: ERR_MINIMAP_TOO_SMALL");
-	errCodeMsg.push_back("6: ERR_PAIMON_NO_FOUND");
-	errCodeMsg.push_back("7: ERR_KEYPOINT_OUT_OF_INDEX");
-	errCodeMsg.push_back("8: ERR_UIDRECT_INVALID");
-	errCodeMsg.push_back("9: ERR_AVATARKEYPOINT_ERROR");
-	errCodeMsg.push_back("10: ERR_HWND_INVALID");
-	errCodeMsg.push_back("11: ERR_AVATARRECT_UNFIND");
-	errCodeMsg.push_back("12: ERR_GIHANDLE_NULL");
-	errCodeMsg.push_back("13: ERR_GIHANDLE_INVALID");
+	errCodeMsg.push_back("执行成功");
+	errCodeMsg.push_back("未初始化");
+	errCodeMsg.push_back("未能找到原神窗口句柄");
+	errCodeMsg.push_back("窗口画面为空");
+	errCodeMsg.push_back("未能匹配到特征点");
+	errCodeMsg.push_back("原神小地图区域为空或者区域长宽小于60px");
+	errCodeMsg.push_back("未能匹配到派蒙");
+	errCodeMsg.push_back("特征点数组访问越界");
+	errCodeMsg.push_back("未能在UID区域检测到有效UID");
+	errCodeMsg.push_back("提取小箭头特征误差过大");
+	errCodeMsg.push_back("无效句柄或指定句柄所指向窗口不存在");
+	errCodeMsg.push_back("未能取到小箭头区域");
+	errCodeMsg.push_back("窗口句柄为空");
+	errCodeMsg.push_back("窗口句柄失效");
 }
 
 ErrorCode::~ErrorCode()
@@ -36,17 +34,32 @@ ErrorCode & ErrorCode::getInstance()
 
 ErrorCode & ErrorCode::operator=(const int & code)
 {
+	string msg = "未定义错误信息";
+	if (code < errCodeMsg.size())
+	{
+		msg = errCodeMsg[code];
+	}
+	(* this) = {code,msg};
+	return *this;
+}
+
+ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
+{
+	const int& code = err_code_msg.first;
+	const string& msg = err_code_msg.second;
+	
 	this->errorCode = code;
 	if (code == 0)
 	{
-		fprintf_s(fptr,"Code = 0 \nClear Error List\n");
-		errCodeList.clear();
+		fprintf_s(fptr, "清空错误堆栈\n");
+		error_code_msg_list.clear();
 	}
 	else
 	{
-		fprintf_s(fptr,"Code = %d\n",code);
-		push(code);
+		fprintf_s(fptr, "Code = %d, Msg = %s\n", code,msg.c_str());
+		push(code,msg);
 	}
+	
 	fflush(fptr);
 
 	return *this;
@@ -58,19 +71,6 @@ ErrorCode::operator int()
 	return this->errorCode;
 }
 
-void ErrorCode::setError(int code)
-{
-	this->errorCode = code;
-	if (code == 0)
-	{
-		errCodeList.clear();
-	}
-	else
-	{
-		push(code);
-	}
-}
-
 int ErrorCode::getLastError()
 {
 	return this->errorCode;
@@ -78,44 +78,46 @@ int ErrorCode::getLastError()
 
 string ErrorCode::getLastErrorMsg()
 {
-	if (errorCode <= errCodeMsg.size())
+	if (this->errorCode != 0)
 	{
-		return errCodeMsg[errorCode];
+		return to_string(error_code_msg_list.back().first) +": "+ error_code_msg_list.back().second;
 	}
 	else
 	{
-		return to_string(errorCode) + string(": UNDEFINE_ERROR");
+		return "0: SUCCESS";
 	}
 }
 
-void ErrorCode::push(int code)
+void ErrorCode::push(int code, string msg)
 {
-	errCodeList.push_back(code);
-	if (errCodeList.size() > 9)
+	error_code_msg_list.push_back({ code,msg });
+	
+	if (error_code_msg_list.size() > 9)
 	{
-		vector<int>::iterator index = errCodeList.begin();
-		errCodeList.erase(index);
+		vector<pair<int, string>>::iterator index = error_code_msg_list.begin();
+		error_code_msg_list.erase(index);
 	}
 }
 
 ostream & operator<<(ostream & os, const ErrorCode & err)
 {
-	for (int i = err.errCodeList.size()-1; i >= 0; i--)
+	for (int i = static_cast<int>(err.error_code_msg_list.size()) - 1; i >= 0; i--)
 	{
-		for (int j = 1; j < err.errCodeList.size() - i; j++)
+		for (int j = 1; j < err.error_code_msg_list.size() - i; j++)
 		{
-			os << "    ";
+			os << "  ";
 		}
-		os << "\u2514 \u2500 \u252C \u2500 \u2192";
-
-		if (err.errCodeList[i] < err.errCodeMsg.size())
+		if (i == 0)
 		{
-			os << err.errCodeMsg[err.errCodeList[i]] << endl;
+			os << "\u2514\u2500\u2500\u2500\u2192";
 		}
 		else
 		{
-			os << to_string(err.errCodeList[i]) + string(": UNDEFINE_ERROR") << endl;
+			os << "\u2514\u2500\u252C\u2500\u2192";
 		}
+		//os << "\u2514 \u2500 \u252C \u2500 \u2192";
+
+		os << to_string(err.error_code_msg_list[i].first) + ": " + err.error_code_msg_list[i].second + '\n';
 	}
 	return os;
 }
