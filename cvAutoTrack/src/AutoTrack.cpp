@@ -20,37 +20,43 @@ AutoTrack::AutoTrack()
 	MapWorldOffset.y = MapWorldAbsOrigin_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
 
+	wForAfter.append(this, &AutoTrack::clear_error_logs, 0);
 	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101);
 	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102);
 	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103);
 
+	wPaimon.append(this, &AutoTrack::clear_error_logs, 0);
 	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
 	wPaimon.append(this, &AutoTrack::getGengshinImpactRect, 105);
 	wPaimon.append(this, &AutoTrack::getGengshinImpactScreen, 106);
 	wPaimon.append(this, &AutoTrack::getPaimonRefMat, 107);
 
+	wMiniMap.append(this, &AutoTrack::clear_error_logs, 0);
 	wMiniMap.append(this, &AutoTrack::getAutoTrackIsInit, 108);
 	wMiniMap.append(this, &AutoTrack::getGengshinImpactWnd, 109);
 	wMiniMap.append(this, &AutoTrack::getGengshinImpactRect, 110);
 	wMiniMap.append(this, &AutoTrack::getGengshinImpactScreen, 111);
 	wMiniMap.append(this, &AutoTrack::getMiniMapRefMat, 112);
 
+	wAvatar.append(this, &AutoTrack::clear_error_logs, 0);
 	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 113);
 	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 114);
 	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 115);
 	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 116);
 
-	
+	wRotating.append(this, &AutoTrack::clear_error_logs, 0);
 	wRotating.append(this, &AutoTrack::getGengshinImpactWnd, 117);
 	wRotating.append(this, &AutoTrack::getGengshinImpactRect, 118);
 	wRotating.append(this, &AutoTrack::getGengshinImpactScreen, 119);
 	wRotating.append(this, &AutoTrack::getMiniMapRefMat, 120);
 
+	wStar.append(this, &AutoTrack::clear_error_logs, 0);
 	wStar.append(this, &AutoTrack::getGengshinImpactWnd, 121);
 	wStar.append(this, &AutoTrack::getGengshinImpactRect, 122);
 	wStar.append(this, &AutoTrack::getGengshinImpactScreen, 123);
 	wStar.append(this, &AutoTrack::getMiniMapRefMat, 124);
 
+	wUID.append(this, &AutoTrack::clear_error_logs, 0);
 	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 125);
 	wUID.append(this, &AutoTrack::getGengshinImpactRect, 126);
 	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 127);
@@ -230,61 +236,16 @@ bool AutoTrack::GetPosition(double & x, double & y)
 	}
 	if (!is_init_end)
 	{
-		err = 1;
+		err = {1,"没有初始化"};
 		return false;
 	}
 
-
-	getPaimonRefMat();
-
-	cv::Mat paimonTemplate;
-
-	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
-	//cv::resize(giMatchResource.PaimonTemplate, paimonTemplate, giPaimonRef.size());
-
-	cv::Mat tmp;
-
-#define Mode1
-
-#ifdef Mode1
-	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
-#endif // Mode1
-
-#ifdef _DEBUG
-	cv::namedWindow("test", cv::WINDOW_FREERATIO);
-	cv::imshow("test", giPaimonRef);
-#endif
-
-#ifdef Mode1
-
-	std::vector<cv::Mat> lisT, lisR;
-	cv::split(paimonTemplate, lisT);
-	cv::split(giPaimonRef, lisR);
-
-	cv::Mat Template, Ref;
-	cv::cvtColor(paimonTemplate, Template, cv::COLOR_RGBA2GRAY);
-	cv::cvtColor(giPaimonRef, Ref, cv::COLOR_RGBA2GRAY);
-
-	//cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
-	//cv::matchTemplate(Template, Ref, tmp, cv::TM_CCOEFF_NORMED);
-	cv::matchTemplate(lisT[3], lisR[3], tmp, cv::TM_CCOEFF_NORMED);
-
-	double minVal, maxVal;
-	cv::Point minLoc, maxLoc;
-	cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-
-#ifdef _DEBUG
-	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
-	cv::imshow("test2", tmp);
-	// std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
-#endif
-
-	if (maxVal < 0.36 || maxVal == 1)
+	cv::Rect paimon_rect;
+	if (!check_paimon(paimon_rect))
 	{
-		err = 6;//未能匹配到派蒙
+		err = { 1000, "获取坐标时，没有识别到paimon"};
 		return false;
 	}
-#endif
 
 	getMiniMapRefMat();
 
@@ -295,7 +256,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 	if (img_object.empty())
 	{
-		err = 5;//原神小地图区域为空或者区域长宽小于60px
+		err = { 5, "原神小地图区域为空"};
 		return false;
 	}
 
@@ -311,21 +272,16 @@ bool AutoTrack::GetPosition(double & x, double & y)
 		if (hisP[2].x > someSizeR && hisP[2].x < img_scene.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < img_scene.rows - someSizeR)
 		{
 			isContinuity = true;
-			if (isContinuity)
-			{
-				if (isOnCity == false)
-				{
+		}
+	}
+	
+	if (isContinuity)
+	{
+		if (isOnCity == false)
+		{
 					cv::Mat someMap(img_scene(cv::Rect(cvRound(hisP[2].x - someSizeR), cvRound(hisP[2].y - someSizeR), cvRound(someSizeR * 2), cvRound(someSizeR * 2))));
 					cv::Mat minMap(img_object);
-
-					//resize(someMap, someMap, Size(), MatchMatScale, MatchMatScale, 1);
-					//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
-
-					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					
 
 					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
 					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
@@ -337,10 +293,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
 					detectorSomeMap->detectAndCompute(minMap, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
 
-					std::vector<double> lisx;
-					std::vector<double> lisy;
-					double sumx = 0;
-					double sumy = 0;
+
 
 					if (KeyPointMiniMap.size() == 0 || KeyPointSomeMap.size() == 0)
 					{
@@ -350,37 +303,16 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					{
 						cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 						std::vector< std::vector<cv::DMatch> > KNN_mTmp;
-#ifdef _DEBUG
-						std::vector<cv::DMatch> good_matchesTmp;
-#endif
+
 						matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
+						
+						std::vector<double> lisx;
+						std::vector<double> lisy;
+						double sumx = 0;
+						double sumy = 0;
+						
+						calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_mTmp, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
 
-						//长时间运行概率触发 有未经处理的异常: Microsoft C++ 异常: cv::Exception，位于内存位置 
-						for (size_t i = 0; i < KNN_mTmp.size(); i++)
-						{
-							if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
-							{
-#ifdef _DEBUG
-								good_matchesTmp.push_back(KNN_mTmp[i][0]);
-#endif
-								if (KNN_mTmp[i][0].queryIdx >= KeyPointMiniMap.size())
-								{
-									continue;
-								}
-								// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
-								lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-								lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*mapScale + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
-
-								sumx += lisx.back();
-								sumy += lisy.back();
-							}
-						}
-#ifdef _DEBUG
-						cv::Mat img_matches, imgmap, imgminmap;
-						drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-						drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-						drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-#endif
 						if (min(lisx.size(), lisy.size()) <= 4)
 						{
 							//有可能处于城镇中
@@ -404,9 +336,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 							{
 								cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 								std::vector< std::vector<cv::DMatch> > KNN_mTmp;
-#ifdef _DEBUG
-								std::vector<cv::DMatch> good_matchesTmp;
-#endif
+
 								matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
 								//std::vector<double> lisx;
 								//std::vector<double> lisy;
@@ -416,33 +346,9 @@ bool AutoTrack::GetPosition(double & x, double & y)
 								//double sumy = 0;
 								sumx = 0;
 								sumy = 0;
-
-								for (size_t i = 0; i < KNN_mTmp.size(); i++)
-								{
-									if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
-									{
-#ifdef _DEBUG
-										good_matchesTmp.push_back(KNN_mTmp[i][0]);
-#endif
-										// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
-										if (KNN_mTmp[i][0].queryIdx >= KeyPointMiniMap.size())
-										{
-											continue;
-										}
-
-										lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-										lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
-										sumx += lisx.back();
-										sumy += lisy.back();
-									}
-								}
-#ifdef _DEBUG
-								//Mat img_matches, imgmap, imgminmap;
-								drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-								drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-								drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-#endif
+								
+								calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+								
 								if (min(lisx.size(), lisy.size()) <= 4)
 								{
 									isContinuity = false;
@@ -457,14 +363,9 @@ bool AutoTrack::GetPosition(double & x, double & y)
 									{
 										isOnCity = false;
 									}
-
-									double meanx = sumx / lisx.size(); //均值
-									double meany = sumy / lisy.size(); //均值
+									
 									cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
-
-									//int x = (int)meanx;
-									//int y = (int)meany;
-
+									
 									double x = (p.x - someMap.cols / 2.0) / 2.0;
 									double y = (p.y - someMap.rows / 2.0) / 2.0;
 
@@ -488,20 +389,15 @@ bool AutoTrack::GetPosition(double & x, double & y)
 							pos = cv::Point2d(x + hisP[2].x - someSizeR, y + hisP[2].y - someSizeR);
 						}
 					}
-				}
-				else
-				{
+		}
+		else
+		{
 					//在城镇中
 						/***********************/
 						//重新从完整中地图取出角色周围部分地图
 					cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 					cv::Mat minMap(img_object);
-
-					//cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorSomeMap;
-					//std::vector<cv::KeyPoint>& KeyPointSomeMap = *(std::vector<cv::KeyPoint>*)_KeyPointSomeMap;
-					//cv::Mat& DataPointSomeMap = *(cv::Mat*)_DataPointSomeMap;
-					//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-					//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
+					
 
 					cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
 					std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
@@ -521,9 +417,7 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					{
 						cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 						std::vector< std::vector<cv::DMatch> > KNN_mTmp;
-#ifdef _DEBUG
-						std::vector<cv::DMatch> good_matchesTmp;
-#endif
+
 						KNN_mTmp.clear();
 						matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
 						std::vector<double> lisx;
@@ -531,32 +425,8 @@ bool AutoTrack::GetPosition(double & x, double & y)
 						double sumx = 0;
 						double sumy = 0;
 
-						for (size_t i = 0; i < KNN_mTmp.size(); i++)
-						{
-							if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
-							{
-#ifdef _DEBUG
-								good_matchesTmp.push_back(KNN_mTmp[i][0]);
-#endif
-								// 这里有个bug回卡进来，进入副本或者切换放大招时偶尔触发
-								if (KNN_mTmp[i][0].queryIdx >= KeyPointMiniMap.size())
-								{
-									continue;
-								}
+						calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
 
-								lisx.push_back(((minMap.cols / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-								lisy.push_back(((minMap.rows / 2.0 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
-								sumx += lisx.back();
-								sumy += lisy.back();
-							}
-						}
-#ifdef _DEBUG
-						cv::Mat img_matches, imgmap, imgminmap;
-						drawKeypoints(someMap, KeyPointSomeMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-						drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-						drawMatches(img_object, KeyPointMiniMap, someMap, KeyPointSomeMap, good_matchesTmp, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-#endif
 						if (max(lisx.size(), lisy.size()) > 4)
 						{
 							if (min(lisx.size(), lisy.size()) >= 10)
@@ -590,8 +460,6 @@ bool AutoTrack::GetPosition(double & x, double & y)
 					{
 						isContinuity = false;
 					}//if (KeyPointSomeMap.size() != 0 && KeyPointMinMap.size() != 0)
-				}
-			}
 		}
 	}
 	else
@@ -601,12 +469,6 @@ bool AutoTrack::GetPosition(double & x, double & y)
 
 	if (!isContinuity)
 	{
-		//cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = *(cv::Ptr<cv::xfeatures2d::SURF>*)_detectorAllMap;
-		//std::vector<cv::KeyPoint>& KeyPointAllMap = *(std::vector<cv::KeyPoint>*)_KeyPointAllMap;
-		//cv::Mat& DataPointAllMap = *(cv::Mat*)_DataPointAllMap;
-		//std::vector<cv::KeyPoint>& KeyPointMiniMap = *(std::vector<cv::KeyPoint>*)_KeyPointMiniMap;
-		//cv::Mat& DataPointMiniMap = *(cv::Mat*)_DataPointMiniMap;
-
 		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = _detectorAllMap;
 		std::vector<cv::KeyPoint>& KeyPointAllMap = _KeyPointAllMap;
 		cv::Mat& DataPointAllMap = _DataPointAllMap;
@@ -617,50 +479,28 @@ bool AutoTrack::GetPosition(double & x, double & y)
 		
 		if (KeyPointMiniMap.size() == 0)
 		{
-			err = 4;//未能匹配到特征点
+			err = { 4, "小地图未能计算出可识别特征点"};//未能匹配到特征点
 			return false;
 		}
 		else
 		{
 			cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 			std::vector< std::vector<cv::DMatch> > KNN_m;
-#ifdef _DEBUG
-			std::vector<cv::DMatch> good_matches;
-#endif
+
 			matcher->knnMatch(DataPointMiniMap, DataPointAllMap, KNN_m, 2);
 
 			std::vector<double> lisx;
 			std::vector<double> lisy;
 			double sumx = 0;
 			double sumy = 0;
-			for (size_t i = 0; i < KNN_m.size(); i++)
-			{
-				if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-				{
-#ifdef _DEBUG
-					good_matches.push_back(KNN_m[i][0]);
-#endif
-					if (KNN_m[i][0].queryIdx >= KeyPointMiniMap.size())
-					{
-						continue;
-					}
-					lisx.push_back(((img_object.cols / 2.0 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.x)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.x));
-					lisy.push_back(((img_object.rows / 2.0 - KeyPointMiniMap[KNN_m[i][0].queryIdx].pt.y)*mapScale + KeyPointAllMap[KNN_m[i][0].trainIdx].pt.y));
-					sumx += lisx.back();
-					sumy += lisy.back();
-				}
-			}
-#ifdef _DEBUG
-			cv::Mat img_matches, imgmap, imgminmap;
-			drawKeypoints(img_scene, KeyPointAllMap, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-			drawKeypoints(img_object, KeyPointMiniMap, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
 
-			drawMatches(img_object, KeyPointMiniMap, img_scene, KeyPointAllMap, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-#endif
+			calc_good_matches(img_scene, KeyPointAllMap, img_object, KeyPointMiniMap, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
+
+
 
 			if (lisx.size() == 0 || lisy.size() == 0)
 			{
-				err = 4;//未能匹配到特征点
+				err = { 4, "未能匹配到特征点"};
 				return false;
 			}
 			else
@@ -717,9 +557,9 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	//cv::Size size_YuanXiaGong_Un(800, 450);
 	cv::Rect rect_DiXiaCengYan(0,0,1250,1016);
 	cv::Rect rect_YuanXiaGong(0,5543,2400,2401);
-
-		int _x = pos_tr.x;
-		int _y = pos_tr.y;
+	{
+		double _x = pos_tr.x;
+		double _y = pos_tr.y;
 		// 渊下宫
 		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
 		{
@@ -741,7 +581,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 			_x = _x - 0;
 			_y = _y - 5543;
-			cv::Point2d pos=TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
 			pos = TransferUserAxes(pos, 0, 0, 1);
 			x = pos.x;
 			y = pos.y;
@@ -758,7 +598,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 			break;
 		}
 		}
-
+	}
 	return true;
 }
 
@@ -768,35 +608,18 @@ bool AutoTrack::GetDirection(double & a)
 	{
 		return false;
 	}
-
-	getPaimonRefMat();
-
-	cv::Mat paimonTemplate;
-
-
-	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
-
-	cv::Mat tmp;
-
-	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
-
-	cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
-
-	double minVal, maxVal;
-	cv::Point minLoc, maxLoc;
-	cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-
-	if (maxVal < 0.36 || maxVal == 1)
+	
+	cv::Rect paimon_rect;
+	if (!check_paimon(paimon_rect))
 	{
-		err = 6;//未能匹配到派蒙
+		err = { 2000 ,"获取角色朝向时，没有识别到Paimon" };
 		return false;
 	}
-
 	getMiniMapRefMat();
 
 	if (giMiniMapRef.empty())
 	{
-		err = 5;//原神小地图区域为空或者区域长宽小于60px
+		err = { 5,"原神小地图区域为空" };
 		return false;
 	}
 
@@ -804,7 +627,7 @@ bool AutoTrack::GetDirection(double & a)
 
 	if (giAvatarRef.empty())
 	{
-		err = 11;//未能取到小箭头区域
+		err = { 11,"原神角色小箭头区域为空" };
 		return false;
 	}
 
@@ -845,7 +668,7 @@ bool AutoTrack::GetDirection(double & a)
 
 	if (contours.size() != 3)
 	{
-		err = 9;//提取小箭头特征误差过大
+		err = { 9,"提取小箭头特征误差过大" };
 		return false;
 	}
 
@@ -890,94 +713,13 @@ bool AutoTrack::GetRotation(double & a)
 	{
 		return false;
 	}
-	getPaimonRefMat();
-
-	cv::Mat paimonTemplate;
-
-
-	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
-
-	cv::Mat tmp;
-
-#define Mode1
-
-#ifdef Mode1
-	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 10), cvCeil(giFrame.rows / 10)));
-#endif // Mode1
-
-#ifdef _DEBUG
-
-#ifdef Mode2
-	cv::Ptr<cv::xfeatures2d::SURF> detectorPaimon = cv::xfeatures2d::SURF::create(minHessian);
-	std::vector<cv::KeyPoint> KeyPointPaimonTemplate, KeyPointPaimonRef;
-	cv::Mat DataPointPaimonTemplate, DataPointPaimonRef;
-
-	detectorPaimon->detectAndCompute(giPaimonRef, cv::noArray(), KeyPointPaimonRef, DataPointPaimonRef);
-	detectorPaimon->detectAndCompute(paimonTemplate, cv::noArray(), KeyPointPaimonTemplate, DataPointPaimonTemplate);
-	cv::Ptr<cv::DescriptorMatcher> matcherPaimonTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_PaimonmTmp;
-	std::vector<cv::DMatch> good_matchesPaimonTmp;
-
-	for (size_t i = 0; i < KNN_PaimonmTmp.size(); i++)
+	cv::Rect paimon_rect;
+	if (!check_paimon(paimon_rect))
 	{
-		if (KNN_PaimonmTmp[i][0].distance < ratio_thresh * KNN_PaimonmTmp[i][1].distance)
-		{
-			good_matchesPaimonTmp.push_back(KNN_PaimonmTmp[i][0]);
-		}
-	}
-
-	cv::Mat img_matchesA, imgmapA, imgminmapA;
-	drawKeypoints(giPaimonRef, KeyPointPaimonRef, imgmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	drawKeypoints(paimonTemplate, KeyPointPaimonTemplate, imgminmapA, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	drawMatches(paimonTemplate, KeyPointPaimonTemplate, giPaimonRef, KeyPointPaimonRef, good_matchesPaimonTmp, img_matchesA, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-
-	cv::imshow("asda", img_matchesA);
-
-	if (good_matchesPaimonTmp.size() < 7)
-	{
-		err = 6;//未能匹配到派蒙
+		err = { 2000 ,"获取视角朝向时，没有识别到Paimon" };
 		return false;
 	}
-#endif // Mode2
-
-#endif
-
-#ifdef _DEBUG
-	cv::namedWindow("test", cv::WINDOW_FREERATIO);
-	cv::imshow("test", giPaimonRef);
-#endif
-
-#ifdef Mode1
-
-	std::vector<cv::Mat> lisT, lisR;
-	cv::split(paimonTemplate, lisT);
-	cv::split(giPaimonRef, lisR);
-
-	cv::Mat Template, Ref;
-	cv::cvtColor(paimonTemplate, Template, cv::COLOR_RGBA2GRAY);
-	cv::cvtColor(giPaimonRef, Ref, cv::COLOR_RGBA2GRAY);
-
-	//cv::matchTemplate(paimonTemplate, giPaimonRef, tmp, cv::TM_CCOEFF_NORMED);
-	//cv::matchTemplate(Template, Ref, tmp, cv::TM_CCOEFF_NORMED);
-	cv::matchTemplate(lisT[3], lisR[3], tmp, cv::TM_CCOEFF_NORMED);
-
-	double minVal, maxVal;
-	cv::Point minLoc, maxLoc;
-	cv::minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-
-#ifdef _DEBUG
-	cv::namedWindow("test2", cv::WINDOW_FREERATIO);
-	cv::imshow("test2", tmp);
-	//std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
-#endif
-
-	if (maxVal < 0.36 || maxVal == 1)
-	{
-		err = 6;//未能匹配到派蒙
-		return false;
-	}
-#endif
-
+	
 	getMiniMapRefMat();
 
 	//cv::Mat img_scene(giMatchResource.MapTemplate);
@@ -985,7 +727,7 @@ bool AutoTrack::GetRotation(double & a)
 
 	if (img_object.channels() != 4)
 	{
-		err = 401;
+		err = { 401,"获取视角朝向时，原神小地图区域没有取到透明通道" };
 		return false;
 	}
 
@@ -1029,7 +771,7 @@ bool AutoTrack::GetRotation(double & a)
 
 	if (contours.size() == 0)
 	{
-		err = 402;//
+		err = { 402 ,"获取视角朝向时，没有提取出视角扇形区域" };
 		return false;
 	}
 
@@ -1271,12 +1013,12 @@ bool AutoTrack::GetStarJson(char * jsonBuff)
 			strncat_s(jsonBuff,1024, buff,99);
 		}
 		strncat_s(jsonBuff,1024, "]}",3);
+		err = 0;
 		return true;
 	}
 	sprintf_s(jsonBuff, 99, "{\"n\": 0 ,\"list\":[]}");
+	err = 0;
 	return true;
-	//err = 501;
-	//return false;
 }
 
 bool AutoTrack::GetUID(int &uid)
@@ -1374,7 +1116,7 @@ bool AutoTrack::GetUID(int &uid)
 	}
 	if (_uid == 0)
 	{
-		err = 8;//未能在UID区域检测到有效UID
+		err = { 8,"未能在UID区域检测到有效UID" };
 		return false;
 	}
 	uid = _uid;
@@ -1744,11 +1486,11 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 							else
 							{
 								cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-								std::vector< std::vector<cv::DMatch> > KNN_mTmp;
+								std::vector< std::vector<cv::DMatch> > KNN_match_maybey_on_city;
 #ifdef _DEBUG
 								std::vector<cv::DMatch> good_matchesTmp;
 #endif
-								matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_mTmp, 2);
+								matcherTmp->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_match_maybey_on_city, 2);
 								//std::vector<double> lisx;
 								//std::vector<double> lisy;
 								lisx.clear();
@@ -1758,7 +1500,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 								sumx = 0;
 								sumy = 0;
 
-								for (size_t i = 0; i < KNN_mTmp.size(); i++)
+								for (size_t i = 0; i < KNN_match_maybey_on_city.size(); i++)
 								{
 									if (KNN_mTmp[i][0].distance < ratio_thresh * KNN_mTmp[i][1].distance)
 									{
@@ -1771,8 +1513,8 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 											continue;
 										}
 
-										lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.x));
-										lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_mTmp[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_mTmp[i][0].trainIdx].pt.y));
+										lisx.push_back(((minMap.cols / 2 - KeyPointMiniMap[KNN_match_maybey_on_city[i][0].queryIdx].pt.x)*0.8667 + KeyPointSomeMap[KNN_match_maybey_on_city[i][0].trainIdx].pt.x));
+										lisy.push_back(((minMap.rows / 2 - KeyPointMiniMap[KNN_match_maybey_on_city[i][0].queryIdx].pt.y)*0.8667 + KeyPointSomeMap[KNN_match_maybey_on_city[i][0].trainIdx].pt.y));
 										sumx += lisx.back();
 										sumy += lisy.back();
 									}
@@ -1798,9 +1540,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 									{
 										isOnCity = false;
 									}
-
-									double meanx = sumx / lisx.size(); //均值
-									double meany = sumy / lisy.size(); //均值
+									
 									cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
 									//int x = (int)meanx;
@@ -1817,9 +1557,7 @@ bool AutoTrack::GetInfoLoadPicture(char * path, int & uid, double & x, double & 
 						else
 						{
 							isOnCity = false;
-
-							double meanx = sumx / lisx.size(); //均值
-							double meany = sumy / lisy.size(); //均值
+							
 							cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
 
@@ -2098,7 +1836,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 		cv::imshow("test2", tmp);
 		//std::cout << "Paimon Match: " << minVal << "," << maxVal << std::endl;
 #endif
-		if (maxVal < 0.36 || maxVal == 1)
+		if (maxVal < 0.9 || maxVal == 1)
 		{
 			continue;
 		}
@@ -2471,9 +2209,6 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 										{
 											isOnCity = false;
 										}
-
-										double meanx = sumx / lisx.size(); //均值
-										double meany = sumy / lisy.size(); //均值
 										cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
 										//int x = (int)meanx;
@@ -2490,9 +2225,7 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 							else
 							{
 								isOnCity = false;
-
-								double meanx = sumx / lisx.size(); //均值
-								double meany = sumy / lisy.size(); //均值
+								
 								cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
 
@@ -2580,13 +2313,6 @@ bool AutoTrack::GetInfoLoadVideo(char * path, char * pathOutFile)
 								{
 									isOnCity = false;
 								}
-								//if(max(lisx.size(), lisy.size()) <=10 )
-								//{
-								//	isOnCity = false;
-								//}
-
-								double meanx = sumx / lisx.size(); //均值
-								double meany = sumy / lisy.size(); //均值
 								cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
 
 								double x = (p.x - someMap.cols / 2.0) / 2.0;
@@ -2728,7 +2454,7 @@ bool AutoTrack::getAutoTrackIsInit()
 {
 	if (is_init_end)
 	{
-		err = 1;
+		err = { 1,"未初始化" };
 		return false;
 	}
 	else
@@ -2818,7 +2544,7 @@ bool AutoTrack::getGengshinImpactRect()
 
 
 #ifdef _DEBUG
-	std::cout << "GISize: " << giClientSize.width << "," << giClientSize.height << ", GIScale: " << screen_scale << "\n";
+	//std::cout << "GISize: " << giClientSize.width << "," << giClientSize.height << ", GIScale: " << screen_scale << "\n";
 #endif
 
 	return true;
@@ -2837,7 +2563,7 @@ bool AutoTrack::getGengshinImpactScale()
 	miex.cbSize = sizeof(miex);
 	GetMonitorInfo(hMonitor, &miex);
 	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
-	int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
+	//int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
 
 	// 获取监视器物理宽度与高度
 	DEVMODE dm;
@@ -2845,7 +2571,7 @@ bool AutoTrack::getGengshinImpactScale()
 	dm.dmDriverExtra = 0;
 	EnumDisplaySettings(miex.szDevice, ENUM_CURRENT_SETTINGS, &dm);
 	int cxPhysical = dm.dmPelsWidth;
-	int cyPhysical = dm.dmPelsHeight;
+	//int cyPhysical = dm.dmPelsHeight;
 
 	double horzScale = ((double)cxPhysical / (double)cxLogical);
 	screen_scale = horzScale;
@@ -2996,8 +2722,8 @@ bool AutoTrack::getPaimonRefMat()
 		paimon_mayArea_width,
 		paimon_mayArea_height);
 
-	giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
-	//giPaimonRef = giFrame(Area_Paimon_mayArea);
+	//giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
+	giPaimonRef = giFrame(Area_Paimon_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
@@ -3176,6 +2902,50 @@ bool AutoTrack::getAvatarRefMat()
 	cv::waitKey(1);
 	//std::cout << "Show Avatar" << std::endl;
 #endif
+	return true;
+}
+
+bool AutoTrack::clear_error_logs()
+{
+	err = 0;
+	return true;
+}
+
+bool AutoTrack::check_paimon(cv::Rect &paimon_rect)
+{
+	static cv::Mat paimon_template;
+	static std::vector<cv::Mat> split_paimon_template;
+	static bool is_first = true;
+	if (is_first)
+	{
+		giMatchResource.PaimonTemplate.copyTo(paimon_template);
+		cv::split(paimon_template, split_paimon_template);
+		is_first = false;
+	}
+
+	getPaimonRefMat();
+
+	std::vector<cv::Mat>  split_paimon;
+	cv::split(giPaimonRef, split_paimon);
+	
+	cv::Mat template_result;
+	cv::matchTemplate(split_paimon[3], split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
+
+	double paimon_match_minVal, paimon_match_maxVal;
+	cv::Point paimon_match_minLoc, paimon_match_maxLoc;
+	cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
+
+#ifdef _DEBUG
+	cv::namedWindow("paimon match result", cv::WINDOW_FREERATIO);
+	cv::imshow("paimon match result", template_result);
+#endif
+
+	if (paimon_match_maxVal < check_match_paimon_params || paimon_match_maxVal == 1)
+	{
+		err = 6;//未能匹配到派蒙
+		return false;
+	}
+	paimon_rect = cv::Rect(paimon_match_maxLoc, paimon_template.size());
 	return true;
 }
 
