@@ -1,26 +1,16 @@
-ï»¿// cvAT_dllTest.cpp : æ­¤æ–‡ä»¶åŒ…å« "main" å‡½æ•°ã€‚ç¨‹åºæ‰§è¡Œå°†åœ¨æ­¤å¤„å¼€å§‹å¹¶ç»“æŸã€‚
-//
-//#pragma execution_character_set("utf-8")
-
 #include <iostream>
 #include <cvAutoTrack.h>
 
 #include <Windows.h>
 
-//#define TestVideo
-#ifdef TestVideo
 #include <vector>
-#endif
 
-int main()
+void Test_video()
 {
-	//system("chcp 65001");
-	std::ios::sync_with_stdio(false);
-
-	// é™æ€æ–¹æ³•è°ƒç”¨
-	// åˆå§‹åŒ–
+	// ¾²Ì¬·½·¨µ÷ÓÃ
+	// ³õÊ¼»¯
 	//init();
-	// å‡†å¤‡å˜é‡
+	// ×¼±¸±äÁ¿
 	float x = 0;
 	float y = 0;
 	float a = 0;
@@ -29,48 +19,37 @@ int main()
 	double a2 = 0;
 	double aa2 = 0;
 	int uid = 0;
-	// è°ƒç”¨å¾ªç¯
-
-#ifdef TestVideo
+	// µ÷ÓÃÑ­»·
 	
 	std::vector<std::vector<double>> his;
 	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/001.png" };
 	char pathV[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.mp4" };
-	
+
 	char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.json" };
-	
+
 	//char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.txt" };
 	/*GetInfoLoadVideo(pathV, pathTxt);
-	std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";*/
-#endif
-
-	//Sleep(1000);
-
+	std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";*/
+	
 	if (init())
 	{
-
-	//	Sleep(2000);
-
+		//	Sleep(2000);
 	}
 	//uninit();
-
 	//Sleep(1000);
 
+	FILE* fptr = NULL;
+	fopen_s(&fptr, "./Output.txt", "w+");
 
-	FILE *fptr = NULL;
-	fopen_s(&fptr,"./Output.txt","w+");
 
-	while (1)
-	{
-#ifdef TestVideo
 		//SetWorldScale(0.666667);
 		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
 		{
-			std::cout << "Now Coor and Angle: "<<" " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
+			std::cout << "Now Coor and Angle: " << " " << uid << " " << " " << x2 << " " << y2 << " " << a2 << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 		}
 		//SetWorldScale(1.0);
 		if (GetInfoLoadPicture(path, uid, x2, y2, a2))
@@ -79,96 +58,124 @@ int main()
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 		}
-#endif
 		char buff[1024] = { 0 };
 #ifdef _DEBUG
 		if (GetStarJson(buff))
 		{
-			//åæ ‡éœ€è¦æ˜ å°„ p * 1.33 + AvatarPos
+			//×ø±êĞèÒªÓ³Éä p * 1.33 + AvatarPos
 			std::cout << buff << "\n";
 		}
 #endif
-#ifndef TestVideo
 
+}
+	
 
+int main()
+{
+	//system("chcp 65001");
+	//system("chcp 936");
+	std::ios::sync_with_stdio(false);
 
-		//è°ƒç”¨è·å–æ–¹æ³•
+	// ¾²Ì¬·½·¨µ÷ÓÃ
+	// ³õÊ¼»¯
+	//init();
+	// ×¼±¸±äÁ¿
+	float x = 0;
+	float y = 0;
+	float a = 0;
+	double x2 = 0;
+	double y2 = 0;
+	double a2 = 0;
+	double aa2 = 0;
+	int uid = 0;
+	char buff[1024] = { 0 };
+	// µ÷ÓÃÑ­»·
+	
+	if (init())
+	{
+	//	Sleep(2000);
+	}
+	//uninit();
+	//Sleep(1000);
+
+	FILE *fptr = NULL;
+	fopen_s(&fptr,"./Output.txt","w+");
+
+	while (1)
+	{
+		//µ÷ÓÃ»ñÈ¡·½·¨
 #pragma warning(suppress : 4996)
 		if (GetTransform(x, y, a))
 		{
-			std::cout << "åæ ‡å’Œè§’åº¦   : " << " " << x << " " << y << " " << a << "\n";
+			std::cout << "×ø±êºÍ½Ç¶È   : " << " " << x << " " << y << " " << a << "\n";
 			fprintf(fptr, "%lf %lf %lf", x, y, a);
 			fflush(fptr);
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 #pragma warning(suppress : 4996)
 		if (GetPosition(x2, y2))
-		{
-		
-			int mapid = 0;
+		{			int mapid = 0;
 			GetPositionOfMap(x2, y2, mapid);
-			std::cout << "åæ ‡         : " << " " << x2 << " " << y2 <<" " << mapid<< "\n";
+			std::cout << "×ø±ê         : " << " " << x2 << " " << y2 <<" " << mapid<< "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		if (GetDirection(a2))
 		{
-			std::cout << "è§’åº¦         : " << " " << a2 << "\n";
+			std::cout << "½Ç¶È         : " << " " << a2 << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		if (GetRotation(aa2))
 		{
-			std::cout << "è§†è§’æœå‘     : " << " " << aa2 << "\n";
+			std::cout << "ÊÓ½Ç³¯Ïò     : " << " " << aa2 << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		if (GetUID(uid))
 		{
-			std::cout << "å½“å‰UID      : " << " " << uid << " " << "\n";
+			std::cout << "µ±Ç°UID      : " << " " << uid << " " << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		if (GetStarJson(buff))
 		{
-			//åæ ‡éœ€è¦æ˜ å°„ p + AvatarPos
-			std::cout << "å½“å‰ç¥ç³Json : " << buff << "\n";
+			//×ø±êĞèÒªÓ³Éä p + AvatarPos
+			std::cout << "µ±Ç°ÉñÍ«Json : " << buff << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
-		//bool a;
-		//GetStar(x2,y2,a);
 		
 		Sleep(30);
 		system("cls");
-		std::cout << "\r\r\r\r\r";
-#endif
+		//std::cout << "\r\r\r\r\r";
+
 	}
 	fclose(fptr);
 }
 
-// è¿è¡Œç¨‹åº: Ctrl + F5 æˆ–è°ƒè¯• >â€œå¼€å§‹æ‰§è¡Œ(ä¸è°ƒè¯•)â€èœå•
-// è°ƒè¯•ç¨‹åº: F5 æˆ–è°ƒè¯• >â€œå¼€å§‹è°ƒè¯•â€èœå•
+// ÔËĞĞ³ÌĞò: Ctrl + F5 »òµ÷ÊÔ >¡°¿ªÊ¼Ö´ĞĞ(²»µ÷ÊÔ)¡±²Ëµ¥
+// µ÷ÊÔ³ÌĞò: F5 »òµ÷ÊÔ >¡°¿ªÊ¼µ÷ÊÔ¡±²Ëµ¥
 
-// å…¥é—¨ä½¿ç”¨æŠ€å·§: 
-//   1. ä½¿ç”¨è§£å†³æ–¹æ¡ˆèµ„æºç®¡ç†å™¨çª—å£æ·»åŠ /ç®¡ç†æ–‡ä»¶
-//   2. ä½¿ç”¨å›¢é˜Ÿèµ„æºç®¡ç†å™¨çª—å£è¿æ¥åˆ°æºä»£ç ç®¡ç†
-//   3. ä½¿ç”¨è¾“å‡ºçª—å£æŸ¥çœ‹ç”Ÿæˆè¾“å‡ºå’Œå…¶ä»–æ¶ˆæ¯
-//   4. ä½¿ç”¨é”™è¯¯åˆ—è¡¨çª—å£æŸ¥çœ‹é”™è¯¯
-//   5. è½¬åˆ°â€œé¡¹ç›®â€>â€œæ·»åŠ æ–°é¡¹â€ä»¥åˆ›å»ºæ–°çš„ä»£ç æ–‡ä»¶ï¼Œæˆ–è½¬åˆ°â€œé¡¹ç›®â€>â€œæ·»åŠ ç°æœ‰é¡¹â€ä»¥å°†ç°æœ‰ä»£ç æ–‡ä»¶æ·»åŠ åˆ°é¡¹ç›®
-//   6. å°†æ¥ï¼Œè‹¥è¦å†æ¬¡æ‰“å¼€æ­¤é¡¹ç›®ï¼Œè¯·è½¬åˆ°â€œæ–‡ä»¶â€>â€œæ‰“å¼€â€>â€œé¡¹ç›®â€å¹¶é€‰æ‹© .sln æ–‡ä»¶
+// ÈëÃÅÊ¹ÓÃ¼¼ÇÉ: 
+//   1. Ê¹ÓÃ½â¾ö·½°¸×ÊÔ´¹ÜÀíÆ÷´°¿ÚÌí¼Ó/¹ÜÀíÎÄ¼ş
+//   2. Ê¹ÓÃÍÅ¶Ó×ÊÔ´¹ÜÀíÆ÷´°¿ÚÁ¬½Óµ½Ô´´úÂë¹ÜÀí
+//   3. Ê¹ÓÃÊä³ö´°¿Ú²é¿´Éú³ÉÊä³öºÍÆäËûÏûÏ¢
+//   4. Ê¹ÓÃ´íÎóÁĞ±í´°¿Ú²é¿´´íÎó
+//   5. ×ªµ½¡°ÏîÄ¿¡±>¡°Ìí¼ÓĞÂÏî¡±ÒÔ´´½¨ĞÂµÄ´úÂëÎÄ¼ş£¬»ò×ªµ½¡°ÏîÄ¿¡±>¡°Ìí¼ÓÏÖÓĞÏî¡±ÒÔ½«ÏÖÓĞ´úÂëÎÄ¼şÌí¼Óµ½ÏîÄ¿
+//   6. ½«À´£¬ÈôÒªÔÙ´Î´ò¿ª´ËÏîÄ¿£¬Çë×ªµ½¡°ÎÄ¼ş¡±>¡°´ò¿ª¡±>¡°ÏîÄ¿¡±²¢Ñ¡Ôñ .sln ÎÄ¼ş
