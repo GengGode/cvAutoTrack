@@ -11,7 +11,7 @@ static AutoTrack _at;
 
 bool __stdcall verison(char* versionBuff)
 {
-	const char version_cstr[] = "6.1.0";
+	const char version_cstr[] = "6.2.1";
 	strcpy_s(versionBuff,9, version_cstr);
 	return true;
 }
