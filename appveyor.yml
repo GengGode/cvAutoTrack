@@ -1,4 +1,4 @@
-version: '6.2.{build}'
+version: '6.3.{build}'
 os: Visual Studio 2019
 configuration: Release
 platform:
@@ -43,7 +43,7 @@ after_build:
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
     
     - echo %APPVEYOR_BUILD_VERSION% >version.tag
-    - md5sum -b cvAutoTrack.dll >md5sum.txt
+    - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll >md5sum.txt
     - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
 
     - appveyor PushArtifact version.tag
