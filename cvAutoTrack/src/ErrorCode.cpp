@@ -5,20 +5,20 @@ ErrorCode::ErrorCode()
 {
 	fopen_s(&fptr, "./autoTrack.log", "w+");
 
-	errCodeMsg.push_back("Ö´ĞĞ³É¹¦");
-	errCodeMsg.push_back("Î´³õÊ¼»¯");
-	errCodeMsg.push_back("Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú");
-	errCodeMsg.push_back("´°¿Ú»­ÃæÎª¿Õ");
-	errCodeMsg.push_back("Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã");
-	errCodeMsg.push_back("Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px");
-	errCodeMsg.push_back("Î´ÄÜÆ¥Åäµ½ÅÉÃÉ");
-	errCodeMsg.push_back("ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç");
-	errCodeMsg.push_back("Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID");
-	errCodeMsg.push_back("ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó");
-	errCodeMsg.push_back("ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ");
-	errCodeMsg.push_back("Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò");
-	errCodeMsg.push_back("´°¿Ú¾ä±úÎª¿Õ");
-	errCodeMsg.push_back("´°¿Ú¾ä±úÊ§Ğ§");
+	errCodeMsg.push_back(u8"Ö´ĞĞ³É¹¦");
+	errCodeMsg.push_back(u8"Î´³õÊ¼»¯");
+	errCodeMsg.push_back(u8"Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú");
+	errCodeMsg.push_back(u8"´°¿Ú»­ÃæÎª¿Õ");
+	errCodeMsg.push_back(u8"Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã");
+	errCodeMsg.push_back(u8"Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px");
+	errCodeMsg.push_back(u8"Î´ÄÜÆ¥Åäµ½ÅÉÃÉ");
+	errCodeMsg.push_back(u8"ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç");
+	errCodeMsg.push_back(u8"Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID");
+	errCodeMsg.push_back(u8"ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó");
+	errCodeMsg.push_back(u8"ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ");
+	errCodeMsg.push_back(u8"Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò");
+	errCodeMsg.push_back(u8"´°¿Ú¾ä±úÎª¿Õ");
+	errCodeMsg.push_back(u8"´°¿Ú¾ä±úÊ§Ğ§");
 }
 
 ErrorCode::~ErrorCode()
@@ -34,7 +34,7 @@ ErrorCode & ErrorCode::getInstance()
 
 ErrorCode & ErrorCode::operator=(const int & code)
 {
-	string msg = "Î´¶¨Òå´íÎóĞÅÏ¢";
+	string msg = u8"Î´¶¨Òå´íÎóĞÅÏ¢";
 	if (code < errCodeMsg.size())
 	{
 		msg = errCodeMsg[code];
@@ -51,22 +51,22 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	this->errorCode = code;
 	if (code == 0)
 	{
-		fprintf_s(fptr, "Çå¿Õ´íÎó¶ÑÕ»\n");
+		//fprintf_s(fptr, "Çå¿Õ´íÎó¶ÑÕ»\n");
 		error_code_msg_list.clear();
 	}
 	else
 	{
-		// è·å–å½“å‰ç³»ç»Ÿæ—¶é—´ 
+		// »ñÈ¡µ±Ç°ÏµÍ³Ê±¼ä 
 		std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-		// è½¬æ¢ä¸ºç³»ç»Ÿæ—¶é—´
+		// ×ª»»ÎªÏµÍ³Ê±¼ä
 		std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-		// è½¬æ¢ä¸ºæœ¬åœ°æ—¶é—´
+		// ×ª»»Îª±¾µØÊ±¼ä
 		std::tm* now_tm = std::localtime(&now_c);
-		// è½¬æ¢ä¸ºå­—ç¬¦ä¸²
+		// ×ª»»Îª×Ö·û´®
 		char time_str[100];
 		std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", now_tm);
 		
-		fprintf_s(fptr, u8"%s | é”™è¯¯ä»£ç ï¼š%dï¼Œé”™è¯¯ä¿¡æ¯ï¼š%s\n", time_str, code, msg.c_str());
+		fprintf_s(fptr, u8"%s | ´íÎó´úÂë£º%d£¬´íÎóĞÅÏ¢£º%s\n", time_str, code, msg.c_str());
 		push(code,msg);
 	}
 	
@@ -119,11 +119,11 @@ ostream & operator<<(ostream & os, const ErrorCode & err)
 		}
 		if (i == 0)
 		{
-			os << "\u2514\u2500\u2500\u2500\u2192";
+			os << u8"\u2514\u2500\u2500\u2500\u2192";
 		}
 		else
 		{
-			os << "\u2514\u2500\u252C\u2500\u2192";
+			os << u8"\u2514\u2500\u252C\u2500\u2192";
 		}
 		//os << "\u2514 \u2500 \u252C \u2500 \u2192";
 
