@@ -42,7 +42,28 @@ ErrorCode & ErrorCode::operator=(const int & code)
 	(* this) = {code,msg};
 	return *this;
 }
+inline std::tm localtime_xp(std::time_t timer)
+{
+	std::tm bt{};
+#if defined(__unix__)
+	localtime_r(&timer, &bt);
+#elif defined(_MSC_VER)
+	localtime_s(&bt, &timer);
+#else
+	static std::mutex mtx;
+	std::lock_guard<std::mutex> lock(mtx);
+	bt = *std::localtime(&timer);
+#endif
+	return bt;
+}
 
+// default = "YYYY-MM-DD HH:MM:SS"
+inline std::string time_stamp(const std::string& fmt = "%F %T")
+{
+	auto bt = localtime_xp(std::time(0));
+	char buf[64];
+	return { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
+}
 ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 {
 	const int& code = err_code_msg.first;
@@ -56,17 +77,19 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	}
 	else
 	{
-		// 获取当前系统时间 
-		std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-		// 转换为系统时间
-		std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-		// 转换为本地时间
-		std::tm* now_tm = std::localtime(&now_c);
-		// 转换为字符串
-		char time_str[100];
-		std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", now_tm);
+		//// 获取当前系统时间 
+		//std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+		//// 转换为系统时间
+		//std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+		//// 转换为本地时间
+		//std::tm *now_tm;
+		//localtime_s(now_tm,&now_c);
+		//// 转换为字符串
+		//char time_str[100];
+		//std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", now_tm);
+		//
 		
-		fprintf_s(fptr, u8"%s | 错误代码：%d，错误信息：%s\n", time_str, code, msg.c_str());
+		fprintf_s(fptr, u8"%s | 错误代码：%d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
 		push(code,msg);
 	}
 	
