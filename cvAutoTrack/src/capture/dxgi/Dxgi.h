@@ -1,5 +1,5 @@
 #pragma once
-#include "Capture.h"
+#include "../Capture.h"
 class Dxgi : public Capture
 {
 public:

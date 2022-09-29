@@ -32,7 +32,6 @@ private:
 	void UIDnumberRGBA2A();
 };
 
-double dis(std::vector<cv::Point> &TransfornHistory);
 double dis(cv::Point2d p);
 cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 int getMaxID(double lis[], int len); 
