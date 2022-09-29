@@ -10,13 +10,6 @@
 //__stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
-//#else
-//#define CVAUTOTRACK_API __declspec(dllimport)
-//#endif
-
-//#define CVAUTOTRACK_API 
-
-// 这是已导出的函数。
 extern "C" CVAUTOTRACK_API bool verison(char* versionBuff);
 
 extern "C" CVAUTOTRACK_API bool init();
