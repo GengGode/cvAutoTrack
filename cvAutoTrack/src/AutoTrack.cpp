@@ -255,14 +255,14 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (!is_init_end)
 	{
-		err = { 1,"没有初始化" };
+		err = { 1, u8"没有初始化" };
 		return false;
 	}
 
 	cv::Rect paimon_rect;
 	if (!check_paimon(paimon_rect))
 	{
-		err = { 1000, "获取坐标时，没有识别到paimon" };
+		err = { 1000, u8"获取坐标时，没有识别到paimon" };
 		return false;
 	}
 
@@ -275,7 +275,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 	if (img_object.empty())
 	{
-		err = { 5, "原神小地图区域为空" };
+		err = { 5, u8"原神小地图区域为空" };
 		return false;
 	}
 
@@ -485,7 +485,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 		if (KeyPointMiniMap.size() == 0)
 		{
-			err = { 4, "小地图未能计算出可识别特征点" };//未能匹配到特征点
+			err = { 4, u8"小地图未能计算出可识别特征点" };//未能匹配到特征点
 			return false;
 		}
 		else
@@ -506,7 +506,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 			if (lisx.size() == 0 || lisy.size() == 0)
 			{
-				err = { 4, "未能匹配到特征点" };
+				err = { 4, u8"未能匹配到特征点" };
 				return false;
 			}
 			else
@@ -623,14 +623,14 @@ bool AutoTrack::GetDirection(double& a)
 	cv::Rect paimon_rect;
 	if (!check_paimon(paimon_rect))
 	{
-		err = { 2000 ,"获取角色朝向时，没有识别到Paimon" };
+		err = { 2000 ,u8"获取角色朝向时，没有识别到Paimon" };
 		return false;
 	}
 	getMiniMapRefMat();
 
 	if (giMiniMapRef.empty())
 	{
-		err = { 5,"原神小地图区域为空" };
+		err = { 5,u8"原神小地图区域为空" };
 		return false;
 	}
 
@@ -638,7 +638,7 @@ bool AutoTrack::GetDirection(double& a)
 
 	if (giAvatarRef.empty())
 	{
-		err = { 11,"原神角色小箭头区域为空" };
+		err = { 11,u8"原神角色小箭头区域为空" };
 		return false;
 	}
 
