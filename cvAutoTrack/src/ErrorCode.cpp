@@ -77,19 +77,7 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	}
 	else
 	{
-		//// 获取当前系统时间 
-		//std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-		//// 转换为系统时间
-		//std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-		//// 转换为本地时间
-		//std::tm *now_tm;
-		//localtime_s(now_tm,&now_c);
-		//// 转换为字符串
-		//char time_str[100];
-		//std::strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", now_tm);
-		//
-		
-		fprintf_s(fptr, "%s | 错误代码：%d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
+		fprintf_s(fptr, "%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
 		push(code,msg);
 	}
 	
