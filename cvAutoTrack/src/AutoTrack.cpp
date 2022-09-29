@@ -679,7 +679,7 @@ bool AutoTrack::GetDirection(double& a)
 
 	if (contours.size() != 3)
 	{
-		err = { 9,"提取小箭头特征误差过大" };
+		err = { 9,u8"提取小箭头特征误差过大" };
 		return false;
 	}
 
@@ -727,7 +727,7 @@ bool AutoTrack::GetRotation(double& a)
 	cv::Rect paimon_rect;
 	if (!check_paimon(paimon_rect))
 	{
-		err = { 2000 ,"获取视角朝向时，没有识别到Paimon" };
+		err = { 2000 ,u8"获取视角朝向时，没有识别到Paimon" };
 		return false;
 	}
 
@@ -738,7 +738,7 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (img_object.channels() != 4)
 	{
-		err = { 401,"获取视角朝向时，原神小地图区域没有取到透明通道" };
+		err = { 401,u8"获取视角朝向时，原神小地图区域没有取到透明通道" };
 		return false;
 	}
 
@@ -782,7 +782,7 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (contours.size() == 0)
 	{
-		err = { 402 ,"获取视角朝向时，没有提取出视角扇形区域" };
+		err = { 402 ,u8"获取视角朝向时，没有提取出视角扇形区域" };
 		return false;
 	}
 
@@ -1127,7 +1127,7 @@ bool AutoTrack::GetUID(int& uid)
 	}
 	if (_uid == 0)
 	{
-		err = { 8,"未能在UID区域检测到有效UID" };
+		err = { 8,u8"未能在UID区域检测到有效UID" };
 		return false;
 	}
 	uid = _uid;
@@ -2253,7 +2253,7 @@ bool AutoTrack::getAutoTrackIsInit()
 {
 	if (is_init_end)
 	{
-		err = { 1,"未初始化" };
+		err = { 1,u8"未初始化" };
 		return false;
 	}
 	else
@@ -2271,35 +2271,31 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCWSTR giWindowName = { L"原神" };
+		LPCWSTR giWindowName = { u8"原神" };
 		/* 对原神窗口的操作 */
-		giWindowName = L"原神";
-		giHandle = FindWindowW(L"UnityWndClass", giWindowName);
+		giWindowName = u8"原神";
+		giHandle = FindWindowW(u8"UnityWndClass", giWindowName);
 		if (giHandle == NULL)
 		{
-			giWindowName = L"Genshin Impact";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = u8"Genshin Impact";
+			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = L"원신";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = u8"원신";
+			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = L"\u539F\u795E";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = u8"\u539F\u795E";
+			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = L"\uC6D0\uC2E0";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = u8"\uC6D0\uC2E0";
+			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
-		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << L"原神" <<" "<< L"原神" << std::endl;
-#ifdef _DEBUG
-		//std::cout << "GI 原神 Genshin Impact 원신 Window Name Find is " << giWindowName << std::endl;
-		//std::cout << "GI 原神 Genshin Impact 원신 Window Handle Find is " << giHandle << std::endl;
-#endif
+
 		if (giHandle == NULL)
 		{
 			err = 10; //无效句柄或指定句柄所指向窗口不存在
