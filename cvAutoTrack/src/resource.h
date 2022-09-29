@@ -4,6 +4,7 @@
 //
 #define IDB_BITMAP_STAR                 101
 #define IDB_BITMAP_PAIMON               102
+
 #define IDB_BITMAP_UID_                 104
 #define IDB_BITMAP_UID0                 105
 #define IDB_BITMAP_UID1                 106
@@ -15,7 +16,10 @@
 #define IDB_BITMAP_UID7                 112
 #define IDB_BITMAP_UID8                 113
 #define IDB_BITMAP_UID9                 114
+
 #define IDB_PNG_GIMAP                   115
+
+#define IDR_XML_GIMAP_COMPUTE           130
 
 // Next default values for new objects
 // 

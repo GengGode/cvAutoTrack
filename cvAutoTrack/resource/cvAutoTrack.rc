@@ -83,6 +83,13 @@ IDB_BITMAP_UID9         BITMAP                  "resource\\png\\uid9.bmp"
 
 IDB_PNG_GIMAP           PNG                     "resource\\GIMAP.png"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// XML
+//
+
+IDR_XML_GIMAP_COMPUTE   XML                     "resource\\GIMAP_COMPUTE.xml"
+
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 

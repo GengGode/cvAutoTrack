@@ -3,7 +3,11 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-
+struct XmlPtr
+{
+	char* ptr;
+	int size;
+};
 
 //图片资源 加载类
 class LoadGiMatchResource
@@ -18,7 +22,8 @@ public:
 	cv::Mat MapTemplate;
 	cv::Mat UID;
 	cv::Mat UIDnumber[10];
-
+	XmlPtr xmlPtr;
+	
 	void install();
 	void release();
 
