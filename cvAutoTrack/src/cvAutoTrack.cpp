@@ -11,7 +11,7 @@ static AutoTrack _at;
 
 bool __stdcall verison(char* versionBuff)
 {
-	const char version_cstr[] = "6.3.2";
+	const char version_cstr[] = "6.4.1";
 	strcpy_s(versionBuff,9, version_cstr);
 	return true;
 }
@@ -31,6 +31,14 @@ int __stdcall GetGpuCount()
 bool __stdcall SetGpuDevice(int deviceId = 0)
 {
 	return _at.SetGpuDevice(deviceId);
+}
+bool __stdcall SetUseBitbltCaptureMode()
+{
+	return _at.SetUseBitbltCaptureMode();
+}
+bool __stdcall SetUseDx11CaptureMode()
+{
+	return _at.SetUseDx11CaptureMode();
 }
 bool __stdcall SetHandle(long long int handle = 0)
 {
@@ -104,6 +112,7 @@ bool __stdcall stopServe()
 {
 	return _at.stopServe();
 }
+
 #ifdef _DEBUG
 
 //bool __stdcall test(char* str)

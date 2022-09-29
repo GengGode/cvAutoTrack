@@ -10,8 +10,6 @@
 //__stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
-//#ifdef CVAUTOTRACK_EXPORTS
-//#define CVAUTOTRACK_API __declspec(dllexport)
 //#else
 //#define CVAUTOTRACK_API __declspec(dllimport)
 //#endif
@@ -25,6 +23,10 @@ extern "C" CVAUTOTRACK_API bool init();
 extern "C" CVAUTOTRACK_API bool uninit();
 extern "C" CVAUTOTRACK_API int  GetGpuCount();
 extern "C" CVAUTOTRACK_API bool SetGpuDevice(int deviceId);
+
+extern "C" CVAUTOTRACK_API bool SetUseBitbltCaptureMode();
+extern "C" CVAUTOTRACK_API bool SetUseDx11CaptureMode();
+
 extern "C" CVAUTOTRACK_API bool SetHandle(long long int handle);
 extern "C" CVAUTOTRACK_API bool SetWorldCenter(double x, double y);
 extern "C" CVAUTOTRACK_API bool SetWorldScale(double scale);
@@ -46,6 +48,8 @@ extern "C" CVAUTOTRACK_API const char* GetLastErrStr();
 
 extern "C" CVAUTOTRACK_API bool startServe();
 extern "C" CVAUTOTRACK_API bool stopServe();
+
+
 
 #ifdef _DEBUG
 

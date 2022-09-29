@@ -22,6 +22,10 @@ public:
 	bool uninit();
 	int  GetGpuCount();
 	bool SetGpuDevice(int deviceId = 0);
+	
+	bool SetUseBitbltCaptureMode();
+	bool SetUseDx11CaptureMode();
+	
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
