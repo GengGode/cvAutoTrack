@@ -142,6 +142,16 @@ bool AutoTrack::SetGpuDevice(int deviceId)
 	return true;
 }
 
+bool AutoTrack::SetUseBitbltCaptureMode()
+{
+	return false;
+}
+
+bool AutoTrack::SetUseDx11CaptureMode()
+{
+	return false;
+}
+
 
 bool AutoTrack::SetHandle(long long int handle)
 {
@@ -2416,7 +2426,9 @@ bool AutoTrack::getGengshinImpactScreen()
 	
 	// 截图
 	// 
-	// hBmp = IDirectDrawSurface3::BltFast(nWidth, nHeight, hScreen, hCompDC);
+	
+	//hBmp = IDirectDrawSurface3::BltFast(nWidth, nHeight, hScreen, hCompDC);
+	
 	//
 	////获取位图信息
 	//GetObject(hBmp, sizeof(BITMAP), &bmp);
