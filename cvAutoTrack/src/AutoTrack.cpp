@@ -516,7 +516,9 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			}
 		}
 	}
+	
 	cv::Point2d filt_pos;
+#ifdef USE_Filt
 	if (isConveying || !isContinuity)
 	{
 		filt_pos = posFilter.reinitfilterting(pos);
@@ -526,7 +528,9 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	{
 		filt_pos = posFilter.filterting(pos);
 	}
-
+#else
+	filt_pos = pos;
+#endif // USE_Filt
 
 	hisP[0] = hisP[1];
 	hisP[1] = hisP[2];
