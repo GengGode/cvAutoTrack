@@ -1600,7 +1600,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 
 		if (KeyPointMiniMap.size() == 0)
 		{
-			err = { 4, "小地图未能计算出可识别特征点" };//未能匹配到特征点
+			err = { 4, u8"小地图未能计算出可识别特征点" };//未能匹配到特征点
 			return false;
 		}
 		else
@@ -1621,7 +1621,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 
 			if (lisx.size() == 0 || lisy.size() == 0)
 			{
-				err = { 4, "未能匹配到特征点" };
+				err = { 4, u8"未能匹配到特征点" };
 				return false;
 			}
 			else
@@ -2158,7 +2158,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 
 			if (KeyPointMiniMap.size() == 0)
 			{
-				err = { 4, "小地图未能计算出可识别特征点" };//未能匹配到特征点
+				err = { 4, u8"小地图未能计算出可识别特征点" };//未能匹配到特征点
 				return false;
 			}
 			else
@@ -2179,7 +2179,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 
 				if (lisx.size() == 0 || lisy.size() == 0)
 				{
-					err = { 4, "未能匹配到特征点" };
+					err = { 4, u8"未能匹配到特征点" };
 					return false;
 				}
 				else
@@ -2271,29 +2271,29 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCWSTR giWindowName = { u8"原神" };
+		LPCWSTR giWindowName = { "原神" };
 		/* 对原神窗口的操作 */
-		giWindowName = u8"原神";
-		giHandle = FindWindowW(u8"UnityWndClass", giWindowName);
+		giWindowName = "原神";
+		giHandle = FindWindowW("UnityWndClass", giWindowName);
 		if (giHandle == NULL)
 		{
-			giWindowName = u8"Genshin Impact";
-			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = "Genshin Impact";
+			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = u8"원신";
-			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = "원신";
+			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = u8"\u539F\u795E";
-			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = "\u539F\u795E";
+			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = u8"\uC6D0\uC2E0";
-			giHandle = FindWindowW(u8"UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = "\uC6D0\uC2E0";
+			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 
 		if (giHandle == NULL)
