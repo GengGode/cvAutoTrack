@@ -11,6 +11,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="src\model">
+      <UniqueIdentifier>{5ecb05a6-5eb3-404b-87a1-355b87747a16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\capture">
+      <UniqueIdentifier>{dab1e440-aefc-4c57-aba1-f28c90365601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\capture\dxgi">
+      <UniqueIdentifier>{d7976ad7-3e49-46ce-8fa4-13e4ae679a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\capture\bitblt">
+      <UniqueIdentifier>{773cb314-1b4c-4edb-9142-d5be669693ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\capture\dxgi\include">
+      <UniqueIdentifier>{ef9fee04-c2fd-47c5-a7d0-e011239919d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -57,6 +72,24 @@
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="Dxgi.h">
+      <Filter>src\capture\dxgi</Filter>
+    </ClInclude>
+    <ClInclude Include="Capture.h">
+      <Filter>src\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\dxgi\include\capture.interop.h">
+      <Filter>src\capture\dxgi\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\dxgi\include\composition.interop.h">
+      <Filter>src\capture\dxgi\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h">
+      <Filter>src\capture\dxgi\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h">
+      <Filter>src\capture\dxgi\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -91,6 +124,12 @@
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Dxgi.cpp">
+      <Filter>src\capture\dxgi</Filter>
+    </ClCompile>
+    <ClCompile Include="Capture.cpp">
+      <Filter>src\capture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
