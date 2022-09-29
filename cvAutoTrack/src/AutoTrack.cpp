@@ -2271,29 +2271,29 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCWSTR giWindowName = { "原神" };
+		LPCWSTR giWindowName = { L"原神" };
 		/* 对原神窗口的操作 */
-		giWindowName = "原神";
-		giHandle = FindWindowW("UnityWndClass", giWindowName);
+		giWindowName = L"原神";
+		giHandle = FindWindowW(L"UnityWndClass", giWindowName);
 		if (giHandle == NULL)
 		{
-			giWindowName = "Genshin Impact";
-			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = L"Genshin Impact";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = "원신";
-			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = L"원신";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = "\u539F\u795E";
-			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			giWindowName = L"\u539F\u795E";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
 		if (giHandle == NULL)
 		{
-			giWindowName = "\uC6D0\uC2E0";
-			giHandle = FindWindowW("UnityWndClass", giWindowName); /* 匹配名称：원신 */
+			giWindowName = L"\uC6D0\uC2E0";
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：원신 */
 		}
 
 		if (giHandle == NULL)
