@@ -72,12 +72,6 @@
     <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="Dxgi.h">
-      <Filter>src\capture\dxgi</Filter>
-    </ClInclude>
-    <ClInclude Include="Capture.h">
-      <Filter>src\capture</Filter>
-    </ClInclude>
     <ClInclude Include="src\capture\dxgi\include\capture.interop.h">
       <Filter>src\capture\dxgi\include</Filter>
     </ClInclude>
@@ -89,6 +83,12 @@
     </ClInclude>
     <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h">
       <Filter>src\capture\dxgi\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\Capture.h">
+      <Filter>src\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\capture\dxgi\Dxgi.h">
+      <Filter>src\capture\dxgi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -125,11 +125,11 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Dxgi.cpp">
-      <Filter>src\capture\dxgi</Filter>
-    </ClCompile>
-    <ClCompile Include="Capture.cpp">
+    <ClCompile Include="src\capture\Capture.cpp">
       <Filter>src\capture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\capture\dxgi\Dxgi.cpp">
+      <Filter>src\capture\dxgi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

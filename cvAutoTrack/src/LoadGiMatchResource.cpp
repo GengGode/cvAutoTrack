@@ -10,7 +10,7 @@ bool HBitmap2Mat(HBITMAP& _hBmp, cv::Mat& _mat)
 	BITMAP bmp;
 	GetObject(_hBmp, sizeof(BITMAP), &bmp);
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-	int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
+	//int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
 	cv::Mat v_mat;
 	v_mat.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
 	GetBitmapBits(_hBmp, bmp.bmHeight*bmp.bmWidth*nChannels, v_mat.data);
@@ -69,7 +69,7 @@ bool LoadPNG2Mat(cv::Mat& _mat)
 
 	{
 		std::vector<BYTE> buffer(width * height * depht);
-		bitmap_source->CopyPixels(NULL, width * depht, buffer.size(), buffer.data());
+		bitmap_source->CopyPixels(NULL, width * depht, static_cast<int>(buffer.size()),buffer.data());
 
 		HBITMAP bitmap = CreateBitmap(width, height, 1, 8 * depht, buffer.data());
 
@@ -212,10 +212,6 @@ void LoadGiMatchResource::UIDnumberRGBA2A()
 	}
 }
 
-double dis(std::vector<cv::Point> &TransfornHistory)
-{
-	return 0;
-}
 double dis(cv::Point2d p)
 {
 	return sqrt(p.x*p.x + p.y*p.y);

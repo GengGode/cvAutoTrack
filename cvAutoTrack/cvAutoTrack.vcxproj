@@ -570,6 +570,12 @@
     <ClInclude Include="src\AutoTrack.h" />
     <ClInclude Include="src\Base_SURF.h" />
     <ClInclude Include="src\Base_Thread.h" />
+    <ClInclude Include="src\capture\Capture.h" />
+    <ClInclude Include="src\capture\dxgi\Dxgi.h" />
+    <ClInclude Include="src\capture\dxgi\include\capture.interop.h" />
+    <ClInclude Include="src\capture\dxgi\include\composition.interop.h" />
+    <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h" />
+    <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h" />
     <ClInclude Include="src\ErrorCode.h" />
     <ClInclude Include="src\FlowWork.h" />
     <ClInclude Include="src\framework.h" />
@@ -586,6 +592,14 @@
     </ClCompile>
     <ClCompile Include="src\Base_SURF.cpp" />
     <ClCompile Include="src\Base_Thread.cpp" />
+    <ClCompile Include="src\capture\Capture.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\capture\dxgi\Dxgi.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../../pch.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\cvAutoTrack.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />
