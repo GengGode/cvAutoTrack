@@ -31,6 +31,7 @@
 // STL
 #include <atomic>
 #include <memory>
+#include <chrono>
 
 // D3D
 #include <d3d11_4.h>
