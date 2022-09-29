@@ -68,82 +68,6 @@ private:
 	bool is_init_end = false;
 
 private:
-
-#define MAP_3_0
-
-#ifdef MAP_1_7_1
-	int minHessian = 400;
-	float ratio_thresh = 0.66f;
-	float mapScale = 1.68f;//1.3;
-	int someSizeR = 106;
-	float MatchMatScale = 2.0;
-#endif
-
-#ifdef MAP_1_7_2
-	int minHessian = 400;
-	float ratio_thresh = 0.66f;
-	float mapScale = 1.68f;//1.3;
-	int someSizeR = 106;
-	float MatchMatScale = 2.0;
-
-
-	double UserWorldOrigin_X = 0;
-	double UserWorldOrigin_Y = 0;
-	double UserWorldScale = 1.0;
-
-	//World Center on AbsAllMap Coor
-	double WorldCenter_X = 5452;
-	double WorldCenter_Y = 9432;
-	double WorldScale = 1.0;
-
-	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOrigin_X = 8866;
-	double MapWorldAbsOrigin_Y = 11457;
-
-	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2;
-
-	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025);
-	//double MapWorldOffset_X = 3412;
-	//double MapWorldOffset_Y = 2025;
-
-	double MapWorldScale = 1.0;
-
-#endif
-
-#ifdef MAP_2_0
-	int minHessian = 400;
-	double ratio_thresh = 0.66;
-	double mapScale = 1.3;//1.3;
-	int someSizeR = 106;
-	double MatchMatScale = 2.0;
-
-	double UserWorldOrigin_X = 0;
-	double UserWorldOrigin_Y = 0;
-	double UserWorldScale = 1.0;
-
-
-	//World Center on AbsAllMap Coor
-	double WorldCenter_X = 5352;
-	double WorldCenter_Y = 9432;
-	double WorldScale = 1.0;
-
-	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOrigin_X = 1703;// 1690;
-	double MapWorldAbsOrigin_Y = 1924;// 1911;
-
-	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2.557;
-
-	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025);
-	//double MapWorldOffset_X = 3412;
-	//double MapWorldOffset_Y = 2025;
-
-	double MapWorldScale = 1.0;
-
-#endif
-
-#ifdef MAP_2_1
 	int minHessian = 400;
 	double ratio_thresh = 0.66;
 	double mapScale = 1.3;//1.3;
@@ -154,46 +78,11 @@ private:
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
+	
+#define MAP_3_1
 
-	// 绝对世界中心 绝对世界缩放系数
-	//World Center on AbsAllMap Coor
-	double WorldCenter_X = 5352; //Abs
-	double WorldCenter_Y = 9432; //Abs
-	double WorldScale = 1.0; //Abs
-
-	//相对绝对空间原点坐标
-	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOrigin_X = 1703; //from diff Image
-	double MapWorldAbsOrigin_Y = 1718; //from diff Image
-
-	//相对绝对空间缩放系数
-	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2.557; //from diff Image 67.40%
-
-	//忘了是啥了，记得明天推导
-	//09.07 是个固定值，不用变
-	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025); // ? forget
-	//double MapWorldOffset_X = 3412;
-	//double MapWorldOffset_Y = 2025;
-
-	//也忘了
-	//2022.07.13 还是没想起来
-	double MapWorldScale = 1.0;
-
-#endif
 
 #ifdef MAP_3_0
-	int minHessian = 400;
-	double ratio_thresh = 0.66;
-	double mapScale = 1.3;//1.3;
-	int someSizeR = 106;
-	double MatchMatScale = 2.0;
-
-	//用户定义映射关系参数
-	double UserWorldOrigin_X = 0;
-	double UserWorldOrigin_Y = 0;
-	double UserWorldScale = 1.0;
-
 	// 绝对世界中心 绝对世界缩放系数
 	//World Center on AbsAllMap Coor
 	double WorldCenter_X = 7400; //Abs 2871   * MapAbsScale = 7392.2870
@@ -202,24 +91,53 @@ private:
 
 	//相对绝对空间原点坐标
 	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOrigin_X = 7.7130; // 7400 - 7392.2870
-	double MapWorldAbsOrigin_Y = 1721.3665; // 9432 - 7710.6335
+	double MapWorldAbsOffset_X = 7.7130; // 7400 - 7392.2870
+	double MapWorldAbsOffset_Y = 1721.3665; // 9432 - 7710.6335
+
+	//相对绝对空间缩放系数
+	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
+	double MapAbsScale = 2.557; //from diff Image 67.40%
+	
+	//2021-09-07 是个固定值，不用变
+	//2022-09-26 构造函数中初始化
+	cv::Point2d MapWorldOffset; 
+#endif
+	
+#ifdef MAP_3_1
+	// 绝对世界中心 天理坐标系原点在实际画布的位置
+	// World Center on AbsAllMap Coor
+	double WorldCenter_X = 13544; //Abs 4480   * MapAbsScale = 11455.36
+	double WorldCenter_Y = 11480; //Abs 3015.5 * MapAbsScale = 7710.6335
+	// 绝对世界缩放系数
+	double WorldScale = 1.0; //Abs
+	
+	// 地图中心点的实际像素位置
+	double MapPixelCenter_X = 4480;
+	double MapPixelCenter_Y = 3015.5;
+
+	// 地图中心点转换到绝对空间中的坐标
+	// Map Origin Point on AbsAllMap Coor.
+	// MapWorldAbsCenter = MapPixelCenter * MapAbsScale;
+	double MapWorldAbsCenter_X = 11455.36;
+	double MapWorldAbsCenter_Y = 7710.6335;
+
+	//相对绝对空间原点偏移
+	//Map Origin Point on AbsAllMap Coor.
+	// MapWorldAbsOrigin = WorldCenter - MapWorldOffset
+	double MapWorldAbsOffset_X = 2088.64; // 13544 - 11455.36
+	double MapWorldAbsOffset_Y = 3769.3665; // 11480 - 7710.6335
 
 	//相对绝对空间缩放系数
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
 	double MapAbsScale = 2.557; //from diff Image 67.40%
 
-	//忘了是啥了，记得明天推导
-	//09.07 是个固定值，不用变
-	cv::Point2d MapWorldOffset = cv::Point2d(3412, 2025); // ? forget
-	//double MapWorldOffset_X = 3412;
-	//double MapWorldOffset_Y = 2025;
-
-	//也忘了
-	//2022.07.13 还是没想起来
-	double MapWorldScale = 1.0;
-
+	//2021-09-07 是个固定值，不用变
+	//2022-09-26 构造函数中初始化
+	// MapWorldOffset = MapWorldAbsOffset - WorldCenter
+	cv::Point2d MapWorldOffset = cv::Point2d(2096.083, 3769.3665);
 #endif
+	//2022-07-13 还是没想起来
+	double MapWorldScale = 1.0;
 
 	// ???
 	double screen_scale = 1;

@@ -16,8 +16,8 @@ AutoTrack::AutoTrack()
 	gpuDeviceNumber = cv::cuda::getCudaEnabledDeviceCount();
 #endif // CV_CUDA_GPU
 
-	MapWorldOffset.x = MapWorldAbsOrigin_X - WorldCenter_X;
-	MapWorldOffset.y = MapWorldAbsOrigin_Y - WorldCenter_Y;
+	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
+	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
 
 	wForAfter.append(this, &AutoTrack::clear_error_logs, 0);
