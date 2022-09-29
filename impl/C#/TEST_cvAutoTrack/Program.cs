@@ -10,11 +10,11 @@ namespace TEST_cvAutoTrack
 
             // 获取版本号
             byte[] versionBuff = new byte[1024];
-            string version = "       ";
+            //string version = "       ";
             
-            //cvAutoTrack.cvAutoTrack.verison(versionBuff);
-            //string version = Encoding.UTF8.GetString(versionBuff);
-            cvAutoTrack.cvAutoTrack.verison(ref version);
+            cvAutoTrack.cvAutoTrack.verison(versionBuff);
+            string version = Encoding.UTF8.GetString(versionBuff);
+            //cvAutoTrack.cvAutoTrack.verison( version);
             
             Console.WriteLine("version: " + version);
             
@@ -24,7 +24,7 @@ namespace TEST_cvAutoTrack
             byte[] jsonBuffer = new byte[1024];
 
             // 调用 cvAutoTrack.dll
-            bool ret = cvAutoTrack.cvAutoTrack.GetStarJson(ref jsonBuffer);
+            bool ret = cvAutoTrack.cvAutoTrack.GetStarJson(jsonBuffer);
 
             // 输出结果
             Console.WriteLine("ret = " + ret);
