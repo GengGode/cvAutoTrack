@@ -307,7 +307,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>D:\opencv\opencv_460\install/build_Static_World_Cuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\opencv\opencv_460\install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -315,10 +315,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>aded.lib;ippicvmt.lib;IlmImfd.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;libwebpd.lib;opencv_img_hash460d.lib;opencv_world460d.lib;quircd.lib;zlibd.lib;cublas.lib;cublasLt.lib;cuda.lib;cudadevrt.lib;cudart.lib;cudart_static.lib;cudnn.lib;cudnn64_8.lib;cudnn_adv_infer.lib;cudnn_adv_infer64_8.lib;cudnn_adv_train.lib;cudnn_adv_train64_8.lib;cudnn_cnn_infer.lib;cudnn_cnn_infer64_8.lib;cudnn_cnn_train.lib;cudnn_cnn_train64_8.lib;cudnn_ops_infer.lib;cudnn_ops_infer64_8.lib;cudnn_ops_train.lib;cudnn_ops_train64_8.lib;cufft.lib;cufftw.lib;cufilt.lib;curand.lib;cusolver.lib;cusolverMg.lib;cusparse.lib;nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;nvblas.lib;nvjpeg.lib;nvml.lib;nvptxcompiler_static.lib;nvrtc-builtins_static.lib;nvrtc.lib;nvrtc_static.lib;OpenCL.lib;opencv_world450d.lib;ade.lib;opencv_img_hash450d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>aded.lib;ippicvmt.lib;IlmImfd.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;libwebpd.lib;opencv_img_hash460d.lib;opencv_world460d.lib;quircd.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
-      <Version>2.1</Version>
-      <AdditionalLibraryDirectories>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib\x64;D:\opencv\opencv_460\install\build_Static_World_Cuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib</AdditionalLibraryDirectories>
+      <Version>3.0</Version>
+      <AdditionalLibraryDirectories>D:\opencv\opencv_460\install\build_Static_World_NoCuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib</AdditionalLibraryDirectories>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
@@ -463,7 +463,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>D:/opencv/opencv_460/install/build_Static_World_Cuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:/opencv/opencv_460/install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
