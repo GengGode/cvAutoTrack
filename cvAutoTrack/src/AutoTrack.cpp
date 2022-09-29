@@ -518,6 +518,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	
 	cv::Point2d filt_pos;
+#define USE_Filt
 #ifdef USE_Filt
 	if (isConveying || !isContinuity)
 	{
