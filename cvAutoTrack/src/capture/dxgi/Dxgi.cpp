@@ -14,37 +14,147 @@ using namespace Windows::UI;
 using namespace Windows::UI::Composition;
 
 
-Dxgi::Dxgi(
-    IDirect3DDevice const& device,
-    GraphicsCaptureItem const& item)
+Dxgi::Dxgi()
 {
-    m_item = item;
-    m_device = device;
+    mode = Capture::Mode_DirectX;
 
-    // Set up 
-    auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    auto d3dDevice = CreateD3DDevice();
+    auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
     d3dDevice->GetImmediateContext(m_d3dContext.put());
+    // Set up 
+    //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    m_device = CreateDirect3DDevice(dxgiDevice.get());
+}
 
-    auto size = m_item.Size();
+bool Dxgi::init()
+{
+	if(!giHandle)
+    {
+        err = { 10003,"句柄为空" };
+        return false;
+    }
 
-    m_swapChain = CreateDXGISwapChain(
-        d3dDevice,
-        static_cast<uint32_t>(size.Width),
-        static_cast<uint32_t>(size.Height),
-        static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
-        2);
+        m_item = CreateCaptureItemForWindow(giHandle);
 
-    // Create framepool, define pixel format (DXGI_FORMAT_B8G8R8A8_UNORM), and frame size. 
-    m_framePool = Direct3D11CaptureFramePool::Create(
-        m_device,
-        DirectXPixelFormat::B8G8R8A8UIntNormalized,
-        2,
-        size);
-    m_session = m_framePool.CreateCaptureSession(m_item);
-    m_lastSize = size;
-    m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
+        auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        //d3dDevice->GetImmediateContext(m_d3dContext.put());
+        
+        auto size = m_item.Size();
 
-    //d3dDevice->CreateTexture2D(&desc, nullptr, &m_pTexture);
+        m_swapChain = CreateDXGISwapChain(
+            d3dDevice,
+            static_cast<uint32_t>(size.Width),
+            static_cast<uint32_t>(size.Height),
+            static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
+            2);
+
+        // Create framepool, define pixel format (DXGI_FORMAT_B8G8R8A8_UNORM), and frame size. 
+        m_framePool = Direct3D11CaptureFramePool::Create(
+            m_device,
+            DirectXPixelFormat::B8G8R8A8UIntNormalized,
+            2,
+            size);       
+        //m_session.IsBorderRequired(false);
+        //m_session.IsCursorCaptureEnabled(false);
+        m_session = m_framePool.CreateCaptureSession(m_item);
+        //winrt::Windows::Graphics::Capture::IGraphicsCaptureSession3 session3 = m_session;
+		//session3.IsBorderRequired(false);
+        //auto unpl = get_unknown(m_session);
+
+
+        m_lastSize = size;
+        //m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
+
+        //if (m_closed.load() == true)
+        //{
+        //    throw winrt::hresult_error(RO_E_CLOSED);
+        //}
+		// m_session.StartCapture();
+        StartCapture();
+	
+    return true;
+}
+
+bool Dxgi::uninit()
+{
+	//m_session.Close();
+	return true;
+}
+
+bool Dxgi::capture(cv::Mat& frame)
+{
+    static D3D11_TEXTURE2D_DESC desc{
+   0,0,1,1,DXGI_FORMAT_B8G8R8A8_UNORM,{1,0},D3D11_USAGE_STAGING,0,D3D11_CPU_ACCESS_READ,0
+    };
+    static ID3D11Texture2D* bufferTexture;
+
+	// 获取新的画面
+	auto new_frame = m_framePool.TryGetNextFrame();
+    if (new_frame == nullptr)
+    {
+        err = { 10004,"未能获取到新一帧画面" };
+        return false;
+    }
+	auto frame_size = new_frame.ContentSize();
+    if(desc.Width != m_lastSize.Width || desc.Height != m_lastSize.Height)
+    {
+        desc.Width = m_lastSize.Width;
+        desc.Height = m_lastSize.Height;
+    }
+    if (frame_size.Width != m_lastSize.Width || frame_size.Height != m_lastSize.Height)
+    {
+		m_framePool.Recreate(
+			m_device,
+			DirectXPixelFormat::B8G8R8A8UIntNormalized,
+			2,
+			frame_size);
+		m_lastSize = frame_size;
+
+        m_swapChain->ResizeBuffers(
+            2,
+            static_cast<uint32_t>(m_lastSize.Width),
+            static_cast<uint32_t>(m_lastSize.Height),
+            static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
+            0);
+
+    }
+    auto frameSurface = GetDXGIInterfaceFromObject<ID3D11Texture2D>(new_frame.Surface());
+	
+    auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    d3dDevice->CreateTexture2D(&desc, nullptr, &bufferTexture);
+    m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
+    if (bufferTexture == nullptr)
+    {
+        err = { 10005,"未能从GPU拷贝画面到CPU" };
+        return false;
+    }
+    D3D11_MAPPED_SUBRESOURCE mappedTex;
+    m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
+	
+	auto data = mappedTex.pData;
+	auto pitch = mappedTex.RowPitch;
+	// 将画面转换为OpenCV的Mat
+	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
+	// 释放资源
+    bufferTexture->Release();
+	// new_frame.Close();
+	return true;
+}
+
+bool Dxgi::setHandle(HWND handle)
+{
+    if (giHandle != handle)
+    {
+        if (handle == nullptr)
+        {
+            err = { 10006,"设置的句柄为空" };
+            return false;
+        }
+		//uninit();
+        giHandle = handle;
+		init();
+    }
+    return true;
 }
 
 // Start sending capture frames
@@ -52,13 +162,6 @@ void Dxgi::StartCapture()
 {
     CheckClosed();
     m_session.StartCapture();
-}
-
-ICompositionSurface Dxgi::CreateSurface(
-    Compositor const& compositor)
-{
-    CheckClosed();
-    return CreateCompositionSurfaceForSwapChain(compositor, m_swapChain.get());
 }
 
 // Process captured frames
@@ -70,7 +173,7 @@ void Dxgi::Close()
         m_frameArrived.revoke();
         m_framePool.Close();
         m_session.Close();
-
+		
         m_swapChain = nullptr;
         m_framePool = nullptr;
         m_session = nullptr;
@@ -86,7 +189,6 @@ void Dxgi::OnFrameArrived(
     static D3D11_TEXTURE2D_DESC desc{
        0,0,1,1,DXGI_FORMAT_B8G8R8A8_UNORM,{1,0},D3D11_USAGE_STAGING,0,D3D11_CPU_ACCESS_READ,0
     };
-	static ID3D11Texture2D* BufferTexture;
     {
         auto frame = sender.TryGetNextFrame();
         auto frameContentSize = frame.ContentSize();
@@ -99,49 +201,45 @@ void Dxgi::OnFrameArrived(
             // After we do that, retire the frame and then recreate our frame pool.
             newSize = true;
             m_lastSize = frameContentSize;
-
-            desc.Width = m_lastSize.Width;
-            desc.Height = m_lastSize.Height;
-
             m_swapChain->ResizeBuffers(
                 2,
                 static_cast<uint32_t>(m_lastSize.Width),
                 static_cast<uint32_t>(m_lastSize.Height),
                 static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
                 0);
+            desc.Width = m_lastSize.Width;
+            desc.Height = m_lastSize.Height;
         }
 
+        //static ID3D11Texture2D* BufferTexture;
         {
-            auto frameSurface = GetDXGIInterfaceFromObject<ID3D11Texture2D>(frame.Surface());
+    //        auto frameSurface = GetDXGIInterfaceFromObject<ID3D11Texture2D>(frame.Surface());
 			
-            {
-                D3D11_MAPPED_SUBRESOURCE mappedTex;
-                {
-                    ID3D11Texture2D* bufferTexture;
+    //        {
+    //            D3D11_MAPPED_SUBRESOURCE mappedTex;
+    //            {
+    //                ID3D11Texture2D* bufferTexture;
 
-                    auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-                    d3dDevice->CreateTexture2D(&desc, nullptr, &bufferTexture);
-
-
-                    m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
+    //                auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    //                d3dDevice->CreateTexture2D(&desc, nullptr, &bufferTexture);
 
 
-                    m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
-                    //m_d3dContext->Unmap(bufferTexture, 0);
-					
-                    bufferTexture->Release();
-                }
+    //                m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
 
-                cv::Mat frameImage = cv::Mat::zeros(m_lastSize.Height, m_lastSize.Width, CV_8UC4);// = cv::Mat(desc.Height, desc.Width, CV_8UC4, mappedTex.pData, mappedTex.RowPitch);
-				memcpy(frameImage.data, mappedTex.pData, frameImage.total() * frameImage.elemSize());
 
-            }
+    //                m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
+    //                //m_d3dContext->Unmap(bufferTexture, 0);
+				//	
+    //                //bufferTexture->Release();
+    //            }
+
+    //            cv::Mat frameImage = cv::Mat(desc.Height, desc.Width, CV_8UC4, mappedTex.pData, mappedTex.RowPitch);
+				////memcpy(frameImage.data, mappedTex.pData, frameImage.total() * frameImage.elemSize());
+
+    //        }
         }
     }
-
-    DXGI_PRESENT_PARAMETERS presentParameters = { 0 };
-    m_swapChain->Present1(1, 0, &presentParameters);
-
+	
     if (newSize)
     {
         m_framePool.Recreate(

@@ -166,7 +166,7 @@ CreateDXGISwapChain(
     desc.BufferCount = bufferCount;
     desc.Scaling = DXGI_SCALING_STRETCH;
     desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-    desc.AlphaMode = DXGI_ALPHA_MODE_PREMULTIPLIED;
+    desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 
     return CreateDXGISwapChain(device, &desc);
 }

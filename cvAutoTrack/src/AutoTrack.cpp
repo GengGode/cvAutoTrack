@@ -1,24 +1,20 @@
 ﻿#include "pch.h"
 #include "AutoTrack.h"
 #include "ErrorCode.h"
-
-#ifdef CV_CUDA_GPU
-#include <opencv2/core/cuda.hpp>
-#endif // CV_CUDA_GPU
+#include "capture/dxgi/Dxgi.h"
+#include "capture/bitblt/Bitblt.h"
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
 AutoTrack::AutoTrack()
 {
-
-#ifdef CV_CUDA_GPU	
-	gpuDeviceNumber = cv::cuda::getCudaEnabledDeviceCount();
-#endif // CV_CUDA_GPU
-
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
+	
+	capture = new Bitblt();
+	capture->init();
 
 	wForAfter.append(this, &AutoTrack::clear_error_logs, 0);
 	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101);
@@ -66,6 +62,7 @@ AutoTrack::AutoTrack()
 
 AutoTrack::~AutoTrack(void)
 {
+	delete capture;
 }
 
 bool AutoTrack::init()
@@ -112,44 +109,44 @@ int AutoTrack::GetGpuCount()
 
 bool AutoTrack::SetGpuDevice(int deviceId)
 {
-	// 如果GPU设备数量等于零，直接返回启用GPU失败，因为不存在GPU设备
-	if (gpuDeviceNumber == 0)
-	{
-		return false;
-	}
-
-	else
-	{
-		if (gpuDeviceNumber > deviceId)
-		{
-#ifdef CV_CUDA_GPU	
-			// 如果设备ID小于GPU设备数量，则启用指定GPU设备
-			cv::cuda::setDevice(deviceId);
-			gpuDeviceId = deviceId;
-			return true;
-#endif // CV_CUDA_GPU
-		}
-		else
-		{
-#ifdef CV_CUDA_GPU	
-			// 如果设备ID大于等于GPU设备数量，则启用最后一个GPU设备
-			cv::cuda::setDevice(gpuDeviceNumber - 1);
-			gpuDeviceId = gpuDeviceNumber - 1;
-			return true;
-#endif // CV_CUDA_GPU
-		}
-	}
 	return true;
 }
 
 bool AutoTrack::SetUseBitbltCaptureMode()
 {
-	return false;
+	if (capture == nullptr)
+	{
+		capture = new Bitblt();
+		return true;
+	}
+	if (capture->mode == Capture::Mode_Bitblt)
+	{
+		return true;
+	}
+	
+	delete capture;
+	capture = new Bitblt();
+
+	return true;
 }
 
 bool AutoTrack::SetUseDx11CaptureMode()
 {
-	return false;
+	if (capture == nullptr)
+	{
+		capture = new Dxgi();
+		return true;
+	}
+	
+	if(capture->mode == Capture::Mode_DirectX)
+	{
+		return true;
+	}
+	
+	delete capture;
+	capture = new Dxgi();
+	
+	return true;
 }
 
 
@@ -518,6 +515,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	
 	cv::Point2d filt_pos;
+	
 #define USE_Filt
 #ifdef USE_Filt
 	if (isConveying || !isContinuity)
@@ -739,6 +737,12 @@ bool AutoTrack::GetRotation(double& a)
 	if (img_object.channels() != 4)
 	{
 		err = { 401,"获取视角朝向时，原神小地图区域没有取到透明通道" };
+		return false;
+	}
+
+	if (capture->mode == Capture::Mode_DirectX)
+	{
+		err = { 402,"DX模式下，原神小地图区域无法取到透明通道" };
 		return false;
 	}
 
@@ -1047,8 +1051,16 @@ bool AutoTrack::GetUID(int& uid)
 	std::vector<cv::Mat> channels;
 
 	split(giUIDRef, channels);
-	giUIDRef = channels[3];
 
+	if (capture->mode == Capture::Mode_DirectX)
+	{
+		cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
+	}
+	else
+	{
+		giUIDRef = channels[3];
+	}
+	
 	int _uid = 0;
 	int _NumBit[9] = { 0 };
 
@@ -2314,6 +2326,8 @@ bool AutoTrack::getGengshinImpactWnd()
 			return false;
 		}
 	}
+	
+	capture->setHandle(giHandle);
 
 	return (giHandle != NULL ? true : false);
 }
@@ -2374,128 +2388,92 @@ bool AutoTrack::getGengshinImpactScale()
 	return true;
 }
 
+namespace bitblt
+{
+
+	//bool AutoTrack::getGengshinImpactScreen()
+	//{
+	//	static HBITMAP	hBmp;
+	//	BITMAP bmp;
+
+	//	DeleteObject(hBmp);
+
+	//	if (giHandle == NULL)
+	//	{
+	//		err = 12;//窗口句柄失效
+	//		return false;
+	//	}
+	//	if (!IsWindow(giHandle))
+	//	{
+	//		err = 12;//窗口句柄失效
+	//		return false;
+	//	}
+	//	//获取目标句柄的窗口大小RECT
+	//	GetWindowRect(giHandle, &giRect);/* 对原神窗口的操作 */
+
+	//	//获取目标句柄的DC
+	//	HDC hScreen = GetDC(giHandle);/* 对原神窗口的操作 */
+	//	HDC hCompDC = CreateCompatibleDC(hScreen);
+
+	//	//获取目标句柄的宽度和高度
+	//	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
+	//	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
+
+	//	//创建Bitmap对象
+	//	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//得到位图
+
+	//	SelectObject(hCompDC, hBmp); //不写就全黑
+
+	//	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
+
+	//	////释放对象
+	//	DeleteDC(hScreen);
+	//	DeleteDC(hCompDC);
+
+	//	//类型转换
+	//	//这里获取位图的大小信息,事实上也是兼容DC绘图输出的范围
+	//	GetObject(hBmp, sizeof(BITMAP), &bmp);
+
+	//	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
+	//	//int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
+
+	//	//mat操作
+	//	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
+
+	//	GetBitmapBits(hBmp, bmp.bmHeight * bmp.bmWidth * nChannels, giFrame.data);
+
+	//	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
+
+
+	//	if (giFrame.empty())
+	//	{
+	//		err = 3;
+	//		return false;
+	//	}
+
+	//	if (giFrame.cols < 480 || giFrame.rows < 360)
+	//	{
+	//		err = 13;
+	//		return false;
+	//	}
+	//	return true;
+	//}
+}
 
 bool AutoTrack::getGengshinImpactScreen()
 {
-	static HBITMAP	hBmp;
-	BITMAP bmp;
-
-	DeleteObject(hBmp);
-
-	if (giHandle == NULL)
+	cv::Mat Frame;
+	if (capture->capture(Frame))
 	{
-		err = 12;//窗口句柄失效
+		giFrame = Frame;
+		return true;
+	}
+	else
+	{
+		err = { 433, "截图失败" };
 		return false;
 	}
-	if (!IsWindow(giHandle))
-	{
-		err = 12;//窗口句柄失效
-		return false;
-	}
-	//获取目标句柄的窗口大小RECT
-	GetWindowRect(giHandle, &giRect);/* 对原神窗口的操作 */
-
-	//获取目标句柄的DC
-	HDC hScreen = GetDC(giHandle);/* 对原神窗口的操作 */
-	HDC hCompDC = CreateCompatibleDC(hScreen);
-
-	//获取目标句柄的宽度和高度
-	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
-	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
-
-	//创建Bitmap对象
-	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//得到位图
-
-	SelectObject(hCompDC, hBmp); //不写就全黑
-	
-	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
-	
-	
-	// // 修复win11截图黑屏 || 无效
-	// BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY | CAPTUREBLT);
-	
-	// IDirectDrawSurface3::BltFast
-	// The IDirectDrawSurface3::BltFast method performs a source copy blit or transparent blit by using a //source color key or destination color key.
-	//
-	// HRESULT BltFast(
-	//		DWORD dwX,
-	//		DWORD dwY,
-	//		LPDIRECTDRAWSURFACE3 lpDDSrcSurface,
-	//		LPRECT lpSrcRect,
-	//		DWORD dwTrans
-	// );
-	
-	// 截图
-	// 
-	
-	//hBmp = IDirectDrawSurface3::BltFast(nWidth, nHeight, hScreen, hCompDC);
-	
-	//
-	////获取位图信息
-	//GetObject(hBmp, sizeof(BITMAP), &bmp);
-	////创建位图信息头
-	//BITMAPINFOHEADER bih;
-	//bih.biSize = sizeof(BITMAPINFOHEADER);
-	//bih.biWidth = bmp.bmWidth;
-	//bih.biHeight = bmp.bmHeight;
-	//bih.biPlanes = 1;
-	//bih.biBitCount = 32;
-	//bih.biCompression = BI_RGB;
-	//bih.biSizeImage = 0;
-	//bih.biXPelsPerMeter = 0;
-	//bih.biYPelsPerMeter = 0;
-	//bih.biClrUsed = 0;
-	//bih.biClrImportant = 0;
-	////创建位图信息
-	//BITMAPINFO bi;
-	//bi.bmiHeader = bih;
-	////创建位图数据
-	//BYTE* lpBits = new BYTE[bmp.bmWidthBytes * bmp.bmHeight];
-	////获取位图数据
-	//GetDIBits(hCompDC, hBmp, 0, bmp.bmHeight, lpBits, &bi, DIB_RGB_COLORS);
-	////创建位图
-	//giBmp = new Bitmap(bmp.bmWidth, bmp.bmHeight, bmp.bmWidthBytes, PixelFormat32bppARGB, lpBits);
-	////释放资源
-	//delete[] lpBits;
-	//DeleteObject(hBmp);
-	//DeleteDC(hCompDC);
-	//ReleaseDC(giHandle, hScreen);
-	//// 转为cv::Mat
-	//giMat = cv::cvarrToMat(giBmp);
-
-	////释放对象
-	DeleteDC(hScreen);
-	DeleteDC(hCompDC);
-
-	//类型转换
-	//这里获取位图的大小信息,事实上也是兼容DC绘图输出的范围
-	GetObject(hBmp, sizeof(BITMAP), &bmp);
-
-	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-	//int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
-
-	//mat操作
-	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
-
-	GetBitmapBits(hBmp, bmp.bmHeight * bmp.bmWidth * nChannels, giFrame.data);
-
-	giFrame = giFrame(cv::Rect(giClientRect.left, giClientRect.top, giClientSize.width, giClientSize.height));
-
-
-	if (giFrame.empty())
-	{
-		err = 3;
-		return false;
-	}
-
-	if (giFrame.cols < 480 || giFrame.rows < 360)
-	{
-		err = 13;
-		return false;
-	}
-	return true;
 }
-
 bool AutoTrack::getPaimonRefMat()
 {
 	int& x = giFrame.cols, & y = giFrame.rows;
@@ -2765,7 +2743,21 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	cv::split(giPaimonRef, split_paimon);
 
 	cv::Mat template_result;
-	cv::matchTemplate(split_paimon[3], split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
+	cv::Mat object = split_paimon[3];
+	
+	const double check_match_paimon_params_dx = 0.55;
+	static double check_match_paimon_param = check_match_paimon_params;
+	if (capture->mode == Capture::Mode_DirectX)
+	{
+		cv::cvtColor(giPaimonRef, object, cv::COLOR_RGBA2GRAY);
+		check_match_paimon_param = check_match_paimon_params_dx;
+	}
+	else
+	{
+		check_match_paimon_param = check_match_paimon_params;
+	}
+	
+	cv::matchTemplate(object, split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
 
 	double paimon_match_minVal, paimon_match_maxVal;
 	cv::Point paimon_match_minLoc, paimon_match_maxLoc;
@@ -2776,7 +2768,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	cv::imshow("paimon match result", template_result);
 #endif
 
-	if (paimon_match_maxVal < check_match_paimon_params || paimon_match_maxVal == 1)
+	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
 	{
 		err = 6;//未能匹配到派蒙
 		return false;

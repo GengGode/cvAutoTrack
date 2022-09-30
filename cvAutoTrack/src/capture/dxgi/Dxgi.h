@@ -3,14 +3,16 @@
 class Dxgi : public Capture
 {
 public:
-    Dxgi(
-        winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice const& device,
-        winrt::Windows::Graphics::Capture::GraphicsCaptureItem const& item);
+    Dxgi();
     ~Dxgi() { Close(); }
+	
+	bool init() override;
+	bool uninit() override;
+	bool capture(cv::Mat& frame) override;
+	bool setHandle(HWND handle = 0) override;
+	
 
     void StartCapture();
-    winrt::Windows::UI::Composition::ICompositionSurface CreateSurface(
-        winrt::Windows::UI::Composition::Compositor const& compositor);
 
     void Close();
 
@@ -29,7 +31,16 @@ private:
 
 private:
     winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{ nullptr };
+    /// <summary>
+    /// 存储应用程序捕获的帧。
+    /// 尝试从帧池获取下一个捕获的帧。
+    /// 捕获帧存储在帧池中时引发的事件。
+    /// </summary>
     winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool m_framePool{ nullptr };
+    /// <summary>
+    /// 允许应用程序进行屏幕捕获
+    /// 启动捕获会话，允许应用程序捕获帧。
+    /// </summary>
     winrt::Windows::Graphics::Capture::GraphicsCaptureSession m_session{ nullptr };
     winrt::Windows::Graphics::SizeInt32 m_lastSize;
 
@@ -40,6 +51,7 @@ private:
     std::atomic<bool> m_closed = false;
     winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::FrameArrived_revoker m_frameArrived;
 private:
-	ID3D11Texture2D* m_pTexture = nullptr;
+	//ID3D11Texture2D* m_pTexture = nullptr;
+	HWND giHandle = nullptr;
 };
 
