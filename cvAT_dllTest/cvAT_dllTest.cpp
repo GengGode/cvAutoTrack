@@ -93,7 +93,7 @@ int main()
 	char buff[1024] = { 0 };
 	// 调用循环
 	
-	if (init())
+	//if (init())
 	{
 	//	Sleep(2000);
 	}
@@ -106,6 +106,16 @@ int main()
 	while (1)
 	{
 		//调用获取方法
+		
+		// 设置Dx截图
+		if (SetUseDx11CaptureMode())
+		{
+			std::cout << "设置Dx截图成功" << "\n";
+		}
+		else
+		{
+			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+		}
 #pragma warning(suppress : 4996)
 		if (GetTransform(x, y, a))
 		{

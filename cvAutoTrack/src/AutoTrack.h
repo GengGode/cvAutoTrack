@@ -9,6 +9,7 @@
 #include "FlowWork.h"
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
+#include "capture/Capture.h"
 
 
 // 此类是不导出的
@@ -198,6 +199,8 @@ private:
 	
 	// 界面处于手柄模式
 	bool isHandleGameMode = false;
+	
+	Capture* capture = nullptr;
 
 private:
 	HWND giHandle;
