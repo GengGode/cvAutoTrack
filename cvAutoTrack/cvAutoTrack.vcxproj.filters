@@ -90,6 +90,9 @@
     <ClInclude Include="src\capture\dxgi\Dxgi.h">
       <Filter>src\capture\dxgi</Filter>
     </ClInclude>
+    <ClInclude Include="src\capture\bitblt\Bitblt.h">
+      <Filter>src\capture\bitblt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="src\capture\dxgi\Dxgi.cpp">
       <Filter>src\capture\dxgi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\capture\bitblt\Bitblt.cpp">
+      <Filter>src\capture\bitblt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
