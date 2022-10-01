@@ -26,11 +26,11 @@ bool __stdcall uninit()
 }
 int __stdcall GetGpuCount()
 {
-	return _at.GetGpuCount();
+	return false;
 }
 bool __stdcall SetGpuDevice(int deviceId = 0)
 {
-	return _at.SetGpuDevice(deviceId);
+	return false;
 }
 bool __stdcall SetUseBitbltCaptureMode()
 {
