@@ -1,152 +1,153 @@
-this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/README_en.md) 
+这是英文，点击查看[中文](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/README.md) 
 # GenshinImpact AutoTrack DLL
 
-通过图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库
+
+Through the image matching algorithm, the DLL dynamic link library for obtaining the position of the character on the map from the Genshin Impact client
 
 [![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
 
-# 介绍 
+# introduce 
 
 
-### 目前支持任意分辨率，但尚不支持手柄模式
-### 地图目前支持区域
+### Currently supports any resolution, but does not support gamepad mode yet
+### The map currently supports regions
 
-| 原神版本 | 地图区域 | dll版本 |
+| Genshin Impact Version | Map Area | dll Version |
 | -------- | ------ | ------ |
-|  1.0 |  蒙德               |   -   |
-|  -   |  雪山               |   -   |
-|  -   |  璃月               |   -   |
-|  -   |  稻妻I              |   -   |
-|  -   |  稻妻II             |   -   |
-|  -   |  稻妻III(鹤观)      |   -   |
-|  -   |  稻妻IIII(渊下宫)   |   -   |
-|  -   |  璃月II(层岩)       |   -   |
-|  -   |  璃月III(地下层岩)  |   -   |
-|  3.0 |  须弥              | 6.1.51 |
-|  3.1 |  须弥沙漠           | 6.4.17 |
+| 1.0 | Mond | - |
+| - | Snow Mountain | - |
+| - | Liyue | - |
+| - | Inawa I | - |
+| - | Inawife II | - |
+| - | Inatsu III (Crane View) | - |
+| - | Inatsu IIII (Fuchixia Palace) | - |
+| - | Liyue II (Layer Rock) | - |
+| - | Liyue III (Underground Rock) | - |
+| 3.0 | Xumi | 6.1.51 |
+| 3.1 | Sumeru Desert | 6.4.17 |
 
-## ~~支持 NVIDA GPU 图形计算加速~~ (远程编译不支持cuda，所以寄了)
+## ~~Support NVIDIA GPU graphics computing acceleration~~ (remote compilation does not support cuda, so I sent it)
 
 
-# 如何使用
+# how to use
 
-1. 下载编译好的动态链接库。
+1. Download the compiled dynamic link library.
    - https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
-2. 装载动态链接库后，根据[函数手册](#函数手册)对相关函数进行调用或封装。
-3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
-4. 由于默认接口输出的是[天理坐标模型](天理坐标模型)的坐标，所以使用者需要根据自身地图坐标系与天理坐标模型之间的映射关系，设置世界中心以及缩放系数或者后期手动换算。
+2. After loading the dynamic link library, call or encapsulate the related functions according to the [Function Manual] (#Function Manual).
+3. For the invocation of some languages, please refer to the invocation example in the `impl` folder.
+4. Since the default interface outputs the coordinates of [Tianli Coordinate Model] (Tianli Coordinate Model), users need to set the world center and scaling factor according to the mapping relationship between their own map coordinate system and the Tianli coordinate model, or manually convert them later
 
-# 如何编译
+# How to compile
 
-1. 环境需求，[Visual Studio 2019 +](https://visualstudio.microsoft.com/zh-hans/vs/) 、[Opencv 4.5.0 static lib zip](https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip)
-2. 安装 Visual Studio 2019 +
-3. 创建 Opencv 库的环境变量，若不使用环境变量则需要手动修改 cvAutoTrack 项目的`附加包含目录`和`附加库目录`
+1. Environment requirements, [Visual Studio 2019+](https://visualstudio.microsoft.com/zh-hans/vs/), [Opencv 4.5.0 static lib zip](https://github.com/GengGode/ opencv450Release/releases/download/v1.0/Release.zip)
+2. Install Visual Studio 2019+
+3. Create the environment variables of the Opencv library. If you do not use the environment variables, you need to manually modify the `additional include directory` and `additional library directory` of the cvAutoTrack project
 
     ``` $OpenCvDir = C:\projects\opencv\ ```
-4. 下载 Opencv 4.5.0 static lib zip 并解压到任意目录
+4. Download Opencv 4.5.0 static lib zip and extract it to any directory
 
     ``` 7z x ./*.zip -y -o%OpenCvDir% ```
-5. Clone 代码
+5. Clone code
 
    ``` Git Clone https://github.com/GengGode/GenshinImpact_AutoTrack_DLL ```
 
-6. 进入项目文件夹解压资源文件
+6. Go to the project folder and unzip the resource file
 
     ``` cd .\cvAutoTrack | 7z -x resource.zip ```
-7. 编译项目
+7. Compile the project
 
     ``` msbuild cvAutoTrack.sln ```
 
-## 注意事项
+## Precautions
 
-- 目前只编译了 Windows x64 平台上的动态链接库（.dll），对于 Windows x86 或其它平台，如 Linux 平台（.so），需要下载源代码另行编译。
-- Windows 规定 64位 进程/DLL与 32位 进程/DLL之间不能相互调用/加载，因此调用动态链接库前，请务必确保调用进程是 **64位进程** 。
-- 本项目借游戏画面的窗口截图进行图像处理算法以实现所有功能，其不会对游戏内存进行读写，因而不会有封号的风险，但效果也因此具备一定的局限。
-- 项目仅在有限的条件下测试过，如需排查错误，强烈建议按照以下描述进行环境配置。
-  - 原神客户端 > 右上角派蒙 > 设置 > 抗锯齿，设置为 `SMAA`
-  - 原神客户端 > 右上角派蒙 > 设置 > 其他 > 小地图锁定，设置为 `锁定方向`
+- Currently only the dynamic link library (.dll) on the Windows x64 platform is compiled. For Windows x86 or other platforms, such as the Linux platform (.so), you need to download the source code and compile it separately.
+- Windows stipulates that 64-bit process/DLL and 32-bit process/DLL cannot call/load each other, so before calling dynamic link library, please make sure that the calling process is **64-bit process** .
+- This project uses the window screenshots of the game screen to perform image processing algorithms to achieve all functions. It does not read and write the game memory, so there is no risk of being banned, but the effect has certain limitations.
+- The project has only been tested under limited conditions. To troubleshoot errors, it is strongly recommended to configure the environment as described below.
+  - Genshin Impact Client > Paimon in the upper right corner > Settings > Antialiasing, set to `SMAA`
+  - Genshin Impact Client > Paimon in the upper right corner > Settings > Others > Small Map Lock, set to `Lock Direction`
+  
+# For developers
 
-# 对于开发者
+- Warehouse on Code Cloud: [https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
+- Repository on Git: [https://github.com/GengGode/GenshinImpact_AutoTrack_DLL](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL)
 
-- 码云上的仓库：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
-- Git上的仓库： [https://github.com/GengGode/GenshinImpact_AutoTrack_DLL](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL)
+## project structure
 
-## 项目结构
-
-- **cvAutoTrack**，dll工程
-- **impl**，部分语言的调用示例
-    - **Cpp/TEST_cvAutoTrack_Cpp** C++调用
-    - **CSharp/TEST_cvAutoTrack_CSharp** C#调用
-    - **Python** Python调用
+- **cvAutoTrack**, dll works
+- **impl**, calling examples for some languages
+    - **Cpp/TEST_cvAutoTrack_Cpp** C++ call
+    - **CSharp/TEST_cvAutoTrack_CSharp** C# call
+    - **Python** Python call
 
 
-# 函数目录
+# function directory
 
-|              接口名称            |                                 接口功能                         |
-| ------------------------------- | --------------------------------------------------------------- |
-| `verison`                       | 获取Dll版本。                                                    |
-| `init`                          | 初始化运行环境。                                                  |
-| `uninit`                        | 卸载初始化时所占用的内存。                                          |
-| `startServe`                    | （未完成）开始服务，开启循环检测线程。                               |
-| `stopServe`                     | （未完成）停止服务，停止循环检测线程。                               |
+| Interface Name | Interface Function |
+| ----------------------------------------- | ----------------- -------------------------------------------------------- |
+| `verison` | Get the Dll version. |
+| `init` | Initializes the runtime environment. |
+| `uninit` | Unload the memory occupied by initialization. |
+| `startServe` | (Incomplete) Start the service, start the loop detection thread. |
+| `stopServe` | (Not done) Stops the service, stops the loop detection thread. |
 | ... | ... |
-| `GetGpuCount`                   | （即将删除）获取本机可用GPU设备数。                                 |
-| `SetGpuDevice`                  | （即将删除）设置启用GPU设备。                                       |
+| `GetGpuCount` | (To be removed) Gets the number of GPU devices available to the machine. |
+| `SetGpuDevice` | (To be removed) Sets the enabled GPU device. |
 | ... | ... |
-| `SetUseBitbltCaptureMode`       | 设置使用Bitblt截图，默认启用，速度较快，效果好，但某些系统不支持。       |
-| `SetUseDx11CaptureMode`         | 设置使用DirectX截图，效果较差，但支持win11及以上系统。                |
-| `SetHandle`                     | 设置原神客户端的窗口句柄。                                          |
-| `SetWorldCenter`                | 设置映射目标地图坐标系的原点中心所在天理坐标模型中的坐标。              |
-| `SetWorldScale`                 | 设置映射目标地图坐标系缩放系数与所在天理坐标模型缩放系数的的比值。       |
+| `SetUseBitbltCaptureMode` | Set to use Bitblt capture, enabled by default, faster and better, but some systems do not support it. |
+| `SetUseDx11CaptureMode` | Set to use DirectX capture, the effect is poor, but it supports win11 and above systems. |
+| `SetHandle` | Set the window handle of Genshin Impact client. |
+| `SetWorldCenter` | Set the coordinates in the celestial coordinate model where the origin center of the mapping target map coordinate system is located. |
+| `SetWorldScale` | Sets the ratio of the zoom factor of the map coordinate system of the mapping target to the zoom factor of the celestial coordinate model. |
 | ... | ... |
-| `DebugCapture`                  | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
+| `DebugCapture` | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text. |
 | ... | ... |
-| `GetTransform`                  | （即将删除）获取当前人物所在位置以及角度（箭头朝向）。                  |
-| `GetTransformOfMap`             | 获取当前人物所在位置、角度（箭头朝向）及所在地图区域并重映射坐标区域。    |
-| `GetPosition`                   | （即将删除）获取当前人物所在位置。                                   |
-| `GetPositionOfMap`              | 获取所在位置的所在地图区域并重映射坐标区域。                          |
-| `GetDirection`                  | 获取当前角度（箭头朝向）。                                          |
-| `GetRotation`                   | 获取当前视角方位（视角朝向）。                                      |
-| `GetUID`                        | 获取在屏幕右下角显示的玩家的UID。                                   |
+| `GetTransform` | (to be deleted) Get the current character's position and angle (the direction of the arrow). |
+| `GetTransformOfMap` | Get the current character's position, angle (direction of the arrow) and the map area and remap the coordinate area. |
+| `GetPosition` | (to be deleted) Get the current position of the character. |
+| `GetPositionOfMap` | Get the location map area of ​​the location and remap the coordinate area. |
+| `GetDirection` | Get the current angle (the direction of the arrow). |
+| `GetRotation` | Get the current view orientation (view orientation). |
+| `GetUID` | Get the player's UID displayed in the bottom right corner of the screen. |
 | ... | ... |
-| `GetInfoLoadPicture`            | 获取本地图片中的UID、当前人物所在位置以及角度（箭头朝向）。             |
-| `GetInfoLoadVideo`              | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
+| `GetInfoLoadPicture` | Get the UID in the local picture, the current character's position and the angle (the direction of the arrow). |
+| `GetInfoLoadVideo` | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text. |
 | ... | ... |
-| `GetLastErr`                    | 获取最后设置的错误码。                                             |
-| `GetLastErrStr`                 | （即将删除）获取最后设置的错误信息。                                 |
-| `GetLastErrMsg`                 | 获取最后设置的错误信息。                                           | 
+| `GetLastErr` | Get the last set error code. |
+| `GetLastErrStr` | (To be removed) Get the last set error message. |
+| `GetLastErrMsg` | Get the last set error message. |
 
 
-## 天理坐标模型
+## Tianli coordinate model
 
-由于原神游戏中地图会不断扩展，而且不同的物理区块对应的地图贴图分辨率存在差异，所以直接根据贴图像素坐标系不可取，对未来的扩展不利。
+Since the map in the Genshin Impact game will continue to expand, and there are differences in the resolution of map textures corresponding to different physical blocks, it is not advisable to directly base on the pixel coordinate system of the texture, which is not good for future expansion.
 
-所以目前根据原神2.0版本已有的地图区块，规划出了一个较为合理且易于扩展的地图模型，称为天理坐标模型。
+Therefore, based on the existing map blocks of Genshin Impact 2.0, a more reasonable and easy-to-expandable map model has been planned, called the Tianli coordinate model.
 
-之后所有关于地图坐标的接口都会默认以该坐标系输出。
+After that, all interfaces related to map coordinates will be output in this coordinate system by default.
 
-目前模型以游戏中城镇位置的贴图缩放为标准缩放尺寸，即没有放大缩小的尺寸。
+At present, the model is scaled with the map of the town location in the game as the standard scale size, that is, there is no zoom-in or zoom-out size.
 
-根据该尺寸将其他贴图一同缩放到相同比例下，最后拼合成为总图，此时的缩放系数即为天理坐标模型的缩放系数。
+According to this size, the other textures are scaled to the same scale, and finally combined into a general image, the scaling factor at this time is the scaling factor of the celestial coordinate model.
 
-在该缩放系数下，原神2.1版本中，总图尺寸为
-![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page1.svg)
-之后选择位于璃月的请仙典仪祭坛中心作为世界原点，即`( 0 , 0 )`。
+Under this zoom factor, in Genshin Impact 2.1 version, the total image size is
+![Coordinate Range](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page1.svg)
+After that, select the center of the altar of the rite of worship in Liyue as the origin of the world, namely `( 0 , 0 )`.
 
-之后为了便于Opencv的坐标计算，设定为地图从蒙德到璃月，是横坐标正方向。
+Afterwards, in order to facilitate the coordinate calculation of Opencv, the map is set to be from Mond to Liyue, which is the positive direction of the abscissa.
 
-地图从璃月到稻妻，是纵坐标正方向。
+The map is from Liyue to Inatsuma, and the ordinate is in the positive direction.
 
-即
+which is
 
-![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page2.svg)
+![Coordinate Range](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page2.svg)
 
-### 渊下宫及地下层岩
+### Fuchigo Palace and Underground Rocks
 
-该部分区域未来会重做坐标映射，暂时只做简单说明，即地图右上角为原点，其他照例。
+This part of the area will be redone the coordinate mapping in the future. For the time being, only a brief description will be given, that is, the upper right corner of the map is the origin, and the rest will be as usual.
 
-# 即将更新
+# Coming soon
 
 > `bool getAllInfo(double &x,double &y,double &a,int &uid);`
 
-获取所有信息，得到最新的状态数据
+Get all the information, get the latest status data
