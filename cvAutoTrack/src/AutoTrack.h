@@ -5,13 +5,11 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "LoadGiMatchResource.h"
 #include "FlowWork.h"
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
 #include "capture/Capture.h"
 #include "resources/Resources.h"
-
 
 // 此类是不导出的
 class AutoTrack {
@@ -22,8 +20,6 @@ public:
 
 	bool init();
 	bool uninit();
-	int  GetGpuCount();
-	bool SetGpuDevice(int deviceId = 0);
 	
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
@@ -53,7 +49,6 @@ public:
 	bool DebugCapture();
 
 private:
-	LoadGiMatchResource giMatchResource;
 	Resources& res = Resources::getInstance();
 	ErrorCode& err = ErrorCode::getInstance();
 	FlowWork wPaimon;
