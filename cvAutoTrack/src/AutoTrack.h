@@ -45,6 +45,7 @@ public:
 	bool GetInfoLoadVideo(char * path, char * pathOutFile);
 	int GetLastError();
 	const char* GetLastErrorStr();
+	int GetLastErrMsg(char* msg_buff, int buff_size);
 	bool startServe();
 	bool stopServe();
 

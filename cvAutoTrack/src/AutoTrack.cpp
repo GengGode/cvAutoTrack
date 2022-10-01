@@ -2307,6 +2307,20 @@ const char* AutoTrack::GetLastErrorStr()
 	return nullptr;
 }
 
+int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
+{
+	std::string msg = err.getLastErrorMsg();
+	if (msg.size() > buff_size)
+	{
+		return -1;
+	}
+	else
+	{
+		strcpy_s(msg_buff, msg.size(), msg.c_str());
+		return 0;
+	}
+}
+
 bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
