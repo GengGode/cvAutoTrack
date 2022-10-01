@@ -1,24 +1,24 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "ErrorCode.h"
 
 ErrorCode::ErrorCode()
 {
 	fopen_s(&fptr, "./autoTrack.log", "w+");
 
-	errCodeMsg.push_back("Ö´ĞĞ³É¹¦");
-	errCodeMsg.push_back("Î´³õÊ¼»¯");
-	errCodeMsg.push_back("Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú");
-	errCodeMsg.push_back("´°¿Ú»­ÃæÎª¿Õ");
-	errCodeMsg.push_back("Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã");
-	errCodeMsg.push_back("Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px");
-	errCodeMsg.push_back("Î´ÄÜÆ¥Åäµ½ÅÉÃÉ");
-	errCodeMsg.push_back("ÌØÕ÷µãÊı×é·ÃÎÊÔ½½ç");
-	errCodeMsg.push_back("Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID");
-	errCodeMsg.push_back("ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó");
-	errCodeMsg.push_back("ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ");
-	errCodeMsg.push_back("Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò");
-	errCodeMsg.push_back("´°¿Ú¾ä±úÎª¿Õ");
-	errCodeMsg.push_back("´°¿Ú¾ä±úÊ§Ğ§");
+	errCodeMsg.push_back("æ‰§è¡ŒæˆåŠŸ");
+	errCodeMsg.push_back("æœªåˆå§‹åŒ–");
+	errCodeMsg.push_back("æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„");
+	errCodeMsg.push_back("çª—å£ç”»é¢ä¸ºç©º");
+	errCodeMsg.push_back("æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹");
+	errCodeMsg.push_back("åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px");
+	errCodeMsg.push_back("æœªèƒ½åŒ¹é…åˆ°æ´¾è’™");
+	errCodeMsg.push_back("ç‰¹å¾ç‚¹æ•°ç»„è®¿é—®è¶Šç•Œ");
+	errCodeMsg.push_back("æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID");
+	errCodeMsg.push_back("æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§");
+	errCodeMsg.push_back("æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨");
+	errCodeMsg.push_back("æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ");
+	errCodeMsg.push_back("çª—å£å¥æŸ„ä¸ºç©º");
+	errCodeMsg.push_back("çª—å£å¥æŸ„å¤±æ•ˆ");
 }
 
 ErrorCode::~ErrorCode()
@@ -34,7 +34,7 @@ ErrorCode & ErrorCode::getInstance()
 
 ErrorCode & ErrorCode::operator=(const int & code)
 {
-	string msg = "Î´¶¨Òå´íÎóĞÅÏ¢";
+	string msg = "æœªå®šä¹‰é”™è¯¯ä¿¡æ¯";
 	if (code < errCodeMsg.size())
 	{
 		msg = errCodeMsg[code];
@@ -72,12 +72,12 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	this->errorCode = code;
 	if (code == 0)
 	{
-		//fprintf_s(fptr, "Çå¿Õ´íÎó¶ÑÕ»\n");
+		//fprintf_s(fptr, "æ¸…ç©ºé”™è¯¯å †æ ˆ\n");
 		error_code_msg_list.clear();
 	}
 	else
 	{
-		fprintf_s(fptr, "%s | ´íÎó´úÂë£º%-6d£¬´íÎóĞÅÏ¢£º%s\n", time_stamp().c_str(), code, msg.c_str());
+		fprintf_s(fptr, "%s | é”™è¯¯ä»£ç ï¼š%-6dï¼Œé”™è¯¯ä¿¡æ¯ï¼š%s\n", time_stamp().c_str(), code, msg.c_str());
 		push(code,msg);
 	}
 	
