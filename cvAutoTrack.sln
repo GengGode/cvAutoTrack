@@ -15,7 +15,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST_cvAutoTrack", "impl\C#\TEST_cvAutoTrack\TEST_cvAutoTrack.csproj", "{5A870021-9BE3-4C22-BCA2-15548912AD92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TEST_cvAutoTrack", "impl\C#\TEST_cvAutoTrack\TEST_cvAutoTrack.csproj", "{5A870021-9BE3-4C22-BCA2-15548912AD92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92943FAC-32B9-4416-A05E-5058B414142D} = {92943FAC-32B9-4416-A05E-5058B414142D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

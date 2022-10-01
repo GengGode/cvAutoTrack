@@ -9,4 +9,8 @@
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="echo 拷贝dll到 $(SolutionDir)impl\C#\TEST_cvAutoTrack\bin\$(Configuration)\net6.0&#xD;&#xA;copy $(SolutionDir)x64\$(Configuration)\cvAutoTrack.dll $(SolutionDir)impl\C#\TEST_cvAutoTrack\bin\$(Configuration)\net6.0&#xD;&#xA;echo 拷贝完成" />
+  </Target>
+
 </Project>
