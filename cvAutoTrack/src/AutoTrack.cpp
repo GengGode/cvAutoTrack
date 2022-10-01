@@ -2804,7 +2804,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	cv::Mat template_result;
 	cv::Mat object = split_paimon[3];
 	
-	const double check_match_paimon_params_dx = 0.55;
+	const double check_match_paimon_params_dx = 0.60;
 	static double check_match_paimon_param = check_match_paimon_params;
 	if (capture->mode == Capture::Mode_DirectX)
 	{
