@@ -32,6 +32,9 @@
     <Filter Include="src\resources">
       <UniqueIdentifier>{74b73ab9-2390-4fea-9151-a6c838056cc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{eb43bce9-bfd0-402a-b861-47a6b71b007c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -48,19 +51,7 @@
     <ClInclude Include="src\AutoTrack.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ErrorCode.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FlowWork.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\framework.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kalmanfilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LoadGiMatchResource.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\resource.h">
@@ -96,6 +87,18 @@
     <ClInclude Include="src\resources\Resources.h">
       <Filter>src\resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\Utils.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kalmanfilter.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FlowWork.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ErrorCode.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -105,18 +108,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ErrorCode.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FlowWork.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kalmanfilter.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LoadGiMatchResource.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\pch.cpp">
@@ -131,9 +122,23 @@
     <ClCompile Include="src\capture\bitblt\Bitblt.cpp">
       <Filter>src\capture\bitblt</Filter>
     </ClCompile>
-    <ClCompile Include="src\match\match_minimap.cpp" />
     <ClCompile Include="src\resources\Resources.cpp">
       <Filter>src\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Utils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\match\match_minimap.cpp">
+      <Filter>src\match</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kalmanfilter.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ErrorCode.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FlowWork.cpp">
+      <Filter>src\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
