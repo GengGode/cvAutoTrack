@@ -54,8 +54,6 @@ IDB_BITMAP_STAR         BITMAP                  "resource\\GISTARTEMPLATE.bmp"
 
 IDB_BITMAP_PAIMON       BITMAP                  "resource\\GIPAIMON.bmp"
 
-IDB_BITMAP_UID_         BITMAP                  "resource\\png\\uid_.bmp"
-
 IDB_BITMAP_UID0         BITMAP                  "resource\\png\\uid0.bmp"
 
 IDB_BITMAP_UID1         BITMAP                  "resource\\png\\uid1.bmp"
@@ -76,12 +74,16 @@ IDB_BITMAP_UID8         BITMAP                  "resource\\png\\uid8.bmp"
 
 IDB_BITMAP_UID9         BITMAP                  "resource\\png\\uid9.bmp"
 
+IDB_BITMAP_UID_         BITMAP                  "resource\\png\\uid_.bmp"
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // PNG
 //
 
 IDB_PNG_GIMAP           PNG                     "resource\\GIMAP.png"
+
+IDB_PNG_MINIMAP_CAILB   PNG  				    "resource\\GIMINIMAP_CAILB.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //
