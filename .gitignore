@@ -278,3 +278,5 @@ __pycache__/
 /cvAutoTrack/MatchResource/*
 /cvAT_dllTest/Output.txt
 /cvAutoTrack/resource
+/impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
+/impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt

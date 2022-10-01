@@ -42,12 +42,6 @@
     <ClInclude Include="src\AutoTrack.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Base_SURF.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Base_Thread.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\ErrorCode.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -55,9 +49,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\framework.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GenshinImpactScreen.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Kalmanfilter.h">
@@ -98,12 +89,6 @@
     <ClCompile Include="src\AutoTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Base_SURF.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Base_Thread.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\cvAutoTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -114,9 +99,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\FlowWork.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GenshinImpactScreen.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Kalmanfilter.cpp">

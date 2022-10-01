@@ -2,21 +2,26 @@ LIBRARY CVAUTOTRACK
 
 EXPORTS
 
-init					  @1
-uninit					  @2
-SetHandle				  @3
-SetWorldCenter			  @4
-SetWorldScale			  @5
-GetTransform			  @6
-GetPosition				  @7
-GetDirection			  @8
-GetRotation				  @9
-GetStar					  @10
-GetStarJson				  @11
-GetUID					  @12
-GetInfoLoadPicture		  @13
-GetInfoLoadVideo		  @14
-GetLastErr				  @15
-GetLastErrStr			  @16
-startServe				  @17
-stopServe				  @18
+verison                   @1
+init					  @2
+uninit					  @3
+startServe				  @4
+stopServe				  @5
+SetUseBitbltCaptureMode   @6
+SetUseDx11CaptureMode     @7
+SetHandle				  @8
+SetWorldCenter			  @9
+SetWorldScale			  @10
+DebugCapture              @12
+GetTransformOfMap		  @13
+GetPositionOfMap		  @14
+GetDirection			  @15
+GetRotation				  @16
+GetStar					  @17
+GetStarJson				  @18
+GetUID					  @19
+GetInfoLoadPicture		  @20
+GetInfoLoadVideo		  @21
+GetLastErr				  @22
+GetLastErrStr			  @23
+GetLastErrMsg             @24
