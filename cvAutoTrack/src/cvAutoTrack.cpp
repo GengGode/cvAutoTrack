@@ -104,6 +104,10 @@ const char * __stdcall GetLastErrStr()
 {
 	return _at.GetLastErrorStr();
 }
+bool __stdcall DebugCapture()
+{
+	return _at.DebugCapture();
+}
 bool __stdcall startServe()
 {
 	return _at.startServe();

@@ -48,6 +48,8 @@ public:
 	bool startServe();
 	bool stopServe();
 
+	bool DebugCapture();
+
 private:
 	LoadGiMatchResource giMatchResource;
 	ErrorCode& err = ErrorCode::getInstance();
@@ -213,6 +215,10 @@ private:
 	cv::Mat giUIDRef;
 	cv::Mat giAvatarRef;
 	cv::Mat giStarRef;
+	cv::Rect Area_Paimon_mayArea;
+	cv::Rect Area_Minimap_mayArea;
+	cv::Rect Area_UID_mayArea;
+	cv::Rect Area_Avatar_mayArea;
 	
 private:
 	bool getAutoTrackIsInit();
