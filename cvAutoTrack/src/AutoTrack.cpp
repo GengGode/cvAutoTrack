@@ -606,8 +606,12 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 		case 0:
 		{
-			x = _x;
-			y = _y;
+			_x = _x - 0;
+			_y = _y - 0;
+			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+			pos = TransferUserAxes(pos, 0, 0, 1);
+			x = pos.x;
+			y = pos.y;
 			break;
 		}
 		case 1:
