@@ -104,6 +104,10 @@ const char * __stdcall GetLastErrStr()
 {
 	return _at.GetLastErrorStr();
 }
+int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
+{
+	return _at.GetLastErrMsg(msg_buff, buff_size);
+}
 bool __stdcall DebugCapture()
 {
 	return _at.DebugCapture();
