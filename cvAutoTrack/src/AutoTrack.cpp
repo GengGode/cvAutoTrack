@@ -571,15 +571,13 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 {
 	mapId = 0;
 	cv::Point2d pos_tr;
-	double x_ = 0;
-	double y_ = 0;
-	bool res_pos = GetPosition(x_, y_);
+	bool res_pos = GetPosition(x, y);
 	if (res_pos != true)
 	{
 		return false;
 	}
 
-	pos_tr = TransferUserAxes_Tr(cv::Point2d(x_, y_), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	pos_tr = TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 	pos_tr = TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
 
@@ -606,12 +604,6 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 		case 0:
 		{
-			_x = _x - 0;
-			_y = _y - 0;
-			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TransferUserAxes(pos, 0, 0, 1);
-			x = pos.x;
-			y = pos.y;
 			break;
 		}
 		case 1:
