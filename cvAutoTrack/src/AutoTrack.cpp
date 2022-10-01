@@ -15,7 +15,7 @@ AutoTrack::AutoTrack()
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
-	
+
 	capture = new Bitblt();
 	capture->init();
 
@@ -75,7 +75,7 @@ bool AutoTrack::init()
 		res.install();
 
 		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
-		
+
 		std::string xml_string(res.xmlPtr.ptr);
 		cv::FileStorage fs(xml_string, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 		fs["keypoints"] >> _KeyPointAllMap;
@@ -113,7 +113,7 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 	{
 		return true;
 	}
-	
+
 	delete capture;
 	capture = new Bitblt();
 
@@ -127,15 +127,15 @@ bool AutoTrack::SetUseDx11CaptureMode()
 		capture = new Dxgi();
 		return true;
 	}
-	
-	if(capture->mode == Capture::Mode_DirectX)
+
+	if (capture->mode == Capture::Mode_DirectX)
 	{
 		return true;
 	}
-	
+
 	delete capture;
 	capture = new Dxgi();
-	
+
 	return true;
 }
 
@@ -194,14 +194,14 @@ bool AutoTrack::DebugCapture()
 	cv::Rect Avatar = Area_Avatar_mayArea;
 	Avatar.x += Area_Minimap_mayArea.x;
 	Avatar.y += Area_Minimap_mayArea.y;
-	
+
 	// 绘制avatar Rect
 	cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 	// 绘制UID Rect
 	cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
-	
+
 	bool rel = cv::imwrite("Capture.png", out_info_img);
-	
+
 	if (!rel)
 	{
 		err = { 502,"保存画面失败 " };
@@ -417,7 +417,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 					isOnCity = false;
 
 					cv::Point2d p_on_city_not = SPC(lisx, sumx, lisy, sumy);
-					
+
 					pos = cv::Point2d(p_on_city_not.x + hisP[2].x - someSizeR, p_on_city_not.y + hisP[2].y - someSizeR);
 				}
 			}
@@ -449,7 +449,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			{
 				cv::Ptr<cv::DescriptorMatcher> matcher_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 				std::vector< std::vector<cv::DMatch> > KNN_m_on_city;
-				
+
 				matcher_on_city->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_m_on_city, 2);
 				std::vector<double> lisx;
 				std::vector<double> lisy;
@@ -535,9 +535,9 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			}
 		}
 	}
-	
+
 	cv::Point2d filt_pos;
-	
+
 #define USE_Filt
 #ifdef USE_Filt
 	if (isConveying || !isContinuity)
@@ -1083,7 +1083,7 @@ bool AutoTrack::GetUID(int& uid)
 	{
 		giUIDRef = channels[3];
 	}
-	
+
 	int _uid = 0;
 	int _NumBit[9] = { 0 };
 
@@ -1170,7 +1170,7 @@ bool AutoTrack::GetUID(int& uid)
 	return true;
 
 }
-
+#pragma warning(disable:4100)
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
 	return false;
@@ -1269,7 +1269,7 @@ bool AutoTrack::getGengshinImpactWnd()
 			return false;
 		}
 	}
-	
+
 	capture->setHandle(giHandle);
 
 	return (giHandle != NULL ? true : false);
@@ -1295,7 +1295,7 @@ bool AutoTrack::getGengshinImpactRect()
 	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));
 	int x = giClientSize.width;
 	int y = giClientSize.height;
-	
+
 	double f = 1, fx = 1, fy = 1;
 
 	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
@@ -1732,7 +1732,7 @@ bool AutoTrack::getUIDRefMat()
 	int UID_Rect_y = cvCeil(giFrame.rows - 1080.0 * (1.0 - 0.9755));
 	int UID_Rect_w = cvCeil(1920 * 0.11);
 	int UID_Rect_h = cvCeil(1920 * 0.0938 * 0.11);
-	
+
 	Area_UID_mayArea = cv::Rect(
 		UID_Rect_x,
 		UID_Rect_y,
@@ -1761,7 +1761,7 @@ bool AutoTrack::getAvatarRefMat()
 	int Avatar_Rect_y = cvRound(giMiniMapRef.rows * 0.4);
 	int Avatar_Rect_w = cvRound(giMiniMapRef.cols * 0.2);
 	int Avatar_Rect_h = cvRound(giMiniMapRef.rows * 0.2);
-	
+
 	Area_Avatar_mayArea = cv::Rect(
 		Avatar_Rect_x,
 		Avatar_Rect_y,
@@ -1804,7 +1804,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 
 	cv::Mat template_result;
 	cv::Mat object = split_paimon[3];
-	
+
 	const double check_match_paimon_params_dx = 0.60;
 	static double check_match_paimon_param = check_match_paimon_params;
 	if (capture->mode == Capture::Mode_DirectX)
@@ -1816,7 +1816,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	{
 		check_match_paimon_param = check_match_paimon_params;
 	}
-	
+
 	cv::matchTemplate(object, split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
 
 	double paimon_match_minVal, paimon_match_maxVal;

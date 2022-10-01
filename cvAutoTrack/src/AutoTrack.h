@@ -11,6 +11,7 @@
 #include "capture/Capture.h"
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
+#include "utils/Utils.h"
 
 // ´ËÀàÊÇ²»µ¼³öµÄ
 class AutoTrack {
@@ -294,7 +295,7 @@ using namespace TianLi::Utils;
 //
 //	if (giAvatarRef.empty())
 //	{
-//		err = 204;//æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ
+//		err = 204;//Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò
 //		return false;
 //	}
 //
@@ -325,7 +326,7 @@ using namespace TianLi::Utils;
 //
 //	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 //
-//	std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
+//	std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
 //	cv::Point2f rect[4];
 //
 //	std::vector<cv::Point2d> AvatarKeyPoint;
@@ -335,7 +336,7 @@ using namespace TianLi::Utils;
 //
 //	if (contours.size() != 3)
 //	{
-//		err = 205;//æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§
+//		err = 205;//ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó
 //		//return false;
 //	}
 //	else
@@ -413,7 +414,7 @@ using namespace TianLi::Utils;
 //		maxVal = 0;
 //		minLoc = cv::Point(0, 0);
 //		maxLoc = cv::Point(0, 0);
-//		//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+//		//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 //		cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 //		if (maxVal > 0.75)
 //		{
@@ -439,7 +440,7 @@ using namespace TianLi::Utils;
 //
 //					double minVali, maxVali;
 //					cv::Point minLoci, maxLoci;
-//					//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+//					//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 //					cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 //
 //					tmplis[i] = maxVali;
@@ -467,7 +468,7 @@ using namespace TianLi::Utils;
 //		}
 //		if (_uid == 0)
 //		{
-//			err = 207;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
+//			err = 207;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
 //			//return false;
 //		}
 //		uid = _uid;
@@ -478,11 +479,11 @@ using namespace TianLi::Utils;
 //
 //	if (!is_init_end)
 //	{
-//		init();//åˆå§‹åŒ–
+//		init();//³õÊ¼»¯
 //	}
 //	if (img_object.empty())
 //	{
-//		err = 208;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
+//		err = 208;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
 //		return false;
 //	}
 //
@@ -541,10 +542,10 @@ using namespace TianLi::Utils;
 //
 //				if (min(lisx.size(), lisy.size()) <= 4)
 //				{
-//					//æœ‰å¯èƒ½å¤„äºåŸé•‡ä¸­
+//					//ÓĞ¿ÉÄÜ´¦ÓÚ³ÇÕòÖĞ
 //
 //					/***********************/
-//					//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
+//					//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
 //					img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 //					//Mat minMap(img_object);
 //
@@ -612,9 +613,9 @@ using namespace TianLi::Utils;
 //		}
 //		else
 //		{
-//			//åœ¨åŸé•‡ä¸­
+//			//ÔÚ³ÇÕòÖĞ
 //				/***********************/
-//				//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
+//				//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
 //			cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 //			cv::Mat minMap(img_object);
 //
@@ -692,7 +693,7 @@ using namespace TianLi::Utils;
 //
 //		if (KeyPointMiniMap.size() == 0)
 //		{
-//			err = { 4, "å°åœ°å›¾æœªèƒ½è®¡ç®—å‡ºå¯è¯†åˆ«ç‰¹å¾ç‚¹" };//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
+//			err = { 4, "Ğ¡µØÍ¼Î´ÄÜ¼ÆËã³ö¿ÉÊ¶±ğÌØÕ÷µã" };//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
 //			return false;
 //		}
 //		else
@@ -713,7 +714,7 @@ using namespace TianLi::Utils;
 //
 //			if (lisx.size() == 0 || lisy.size() == 0)
 //			{
-//				err = { 4, "æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹" };
+//				err = { 4, "Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã" };
 //				return false;
 //			}
 //			else
@@ -777,7 +778,7 @@ using namespace TianLi::Utils;
 //#ifdef TestJson
 //
 //#else
-//	fprintf_s(fpSave, "{\"curveName\":\"æ–°çš„ç”»å¸ƒ\",\"curve_list\":[{\"lineName\":\"æ–°çš„çº¿æ¡\",\"curve_poi\":[");
+//	fprintf_s(fpSave, "{\"curveName\":\"ĞÂµÄ»­²¼\",\"curve_list\":[{\"lineName\":\"ĞÂµÄÏßÌõ\",\"curve_poi\":[");
 //#endif
 //
 //	int uid = 0;
@@ -849,7 +850,7 @@ using namespace TianLi::Utils;
 //
 //		if (giAvatarRef.empty())
 //		{
-//			//err = 204;//æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ
+//			//err = 204;//Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò
 //			//break;// return false;
 //		}
 //		else
@@ -881,7 +882,7 @@ using namespace TianLi::Utils;
 //
 //			cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 //
-//			std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
+//			std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
 //			cv::Point2f rect[4];
 //
 //			std::vector<cv::Point2d> AvatarKeyPoint;
@@ -891,7 +892,7 @@ using namespace TianLi::Utils;
 //
 //			if (contours.size() != 3)
 //			{
-//				//err = 205;//æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§
+//				//err = 205;//ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó
 //				//break;//return false;
 //			}
 //			else
@@ -971,7 +972,7 @@ using namespace TianLi::Utils;
 //			maxVal = 0;
 //			minLoc = cv::Point(0, 0);
 //			maxLoc = cv::Point(0, 0);
-//			//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+//			//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 //			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 //			if (maxVal > 0.75)
 //			{
@@ -997,7 +998,7 @@ using namespace TianLi::Utils;
 //
 //						double minVali, maxVali;
 //						cv::Point minLoci, maxLoci;
-//						//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
+//						//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
 //						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 //
 //						tmplis[i] = maxVali;
@@ -1025,7 +1026,7 @@ using namespace TianLi::Utils;
 //			}
 //			if (_uid == 0)
 //			{
-//				//err = 207;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
+//				//err = 207;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
 //				//return false;
 //			}
 //			uid = _uid;
@@ -1037,7 +1038,7 @@ using namespace TianLi::Utils;
 //
 //		if (!is_init_end)
 //		{
-//			init();//åˆå§‹åŒ–
+//			init();//³õÊ¼»¯
 //		}
 //		if (img_object.empty())
 //		{
@@ -1099,10 +1100,10 @@ using namespace TianLi::Utils;
 //
 //					if (min(lisx.size(), lisy.size()) <= 4)
 //					{
-//						//æœ‰å¯èƒ½å¤„äºåŸé•‡ä¸­
+//						//ÓĞ¿ÉÄÜ´¦ÓÚ³ÇÕòÖĞ
 //
 //						/***********************/
-//						//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
+//						//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
 //						img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 //						//Mat minMap(img_object);
 //
@@ -1170,9 +1171,9 @@ using namespace TianLi::Utils;
 //			}
 //			else
 //			{
-//				//åœ¨åŸé•‡ä¸­
+//				//ÔÚ³ÇÕòÖĞ
 //					/***********************/
-//					//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
+//					//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
 //				cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 //				cv::Mat minMap(img_object);
 //
@@ -1250,7 +1251,7 @@ using namespace TianLi::Utils;
 //
 //			if (KeyPointMiniMap.size() == 0)
 //			{
-//				err = { 4, "å°åœ°å›¾æœªèƒ½è®¡ç®—å‡ºå¯è¯†åˆ«ç‰¹å¾ç‚¹" };//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
+//				err = { 4, "Ğ¡µØÍ¼Î´ÄÜ¼ÆËã³ö¿ÉÊ¶±ğÌØÕ÷µã" };//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
 //				return false;
 //			}
 //			else
@@ -1271,7 +1272,7 @@ using namespace TianLi::Utils;
 //
 //				if (lisx.size() == 0 || lisy.size() == 0)
 //				{
-//					err = { 4, "æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹" };
+//					err = { 4, "Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã" };
 //					return false;
 //				}
 //				else
