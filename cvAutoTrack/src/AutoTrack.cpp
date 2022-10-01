@@ -1461,9 +1461,26 @@ bool AutoTrack::getGengshinImpactScreen()
 			giFrame = giFrame(cv::Rect(x, y, w, h));
 		}
 		
+		cv::resize(giFrame, genshin_screen.img_screen, genshin_handle.size_frame);
+
+		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
+
+		// 获取maybe区域
+		genshin_screen.img_paimon_maybe = giFrame(genshin_handle.rect_paimon_maybe);
+		genshin_screen.img_minimap_cailb_maybe = giFrame(genshin_handle.rect_minimap_cailb_maybe);
+		genshin_screen.img_minimap_maybe = giFrame(genshin_handle.rect_minimap_maybe);
+		genshin_screen.img_uid_maybe = giFrame(genshin_handle.rect_uid_maybe);
+		genshin_screen.img_left_give_items_maybe = giFrame(genshin_handle.rect_left_give_items_maybe);
+		genshin_screen.img_right_pick_items_maybe = giFrame(genshin_handle.rect_right_pick_items_maybe);
+
+		genshin_screen.config.rect_paimon_maybe = genshin_handle.rect_paimon_maybe;
+		genshin_screen.config.rect_minimap_cailb_maybe = genshin_handle.rect_minimap_cailb_maybe;
+		genshin_screen.config.rect_minimap_maybe = genshin_handle.rect_minimap_maybe;
 
 
-		
+		genshin_screen.img_uid = giFrame(genshin_handle.rect_uid);
+
+
 		return true;
 	}
 	else
@@ -1629,9 +1646,37 @@ bool AutoTrack::getMiniMapRefMat()
 
 	giMiniMapRef = giFrame(Area_Minimap_mayArea);
 
+	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
+
+	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
+	{
+		err = { 40001,"paimon not find" };
+		return false;
+	}
+
+	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
+	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
+
+	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
+	{
+		err = { 40002,"minimap cailb not find" };
+		return false;
+	}
+
+	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
+
+	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
+	{
+		err = { 40003, "splite minimap 失败" };
+		return false;
+	}
+
+	giMiniMapRef = genshin_minimap.img_minimap;
+
+
 #ifdef _DEBUG
-	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
-	cv::imshow("MiniMap", giMiniMapRef);
+		cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
+		cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(1);
 	//std::cout << "Show MiniMap" << std::endl;
 #endif
