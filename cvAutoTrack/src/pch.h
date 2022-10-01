@@ -24,6 +24,7 @@
 #include <winrt/Windows.Graphics.Capture.h>
 #include <winrt/Windows.Graphics.DirectX.h>
 #include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
+#include <winrt/windows.foundation.metadata.h>
 
 #include <windows.ui.composition.interop.h>
 #include <DispatcherQueue.h>

@@ -54,22 +54,37 @@ bool Dxgi::init()
             DirectXPixelFormat::B8G8R8A8UIntNormalized,
             2,
             size);       
-        //m_session.IsBorderRequired(false);
-        //m_session.IsCursorCaptureEnabled(false);
+		
         m_session = m_framePool.CreateCaptureSession(m_item);
-        //winrt::Windows::Graphics::Capture::IGraphicsCaptureSession3 session3 = m_session;
-		//session3.IsBorderRequired(false);
-        //auto unpl = get_unknown(m_session);
-
+		
+        auto f = [=] {
+            try {
+                return winrt::Windows::Foundation::Metadata::ApiInformation::
+                    IsPropertyPresent(
+                        L"Windows.Graphics.Capture.GraphicsCaptureSession",
+                        L"IsBorderRequired");
+            }
+            catch (const winrt::hresult_error& err) {
+                return false;
+            }
+            catch (...) {
+                return false;
+            }
+        };
+        if (f())
+        {
+            winrt::Windows::Graphics::Capture::GraphicsCaptureAccess::
+                RequestAccessAsync(
+                    winrt::Windows::Graphics::Capture::
+                    GraphicsCaptureAccessKind::Borderless)
+                .get();
+            m_session.IsBorderRequired(false);
+            m_session.IsCursorCaptureEnabled(false);
+        }
 
         m_lastSize = size;
         //m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
 
-        //if (m_closed.load() == true)
-        //{
-        //    throw winrt::hresult_error(RO_E_CLOSED);
-        //}
-		// m_session.StartCapture();
         StartCapture();
 	
     return true;
