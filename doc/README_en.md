@@ -84,41 +84,41 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 # function directory
 
 | Interface Name | Interface Function |
-| ----------------------------------------- | ----------------- -------------------------------------------------------- |
-| `verison` | Get the Dll version. |
-| `init` | Initializes the runtime environment. |
-| `uninit` | Unload the memory occupied by initialization. |
-| `startServe` | (Incomplete) Start the service, start the loop detection thread. |
-| `stopServe` | (Not done) Stops the service, stops the loop detection thread. |
-| ... | ... |
-| `GetGpuCount` | (To be removed) Gets the number of GPU devices available to the machine. |
-| `SetGpuDevice` | (To be removed) Sets the enabled GPU device. |
-| ... | ... |
-| `SetUseBitbltCaptureMode` | Set to use Bitblt capture, enabled by default, faster and better, but some systems do not support it. |
-| `SetUseDx11CaptureMode` | Set to use DirectX capture, the effect is poor, but it supports win11 and above systems. |
-| `SetHandle` | Set the window handle of Genshin Impact client. |
-| `SetWorldCenter` | Set the coordinates in the celestial coordinate model where the origin center of the mapping target map coordinate system is located. |
-| `SetWorldScale` | Sets the ratio of the zoom factor of the map coordinate system of the mapping target to the zoom factor of the celestial coordinate model. |
-| ... | ... |
-| `DebugCapture` | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text. |
-| ... | ... |
-| `GetTransform` | (to be deleted) Get the current character's position and angle (the direction of the arrow). |
-| `GetTransformOfMap` | Get the current character's position, angle (direction of the arrow) and the map area and remap the coordinate area. |
-| `GetPosition` | (to be deleted) Get the current position of the character. |
-| `GetPositionOfMap` | Get the location map area of ​​the location and remap the coordinate area. |
-| `GetDirection` | Get the current angle (the direction of the arrow). |
-| `GetRotation` | Get the current view orientation (view orientation). |
-| `GetUID` | Get the player's UID displayed in the bottom right corner of the screen. |
-| ... | ... |
-| `GetInfoLoadPicture` | Get the UID in the local picture, the current character's position and the angle (the direction of the arrow). |
-| `GetInfoLoadVideo` | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text. |
-| ... | ... |
-| `GetLastErr` | Get the last set error code. |
-| `GetLastErrStr` | (To be removed) Get the last set error message. |
-| `GetLastErrMsg` | Get the last set error message. |
+| ----------------------------------------- | ------------------------------------------------------------------------- |
+| `verison`                  | Get the Dll version.                                                                                                                            |
+| `init`                     | Initializes the runtime environment.                                                                                                            |
+| `uninit`                   | Unload the memory occupied by initialization.                                                                                                   |
+| `startServe`               | (Incomplete) Start the service, start the loop detection thread.                                                                                |
+| `stopServe`                | (Not done) Stops the service, stops the loop detection thread.                                                                                  |
+| ... | ... |                                                                                                                                                                  |
+| `GetGpuCount`              | (To be removed) Gets the number of GPU devices available to the machine.                                                                        |
+| `SetGpuDevice`             | (To be removed) Sets the enabled GPU device.                                                                                                    |
+| ... | ... |                                                                                                                                                                  |
+| `SetUseBitbltCaptureMode`  | Set to use Bitblt capture, enabled by default, faster and better, but some systems do not support it.                                           |
+| `SetUseDx11CaptureMode`    | Set to use DirectX capture, the effect is poor, but it supports win11 and above systems.                                                        |
+| `SetHandle`                | Set the window handle of Genshin Impact client.                                                                                                 |
+| `SetWorldCenter`           | Set the coordinates in the celestial coordinate model where the origin center of the mapping target map coordinate system is located.           |
+| `SetWorldScale`            | Sets the ratio of the zoom factor of the map coordinate system of the mapping target to the zoom factor of the celestial coordinate model.      |
+| ... | ... |                                                                                                                                                                  |
+| `DebugCapture`             | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text.                                 |
+| ... | ... |                                                                                                                                                                  |
+| `GetTransform`             | (to be deleted) Get the current character's position and angle (the direction of the arrow).                                                    |
+| `GetTransformOfMap`        | Get the current character's position, angle (direction of the arrow) and the map area and remap the coordinate area.                            |
+| `GetPosition`              | (to be deleted) Get the current position of the character.                                                                                      |
+| `GetPositionOfMap`         | Get the location map area of ​​the location and remap the coordinate area.                                                                        |
+| `GetDirection`             | Get the current angle (the direction of the arrow).                                                                                             |
+| `GetRotation`              | Get the current view orientation (view orientation).                                                                                            |
+| `GetUID`                   | Get the player's UID displayed in the bottom right corner of the screen.                                                                        |
+| ... | ... |                                                                                                                                                                  |
+| `GetInfoLoadPicture`       | Get the UID in the local picture, the current character's position and the angle (the direction of the arrow).                                  |
+| `GetInfoLoadVideo`         | Get the UID, current character position and angle (arrow direction) in the local video and save it to the text.                                 |
+| ... | ... |                                                                                                                                                                  |
+| `GetLastErr`               | Get the last set error code.                                                                                                                    |
+| `GetLastErrStr`            | (To be removed) Get the last set error message.                                                                                                 |
+| `GetLastErrMsg`            | Get the last set error message.                                                                                                                 |
+                          
 
-
-## Tianli coordinate model
+## Tianli coordinate model                                                                                                                                                     
 
 Since the map in the Genshin Impact game will continue to expand, and there are differences in the resolution of map textures corresponding to different physical blocks, it is not advisable to directly base on the pixel coordinate system of the texture, which is not good for future expansion.
 
