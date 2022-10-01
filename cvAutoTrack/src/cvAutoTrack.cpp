@@ -28,6 +28,7 @@ int __stdcall GetGpuCount()
 {
 	return false;
 }
+#pragma warning(disable:4100)
 bool __stdcall SetGpuDevice(int deviceId = 0)
 {
 	return false;
