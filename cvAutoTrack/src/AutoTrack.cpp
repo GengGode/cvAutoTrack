@@ -189,6 +189,34 @@ bool AutoTrack::stopServe()
 	return false;
 }
 
+bool AutoTrack::DebugCapture()
+{
+	if (giFrame.empty())
+	{
+		err = { 501,"画面为空" };
+		return false;
+	}
+	cv::Mat out_info_img = giFrame.clone();
+	// 绘制paimon Rect
+	cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
+	// 绘制miniMap Rect
+	cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
+	// 绘制avatar Rect
+	cv::rectangle(out_info_img, Area_Avatar_mayArea, cv::Scalar(0, 0, 255), 2);
+	// 绘制UID Rect
+	cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+	
+	bool rel = cv::imwrite("Capture.png", out_info_img);
+	
+	if (!rel)
+	{
+		err = { 502,"保存画面失败 " };
+		return false;
+	}
+	err = 0;
+	return true;
+}
+
 bool AutoTrack::GetTransform(float& x, float& y, float& a)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
@@ -2543,7 +2571,7 @@ bool AutoTrack::getPaimonRefMat()
 	int paimon_mayArea_width = static_cast<int>(x * 0.10);
 	int paimon_mayArea_height = static_cast<int>(y * 0.10);
 	// 派蒙可能性区域
-	cv::Rect Area_Paimon_mayArea(
+	Area_Paimon_mayArea = cv::Rect(
 		paimon_mayArea_left,
 		paimon_mayArea_top,
 		paimon_mayArea_width,
@@ -2623,8 +2651,13 @@ bool AutoTrack::getMiniMapRefMat()
 		MiniMap_Rect_w = cvRound(1920 * 0.11);
 		MiniMap_Rect_h = cvRound(1920 * 0.11);
 	}
+	Area_Minimap_mayArea = cv::Rect(
+		MiniMap_Rect_x,
+		MiniMap_Rect_y,
+		MiniMap_Rect_w,
+		MiniMap_Rect_h);
 
-	giMiniMapRef = giFrame(cv::Rect(MiniMap_Rect_x, MiniMap_Rect_y, MiniMap_Rect_w, MiniMap_Rect_h));
+	giMiniMapRef = giFrame(Area_Minimap_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
@@ -2684,8 +2717,14 @@ bool AutoTrack::getUIDRefMat()
 	int UID_Rect_y = cvCeil(giFrame.rows - 1080.0 * (1.0 - 0.9755));
 	int UID_Rect_w = cvCeil(1920 * 0.0938);
 	int UID_Rect_h = cvCeil(UID_Rect_w * 0.11);
+	
+	Area_UID_mayArea = cv::Rect(
+		UID_Rect_x,
+		UID_Rect_y,
+		UID_Rect_w,
+		UID_Rect_h);
 
-	giUIDRef = giFrame(cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h));
+	giUIDRef = giFrame(Area_UID_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
@@ -2707,8 +2746,14 @@ bool AutoTrack::getAvatarRefMat()
 	int Avatar_Rect_y = cvRound(giMiniMapRef.rows * 0.4);
 	int Avatar_Rect_w = cvRound(giMiniMapRef.cols * 0.2);
 	int Avatar_Rect_h = cvRound(giMiniMapRef.rows * 0.2);
+	
+	Area_Avatar_mayArea = cv::Rect(
+		Avatar_Rect_x,
+		Avatar_Rect_y,
+		Avatar_Rect_w,
+		Avatar_Rect_h);
 
-	giAvatarRef = giMiniMapRef(cv::Rect(Avatar_Rect_x, Avatar_Rect_y, Avatar_Rect_w, Avatar_Rect_h));
+	giAvatarRef = giMiniMapRef(Area_Avatar_mayArea);
 
 #ifdef _DEBUG
 	cv::namedWindow("Avatar", cv::WINDOW_FREERATIO);
