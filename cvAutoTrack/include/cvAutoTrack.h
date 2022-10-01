@@ -1,21 +1,24 @@
 ﻿#pragma once
-
 #ifdef CVAUTOTRACK_EXPORTS
 #define CVAUTOTRACK_PORT __declspec(dllexport)
 #else
 #define CVAUTOTRACK_PORT __declspec(dllimport)
 #endif
-
 #define CVAUTOTRACK_CALL  
 //__stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
+
 
 extern "C" CVAUTOTRACK_API bool verison(char* versionBuff);
 
 extern "C" CVAUTOTRACK_API bool init();
 extern "C" CVAUTOTRACK_API bool uninit();
-extern "C" CVAUTOTRACK_API int  GetGpuCount();
-extern "C" CVAUTOTRACK_API bool SetGpuDevice(int deviceId);
+
+extern "C" CVAUTOTRACK_API bool startServe();
+extern "C" CVAUTOTRACK_API bool stopServe();
+
+extern "C" CVAUTOTRACK_API __declspec(deprecated) int  GetGpuCount();
+extern "C" CVAUTOTRACK_API __declspec(deprecated) bool SetGpuDevice(int deviceId);
 
 extern "C" CVAUTOTRACK_API bool SetUseBitbltCaptureMode();
 extern "C" CVAUTOTRACK_API bool SetUseDx11CaptureMode();
@@ -39,15 +42,5 @@ extern "C" CVAUTOTRACK_API bool GetInfoLoadVideo(char* path, char* pathOutFile);
 extern "C" CVAUTOTRACK_API int  GetLastErr();
 extern "C" CVAUTOTRACK_API const char* GetLastErrStr();
 
-extern "C" CVAUTOTRACK_API bool startServe();
-extern "C" CVAUTOTRACK_API bool stopServe();
 
 
-
-#ifdef _DEBUG
-
-//extern "C" CVAUTOTRACK_API bool test(char *str);
-
-//void testLocalVideo(std::string path);
-
-#endif
