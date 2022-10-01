@@ -65,7 +65,7 @@ bool Dxgi::init()
                         L"Windows.Graphics.Capture.GraphicsCaptureSession",
                         L"IsBorderRequired");
             }
-            catch (const winrt::hresult_error& err) {
+            catch (const winrt::hresult_error&) {
                 return false;
             }
             catch (...) {
