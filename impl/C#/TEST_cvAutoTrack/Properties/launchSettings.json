@@ -1,8 +1,7 @@
 {
   "profiles": {
     "TEST_cvAutoTrack": {
-      "commandName": "Project",
-      "workingDirectory": "$(SolutionDir)x64\\$(Configuration)\\"
+      "commandName": "Project"
     }
   }
 }
