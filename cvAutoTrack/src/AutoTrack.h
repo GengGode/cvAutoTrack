@@ -10,6 +10,7 @@
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
 #include "capture/Capture.h"
+#include "resources/Resources.h"
 
 
 // 此类是不导出的
@@ -53,6 +54,7 @@ public:
 
 private:
 	LoadGiMatchResource giMatchResource;
+	Resources& res = Resources::getInstance();
 	ErrorCode& err = ErrorCode::getInstance();
 	FlowWork wPaimon;
 	FlowWork wMiniMap;
@@ -148,25 +150,6 @@ private:
 
 
 private:
-#ifdef oldValue
-	//cv::Ptr<cv::xfeatures2d::SURF>
-	void* _detectorAllMap = nullptr;
-	//cv::Ptr<cv::xfeatures2d::SURF>
-	void* _detectorSomeMap = nullptr;
-	//std::vector<cv::KeyPoint>
-	void* _KeyPointAllMap = nullptr;
-	//std::vector<cv::KeyPoint>
-	void* _KeyPointSomeMap = nullptr;
-	//std::vector<cv::KeyPoint>
-	void* _KeyPointMiniMap = nullptr;
-	//cv::Mat
-	void* _DataPointAllMap = nullptr;
-	//cv::Mat
-	void* _DataPointSomeMap = nullptr;
-	//cv::Mat
-	void* _DataPointMiniMap = nullptr;
-#else
-	//
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
 	//
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap ;
@@ -182,8 +165,6 @@ private:
 	cv::Mat _DataPointSomeMap;
 	//cv::Mat
 	cv::Mat _DataPointMiniMap;
-#endif
-
 private:
 	bool isOnCity = false;
 	bool isContinuity = false;
