@@ -1,4 +1,4 @@
-version: '6.4.{build}'
+version: '6.5.{build}'
 os: Visual Studio 2019
 configuration: Release
 platform:
@@ -41,13 +41,14 @@ after_build:
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.lib $env:MyProjectDir\x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
+    - ps: cp -r $env:MyProjectDir\cvAutoTrack\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
     
     - echo %APPVEYOR_BUILD_VERSION% >version.tag
-    - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -d ' ' -f1 >md5sum.txt
+    - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -d '\' -f2 >%ProjectName%.md5
     - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
     
     - appveyor PushArtifact version.tag
-    - appveyor PushArtifact md5sum.txt
+    - appveyor PushArtifact %ProjectName%.md5
     - appveyor PushArtifact cvAutoTrack.7z
     
 #artifacts:
