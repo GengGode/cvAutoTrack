@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
@@ -18,6 +19,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST_cvAutoTrack_CSharp", "impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj", "{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{92943FAC-32B9-4416-A05E-5058B414142D} = {92943FAC-32B9-4416-A05E-5058B414142D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{CF359DD3-7891-4621-9A9E-4A006C7ED974}"
+	ProjectSection(SolutionItems) = preProject
+		doc\README_en.md = doc\README_en.md
+		doc\函数手册.md = doc\函数手册.md
 	EndProjectSection
 EndProject
 Global
