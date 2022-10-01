@@ -44,7 +44,7 @@ after_build:
     - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
     
     - echo %APPVEYOR_BUILD_VERSION% >version.tag
-    - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -d '\' -f2 >%ProjectName%.md5
+    - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -c 2-34 >%ProjectName%.md5
     - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
     
     - appveyor PushArtifact version.tag
