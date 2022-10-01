@@ -69,16 +69,14 @@ bool AutoTrack::init()
 {
 	if (!is_init_end)
 	{
-		giMatchResource.install();
+		res.install();
 
 		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
 		
-		std::string xml_string(giMatchResource.xmlPtr.ptr);
+		std::string xml_string(res.xmlPtr.ptr);
 		cv::FileStorage fs(xml_string, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 		fs["keypoints"] >> _KeyPointAllMap;
 		fs["descriptors"] >> _DataPointAllMap;
-		
-		//_detectorAllMap->detectAndCompute(giMatchResource.MapTemplate, cv::noArray(), _KeyPointAllMap, _DataPointAllMap);
 
 		is_init_end = true;
 	}
@@ -94,7 +92,7 @@ bool AutoTrack::uninit()
 		_KeyPointAllMap.reserve(0);
 		_DataPointAllMap.release();
 
-		giMatchResource.release();
+		res.release();
 
 		is_init_end = false;
 	}
@@ -286,7 +284,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 	getMiniMapRefMat();
 
-	cv::Mat img_scene(giMatchResource.MapTemplate);
+	cv::Mat img_scene(res.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
 	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
@@ -753,7 +751,7 @@ bool AutoTrack::GetRotation(double& a)
 
 	getMiniMapRefMat();
 
-	//cv::Mat img_scene(giMatchResource.MapTemplate);
+	//cv::Mat img_scene(res.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
 
 	if (img_object.channels() != 4)
@@ -894,7 +892,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			giStarRef, cv::COLOR_RGBA2GRAY);
 
 
-		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+		matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
 		//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
@@ -909,13 +907,13 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			isStarVisible = true;
 			pos.push_back(cv::Point2d(maxLoc) -
 				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-				cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 		}
 
 		while (isLoopMatch)
 		{
-			giStarRef(cv::Rect(maxLoc.x, maxLoc.y, giMatchResource.StarTemplate.cols, giMatchResource.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
-			matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+			giStarRef(cv::Rect(maxLoc.x, maxLoc.y, res.StarTemplate.cols, res.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
+			matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 			minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
 			//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
@@ -929,7 +927,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			{
 				pos.push_back(cv::Point2d(maxLoc) -
 					cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-					cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+					cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 			}
 
 			MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
@@ -987,7 +985,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		giStarRef, cv::COLOR_RGBA2GRAY);
 
 
-	matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+	matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 	minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
 	//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
@@ -1002,13 +1000,13 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		isStarVisible = true;
 		pos.push_back(cv::Point2d(maxLoc) -
 			cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-			cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+			cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 	}
 
 	while (isLoopMatch)
 	{
-		giStarRef(cv::Rect(maxLoc.x, maxLoc.y, giMatchResource.StarTemplate.cols, giMatchResource.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
-		matchTemplate(giMatchResource.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
+		giStarRef(cv::Rect(maxLoc.x, maxLoc.y, res.StarTemplate.cols, res.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
+		matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
 		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
 #ifdef _DEBUG
 		//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
@@ -1021,7 +1019,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		{
 			pos.push_back(cv::Point2d(maxLoc) -
 				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-				cv::Point2d(giMatchResource.StarTemplate.cols / 2, giMatchResource.StarTemplate.rows / 2));
+				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 		}
 
 		MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
@@ -1089,7 +1087,7 @@ bool AutoTrack::GetUID(int& uid)
 	int bitCount = 1;
 	cv::Mat matchTmp;
 	cv::Mat Roi;
-	cv::Mat checkUID = giMatchResource.UID;
+	cv::Mat checkUID = res.UID;
 
 #ifdef _DEBUG
 	//if (checkUID.rows > Roi.rows)
@@ -1121,13 +1119,13 @@ bool AutoTrack::GetUID(int& uid)
 			_NumBit[p] = 0;
 			for (int i = 0; i < 10; i++)
 			{
-				cv::Rect r(x_uid_, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
+				cv::Rect r(x_uid_, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
 				if (x_uid_ + r.width > giUIDRef.cols)
 				{
-					r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
+					r = cv::Rect(giUIDRef.cols - res.UIDnumber[i].cols - 2, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);
 				}
 
-				cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
+				cv::Mat numCheckUID = res.UIDnumber[i];
 				Roi = giUIDRef(r);
 
 				cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
@@ -1187,7 +1185,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 	cv::Mat paimonTemplate;
 
 
-	giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
+	res.PaimonTemplate.copyTo(paimonTemplate);
 
 	cv::Mat tmp;
 	//	giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
@@ -1221,7 +1219,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 
 	getMiniMapRefMat();
 
-	cv::Mat img_scene(giMatchResource.MapTemplate);
+	cv::Mat img_scene(res.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
 	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
@@ -1334,7 +1332,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 		int bitCount = 1;
 		cv::Mat matchTmp;
 		cv::Mat Roi;
-		cv::Mat checkUID = giMatchResource.UID;
+		cv::Mat checkUID = res.UID;
 
 #ifdef _DEBUG
 		//if (checkUID.rows > Roi.rows)
@@ -1368,13 +1366,13 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 				_NumBit[p] = 0;
 				for (int i = 0; i < 10; i++)
 				{
-					cv::Rect r(x_uid_, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
+					cv::Rect r(x_uid_, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
 					if (x_uid_ + r.width > giUIDRef.cols)
 					{
-						r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
+						r = cv::Rect(giUIDRef.cols - res.UIDnumber[i].cols - 2, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);
 					}
 
-					cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
+					cv::Mat numCheckUID = res.UIDnumber[i];
 					Roi = giUIDRef(r);
 
 					cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
@@ -1744,7 +1742,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 
 		cv::Mat paimonTemplate;
 
-		giMatchResource.PaimonTemplate.copyTo(paimonTemplate);
+		res.PaimonTemplate.copyTo(paimonTemplate);
 
 		cv::Mat tmp;
 		giPaimonRef = giFrame(cv::Rect(0, 0, cvCeil(giFrame.cols / 20), cvCeil(giFrame.rows / 10)));
@@ -1777,7 +1775,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 
 		getMiniMapRefMat();
 
-		cv::Mat img_scene(giMatchResource.MapTemplate);
+		cv::Mat img_scene(res.MapTemplate);
 		cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
 
 		cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
@@ -1892,7 +1890,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 			int bitCount = 1;
 			cv::Mat matchTmp;
 			cv::Mat Roi;
-			cv::Mat checkUID = giMatchResource.UID;
+			cv::Mat checkUID = res.UID;
 
 #ifdef _DEBUG
 			//if (checkUID.rows > Roi.rows)
@@ -1926,13 +1924,13 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 					_NumBit[p] = 0;
 					for (int i = 0; i < 10; i++)
 					{
-						cv::Rect r(x_uid_, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
+						cv::Rect r(x_uid_, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);//180-46/9->140/9->16->16*9=90+54=144
 						if (x_uid_ + r.width > giUIDRef.cols)
 						{
-							r = cv::Rect(giUIDRef.cols - giMatchResource.UIDnumber[i].cols - 2, y_uid_, giMatchResource.UIDnumber[i].cols + 2, giUIDRef.rows);
+							r = cv::Rect(giUIDRef.cols - res.UIDnumber[i].cols - 2, y_uid_, res.UIDnumber[i].cols + 2, giUIDRef.rows);
 						}
 
-						cv::Mat numCheckUID = giMatchResource.UIDnumber[i];
+						cv::Mat numCheckUID = res.UIDnumber[i];
 						Roi = giUIDRef(r);
 
 						cv::matchTemplate(Roi, numCheckUID, matchTmp, cv::TM_CCOEFF_NORMED);
@@ -2721,7 +2719,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	static bool is_first = true;
 	if (is_first)
 	{
-		giMatchResource.PaimonTemplate.copyTo(paimon_template);
+		res.PaimonTemplate.copyTo(paimon_template);
 		cv::split(paimon_template, split_paimon_template);
 		is_first = false;
 	}
