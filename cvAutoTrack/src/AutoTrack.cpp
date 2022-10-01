@@ -2665,10 +2665,10 @@ bool AutoTrack::getUIDRefMat()
 
 	}
 
-	int UID_Rect_x = cvCeil(giFrame.cols - giFrame.cols * (1.0 - 0.875));
+	int UID_Rect_x = cvCeil(giFrame.cols - giFrame.cols * (1.0 - 0.865));
 	int UID_Rect_y = cvCeil(giFrame.rows - 1080.0 * (1.0 - 0.9755));
-	int UID_Rect_w = cvCeil(1920 * 0.0938);
-	int UID_Rect_h = cvCeil(UID_Rect_w * 0.11);
+	int UID_Rect_w = cvCeil(1920 * 0.11);
+	int UID_Rect_h = cvCeil(1920 * 0.0938 * 0.11);
 	
 	Area_UID_mayArea = cv::Rect(
 		UID_Rect_x,
