@@ -39,6 +39,8 @@ extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
 extern "C" CVAUTOTRACK_API bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 extern "C" CVAUTOTRACK_API bool GetInfoLoadVideo(char* path, char* pathOutFile);
 
+extern "C" CVAUTOTRACK_API bool DebugCapture();
+
 extern "C" CVAUTOTRACK_API int  GetLastErr();
 extern "C" CVAUTOTRACK_API const char* GetLastErrStr();
 
