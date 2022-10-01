@@ -26,6 +26,12 @@
     <Filter Include="src\capture\dxgi\include">
       <UniqueIdentifier>{ef9fee04-c2fd-47c5-a7d0-e011239919d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\match">
+      <UniqueIdentifier>{ac6f39d1-8b24-4329-8e46-af9ad6ab5919}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources">
+      <UniqueIdentifier>{74b73ab9-2390-4fea-9151-a6c838056cc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -84,6 +90,12 @@
     <ClInclude Include="src\capture\bitblt\Bitblt.h">
       <Filter>src\capture\bitblt</Filter>
     </ClInclude>
+    <ClInclude Include="src\match\match_minimap.h">
+      <Filter>src\match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\Resources.h">
+      <Filter>src\resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -118,6 +130,10 @@
     </ClCompile>
     <ClCompile Include="src\capture\bitblt\Bitblt.cpp">
       <Filter>src\capture\bitblt</Filter>
+    </ClCompile>
+    <ClCompile Include="src\match\match_minimap.cpp" />
+    <ClCompile Include="src\resources\Resources.cpp">
+      <Filter>src\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
