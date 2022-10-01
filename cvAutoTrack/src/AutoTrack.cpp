@@ -101,17 +101,6 @@ bool AutoTrack::uninit()
 	return !is_init_end;
 }
 
-int AutoTrack::GetGpuCount()
-{
-	// 获取GPU设备数量
-	return gpuDeviceNumber;
-}
-
-bool AutoTrack::SetGpuDevice(int deviceId)
-{
-	return true;
-}
-
 bool AutoTrack::SetUseBitbltCaptureMode()
 {
 	if (capture == nullptr)
@@ -582,14 +571,15 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 {
 	mapId = 0;
 	cv::Point2d pos_tr;
-
-	bool res_pos = GetPosition(x, y);
+	double x_ = 0;
+	double y_ = 0;
+	bool res_pos = GetPosition(x_, y_);
 	if (res_pos != true)
 	{
 		return false;
 	}
 
-	pos_tr = TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	pos_tr = TransferUserAxes_Tr(cv::Point2d(x_, y_), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 	pos_tr = TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
 
@@ -616,6 +606,8 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 		case 0:
 		{
+			x = _x;
+			y = _y;
 			break;
 		}
 		case 1:
@@ -638,6 +630,8 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 			y = pos.y;
 			break;
 		}
+		default:
+			break;
 		}
 	}
 	return true;
