@@ -80,7 +80,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
     - **Python** Python调用
 
 
-# 函数目录
+# 函数目录( [详细文档](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E5%87%BD%E6%95%B0%E6%89%8B%E5%86%8C.md) )
 
 |              接口名称            |                                 接口功能                         |
 | ------------------------------- | --------------------------------------------------------------- |
