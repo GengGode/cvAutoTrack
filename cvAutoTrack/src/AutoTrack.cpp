@@ -201,8 +201,12 @@ bool AutoTrack::DebugCapture()
 	cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
 	// 绘制miniMap Rect
 	cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
+	cv::Rect Avatar = Area_Avatar_mayArea;
+	Avatar.x += Area_Minimap_mayArea.x;
+	Avatar.y += Area_Minimap_mayArea.y;
+	
 	// 绘制avatar Rect
-	cv::rectangle(out_info_img, Area_Avatar_mayArea, cv::Scalar(0, 0, 255), 2);
+	cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 	// 绘制UID Rect
 	cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 	
