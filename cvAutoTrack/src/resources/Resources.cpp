@@ -165,7 +165,7 @@ Resources& Resources::getInstance()
 
 void Resources::install()
 {
-	if (is_installed)
+	if (is_installed == false)
 	{
 		LoadXml(xmlPtr);
 		LoadPng_ID2Mat(IDB_PNG_GIMAP, MapTemplate);
