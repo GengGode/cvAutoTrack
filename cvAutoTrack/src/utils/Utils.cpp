@@ -123,4 +123,63 @@ namespace TianLi::Utils
 		return cv::Point2d(pos.x / scale - x, pos.y / scale - y);
 	}
 
+	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
+	{
+			cv::Mat img_matches, imgmap, imgminmap;
+			drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+			drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+			drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+	}
+	
+	namespace CalcMatch
+	{
+		namespace Debug
+		{
+			void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
+			{
+				std::vector<cv::DMatch> good_matches;
+				for (size_t i = 0; i < KNN_m.size(); i++)
+				{
+					if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
+					{
+						good_matches.push_back(KNN_m[i][0]);
+						if (KNN_m[i][0].queryIdx >= keypoint_object.size())
+						{
+							continue;
+						}
+						lisx.push_back(((img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.x));
+						lisy.push_back(((img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.y));
+						sumx += lisx.back();
+						sumy += lisy.back();
+					}
+				}
+				draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
+			}
+		}
+
+		void calc_good_matches_show(cv::Mat& , std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
+		{
+			for (size_t i = 0; i < KNN_m.size(); i++)
+			{
+				if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
+				{
+					if (KNN_m[i][0].queryIdx >= keypoint_object.size())
+					{
+						continue;
+					}
+					lisx.push_back(((img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.x));
+					lisy.push_back(((img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.y));
+					sumx += lisx.back();
+					sumy += lisy.back();
+				}
+			}
+		}
+
+	}
+
+	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
+	{
+		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
+	}
+
 }
