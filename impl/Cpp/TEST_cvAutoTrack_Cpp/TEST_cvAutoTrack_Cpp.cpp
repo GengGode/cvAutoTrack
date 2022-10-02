@@ -1,5 +1,6 @@
 ﻿#include <iostream>
-#include <cvAutoTrack.h>
+//#include <cvAutoTrack.h>
+#include "../../../cvAutoTrack/include/cvAutoTrack.h"
 
 #include <Windows.h>
 
@@ -94,14 +95,14 @@ int main()
 	while (1)
 	{
 		// 设置Dx截图
-		if (SetUseDx11CaptureMode())
+		/*if (SetUseDx11CaptureMode())
 		{
 			std::cout << "设置Dx截图成功" << "\n";
 		}
 		else
 		{
 			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-		}
+		}*/
 #pragma warning(suppress : 4996)
 		if (GetTransform(x, y, a))
 		{
@@ -113,33 +114,33 @@ int main()
 		{
 			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
 		}
-#pragma warning(suppress : 4996)
-		if (GetPosition(x2, y2))
-		{
-			int mapid = 0;
-			GetPositionOfMap(x2, y2, mapid);
-			std::cout << "坐标         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-		}
-		if (GetDirection(a2))
-		{
-			std::cout << "角度         : " << " " << a2 << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-		}
-		if (GetRotation(aa2))
-		{
-			std::cout << "视角朝向     : " << " " << aa2 << "\n";
-		}
-		else
-		{
-			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-		}
+//#pragma warning(suppress : 4996)
+//		if (GetPosition(x2, y2))
+//		{
+//			int mapid = 0;
+//			GetPositionOfMap(x2, y2, mapid);
+//			std::cout << "坐标         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
+//		}
+//		else
+//		{
+//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+//		}
+//		if (GetDirection(a2))
+//		{
+//			std::cout << "角度         : " << " " << a2 << "\n";
+//		}
+//		else
+//		{
+//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+//		}
+//		if (GetRotation(aa2))
+//		{
+//			std::cout << "视角朝向     : " << " " << aa2 << "\n";
+//		}
+//		else
+//		{
+//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+//		}
 		if (GetUID(uid))
 		{
 			std::cout << "当前UID      : " << " " << uid << " " << "\n";

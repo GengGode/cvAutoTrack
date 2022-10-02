@@ -537,7 +537,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 			if (lisx.size() == 0 || lisy.size() == 0)
 			{
-				err = { 4, "未能匹配到特征点" };
+				err = { 42, "未能匹配到特征点" };
 				return false;
 			}
 			else
