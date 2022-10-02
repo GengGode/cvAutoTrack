@@ -32,14 +32,14 @@ before_build:
     #- dir  %OpenCvDir%
 
 build_script:
-    - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj
+    - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
 
 after_build:
     # copy include and source code files
     #- ls
     - mkdir %MyProjectDir%x64\build\
-    - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.dll $env:MyProjectDir\x64\build\
-    - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Release\*.lib $env:MyProjectDir\x64\build\
+    - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
+    - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
     - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
     - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
     
