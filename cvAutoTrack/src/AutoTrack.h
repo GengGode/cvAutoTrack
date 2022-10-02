@@ -210,6 +210,7 @@ private:
 
 	bool getPaimonRefMat();
 	bool getMiniMapRefMat();
+	bool getMiniMapRefMat_Bitblt();
 	bool getUIDRefMat();
 	bool getAvatarRefMat();
 

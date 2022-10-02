@@ -277,15 +277,21 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 1, "没有初始化" };
 		return false;
 	}
-
-	cv::Rect paimon_rect;
-	if (!check_paimon(paimon_rect))
+	if (capture->mode == Capture::Mode_Bitblt)
 	{
-		err = { 1000, "获取坐标时，没有识别到paimon" };
-		return false;
+		getMiniMapRefMat_Bitblt();
 	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 1000, "获取坐标时，没有识别到paimon" };
+			return false;
+		}
 
-	getMiniMapRefMat();
+		getMiniMapRefMat();
+	}
 
 	cv::Mat img_scene(res.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
@@ -2782,6 +2788,113 @@ bool AutoTrack::getMiniMapRefMat()
 		MiniMap_Rect_h);
 
 	giMiniMapRef = giFrame(Area_Minimap_mayArea);
+
+#ifdef _DEBUG
+		cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
+		cv::imshow("MiniMap", giMiniMapRef);
+	cv::waitKey(1);
+	//std::cout << "Show MiniMap" << std::endl;
+#endif
+	return true;
+}
+
+bool AutoTrack::getMiniMapRefMat_Bitblt()
+{
+	int& x = giFrame.cols, & y = giFrame.rows;
+	double f = 1, fx = 1, fy = 1;
+
+	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
+	{
+
+		//正常，不做处理
+		if (x != 1920 && y != 1080)
+		{
+			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
+		}
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
+	{
+
+		//高型，以宽为比例
+
+		// x = (y * 16) / 9;
+		f = y / 1080.0;
+		//将giFrame缩放到1920*1080的比例
+		fx = x / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
+
+	}
+	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
+	{
+
+		//宽型，以高为比例
+
+		// x = (y * 16) / 9;
+		f = x / 1920.0;
+		//将giFrame缩放到1920*1080的比例
+		fy = y / f;
+		// 将图片缩放
+		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
+	}
+	else
+	{
+		//出错
+
+	}
+
+	int MiniMap_Rect_x = cvRound(1920 * 0.033);
+	int MiniMap_Rect_y = cvRound(1920 * 0.01);
+	int MiniMap_Rect_w = cvRound(1920 * 0.11);
+	int MiniMap_Rect_h = cvRound(1920 * 0.11);
+
+	if (giFrame.cols == 3440 && giFrame.rows == 1440)
+	{
+		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
+	}
+
+	if (giFrame.cols == 2560 && giFrame.rows == 1080)
+	{
+		MiniMap_Rect_x = cvRound(1920 * 0.033 + 72);
+		MiniMap_Rect_y = cvRound(1920 * 0.01);
+		MiniMap_Rect_w = cvRound(1920 * 0.11);
+		MiniMap_Rect_h = cvRound(1920 * 0.11);
+	}
+	Area_Minimap_mayArea = cv::Rect(
+		MiniMap_Rect_x,
+		MiniMap_Rect_y,
+		MiniMap_Rect_w,
+		MiniMap_Rect_h);
+
+	giMiniMapRef = giFrame(Area_Minimap_mayArea);
+
+
+	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
+
+	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
+	{
+		err = { 40001,"paimon not find" };
+		return false;
+	}
+
+	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
+	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
+
+	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
+	{
+		err = { 40002,"minimap cailb not find" };
+		return false;
+	}
+
+	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
+
+	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
+	{
+		err = { 40003, "splite minimap 失败" };
+		return false;
+	}
+
+	giMiniMapRef = genshin_minimap.img_minimap;
 
 #ifdef _DEBUG
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
