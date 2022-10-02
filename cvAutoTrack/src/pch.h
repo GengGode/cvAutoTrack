@@ -42,6 +42,7 @@
 
 // Helpers
 #include "capture/dxgi/include/composition.interop.h"
+#include "capture/dxgi/include/d3dHelpers.h"
 #include "capture/dxgi/include/direct3d11.interop.h"
 #include "capture/dxgi/include/capture.interop.h"
 

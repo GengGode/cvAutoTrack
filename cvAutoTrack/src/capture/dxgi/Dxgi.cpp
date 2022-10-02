@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Dxgi.h"
-#include "capture/dxgi/include/d3dHelpers.h"
 
 using namespace winrt;
 using namespace Windows;
