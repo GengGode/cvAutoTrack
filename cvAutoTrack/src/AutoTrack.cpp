@@ -267,6 +267,13 @@ bool AutoTrack::GetTransformOfMap(float& x, float& y, float& a, int& mapId)
 
 bool AutoTrack::GetPosition(double& x, double& y)
 {
+	static cv::Mat img_scene(res.MapTemplate);
+	static bool is_frist = true;
+	if (is_frist)
+	{
+		cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
+		is_frist = false;
+	}
 
 	if (wForAfter.run() == false)
 	{
@@ -293,16 +300,15 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		getMiniMapRefMat();
 	}
 
-	cv::Mat img_scene(res.MapTemplate);
-	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
-
-	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
-
-	if (img_object.empty())
+	if (giMiniMapRef.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
+
+	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
+	cv::cvtColor(img_object, img_object, cv::COLOR_RGBA2RGB);
+
 
 	isContinuity = false;
 	isConveying = false;
