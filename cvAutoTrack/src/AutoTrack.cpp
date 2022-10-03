@@ -1242,17 +1242,14 @@ bool AutoTrack::GetUID(int& uid)
 	return true;
 
 }
-#pragma warning(disable:4100)
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
 	return false;
 }
-#pragma warning(disable:4100)
 bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 {
-	return false;
+	return true;
 }
-
 
 int AutoTrack::GetLastError()
 {
