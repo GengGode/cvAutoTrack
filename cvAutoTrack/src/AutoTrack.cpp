@@ -1518,9 +1518,26 @@ bool AutoTrack::getGengshinImpactScreen()
 			giFrame = giFrame(cv::Rect(x, y, w, h));
 		}
 		
+		cv::resize(giFrame, genshin_screen.img_screen, genshin_handle.size_frame);
+
+		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
+
+		// ªÒ»°maybe«¯”Ú
+		genshin_screen.img_paimon_maybe = giFrame(genshin_handle.rect_paimon_maybe);
+		genshin_screen.img_minimap_cailb_maybe = giFrame(genshin_handle.rect_minimap_cailb_maybe);
+		genshin_screen.img_minimap_maybe = giFrame(genshin_handle.rect_minimap_maybe);
+		genshin_screen.img_uid_maybe = giFrame(genshin_handle.rect_uid_maybe);
+		genshin_screen.img_left_give_items_maybe = giFrame(genshin_handle.rect_left_give_items_maybe);
+		genshin_screen.img_right_pick_items_maybe = giFrame(genshin_handle.rect_right_pick_items_maybe);
+
+		genshin_screen.config.rect_paimon_maybe = genshin_handle.rect_paimon_maybe;
+		genshin_screen.config.rect_minimap_cailb_maybe = genshin_handle.rect_minimap_cailb_maybe;
+		genshin_screen.config.rect_minimap_maybe = genshin_handle.rect_minimap_maybe;
 
 
-		
+		genshin_screen.img_uid = giFrame(genshin_handle.rect_uid);
+
+
 		return true;
 	}
 	else
