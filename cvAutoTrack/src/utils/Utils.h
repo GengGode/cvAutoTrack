@@ -1,5 +1,6 @@
 #pragma once
-#include "pch.h"
+#include <vector>
+#include <opencv2/opencv.hpp>
 
 namespace TianLi::Utils
 {
@@ -19,6 +20,4 @@ namespace TianLi::Utils
 	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
 
 	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy);
-
-
 }

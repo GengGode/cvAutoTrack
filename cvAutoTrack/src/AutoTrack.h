@@ -11,9 +11,8 @@
 #include "capture/Capture.h"
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
-#include "utils/Utils.h"
 
-// ´ËÀàÊÇ²»µ¼³öµÄ
+// æ­¤ç±»æ˜¯ä¸å¯¼å‡ºçš„
 class AutoTrack {
 public:
 	AutoTrack(void);
@@ -22,26 +21,26 @@ public:
 
 	bool init();
 	bool uninit();
-	
+
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
-	
+
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
-	bool GetTransform(float &x, float &y, float &a);
+	bool GetTransform(float& x, float& y, float& a);
 	bool GetTransformOfMap(float& x, float& y, float& a, int& mapId);
-	bool GetPosition(double &x, double &y);
+	bool GetPosition(double& x, double& y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
-	bool GetDirection(double &a);
-	bool GetRotation(double &a);
-	//»ñÈ¡·¢ÏÖµÄÉñÍ«×ø±ê,isEndÎªÕæÔòÎªµ±Ç°»­ÃæÖĞµÄ×îºóÒ»¸öÉñÍ«
-	bool GetStar(double &x, double &y, bool &isEnd);
-	//»ñÈ¡·¢ÏÖµÄÉñÍ«×ø±ê£¬ÒÔjson×Ö·û´®¸ñÊ½
-	bool GetStarJson(char *jsonBuff);
-	bool GetUID(int &uid);
-	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
-	bool GetInfoLoadVideo(char * path, char * pathOutFile);
+	bool GetDirection(double& a);
+	bool GetRotation(double& a);
+	//è·å–å‘ç°çš„ç¥ç³åæ ‡,isEndä¸ºçœŸåˆ™ä¸ºå½“å‰ç”»é¢ä¸­çš„æœ€åä¸€ä¸ªç¥ç³
+	bool GetStar(double& x, double& y, bool& isEnd);
+	//è·å–å‘ç°çš„ç¥ç³åæ ‡ï¼Œä»¥jsonå­—ç¬¦ä¸²æ ¼å¼
+	bool GetStarJson(char* jsonBuff);
+	bool GetUID(int& uid);
+	bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
+	bool GetInfoLoadVideo(char* path, char* pathOutFile);
 	int GetLastError();
 	const char* GetLastErrorStr();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
@@ -77,69 +76,69 @@ private:
 	int someSizeR = 106;
 	double MatchMatScale = 2.0;
 
-	//ÓÃ»§¶¨ÒåÓ³Éä¹ØÏµ²ÎÊı
+	//ç”¨æˆ·å®šä¹‰æ˜ å°„å…³ç³»å‚æ•°
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
-	
+
 #define MAP_3_1
 
 
 #ifdef MAP_3_0
-	// ¾ø¶ÔÊÀ½çÖĞĞÄ ¾ø¶ÔÊÀ½çËõ·ÅÏµÊı
+	// ç»å¯¹ä¸–ç•Œä¸­å¿ƒ ç»å¯¹ä¸–ç•Œç¼©æ”¾ç³»æ•°
 	//World Center on AbsAllMap Coor
 	double WorldCenter_X = 7400; //Abs 2871   * MapAbsScale = 7392.2870
 	double WorldCenter_Y = 9432; //Abs 3015.5 * MapAbsScale = 7710.6335
 	double WorldScale = 1.0; //Abs
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äÔ­µã×ø±ê
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´åŸç‚¹åæ ‡
 	//Map Origin Point on AbsAllMap Coor.
 	double MapWorldAbsOffset_X = 7.7130; // 7400 - 7392.2870
 	double MapWorldAbsOffset_Y = 1721.3665; // 9432 - 7710.6335
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äËõ·ÅÏµÊı
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´ç¼©æ”¾ç³»æ•°
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
 	double MapAbsScale = 2.557; //from diff Image 67.40%
-	
-	//2021-09-07 ÊÇ¸ö¹Ì¶¨Öµ£¬²»ÓÃ±ä
-	//2022-09-26 ¹¹Ôìº¯ÊıÖĞ³õÊ¼»¯
-	cv::Point2d MapWorldOffset; 
+
+	//2021-09-07 æ˜¯ä¸ªå›ºå®šå€¼ï¼Œä¸ç”¨å˜
+	//2022-09-26 æ„é€ å‡½æ•°ä¸­åˆå§‹åŒ–
+	cv::Point2d MapWorldOffset;
 #endif
-	
+
 #ifdef MAP_3_1
-	// ¾ø¶ÔÊÀ½çÖĞĞÄ ÌìÀí×ø±êÏµÔ­µãÔÚÊµ¼Ê»­²¼µÄÎ»ÖÃ
+	// ç»å¯¹ä¸–ç•Œä¸­å¿ƒ å¤©ç†åæ ‡ç³»åŸç‚¹åœ¨å®é™…ç”»å¸ƒçš„ä½ç½®
 	// World Center on AbsAllMap Coor
 	double WorldCenter_X = 13544; //Abs 4480   * MapAbsScale = 11455.36
 	double WorldCenter_Y = 11480; //Abs 3015.5 * MapAbsScale = 7710.6335
-	// ¾ø¶ÔÊÀ½çËõ·ÅÏµÊı
+	// ç»å¯¹ä¸–ç•Œç¼©æ”¾ç³»æ•°
 	double WorldScale = 1.0; //Abs
-	
-	// µØÍ¼ÖĞĞÄµãµÄÊµ¼ÊÏñËØÎ»ÖÃ
+
+	// åœ°å›¾ä¸­å¿ƒç‚¹çš„å®é™…åƒç´ ä½ç½®
 	double MapPixelCenter_X = 4480;
 	double MapPixelCenter_Y = 3015.5;
 
-	// µØÍ¼ÖĞĞÄµã×ª»»µ½¾ø¶Ô¿Õ¼äÖĞµÄ×ø±ê
+	// åœ°å›¾ä¸­å¿ƒç‚¹è½¬æ¢åˆ°ç»å¯¹ç©ºé—´ä¸­çš„åæ ‡
 	// Map Origin Point on AbsAllMap Coor.
 	// MapWorldAbsCenter = MapPixelCenter * MapAbsScale;
 	double MapWorldAbsCenter_X = 11455.36;
 	double MapWorldAbsCenter_Y = 7710.6335;
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äÔ­µãÆ«ÒÆ
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´åŸç‚¹åç§»
 	//Map Origin Point on AbsAllMap Coor.
 	// MapWorldAbsOrigin = WorldCenter - MapWorldOffset
 	double MapWorldAbsOffset_X = 2088.64; // 13544 - 11455.36
 	double MapWorldAbsOffset_Y = 3769.3665; // 11480 - 7710.6335
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äËõ·ÅÏµÊı
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´ç¼©æ”¾ç³»æ•°
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
 	double MapAbsScale = 2.557; //from diff Image 67.40%
 
-	//2021-09-07 ÊÇ¸ö¹Ì¶¨Öµ£¬²»ÓÃ±ä
-	//2022-09-26 ¹¹Ôìº¯ÊıÖĞ³õÊ¼»¯
+	//2021-09-07 æ˜¯ä¸ªå›ºå®šå€¼ï¼Œä¸ç”¨å˜
+	//2022-09-26 æ„é€ å‡½æ•°ä¸­åˆå§‹åŒ–
 	// MapWorldOffset = MapWorldAbsOffset - WorldCenter
 	cv::Point2d MapWorldOffset = cv::Point2d(2096.083, 3769.3665);
 #endif
-	//2022-07-13 »¹ÊÇÃ»ÏëÆğÀ´
+	//2022-07-13 è¿˜æ˜¯æ²¡æƒ³èµ·æ¥
 	double MapWorldScale = 1.0;
 
 	// ???
@@ -149,7 +148,7 @@ private:
 private:
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
 	//
-	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap ;
+	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap;
 	//
 	std::vector<cv::KeyPoint> _KeyPointAllMap;
 	//std::vector<cv::KeyPoint>
@@ -173,14 +172,14 @@ private:
 private:
 	double check_match_paimon_params = 0.9;
 private:
-	// GPUÉè±¸ÊıÁ¿
+	// GPUè®¾å¤‡æ•°é‡
 	int gpuDeviceNumber = 0;
-	// Ê¹ÄÜGPUÉè±¸id
+	// ä½¿èƒ½GPUè®¾å¤‡id
 	int gpuDeviceId = -1;
-	
-	// ½çÃæ´¦ÓÚÊÖ±úÄ£Ê½
+
+	// ç•Œé¢å¤„äºæ‰‹æŸ„æ¨¡å¼
 	bool isHandleGameMode = false;
-	
+
 	Capture* capture = nullptr;
 
 private:
@@ -204,7 +203,7 @@ private:
 	GenshinPaimon genshin_paimon;
 	GenshinMinimapCailb genshin_minimap_cailb;
 	GenshinMinimap genshin_minimap;
-	
+  
 private:
 	bool getAutoTrackIsInit();
 	bool getGengshinImpactWnd();
@@ -221,14 +220,14 @@ private:
 private:
 	bool clear_error_logs();
 private:
-	bool check_paimon(cv::Rect &paimon_rect);
+	bool check_paimon(cv::Rect& paimon_rect);
 	//bool check_minimap(cv::Rect minimap_rect);	
 	//bool check_uid(cv::Rect uid_rect);
 	//bool check_avatar(cv::Rect avatar_rect);
 	//bool check_star(cv::Rect star_rect);
 };
 
-using namespace TianLi::Utils;
+// using namespace TianLi::Utils;
 
 //bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 //{
@@ -296,7 +295,7 @@ using namespace TianLi::Utils;
 //
 //	if (giAvatarRef.empty())
 //	{
-//		err = 204;//Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò
+//		err = 204;//æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ
 //		return false;
 //	}
 //
@@ -327,7 +326,7 @@ using namespace TianLi::Utils;
 //
 //	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 //
-//	std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+//	std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
 //	cv::Point2f rect[4];
 //
 //	std::vector<cv::Point2d> AvatarKeyPoint;
@@ -337,7 +336,7 @@ using namespace TianLi::Utils;
 //
 //	if (contours.size() != 3)
 //	{
-//		err = 205;//ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó
+//		err = 205;//æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§
 //		//return false;
 //	}
 //	else
@@ -415,7 +414,7 @@ using namespace TianLi::Utils;
 //		maxVal = 0;
 //		minLoc = cv::Point(0, 0);
 //		maxLoc = cv::Point(0, 0);
-//		//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+//		//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 //		cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 //		if (maxVal > 0.75)
 //		{
@@ -441,7 +440,7 @@ using namespace TianLi::Utils;
 //
 //					double minVali, maxVali;
 //					cv::Point minLoci, maxLoci;
-//					//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+//					//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 //					cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 //
 //					tmplis[i] = maxVali;
@@ -469,7 +468,7 @@ using namespace TianLi::Utils;
 //		}
 //		if (_uid == 0)
 //		{
-//			err = 207;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
+//			err = 207;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
 //			//return false;
 //		}
 //		uid = _uid;
@@ -480,11 +479,11 @@ using namespace TianLi::Utils;
 //
 //	if (!is_init_end)
 //	{
-//		init();//³õÊ¼»¯
+//		init();//åˆå§‹åŒ–
 //	}
 //	if (img_object.empty())
 //	{
-//		err = 208;//Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ»òÕßÇøÓò³¤¿íĞ¡ÓÚ60px
+//		err = 208;//åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©ºæˆ–è€…åŒºåŸŸé•¿å®½å°äº60px
 //		return false;
 //	}
 //
@@ -543,10 +542,10 @@ using namespace TianLi::Utils;
 //
 //				if (min(lisx.size(), lisy.size()) <= 4)
 //				{
-//					//ÓĞ¿ÉÄÜ´¦ÓÚ³ÇÕòÖĞ
+//					//æœ‰å¯èƒ½å¤„äºåŸé•‡ä¸­
 //
 //					/***********************/
-//					//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+//					//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 //					img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 //					//Mat minMap(img_object);
 //
@@ -614,9 +613,9 @@ using namespace TianLi::Utils;
 //		}
 //		else
 //		{
-//			//ÔÚ³ÇÕòÖĞ
+//			//åœ¨åŸé•‡ä¸­
 //				/***********************/
-//				//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+//				//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 //			cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 //			cv::Mat minMap(img_object);
 //
@@ -694,7 +693,7 @@ using namespace TianLi::Utils;
 //
 //		if (KeyPointMiniMap.size() == 0)
 //		{
-//			err = { 4, "Ğ¡µØÍ¼Î´ÄÜ¼ÆËã³ö¿ÉÊ¶±ğÌØÕ÷µã" };//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
+//			err = { 4, "å°åœ°å›¾æœªèƒ½è®¡ç®—å‡ºå¯è¯†åˆ«ç‰¹å¾ç‚¹" };//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
 //			return false;
 //		}
 //		else
@@ -715,7 +714,7 @@ using namespace TianLi::Utils;
 //
 //			if (lisx.size() == 0 || lisy.size() == 0)
 //			{
-//				err = { 4, "Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã" };
+//				err = { 4, "æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹" };
 //				return false;
 //			}
 //			else
@@ -779,7 +778,7 @@ using namespace TianLi::Utils;
 //#ifdef TestJson
 //
 //#else
-//	fprintf_s(fpSave, "{\"curveName\":\"ĞÂµÄ»­²¼\",\"curve_list\":[{\"lineName\":\"ĞÂµÄÏßÌõ\",\"curve_poi\":[");
+//	fprintf_s(fpSave, "{\"curveName\":\"æ–°çš„ç”»å¸ƒ\",\"curve_list\":[{\"lineName\":\"æ–°çš„çº¿æ¡\",\"curve_poi\":[");
 //#endif
 //
 //	int uid = 0;
@@ -851,7 +850,7 @@ using namespace TianLi::Utils;
 //
 //		if (giAvatarRef.empty())
 //		{
-//			//err = 204;//Î´ÄÜÈ¡µ½Ğ¡¼ıÍ·ÇøÓò
+//			//err = 204;//æœªèƒ½å–åˆ°å°ç®­å¤´åŒºåŸŸ
 //			//break;// return false;
 //		}
 //		else
@@ -883,7 +882,7 @@ using namespace TianLi::Utils;
 //
 //			cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 //
-//			std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+//			std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
 //			cv::Point2f rect[4];
 //
 //			std::vector<cv::Point2d> AvatarKeyPoint;
@@ -893,7 +892,7 @@ using namespace TianLi::Utils;
 //
 //			if (contours.size() != 3)
 //			{
-//				//err = 205;//ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó
+//				//err = 205;//æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§
 //				//break;//return false;
 //			}
 //			else
@@ -973,7 +972,7 @@ using namespace TianLi::Utils;
 //			maxVal = 0;
 //			minLoc = cv::Point(0, 0);
 //			maxLoc = cv::Point(0, 0);
-//			//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+//			//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 //			cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 //			if (maxVal > 0.75)
 //			{
@@ -999,7 +998,7 @@ using namespace TianLi::Utils;
 //
 //						double minVali, maxVali;
 //						cv::Point minLoci, maxLoci;
-//						//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+//						//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 //						cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 //
 //						tmplis[i] = maxVali;
@@ -1027,7 +1026,7 @@ using namespace TianLi::Utils;
 //			}
 //			if (_uid == 0)
 //			{
-//				//err = 207;//Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID
+//				//err = 207;//æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID
 //				//return false;
 //			}
 //			uid = _uid;
@@ -1039,7 +1038,7 @@ using namespace TianLi::Utils;
 //
 //		if (!is_init_end)
 //		{
-//			init();//³õÊ¼»¯
+//			init();//åˆå§‹åŒ–
 //		}
 //		if (img_object.empty())
 //		{
@@ -1101,10 +1100,10 @@ using namespace TianLi::Utils;
 //
 //					if (min(lisx.size(), lisy.size()) <= 4)
 //					{
-//						//ÓĞ¿ÉÄÜ´¦ÓÚ³ÇÕòÖĞ
+//						//æœ‰å¯èƒ½å¤„äºåŸé•‡ä¸­
 //
 //						/***********************/
-//						//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+//						//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 //						img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 //						//Mat minMap(img_object);
 //
@@ -1172,9 +1171,9 @@ using namespace TianLi::Utils;
 //			}
 //			else
 //			{
-//				//ÔÚ³ÇÕòÖĞ
+//				//åœ¨åŸé•‡ä¸­
 //					/***********************/
-//					//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+//					//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 //				cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 //				cv::Mat minMap(img_object);
 //
@@ -1252,7 +1251,7 @@ using namespace TianLi::Utils;
 //
 //			if (KeyPointMiniMap.size() == 0)
 //			{
-//				err = { 4, "Ğ¡µØÍ¼Î´ÄÜ¼ÆËã³ö¿ÉÊ¶±ğÌØÕ÷µã" };//Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã
+//				err = { 4, "å°åœ°å›¾æœªèƒ½è®¡ç®—å‡ºå¯è¯†åˆ«ç‰¹å¾ç‚¹" };//æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹
 //				return false;
 //			}
 //			else
@@ -1273,7 +1272,7 @@ using namespace TianLi::Utils;
 //
 //				if (lisx.size() == 0 || lisy.size() == 0)
 //				{
-//					err = { 4, "Î´ÄÜÆ¥Åäµ½ÌØÕ÷µã" };
+//					err = { 4, "æœªèƒ½åŒ¹é…åˆ°ç‰¹å¾ç‚¹" };
 //					return false;
 //				}
 //				else

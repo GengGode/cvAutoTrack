@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Dxgi.h"
+#include <opencv2/core/directx.hpp>
 
 using namespace winrt;
 using namespace Windows;
@@ -18,25 +19,40 @@ Dxgi::Dxgi()
 {
     mode = Capture::Mode_DirectX;
 
-    auto d3dDevice = CreateD3DDevice();
-    auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
-    d3dDevice->GetImmediateContext(m_d3dContext.put());
-    // Set up 
-    //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-    m_device = CreateDirect3DDevice(dxgiDevice.get());
+    // auto d3dDevice = CreateD3DDevice();
+    // auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
+    // d3dDevice->GetImmediateContext(m_d3dContext.put());
+    // // Set up 
+    // //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    // m_device = CreateDirect3DDevice(dxgiDevice.get());
 }
 
 bool Dxgi::init()
 {
+    // 只需要定义一下，不会用上，唯一的作用是避免依赖d3d11.dll
+    // 这背后大概有什么科学原理吧，可能
+    static cv::VideoCapture Video;
+
+	static auto d3dDevice = CreateD3DDevice();
+    static auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
+    static bool is_frist = true;
+    if (is_frist)
+    {
+        d3dDevice->GetImmediateContext(m_d3dContext.put());
+        // Set up 
+        //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        m_device = CreateDirect3DDevice(dxgiDevice.get());
+    }
+
 	if(!giHandle)
     {
-        err = { 10003,"���Ϊ��" };
+        err = { 10003,"句柄为空" };
         return false;
     }
 
         m_item = CreateCaptureItemForWindow(giHandle);
 
-        auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        // auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
         //d3dDevice->GetImmediateContext(m_d3dContext.put());
         
         auto size = m_item.Size();
@@ -103,11 +119,11 @@ bool Dxgi::capture(cv::Mat& frame)
     };
     static ID3D11Texture2D* bufferTexture;
 
-	// ��ȡ�µĻ���
+	// 获取新的画面
 	auto new_frame = m_framePool.TryGetNextFrame();
     if (new_frame == nullptr)
     {
-        err = { 10004,"δ�ܻ�ȡ����һ֡����" };
+        err = { 10004,"未能获取到新一帧画面" };
         return false;
     }
 	auto frame_size = new_frame.ContentSize();
@@ -140,17 +156,21 @@ bool Dxgi::capture(cv::Mat& frame)
     m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
     if (bufferTexture == nullptr)
     {
-        err = { 10005,"δ�ܴ�GPU�������浽CPU" };
+        err = { 10005,"未能从GPU拷贝画面到CPU" };
         return false;
     }
+
+    //cv::Mat test;
+    //cv::directx::convertFromD3D11Texture2D(bufferTexture,test);
+	
     D3D11_MAPPED_SUBRESOURCE mappedTex;
     m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
 	
 	auto data = mappedTex.pData;
 	auto pitch = mappedTex.RowPitch;
-	// ������ת��ΪOpenCV��Mat
+	// 将画面转换为OpenCV的Mat
 	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
-	// �ͷ���Դ
+	// 释放资源
     bufferTexture->Release();
 	// new_frame.Close();
 	return true;
@@ -162,7 +182,7 @@ bool Dxgi::setHandle(HWND handle)
     {
         if (handle == nullptr)
         {
-            err = { 10006,"���õľ��Ϊ��" };
+            err = { 10006,"设置的句柄为空" };
             return false;
         }
 		//uninit();
