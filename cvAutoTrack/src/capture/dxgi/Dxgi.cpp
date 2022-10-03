@@ -29,8 +29,8 @@ Dxgi::Dxgi()
 
 bool Dxgi::init()
 {
-    // åªéœ€è¦å®šä¹‰ä¸€ä¸‹ï¼Œä¸ä¼šç”¨ä¸Šï¼Œå”¯ä¸€çš„ä½œç”¨æ˜¯é¿å…ä¾èµ–d3d11.dll
-    // è¿™èƒŒåå¤§æ¦‚æœ‰ä»€ä¹ˆç§‘å­¦åŸç†å§ï¼Œå¯èƒ½
+    // Ö»ĞèÒª¶¨ÒåÒ»ÏÂ£¬²»»áÓÃÉÏ£¬Î¨Ò»µÄ×÷ÓÃÊÇ±ÜÃâÒÀÀµd3d11.dll
+    // Õâ±³ºó´ó¸ÅÓĞÊ²Ã´¿ÆÑ§Ô­Àí°É£¬¿ÉÄÜ
     static cv::VideoCapture Video;
 
 	static auto d3dDevice = CreateD3DDevice();
@@ -46,7 +46,7 @@ bool Dxgi::init()
 
 	if(!giHandle)
     {
-        err = { 10003,"å¥æŸ„ä¸ºç©º" };
+        err = { 10003,"¾ä±úÎª¿Õ" };
         return false;
     }
 
@@ -119,11 +119,11 @@ bool Dxgi::capture(cv::Mat& frame)
     };
     static ID3D11Texture2D* bufferTexture;
 
-	// è·å–æ–°çš„ç”»é¢
+	// »ñÈ¡ĞÂµÄ»­Ãæ
 	auto new_frame = m_framePool.TryGetNextFrame();
     if (new_frame == nullptr)
     {
-        err = { 10004,"æœªèƒ½è·å–åˆ°æ–°ä¸€å¸§ç”»é¢" };
+        err = { 10004,"Î´ÄÜ»ñÈ¡µ½ĞÂÒ»Ö¡»­Ãæ" };
         return false;
     }
 	auto frame_size = new_frame.ContentSize();
@@ -156,7 +156,7 @@ bool Dxgi::capture(cv::Mat& frame)
     m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
     if (bufferTexture == nullptr)
     {
-        err = { 10005,"æœªèƒ½ä»GPUæ‹·è´ç”»é¢åˆ°CPU" };
+        err = { 10005,"Î´ÄÜ´ÓGPU¿½±´»­Ãæµ½CPU" };
         return false;
     }
 
@@ -168,9 +168,9 @@ bool Dxgi::capture(cv::Mat& frame)
 	
 	auto data = mappedTex.pData;
 	auto pitch = mappedTex.RowPitch;
-	// å°†ç”»é¢è½¬æ¢ä¸ºOpenCVçš„Mat
+	// ½«»­Ãæ×ª»»ÎªOpenCVµÄMat
 	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
-	// é‡Šæ”¾èµ„æº
+	// ÊÍ·Å×ÊÔ´
     bufferTexture->Release();
 	// new_frame.Close();
 	return true;
@@ -182,7 +182,7 @@ bool Dxgi::setHandle(HWND handle)
     {
         if (handle == nullptr)
         {
-            err = { 10006,"è®¾ç½®çš„å¥æŸ„ä¸ºç©º" };
+            err = { 10006,"ÉèÖÃµÄ¾ä±úÎª¿Õ" };
             return false;
         }
 		//uninit();
