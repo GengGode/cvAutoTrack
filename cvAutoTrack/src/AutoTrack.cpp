@@ -659,7 +659,22 @@ bool AutoTrack::GetDirection(double& a)
 		err = { 2000 ,"获取角色朝向时，没有识别到Paimon" };
 		return false;
 	}
-	getMiniMapRefMat();
+
+	if (capture->mode == Capture::Mode_Bitblt)
+	{
+		getMiniMapRefMat_Bitblt();
+	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 1000, "获取坐标时，没有识别到paimon" };
+			return false;
+		}
+
+		getMiniMapRefMat();
+	}
 
 	if (giMiniMapRef.empty())
 	{
@@ -764,7 +779,21 @@ bool AutoTrack::GetRotation(double& a)
 		return false;
 	}
 
-	getMiniMapRefMat();
+	if (capture->mode == Capture::Mode_Bitblt)
+	{
+		getMiniMapRefMat_Bitblt();
+	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 1000, "获取坐标时，没有识别到paimon" };
+			return false;
+		}
+
+		getMiniMapRefMat();
+	}
 
 	//cv::Mat img_scene(res.MapTemplate);
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
@@ -902,6 +931,22 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		}
 
 		getPaimonRefMat();
+		
+		if (capture->mode == Capture::Mode_Bitblt)
+		{
+			getMiniMapRefMat_Bitblt();
+		}
+		else
+		{
+			cv::Rect paimon_rect;
+			if (!check_paimon(paimon_rect))
+			{
+				err = { 1000, "获取坐标时，没有识别到paimon" };
+				return false;
+			}
+
+			getMiniMapRefMat();
+		}
 
 		cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 			giStarRef, cv::COLOR_RGBA2GRAY);
@@ -994,7 +1039,22 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	}
 
 	getPaimonRefMat();
+	
+	if (capture->mode == Capture::Mode_Bitblt)
+	{
+		getMiniMapRefMat_Bitblt();
+	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 1000, "获取坐标时，没有识别到paimon" };
+			return false;
+		}
 
+		getMiniMapRefMat();
+	}
 	//一个bug 未开游戏而先开应用，开游戏时触发
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
