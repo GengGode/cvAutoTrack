@@ -7,8 +7,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 # 介绍 
 
-
-### 目前支持任意分辨率，但尚不支持手柄模式
+### 目前支持任意分辨率，以及手柄模式，但暂不支持小地图设置的【跟随视角】仅支持【锁定方向】
 ### 地图目前支持区域
 
 | 原神版本 | 地图区域 | dll版本 |
@@ -27,6 +26,32 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 ## ~~支持 NVIDA GPU 图形计算加速~~ (远程编译不支持cuda，所以寄了)
 
+### 各版本所支持的功能
+
+| 版本 | 键盘模式 | 手柄模式 | 分辨率支持列表 |
+| -------- | ------ | ------ | ------ |
+|  6.4.x |  √ | × |  1920x1080 |
+|  6.5.39 |  √ | × |  1920x1080, 2560x1440, 2560x1080 |
+|  6.5.92 |  √ | √(DX模式下不支持) |  16:9 系列(但不包括4K及以上), 21:9 系列, 以及1920*1080以下的所有分辨率 |
+
+## 新版本计划 7.0.0
+
+- [ ] 添加定位的惯性加速度导航算法
+- [ ] 添加定位的平滑过渡算法
+- [ ] 添加定位的自动校准算法
+- [ ] 完全支持手柄模式
+- [ ] 完全支持任意分辨率，4K及以上
+- [ ] 支持任意地图区域
+- [ ] 支持传入地图而非内嵌
+- [ ] 可选的嵌入预计算结果
+
+### 接口修改方案
+
+- [ ] 重构接口，统一使用double作为浮点参数
+    - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
+- [ ] 重构接口，统一使用int作为接口返回值
+    - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
+	- `bool GetDirection(double &a)` -> `int GetDirection(double &a)`
 
 # 如何使用
 
