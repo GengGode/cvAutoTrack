@@ -12,7 +12,7 @@
     environment:
         MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
         OpenCvDir: C:\projects\opencv\
-        OpenCvUrl: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
+        OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
         ProJectExeName: cvAutoTrack
     skip_tags: true
@@ -95,7 +95,7 @@
     environment:
         MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
         OpenCvDir: C:\projects\opencv\
-        OpenCvUrl: https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip
+        OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
         ProJectExeName: cvAutoTrack
     skip_tags: true
