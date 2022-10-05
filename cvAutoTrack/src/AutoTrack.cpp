@@ -76,7 +76,7 @@ bool AutoTrack::init()
 
 		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
 		
-		std::string xml_string(giMatchResource.xmlPtr.ptr);
+		std::string xml_string(res.xmlPtr.ptr);
 		cv::FileStorage fs(xml_string, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 		fs["keypoints"] >> _KeyPointAllMap;
 		fs["descriptors"] >> _DataPointAllMap;
@@ -300,12 +300,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		getMiniMapRefMat();
 	}
 
-	cv::Mat img_scene(res.MapTemplate);
-	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
-
-	cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
-
-	if (img_object.empty())
+	if (giMiniMapRef.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
