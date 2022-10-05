@@ -73,17 +73,39 @@ void Test_video()
 }
 
 
-int main()
+int TEST()
 {
+	float x = 0;
+	float y = 0;
+	float a = 0;
+	int map_id = 0;
+	
+	if (GetTransformOfMap(x, y, a, map_id))
+	{
+		std::cout << "坐标和角度   : " << " " << map_id << x << " " << y << " " << a << "\n";
+	}
+	else
+	{
+		std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+	}
+	
+	return 0;
+}
+
+int Run()
+{
+
+
 	std::ios::sync_with_stdio(false);
 
 	FILE* fptr = NULL;
 	fopen_s(&fptr, "./Output.txt", "w+");
-	
+
 	// 准备变量
 	float x = 0;
 	float y = 0;
 	float a = 0;
+	int map_id = 0;
 	double x2 = 0;
 	double y2 = 0;
 	double a2 = 0;
@@ -104,43 +126,41 @@ int main()
 			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
 		}*/
 #pragma warning(suppress : 4996)
-		if (GetTransform(x, y, a))
+		if (GetTransformOfMap(x, y, a, map_id))
 		{
-			std::cout << "坐标和角度   : " << " " << x << " " << y << " " << a << "\n";
-			fprintf(fptr, "%lf %lf %lf", x, y, a);
-			fflush(fptr);
+			std::cout << "坐标和角度   : " << " " << map_id << x << " " << y << " " << a << "\n";
 		}
 		else
 		{
 			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
 		}
-//#pragma warning(suppress : 4996)
-//		if (GetPosition(x2, y2))
-//		{
-//			int mapid = 0;
-//			GetPositionOfMap(x2, y2, mapid);
-//			std::cout << "坐标         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
-//		}
-//		else
-//		{
-//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-//		}
-//		if (GetDirection(a2))
-//		{
-//			std::cout << "角度         : " << " " << a2 << "\n";
-//		}
-//		else
-//		{
-//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-//		}
-//		if (GetRotation(aa2))
-//		{
-//			std::cout << "视角朝向     : " << " " << aa2 << "\n";
-//		}
-//		else
-//		{
-//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
-//		}
+		//#pragma warning(suppress : 4996)
+		//		if (GetPosition(x2, y2))
+		//		{
+		//			int mapid = 0;
+		//			GetPositionOfMap(x2, y2, mapid);
+		//			std::cout << "坐标         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
+		//		}
+		//		else
+		//		{
+		//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+		//		}
+		//		if (GetDirection(a2))
+		//		{
+		//			std::cout << "角度         : " << " " << a2 << "\n";
+		//		}
+		//		else
+		//		{
+		//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+		//		}
+		//		if (GetRotation(aa2))
+		//		{
+		//			std::cout << "视角朝向     : " << " " << aa2 << "\n";
+		//		}
+		//		else
+		//		{
+		//			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+		//		}
 		if (GetUID(uid))
 		{
 			std::cout << "当前UID      : " << " " << uid << " " << "\n";
@@ -167,7 +187,7 @@ int main()
 		{
 			std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
 		}
-		
+
 		// 推送io流缓存
 		std::cout << std::flush;
 
@@ -175,4 +195,19 @@ int main()
 		system("cls");
 	}
 	fclose(fptr);
+	return 0;
+}
+
+int main(int argc, char* argv[])
+{
+	// 如果输入参数 -test 就执行测试
+	if (argc > 1 && strcmp(argv[1], "-test") == 0)
+	{
+		return TEST();
+	}
+	else
+	{
+		// 否则执行正常的程序
+		return Run();
+	}
 }
