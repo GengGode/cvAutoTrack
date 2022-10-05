@@ -36,6 +36,7 @@
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
         # ±‡“Î≤‚ ‘Œƒº˛
+        - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
 
@@ -141,6 +142,7 @@
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
         # ±‡“Î≤‚ ‘Œƒº˛
+        - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
         
