@@ -1,6 +1,6 @@
 -
     version: '6.5.{build}'
-    os: Visual Studio 2019
+    os: Visual Studio 2022
 
     configuration: Release
     platform:
@@ -84,7 +84,8 @@
         on_build_failure: false
         on_build_status_changed: false
 -
-
+    version: '6.0.{build}'
+    os: Visual Studio 2022
     configuration: Dev
     platform:
         - x64
@@ -107,14 +108,156 @@
         - appveyor DownloadFile %OpenCvUrl%
         - 7z x ./*.zip -y -o%OpenCvDir%
         - rm -f ./*.zip
-        #- dir %OpenCvDir%
-        #- dir %OpenCvDir%x64\vc15\staticlib
 
         - cd %MyProjectDir%\%ProjectName%\
         - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
 
-    build_script:
+    build_script: 
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
+        # 开启远程桌面
+        # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+        - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
 
     after_build:
-        echo Test
+        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - mkdir %MyProjectDir%x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
+    
+    before_test:
+        # 移动测试文件到build目录
+        - cd %MyProjectDir% 
+        - ls -R
+        - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Compile\*.exe $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.exe $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.dll $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.json $env:MyProjectDir\x64\build\
+        
+    test_script:
+        - cd %MyProjectDir%\x64\build\
+        - dir
+        # 运行 C# 测试
+        - TEST_cvAutoTrack_CSharp.exe -test
+        # 运行 C++ 测试
+        - TEST_cvAutoTrack_Cpp.exe -test
+        # 运行 C# 测试
+        - TEST_cvAutoTrack_CSharp.exe -test
+
+        
+    notifications:
+      - provider: Email
+        to:
+          - ysx20201030@163.com
+          - aymb00@126.com
+        subject: '{{status}}: {{projectName}} {{buildVersion}}'                  # optional
+        message: "<h1>Build</h1>
+                    <h2>{{projectName}} {{status}}</h2>
+                        <p>{{buildVersion}}: {{buildUrl}}</p>
+                   <H1>Commit</h1> 
+                    <h3>#{{commitId}} by {{commitAuthor}} on {{commitDate}}</h3><h2> {{commitMessage}}</h2>"    # optional
+        on_build_success: true
+        on_build_failure: false
+        on_build_status_changed: false
+-
+    version: '6.0.{build}'
+    os: Visual Studio 2022
+    configuration: Dev
+    platform:
+        - x64
+    branches:
+      only:
+        - /dev-/
+
+    environment:
+        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        OpenCvDir: C:\projects\opencv\
+        OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
+        ProjectName: cvAutoTrack
+        ProJectExeName: cvAutoTrack
+    skip_tags: true
+  
+    install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+
+        - mkdir %OpenCvDir%
+        - appveyor DownloadFile %OpenCvUrl%
+        - 7z x ./*.zip -y -o%OpenCvDir%
+        - rm -f ./*.zip
+
+        - cd %MyProjectDir%\%ProjectName%\
+        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+
+    build_script: 
+        - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
+        # 开启远程桌面
+        # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+        - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
+
+    after_build:
+        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - mkdir %MyProjectDir%x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
+    
+        
+    before_test:
+        # 移动测试文件到build目录
+        - cd %MyProjectDir% 
+        - ls -R
+        - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Release\*.exe $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Release\net6.0\*.exe $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Release\net6.0\*.dll $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Release\net6.0\*.json $env:MyProjectDir\x64\build\
+        
+    test_script:
+        - cd %MyProjectDir%\x64\build\
+        - dir
+        # 运行 C# 测试
+        - TEST_cvAutoTrack_CSharp.exe -test
+        # 运行 C++ 测试
+        #- TEST_cvAutoTrack_Cpp.exe -test
+        # 运行 C# 测试
+        #- TEST_cvAutoTrack_CSharp.exe -test
+            #artifacts:
+        #- path: build/Release
+        #artifacts path name must be appveyor API
+    after_test:
+        - mkdir %MyProjectDir%x64\build\
+        - echo %APPVEYOR_BUILD_VERSION% >version.tag
+        - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -c 2-34 >%ProjectName%.md5
+        - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
+    
+        - appveyor PushArtifact version.tag
+        - appveyor PushArtifact %ProjectName%.md5
+        - appveyor PushArtifact cvAutoTrack.7z
+
+    deploy:
+        - provider: GitHub
+          description: '$(APPVEYOR_PROJECT_SLUG): DEV cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)' 
+          auth_token:
+             secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
+          draft: true
+          tag: Dev-$(APPVEYOR_BUILD_VERSION)
+          force_update: true
+          on:  
+            APPVEYOR_REPO_TAG: false
+
+    notifications:
+      - provider: Email
+        to:
+          - ysx20201030@163.com
+          - aymb00@126.com
+        subject: '{{status}}: {{projectName}} {{buildVersion}}'                  # optional
+        message: "<h1>Build</h1>
+                    <h2>{{projectName}} {{status}}</h2>
+                        <p>{{buildVersion}}: {{buildUrl}}</p>
+                   <H1>Commit</h1> 
+                    <h3>#{{commitId}} by {{commitAuthor}} on {{commitDate}}</h3><h2> {{commitMessage}}</h2>"    # optional
+        on_build_success: true
+        on_build_failure: false
+        on_build_status_changed: false
