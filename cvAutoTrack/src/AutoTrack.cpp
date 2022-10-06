@@ -1571,7 +1571,9 @@ bool AutoTrack::getGengshinImpactScreen()
 		}
 
 		cv::resize(giFrame, genshin_screen.img_screen, genshin_handle.size_frame);
-
+		
+		giFrame = genshin_screen.img_screen;
+		
 		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
 
 		// ªÒ»°maybe«¯”Ú
