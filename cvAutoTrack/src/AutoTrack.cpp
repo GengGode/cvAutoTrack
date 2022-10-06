@@ -369,7 +369,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 
 
-			if (KeyPointMiniMap.size() == 0 || KeyPointSomeMap.size() == 0)
+			if (KeyPointMiniMap.size() == 0 || KeyPointSomeMap.size() <= 2)
 			{
 				isContinuity = false;
 			}
