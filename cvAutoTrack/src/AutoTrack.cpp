@@ -353,7 +353,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	{
 		if (isOnCity == false)
 		{
-			cv::Mat someMap(img_scene(cv::Rect(cvRound(hisP[2].x - someSizeR), cvRound(hisP[2].y - someSizeR), cvRound(someSizeR * 2), cvRound(someSizeR * 2))));
+			cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
+			//cv::Mat someMap(img_scene(cv::Rect(cvRound(hisP[2].x - someSizeR), cvRound(hisP[2].y - someSizeR), cvRound(someSizeR * 2), cvRound(someSizeR * 2))));
 			cv::Mat minMap(img_object);
 
 
@@ -393,7 +394,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 					/***********************/
 					//重新从完整中地图取出角色周围部分地图
-					img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
+					cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
+					//img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 					//Mat minMap(img_object);
 
 					resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
@@ -463,7 +465,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			//在城镇中
 				/***********************/
 				//重新从完整中地图取出角色周围部分地图
-			cv::Mat someMap(img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
+			cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
 			cv::Mat minMap(img_object);
 
 
