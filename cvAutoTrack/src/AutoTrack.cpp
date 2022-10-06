@@ -12,6 +12,8 @@ using namespace TianLi::Utils;
 
 AutoTrack::AutoTrack()
 {
+	giHandle = 0;
+
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
@@ -211,7 +213,7 @@ bool AutoTrack::DebugCapture()
 	return true;
 }
 
-bool AutoTrack::GetTransform(float& x, float& y, float& a)
+bool AutoTrack::GetTransform(double& x, double& y, double& a)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
 	if (!is_init_end)
@@ -231,13 +233,13 @@ bool AutoTrack::GetTransform(float& x, float& y, float& a)
 	{
 		return false;
 	}
-	x = (float)x2;
-	y = (float)y2;
-	a = (float)a2;
+	x = x2;
+	y = y2;
+	a = a2;
 	return true;
 }
 
-bool AutoTrack::GetTransformOfMap(float& x, float& y, float& a, int& mapId)
+bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
 	int mapId2 = 0;
@@ -669,6 +671,22 @@ bool AutoTrack::GetDirection(double& a)
 
 		getMiniMapRefMat();
 	}
+	
+	if (capture->mode == Capture::Mode_Bitblt)
+	{
+		getMiniMapRefMat_Bitblt();
+	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 1000, "鑾峰彇鍧愭爣鏃讹紝娌℃湁璇嗗埆鍒皃aimon" };
+			return false;
+		}
+
+		getMiniMapRefMat();
+	}
 
 	if (giMiniMapRef.empty())
 	{
@@ -776,7 +794,7 @@ bool AutoTrack::GetRotation(double& a)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 2000 ,"获取视角朝向时，没有识别到Paimon" };
+			err = { 1000, "获取视角朝向时，没有识别到Paimon" };
 			return false;
 		}
 
@@ -929,7 +947,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			cv::Rect paimon_rect;
 			if (!check_paimon(paimon_rect))
 			{
-				err = { 1000, "获取坐标时，没有识别到paimon" };
+				err = { 1000, "鑾峰彇鍧愭爣鏃讹紝娌℃湁璇嗗埆鍒皃aimon" };
 				return false;
 			}
 
@@ -1037,7 +1055,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 1000, "获取坐标时，没有识别到paimon" };
+			err = { 1000, "鑾峰彇鍧愭爣鏃讹紝娌℃湁璇嗗埆鍒皃aimon" };
 			return false;
 		}
 
@@ -1232,6 +1250,9 @@ bool AutoTrack::GetUID(int& uid)
 }
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
+	// warning C4100 path uid x y a
+
+
 	return false;
 }
 bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
@@ -1518,26 +1539,7 @@ bool AutoTrack::getGengshinImpactScreen()
 			giFrame = giFrame(cv::Rect(x, y, w, h));
 		}
 		
-		cv::resize(giFrame, genshin_screen.img_screen, genshin_handle.size_frame);
-
-		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
-
-		// 获取maybe区域
-		genshin_screen.img_paimon_maybe = giFrame(genshin_handle.rect_paimon_maybe);
-		genshin_screen.img_minimap_cailb_maybe = giFrame(genshin_handle.rect_minimap_cailb_maybe);
-		genshin_screen.img_minimap_maybe = giFrame(genshin_handle.rect_minimap_maybe);
-		genshin_screen.img_uid_maybe = giFrame(genshin_handle.rect_uid_maybe);
-		genshin_screen.img_left_give_items_maybe = giFrame(genshin_handle.rect_left_give_items_maybe);
-		genshin_screen.img_right_pick_items_maybe = giFrame(genshin_handle.rect_right_pick_items_maybe);
-
-		genshin_screen.config.rect_paimon_maybe = genshin_handle.rect_paimon_maybe;
-		genshin_screen.config.rect_minimap_cailb_maybe = genshin_handle.rect_minimap_cailb_maybe;
-		genshin_screen.config.rect_minimap_maybe = genshin_handle.rect_minimap_maybe;
-
-
-		genshin_screen.img_uid = giFrame(genshin_handle.rect_uid);
-
-
+		
 		return true;
 	}
 	else

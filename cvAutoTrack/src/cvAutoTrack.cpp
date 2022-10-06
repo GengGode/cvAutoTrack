@@ -24,14 +24,6 @@ bool __stdcall uninit()
 {
 	return _at.uninit();
 }
-int __stdcall GetGpuCount()
-{
-	return false;
-}
-bool __stdcall SetGpuDevice(int deviceId = 0)
-{
-	return false;
-}
 bool __stdcall SetUseBitbltCaptureMode()
 {
 	return _at.SetUseBitbltCaptureMode();
@@ -52,17 +44,9 @@ bool __stdcall SetWorldScale(double scale)
 {
 	return _at.SetWorldScale(scale);
 }
-bool __stdcall GetTransform(float &x, float &y, float &a)
-{
-	return _at.GetTransform(x, y, a);
-}
-bool __stdcall GetTransformOfMap(float& x, float& y, float& a, int& mapId)
+bool __stdcall GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
 	return _at.GetTransformOfMap(x, y, a, mapId);
-}
-bool __stdcall GetPosition(double & x, double & y)
-{
-	return _at.GetPosition(x, y);
 }
 bool __stdcall GetPositionOfMap(double& x, double& y, int& mapId)
 {
