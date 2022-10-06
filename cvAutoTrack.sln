@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -16,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TEST_cvAutoTrack_Cpp", "imp
 		{92943FAC-32B9-4416-A05E-5058B414142D} = {92943FAC-32B9-4416-A05E-5058B414142D}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TEST_cvAutoTrack_CSharp", "impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj", "{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TEST_cvAutoTrack_CSharp", "impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj", "{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{92943FAC-32B9-4416-A05E-5058B414142D} = {92943FAC-32B9-4416-A05E-5058B414142D}
 	EndProjectSection
@@ -29,6 +28,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Compile|Any CPU = Compile|Any CPU
+		Compile|x64 = Compile|x64
+		Compile|x86 = Compile|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -37,6 +39,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|Any CPU.ActiveCfg = Compile|x64
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|Any CPU.Build.0 = Compile|x64
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|x64.ActiveCfg = Compile|x64
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|x64.Build.0 = Compile|x64
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|x86.ActiveCfg = Compile|Win32
+		{92943FAC-32B9-4416-A05E-5058B414142D}.Compile|x86.Build.0 = Compile|Win32
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Debug|Any CPU.Build.0 = Debug|x64
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Debug|x64.ActiveCfg = Debug|x64
@@ -49,6 +57,12 @@ Global
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Release|x64.Build.0 = Release|x64
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Release|x86.ActiveCfg = Release|Win32
 		{92943FAC-32B9-4416-A05E-5058B414142D}.Release|x86.Build.0 = Release|Win32
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|Any CPU.ActiveCfg = Compile|x64
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|Any CPU.Build.0 = Compile|x64
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|x64.ActiveCfg = Compile|x64
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|x64.Build.0 = Compile|x64
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|x86.ActiveCfg = Compile|Win32
+		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Compile|x86.Build.0 = Compile|Win32
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Debug|Any CPU.Build.0 = Debug|x64
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Debug|x64.ActiveCfg = Debug|x64
@@ -61,15 +75,12 @@ Global
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Release|x64.Build.0 = Release|x64
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Release|x86.ActiveCfg = Release|Win32
 		{8A8D9B56-DC74-49CA-9F0A-BDD2FD176F86}.Release|x86.Build.0 = Release|Win32
-<<<<<<< HEAD
-=======
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|Any CPU.ActiveCfg = Compile|Any CPU
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|Any CPU.Build.0 = Compile|Any CPU
-		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x64.ActiveCfg = Debug|Any CPU
-		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x64.Build.0 = Debug|Any CPU
+		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x64.ActiveCfg = Compile|Any CPU
+		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x64.Build.0 = Compile|Any CPU
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x86.ActiveCfg = Build|Any CPU
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Compile|x86.Build.0 = Build|Any CPU
->>>>>>> f8cc405 (Dev d3d11lib (#38))
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5442D22-FD24-4C8F-BAFB-865D1A7BF3F6}.Debug|x64.ActiveCfg = Debug|Any CPU
