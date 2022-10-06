@@ -38,7 +38,7 @@ namespace cvAutoTrackCSharp
         //public static extern bool GetTransform(ref float x, ref float y, ref float a);
 
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetTransformOfMap")]
-        public static extern bool GetTransformOfMap(ref float x, ref float y, ref float a, ref int mapId);
+        public static extern bool GetTransformOfMap(ref double x, ref double y, ref double a, ref int mapId);
 
         //[DllImport("cvAutoTrack.dll", EntryPoint = "GetPosition")]
         //public static extern bool GetPosition(ref double x, ref double y);

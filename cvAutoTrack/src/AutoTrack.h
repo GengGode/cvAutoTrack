@@ -28,8 +28,8 @@ public:
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
-	bool GetTransform(float &x, float &y, float &a);
-	bool GetTransformOfMap(float& x, float& y, float& a, int& mapId);
+	bool GetTransform(double&x, double&y, double&a);
+	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
 	bool GetPosition(double &x, double &y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
 	bool GetDirection(double &a);
@@ -39,8 +39,10 @@ public:
 	//获取发现的神瞳坐标，以json字符串格式
 	bool GetStarJson(char *jsonBuff);
 	bool GetUID(int &uid);
-	bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
-	bool GetInfoLoadVideo(char * path, char * pathOutFile);
+	/*********/
+	bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
+	bool GetInfoLoadVideo(char* path, char* pathOutFile);
+	/*********/
 	int GetLastError();
 	const char* GetLastErrorStr();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
@@ -183,7 +185,7 @@ private:
 	Capture* capture = nullptr;
 
 private:
-	HWND giHandle;
+	HWND giHandle =0;
 	RECT giRect;
 	RECT giClientRect;
 	cv::Size giClientSize;
@@ -193,13 +195,16 @@ private:
 	cv::Mat giUIDRef;
 	cv::Mat giAvatarRef;
 	cv::Mat giStarRef;
-	cv::Rect Area_Paimon_mayArea;
-	cv::Rect Area_Minimap_mayArea;
-	cv::Rect Area_UID_mayArea;
-	cv::Rect Area_Avatar_mayArea;
+	//cv::Rect Area_Paimon_mayArea;
+	//cv::Rect Area_Minimap_mayArea;
+	//cv::Rect Area_UID_mayArea;
+	//cv::Rect Area_Avatar_mayArea;
 
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
+	GenshinPaimon genshin_paimon;
+	GenshinMinimapCailb genshin_minimap_cailb;
+	GenshinMinimap genshin_minimap;
 	
 private:
 	bool getAutoTrackIsInit();

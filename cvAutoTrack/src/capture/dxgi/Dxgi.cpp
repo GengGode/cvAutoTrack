@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Dxgi.h"
+#include <opencv2/core/directx.hpp>
 
 using namespace winrt;
 using namespace Windows;
@@ -18,16 +19,31 @@ Dxgi::Dxgi()
 {
     mode = Capture::Mode_DirectX;
 
-    auto d3dDevice = CreateD3DDevice();
-    auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
-    d3dDevice->GetImmediateContext(m_d3dContext.put());
-    // Set up 
-    //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-    m_device = CreateDirect3DDevice(dxgiDevice.get());
+    // auto d3dDevice = CreateD3DDevice();
+    // auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
+    // d3dDevice->GetImmediateContext(m_d3dContext.put());
+    // // Set up 
+    // //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+    // m_device = CreateDirect3DDevice(dxgiDevice.get());
 }
 
 bool Dxgi::init()
 {
+    // 只需要定义一下，不会用上，唯一的作用是避免依赖d3d11.dll
+    // 这背后大概有什么科学原理吧，可能
+    static cv::VideoCapture Video;
+
+	static auto d3dDevice = CreateD3DDevice();
+    static auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
+    static bool is_frist = true;
+    if (is_frist)
+    {
+        d3dDevice->GetImmediateContext(m_d3dContext.put());
+        // Set up 
+        //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        m_device = CreateDirect3DDevice(dxgiDevice.get());
+    }
+
 	if(!giHandle)
     {
         err = { 10003,"句柄为空" };
@@ -36,7 +52,7 @@ bool Dxgi::init()
 
         m_item = CreateCaptureItemForWindow(giHandle);
 
-        auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
+        // auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
         //d3dDevice->GetImmediateContext(m_d3dContext.put());
         
         auto size = m_item.Size();
@@ -83,10 +99,10 @@ bool Dxgi::init()
         }
 
         m_lastSize = size;
-        //m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
+        m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
 
         StartCapture();
-	
+        is_need_init = false;
     return true;
 }
 
@@ -143,6 +159,10 @@ bool Dxgi::capture(cv::Mat& frame)
         err = { 10005,"未能从GPU拷贝画面到CPU" };
         return false;
     }
+
+    //cv::Mat test;
+    //cv::directx::convertFromD3D11Texture2D(bufferTexture,test);
+	
     D3D11_MAPPED_SUBRESOURCE mappedTex;
     m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
 	
@@ -185,9 +205,17 @@ void Dxgi::Close()
     auto expected = false;
     if (m_closed.compare_exchange_strong(expected, true))
     {
+        if (is_need_init)
+            return;
         m_frameArrived.revoke();
-        m_framePool.Close();
-        m_session.Close();
+        if (m_framePool != nullptr)
+        {
+            m_framePool.Close();
+        }
+        if (m_session != nullptr)
+        {
+            m_session.Close();
+        }
 		
         m_swapChain = nullptr;
         m_framePool = nullptr;

@@ -51,6 +51,7 @@ private:
     std::atomic<bool> m_closed = false;
     winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::FrameArrived_revoker m_frameArrived;
 private:
+    bool is_need_init = false;
 	//ID3D11Texture2D* m_pTexture = nullptr;
 	HWND giHandle = nullptr;
 };
