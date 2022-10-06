@@ -1858,7 +1858,7 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 		err = { 40003, "splite minimap Ê§°Ü" };
 		return false;
 	}
-	genshin_screen.config.rect_minimap = rect_minimap.rect_minimap;
+	genshin_screen.config.rect_minimap = genshin_minimap.rect_minimap;
 	giMiniMapRef = genshin_minimap.img_minimap;
 
 #ifdef _DEBUG
