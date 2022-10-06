@@ -323,6 +323,8 @@
     <ClInclude Include="src\framework.h" />
     <ClInclude Include="src\Kalmanfilter.h" />
     <ClInclude Include="src\match\match_minimap.h" />
+    <ClInclude Include="src\match\surf\SurfMatch.h" />
+    <ClInclude Include="src\match\type\MatchType.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\resources\Resources.h" />
@@ -347,6 +349,7 @@
     <ClCompile Include="src\FlowWork.cpp" />
     <ClCompile Include="src\Kalmanfilter.cpp" />
     <ClCompile Include="src\match\match_minimap.cpp" />
+    <ClCompile Include="src\match\surf\SurfMatch.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

@@ -189,18 +189,40 @@ bool AutoTrack::DebugCapture()
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
-	// 绘制paimon Rect
-	cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
-	// 绘制miniMap Rect
-	cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
-	cv::Rect Avatar = Area_Avatar_mayArea;
-	Avatar.x += Area_Minimap_mayArea.x;
-	Avatar.y += Area_Minimap_mayArea.y;
-	
-	// 绘制avatar Rect
-	cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-	// 绘制UID Rect
-	cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+	switch (capture->mode)
+	{
+	case Capture::Mode_Bitblt:
+	{
+		// 绘制paimon Rect
+		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
+		// 绘制miniMap Rect
+		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = Area_Avatar_mayArea;
+		Avatar.x += genshin_screen.config.rect_minimap.x;
+		Avatar.y += genshin_screen.config.rect_minimap.y;
+
+		// 绘制avatar Rect
+		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+		// 绘制UID Rect
+		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		break;
+	}
+	case Capture::Mode_DirectX:
+	{
+		// 绘制paimon Rect
+		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
+		// 绘制miniMap Rect
+		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = Area_Avatar_mayArea;
+		Avatar.x += Area_Minimap_mayArea.x;
+		Avatar.y += Area_Minimap_mayArea.y;
+
+		// 绘制avatar Rect
+		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+		// 绘制UID Rect
+		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+	}
+	}
 	
 	bool rel = cv::imwrite("Capture.png", out_info_img);
 	
@@ -1251,12 +1273,18 @@ bool AutoTrack::GetUID(int& uid)
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
 	// warning C4100 path uid x y a
-
+	UNREFERENCED_PARAMETER(path);
+	UNREFERENCED_PARAMETER(uid);
+	UNREFERENCED_PARAMETER(x);
+	UNREFERENCED_PARAMETER(y);
+	UNREFERENCED_PARAMETER(a);
 
 	return false;
 }
 bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 {
+	UNREFERENCED_PARAMETER(path);
+	UNREFERENCED_PARAMETER(pathOutFile);
 	return true;
 }
 
@@ -1413,12 +1441,13 @@ bool AutoTrack::getGengshinImpactRect()
 	int paimon_mayArea_width = static_cast<int>(x * 0.10);
 	int paimon_mayArea_height = static_cast<int>(y * 0.10);
 	// 派蒙可能性区域
-	cv::Rect Area_Paimon_mayArea(
+	//cv::Rect Area_Paimon_mayArea(
+	genshin_handle.rect_paimon_maybe=cv::Rect(
 		paimon_mayArea_left,
 		paimon_mayArea_top,
 		paimon_mayArea_width,
 		paimon_mayArea_height);
-	genshin_handle.rect_paimon_maybe = Area_Paimon_mayArea;
+	//genshin_handle.rect_paimon_maybe = Area_Paimon_mayArea;
 
 	// 小地图标定可能性区域计算参数
 	int miniMap_Cailb_mayArea_left = static_cast<int>(x * 0.10);
@@ -1452,12 +1481,14 @@ bool AutoTrack::getGengshinImpactRect()
 	int UID_mayArea_width = x - UID_mayArea_left;
 	int UID_mayArea_height = y - UID_mayArea_top;
 	// UID可能性区域
-	cv::Rect Area_UID_mayArea(
+	//cv::Rect Area_UID_mayArea(
+	genshin_handle.rect_uid_maybe =cv::Rect(
 		UID_mayArea_left,
 		UID_mayArea_top,
 		UID_mayArea_width,
 		UID_mayArea_height);
-	genshin_handle.rect_uid_maybe = Area_UID_mayArea;
+	//genshin_handle.rect_uid_maybe = Area_UID_mayArea;
+	
 	int UID_Rect_x = cvCeil(x - x * (1.0 - 0.865));
 	int UID_Rect_y = cvCeil(y - 1080.0 * (1.0 - 0.9755));
 	int UID_Rect_w = cvCeil(1920 * 0.11);
@@ -1776,13 +1807,13 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 		MiniMap_Rect_w = cvRound(1920 * 0.11);
 		MiniMap_Rect_h = cvRound(1920 * 0.11);
 	}
-	Area_Minimap_mayArea = cv::Rect(
+	genshin_minimap.rect_minimap = cv::Rect(
 		MiniMap_Rect_x,
 		MiniMap_Rect_y,
 		MiniMap_Rect_w,
 		MiniMap_Rect_h);
-
-	giMiniMapRef = giFrame(Area_Minimap_mayArea);
+	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
+	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
 
 
 	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标

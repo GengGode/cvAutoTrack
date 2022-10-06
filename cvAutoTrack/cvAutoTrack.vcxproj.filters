@@ -35,6 +35,12 @@
     <Filter Include="src\utils">
       <UniqueIdentifier>{eb43bce9-bfd0-402a-b861-47a6b71b007c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\match\surf">
+      <UniqueIdentifier>{b44a52c1-eb36-44d4-9d60-9653e25b9a34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\match\type">
+      <UniqueIdentifier>{3c973a25-eb85-4aad-a785-98e5dff329a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -99,6 +105,12 @@
     <ClInclude Include="src\ErrorCode.h">
       <Filter>src\utils</Filter>
     </ClInclude>
+    <ClInclude Include="src\match\surf\SurfMatch.h">
+      <Filter>src\match\surf</Filter>
+    </ClInclude>
+    <ClInclude Include="src\match\type\MatchType.h">
+      <Filter>src\match\type</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -140,6 +152,7 @@
     <ClCompile Include="src\FlowWork.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\match\surf\SurfMatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
