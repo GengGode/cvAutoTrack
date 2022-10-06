@@ -11,9 +11,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="src\model">
-      <UniqueIdentifier>{5ecb05a6-5eb3-404b-87a1-355b87747a16}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\capture">
       <UniqueIdentifier>{dab1e440-aefc-4c57-aba1-f28c90365601}</UniqueIdentifier>
     </Filter>
@@ -152,7 +149,9 @@
     <ClCompile Include="src\FlowWork.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\match\surf\SurfMatch.cpp" />
+    <ClCompile Include="src\match\surf\SurfMatch.cpp">
+      <Filter>src\match\surf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
