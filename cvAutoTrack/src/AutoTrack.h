@@ -195,11 +195,11 @@ private:
 	cv::Mat giUIDRef;
 	cv::Mat giAvatarRef;
 	cv::Mat giStarRef;
-	//cv::Rect Area_Paimon_mayArea;
-	//cv::Rect Area_Minimap_mayArea;
-	//cv::Rect Area_UID_mayArea;
-	//cv::Rect Area_Avatar_mayArea;
-
+	cv::Rect Area_Paimon_mayArea;
+	cv::Rect Area_Minimap_mayArea;
+	cv::Rect Area_UID_mayArea;
+	cv::Rect Area_Avatar_mayArea;
+	
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
 	GenshinPaimon genshin_paimon;
