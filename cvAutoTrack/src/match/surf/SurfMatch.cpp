@@ -2,6 +2,7 @@
 #include "SurfMatch.h"
 #include "match/type/MatchType.h"
 #include "resources/Resources.h"
+#include "utils/Utils.h"
 
 SurfMatch::SurfMatch()
 {
@@ -50,7 +51,7 @@ void SurfMatch::match()
 	isContinuity = false;
 
 	//角色移动连续性判断
-	if (((dis(dp1) + dis(dp2)) < 2000) && (hisP[2].x > someSizeR && hisP[2].x < _mapMat.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < _mapMat.rows - someSizeR))
+	if (((TianLi::Utils::dis(dp1) + TianLi::Utils::dis(dp2)) < 2000) && (hisP[2].x > someSizeR && hisP[2].x < _mapMat.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < _mapMat.rows - someSizeR))
 	{
 		isContinuity = true;
 	}
@@ -133,7 +134,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	double sumx = 0;
 	double sumy = 0;
 
-	calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
 
 	if (std::max(lisx.size(), lisy.size()) <= 4)
 	{
@@ -150,7 +151,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 		isOnCity = false;
 	}
 
-	cv::Point2d pos_continuity_on_city = SPC(lisx, sumx, lisy, sumy);
+	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 
 	pos_continuity_on_city.x = (pos_continuity_on_city.x - someMap.cols / 2.0) / 2.0;
 	pos_continuity_on_city.y = (pos_continuity_on_city.y - someMap.rows / 2.0) / 2.0;
@@ -190,14 +191,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	double sumx = 0;
 	double sumy = 0;
 
-	calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
 
 	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
 	if (std::min(lisx.size(), lisy.size()) > 4)
 	{
 		isOnCity = false;
 
-		cv::Point2d p = SPC(lisx, sumx, lisy, sumy);
+		cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 		pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
 	}
 	else
@@ -232,7 +233,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		double sum_x_on_city = 0;
 		double sum_y_on_city = 0;
 
-		calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
+		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
 
 		if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= 4)
 		{
@@ -249,7 +250,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 			isOnCity = false;
 		}
 
-		cv::Point2d p = SPC(list_x_on_city, sum_x_on_city, list_y_on_city, sum_y_on_city);
+		cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, sum_x_on_city, list_y_on_city, sum_y_on_city);
 
 		double x = (p.x - someMap.cols / 2.0) / 2.0;
 		double y = (p.y - someMap.rows / 2.0) / 2.0;
@@ -287,7 +288,7 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 	double sumx = 0;
 	double sumy = 0;
 
-	calc_good_matches(img_scene, Kp_Map, img_object, Kp_MinMap, KNN_m, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(img_scene, Kp_Map, img_object, Kp_MinMap, KNN_m, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
 
 	if (std::min(lisx.size(), lisy.size()) == 0)
 	{
@@ -295,48 +296,11 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 		return pos_continuity_no;
 	}
 
-	pos_continuity_no = SPC(lisx, sumx, lisy, sumy);
+	pos_continuity_no = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 
 	return pos_continuity_no;
 }
 
-
-void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double render_map_scale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
-{
-#ifdef _DEBUG
-	std::vector<cv::DMatch> good_matches;
-#endif
-	for (size_t i = 0; i < KNN_m.size(); i++)
-	{
-		if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-		{
-#ifdef _DEBUG
-			good_matches.push_back(KNN_m[i][0]);
-#endif
-			if (KNN_m[i][0].queryIdx >= keypoint_object.size())
-			{
-				continue;
-			}
-			lisx.push_back(((img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x) * render_map_scale + keypoint_scene[KNN_m[i][0].trainIdx].pt.x));
-			lisy.push_back(((img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y) * render_map_scale + keypoint_scene[KNN_m[i][0].trainIdx].pt.y));
-			sumx += lisx.back();
-			sumy += lisy.back();
-		}
-	}
-#ifdef _DEBUG
-	draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
-#endif
-}
-
-
-void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
-{
-	cv::Mat img_matches, imgmap, imgminmap;
-	drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-	drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
-	drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-}
 
 cv::Point2d SurfMatch::SURFMatch(cv::Mat minMapMat)
 {
@@ -352,78 +316,6 @@ bool SurfMatch::getIsContinuity()
 {
 	return isContinuity;
 }
-
-double SurfMatch::dis(cv::Point2d& p)
-{
-	return sqrt(p.x * p.x + p.y * p.y);
-}
-
-cv::Point2d SurfMatch::SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
-{
-	//这个剔除异常点算法
-	//回头要改
-	cv::Point2d mpos;
-	double meanx = sumx / lisx.size(); //均值
-	double meany = sumy / lisy.size(); //均值
-	double x = meanx;
-	double y = meany;
-	if (std::min(lisx.size(), lisy.size()) > 3)
-	{
-		double accumx = 0.0;
-		double accumy = 0.0;
-		for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
-		{
-			accumx += (lisx[i] - meanx) * (lisx[i] - meanx);
-			accumy += (lisy[i] - meany) * (lisy[i] - meany);
-		}
-
-		double stdevx = sqrt(accumx / (lisx.size() - 1)); //标准差
-		double stdevy = sqrt(accumy / (lisy.size() - 1)); //标准差
-
-		sumx = 0;
-		sumy = 0;
-		double numx = 0;
-		double numy = 0;
-		for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
-		{
-			if (abs(lisx[i] - meanx) < 1 * stdevx)
-			{
-				sumx += lisx[i];
-				numx++;
-			}
-
-			if (abs(lisy[i] - meany) < 1 * stdevy)
-			{
-				sumy += lisy[i];
-				numy++;
-			}
-		}
-		double xx = sumx / numx;
-		double yy = sumy / numy;
-		mpos = cv::Point2d(xx, yy);
-	}
-	else
-	{
-		mpos = cv::Point2d(x, y);
-	}
-	return mpos;
-}
-
-double SurfMatch::var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
-{
-	double accumx = 0.0;
-	double accumy = 0.0;
-	for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
-	{
-		accumx = (lisx[i] - sumx) * (lisx[i] - sumx);
-		accumy = (lisy[i] - sumy) * (lisy[i] - sumy);
-	}
-	double stdevx = sqrt(accumx / (lisx.size() - 1));
-	double stdevy = sqrt(accumy / (lisy.size() - 1));
-
-	return sqrt(stdevx * stdevx + stdevy * stdevy);
-}
-
 
 void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPosition& out_genshin_position)
 {

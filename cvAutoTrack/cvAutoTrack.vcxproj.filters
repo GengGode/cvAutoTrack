@@ -108,6 +108,9 @@
     <ClInclude Include="src\match\type\MatchType.h">
       <Filter>src\match\type</Filter>
     </ClInclude>
+    <ClInclude Include="src\match\Match.h">
+      <Filter>src\match</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="src\match\surf\SurfMatch.cpp">
       <Filter>src\match\surf</Filter>
+    </ClCompile>
+    <ClCompile Include="src\match\Match.cpp">
+      <Filter>src\match</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
