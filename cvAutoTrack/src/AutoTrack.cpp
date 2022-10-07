@@ -335,16 +335,18 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		return false;
 	}
 
-	cv::Mat img_object(giMiniMapRef(cv::Rect(30, 30, giMiniMapRef.cols - 60, giMiniMapRef.rows - 60)));
+	cv::Mat img_object(giMiniMapRef(cv::Rect(20, 20, giMiniMapRef.cols - 40, giMiniMapRef.rows - 40)));
 	cv::cvtColor(img_object, img_object, cv::COLOR_RGBA2RGB);
 
-
+	int someSizeR = (img_object.cols + img_object.rows) / 4;
+		 
 	isContinuity = false;
 	isConveying = false;
 
 	cv::Point2d* hisP = _TransformHistory;
 
 	cv::Point2d pos;
+
 
 	if (dis(hisP[2] - hisP[1]) < 1000)
 	{
