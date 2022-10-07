@@ -1,4 +1,7 @@
 这是英文，点击查看[中文](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/README.md) 
+
+This content is from Google Translate.
+
 # GenshinImpact AutoTrack DLL
 
 
@@ -8,8 +11,7 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 
 # introduce 
 
-
-### Currently supports any resolution, but does not support gamepad mode yet
+### Currently supports any resolution and handle mode, but does not support the [Following View] of the minimap setting, only supports [Lock Direction]
 ### The map currently supports regions
 
 | Genshin Impact Version | Map Area | dll Version |
@@ -28,6 +30,32 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 
 ## ~~Support NVIDIA GPU graphics computing acceleration~~ (remote compilation does not support cuda, so I sent it)
 
+### Functions supported by each version
+
+| Version | Keyboard Mode | Gamepad Mode | Resolution Support List |
+| -------- | ------ | ------ | ------ |
+| 6.4.x | √ | × | 1920x1080 |
+| 6.5.39 | √ | × | 1920x1080, 2560x1440, 2560x1080 |
+| 6.5.92 | √ | √(Not supported in DX mode) | 16:9 series (but not 4K and above), 21:9 series, and all resolutions below 1920*1080 |
+
+## New version planned 7.0.0
+
+- [ ] Added inertial acceleration navigation algorithm for positioning
+- [ ] Added smooth transition algorithm for positioning
+- [ ] Added automatic calibration algorithm for positioning
+- [ ] Fully support controller mode
+- [ ] Fully supports any resolution, 4K and above
+- [ ] supports any map area
+- [ ] support incoming map instead of inline
+- [ ] optional embedded precomputed result
+
+### Interface modification scheme
+
+- [ ] Refactor the interface to uniformly use double as floating-point parameters
+    - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
+- [ ] Refactored the interface to uniformly use int as the return value of the interface
+    - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
+- `bool GetDirection(double &a)` -> `int GetDirection(double &a)`
 
 # how to use
 

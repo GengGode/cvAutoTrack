@@ -170,3 +170,4 @@ CreateDXGISwapChain(
 
     return CreateDXGISwapChain(device, &desc);
 }
+/// DXGI_ALPHA_MODE_UNSPECIFIED

@@ -18,13 +18,6 @@ using namespace Windows::UI::Composition;
 Dxgi::Dxgi()
 {
     mode = Capture::Mode_DirectX;
-
-    // auto d3dDevice = CreateD3DDevice();
-    // auto dxgiDevice = d3dDevice.as<IDXGIDevice>();
-    // d3dDevice->GetImmediateContext(m_d3dContext.put());
-    // // Set up 
-    // //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-    // m_device = CreateDirect3DDevice(dxgiDevice.get());
 }
 
 bool Dxgi::init()
@@ -80,7 +73,7 @@ bool Dxgi::init()
                         L"Windows.Graphics.Capture.GraphicsCaptureSession",
                         L"IsBorderRequired");
             }
-            catch (const winrt::hresult_error& err) {
+            catch (const winrt::hresult_error&) {
                 return false;
             }
             catch (...) {
