@@ -70,9 +70,6 @@ namespace cvAutoTrackCSharp
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetLastErr")]
         public static extern int GetLastErr();
 
-        [DllImport("cvAutoTrack.dll", EntryPoint = "GetLastErrStr")]
-        public static extern byte[] GetLastErrStr();
-
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetLastErrMsg")]
         public static extern int GetLastErrMsg(byte[] msg_buff, int buff_size);
 

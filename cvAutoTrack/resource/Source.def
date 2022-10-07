@@ -23,5 +23,4 @@ GetUID					  @19
 GetInfoLoadPicture		  @20
 GetInfoLoadVideo		  @21
 GetLastErr				  @22
-GetLastErrStr			  @23
-GetLastErrMsg             @24
+GetLastErrMsg             @23
