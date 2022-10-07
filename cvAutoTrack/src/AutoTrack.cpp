@@ -185,7 +185,7 @@ bool AutoTrack::DebugCapture()
 {
 	if (giFrame.empty())
 	{
-		err = { 501,"画面为空" };
+		err = { 251,"画面为空" };
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
@@ -228,7 +228,7 @@ bool AutoTrack::DebugCapture()
 
 	if (!rel)
 	{
-		err = { 502,"保存画面失败 " };
+		err = { 252,"保存画面失败 " };
 		return false;
 	}
 	err = 0;
@@ -282,9 +282,9 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 	{
 		return false;
 	}
-	x = (float)x2;
-	y = (float)y2;
-	a = (float)a2;
+	x = x2;
+	y = y2;
+	a = a2;
 	mapId = mapId2;
 	return true;
 }
@@ -313,7 +313,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		
 		if (getMiniMapRefMat_Bitblt()==false)
 		{
-			err = { 1000, "Bitblt模式下获取坐标时，没有识别到paimon" };
+			err = { 1001, "Bitblt模式下获取坐标时，没有识别到paimon" };
 			return false;
 		}
 	}
@@ -322,7 +322,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 1000, "获取坐标时，没有识别到paimon" };
+			err = { 1002, "获取坐标时，没有识别到paimon" };
 			return false;
 		}
 
@@ -604,8 +604,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 	cv::Point2d user_pos = TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 
-	x = (float)(user_pos.x);
-	y = (float)(user_pos.y);
+	x = user_pos.x;
+	y = user_pos.y;
 
 	err = 0;
 	return true;
