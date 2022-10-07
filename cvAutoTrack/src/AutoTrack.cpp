@@ -971,7 +971,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			cv::Rect paimon_rect;
 			if (!check_paimon(paimon_rect))
 			{
-				err = { 1000, "鑾峰彇鍧愭爣鏃讹紝娌℃湁璇嗗埆鍒皃aimon" };
+				err = { 1000, "获取坐标时，没有识别到paimon" };
 				return false;
 			}
 
@@ -1869,7 +1869,6 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(1);
-	//std::cout << "Show MiniMap" << std::endl;
 #endif
 	return true;
 }
@@ -1965,7 +1964,6 @@ bool AutoTrack::getAvatarRefMat()
 	cv::namedWindow("Avatar", cv::WINDOW_FREERATIO);
 	cv::imshow("Avatar", giAvatarRef);
 	cv::waitKey(1);
-	//std::cout << "Show Avatar" << std::endl;
 #endif
 	return true;
 }
