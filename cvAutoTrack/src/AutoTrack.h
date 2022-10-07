@@ -12,7 +12,7 @@
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
 
-// ´ËÀàÊÇ²»µ¼³öµÄ
+// æ­¤ç±»æ˜¯ä¸å¯¼å‡ºçš„
 class AutoTrack {
 public:
 	AutoTrack(void);
@@ -24,7 +24,7 @@ public:
 	
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
-	
+
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
@@ -32,11 +32,11 @@ public:
 	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
 	bool GetPosition(double &x, double &y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
-	bool GetDirection(double &a);
-	bool GetRotation(double &a);
-	//»ñÈ¡·¢ÏÖµÄÉñÍ«×ø±ê,isEndÎªÕæÔòÎªµ±Ç°»­ÃæÖĞµÄ×îºóÒ»¸öÉñÍ«
-	bool GetStar(double &x, double &y, bool &isEnd);
-	//»ñÈ¡·¢ÏÖµÄÉñÍ«×ø±ê£¬ÒÔjson×Ö·û´®¸ñÊ½
+	bool GetDirection(double& a);
+	bool GetRotation(double& a);
+	//è·å–å‘ç°çš„ç¥ç³åæ ‡,isEndä¸ºçœŸåˆ™ä¸ºå½“å‰ç”»é¢ä¸­çš„æœ€åä¸€ä¸ªç¥ç³
+	bool GetStar(double& x, double& y, bool& isEnd);
+	//è·å–å‘ç°çš„ç¥ç³åæ ‡ï¼Œä»¥jsonå­—ç¬¦ä¸²æ ¼å¼
 	bool GetStarJson(char *jsonBuff);
 	bool GetUID(int &uid);
 	/*********/
@@ -78,69 +78,69 @@ private:
 	int someSizeR = 106;
 	double MatchMatScale = 2.0;
 
-	//ÓÃ»§¶¨ÒåÓ³Éä¹ØÏµ²ÎÊı
+	//ç”¨æˆ·å®šä¹‰æ˜ å°„å…³ç³»å‚æ•°
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
-	
+
 #define MAP_3_1
 
 
 #ifdef MAP_3_0
-	// ¾ø¶ÔÊÀ½çÖĞĞÄ ¾ø¶ÔÊÀ½çËõ·ÅÏµÊı
+	// ç»å¯¹ä¸–ç•Œä¸­å¿ƒ ç»å¯¹ä¸–ç•Œç¼©æ”¾ç³»æ•°
 	//World Center on AbsAllMap Coor
 	double WorldCenter_X = 7400; //Abs 2871   * MapAbsScale = 7392.2870
 	double WorldCenter_Y = 9432; //Abs 3015.5 * MapAbsScale = 7710.6335
 	double WorldScale = 1.0; //Abs
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äÔ­µã×ø±ê
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´åŸç‚¹åæ ‡
 	//Map Origin Point on AbsAllMap Coor.
 	double MapWorldAbsOffset_X = 7.7130; // 7400 - 7392.2870
 	double MapWorldAbsOffset_Y = 1721.3665; // 9432 - 7710.6335
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äËõ·ÅÏµÊı
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´ç¼©æ”¾ç³»æ•°
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
 	double MapAbsScale = 2.557; //from diff Image 67.40%
-	
-	//2021-09-07 ÊÇ¸ö¹Ì¶¨Öµ£¬²»ÓÃ±ä
-	//2022-09-26 ¹¹Ôìº¯ÊıÖĞ³õÊ¼»¯
-	cv::Point2d MapWorldOffset; 
+
+	//2021-09-07 æ˜¯ä¸ªå›ºå®šå€¼ï¼Œä¸ç”¨å˜
+	//2022-09-26 æ„é€ å‡½æ•°ä¸­åˆå§‹åŒ–
+	cv::Point2d MapWorldOffset;
 #endif
-	
+
 #ifdef MAP_3_1
-	// ¾ø¶ÔÊÀ½çÖĞĞÄ ÌìÀí×ø±êÏµÔ­µãÔÚÊµ¼Ê»­²¼µÄÎ»ÖÃ
+	// ç»å¯¹ä¸–ç•Œä¸­å¿ƒ å¤©ç†åæ ‡ç³»åŸç‚¹åœ¨å®é™…ç”»å¸ƒçš„ä½ç½®
 	// World Center on AbsAllMap Coor
 	double WorldCenter_X = 13544; //Abs 4480   * MapAbsScale = 11455.36
 	double WorldCenter_Y = 11480; //Abs 3015.5 * MapAbsScale = 7710.6335
-	// ¾ø¶ÔÊÀ½çËõ·ÅÏµÊı
+	// ç»å¯¹ä¸–ç•Œç¼©æ”¾ç³»æ•°
 	double WorldScale = 1.0; //Abs
-	
-	// µØÍ¼ÖĞĞÄµãµÄÊµ¼ÊÏñËØÎ»ÖÃ
+
+	// åœ°å›¾ä¸­å¿ƒç‚¹çš„å®é™…åƒç´ ä½ç½®
 	double MapPixelCenter_X = 4480;
 	double MapPixelCenter_Y = 3015.5;
 
-	// µØÍ¼ÖĞĞÄµã×ª»»µ½¾ø¶Ô¿Õ¼äÖĞµÄ×ø±ê
+	// åœ°å›¾ä¸­å¿ƒç‚¹è½¬æ¢åˆ°ç»å¯¹ç©ºé—´ä¸­çš„åæ ‡
 	// Map Origin Point on AbsAllMap Coor.
 	// MapWorldAbsCenter = MapPixelCenter * MapAbsScale;
 	double MapWorldAbsCenter_X = 11455.36;
 	double MapWorldAbsCenter_Y = 7710.6335;
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äÔ­µãÆ«ÒÆ
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´åŸç‚¹åç§»
 	//Map Origin Point on AbsAllMap Coor.
 	// MapWorldAbsOrigin = WorldCenter - MapWorldOffset
 	double MapWorldAbsOffset_X = 2088.64; // 13544 - 11455.36
 	double MapWorldAbsOffset_Y = 3769.3665; // 11480 - 7710.6335
 
-	//Ïà¶Ô¾ø¶Ô¿Õ¼äËõ·ÅÏµÊı
+	//ç›¸å¯¹ç»å¯¹ç©ºé—´ç¼©æ”¾ç³»æ•°
 	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
 	double MapAbsScale = 2.557; //from diff Image 67.40%
 
-	//2021-09-07 ÊÇ¸ö¹Ì¶¨Öµ£¬²»ÓÃ±ä
-	//2022-09-26 ¹¹Ôìº¯ÊıÖĞ³õÊ¼»¯
+	//2021-09-07 æ˜¯ä¸ªå›ºå®šå€¼ï¼Œä¸ç”¨å˜
+	//2022-09-26 æ„é€ å‡½æ•°ä¸­åˆå§‹åŒ–
 	// MapWorldOffset = MapWorldAbsOffset - WorldCenter
 	cv::Point2d MapWorldOffset = cv::Point2d(2096.083, 3769.3665);
 #endif
-	//2022-07-13 »¹ÊÇÃ»ÏëÆğÀ´
+	//2022-07-13 è¿˜æ˜¯æ²¡æƒ³èµ·æ¥
 	double MapWorldScale = 1.0;
 
 	// ???
@@ -150,7 +150,7 @@ private:
 private:
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
 	//
-	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap ;
+	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap;
 	//
 	std::vector<cv::KeyPoint> _KeyPointAllMap;
 	//std::vector<cv::KeyPoint>
@@ -174,14 +174,14 @@ private:
 private:
 	double check_match_paimon_params = 0.9;
 private:
-	// GPUÉè±¸ÊıÁ¿
+	// GPUè®¾å¤‡æ•°é‡
 	int gpuDeviceNumber = 0;
-	// Ê¹ÄÜGPUÉè±¸id
+	// ä½¿èƒ½GPUè®¾å¤‡id
 	int gpuDeviceId = -1;
-	
-	// ½çÃæ´¦ÓÚÊÖ±úÄ£Ê½
+
+	// ç•Œé¢å¤„äºæ‰‹æŸ„æ¨¡å¼
 	bool isHandleGameMode = false;
-	
+
 	Capture* capture = nullptr;
 
 private:
@@ -222,7 +222,7 @@ private:
 private:
 	bool clear_error_logs();
 private:
-	bool check_paimon(cv::Rect &paimon_rect);
+	bool check_paimon(cv::Rect& paimon_rect);
 	//bool check_minimap(cv::Rect minimap_rect);	
 	//bool check_uid(cv::Rect uid_rect);
 	//bool check_avatar(cv::Rect avatar_rect);

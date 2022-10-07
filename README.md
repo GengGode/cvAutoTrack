@@ -7,8 +7,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 # 介绍 
 
-
-### 目前支持任意分辨率，但尚不支持手柄模式
+### 目前支持任意分辨率，以及手柄模式，但暂不支持小地图设置的【跟随视角】仅支持【锁定方向】
 ### 地图目前支持区域
 
 | 原神版本 | 地图区域 | dll版本 |
@@ -27,6 +26,33 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 ## ~~支持 NVIDA GPU 图形计算加速~~ (远程编译不支持cuda，所以寄了)
 
+### 各版本所支持的功能
+
+| 版本 | 键盘模式 | 手柄模式 | 分辨率支持列表 |
+| -------- | ------ | ------ | ------ |
+|  6.4.x |  √ | × |  1920x1080 |
+|  6.5.39 |  √ | × |  1920x1080, 2560x1440, 2560x1080 |
+|  6.5.92 |  - | - |  - |
+|  7.0.1 |  √ | √(DX模式下不支持) |  16:9 系列(但不包括4K及以上), 21:9 系列, 以及1920*1080以下的所有分辨率 |
+
+## 新版本计划 7.0.0
+
+- [ ] 添加定位的惯性加速度导航算法
+- [ ] 添加定位的平滑过渡算法
+- [ ] 添加定位的自动校准算法
+- [ ] 完全支持手柄模式
+- [ ] 完全支持任意分辨率，4K及以上
+- [ ] 支持任意地图区域
+- [ ] 支持传入地图而非内嵌
+- [ ] 可选的嵌入预计算结果
+
+### 7.0 接口修改方案
+
+- [ ] 重构接口，统一使用double作为浮点参数
+    - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
+- [ ] 重构接口，统一使用int作为接口返回值
+    - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
+	- `bool GetDirection(double &a)` -> `int GetDirection(double &a)`
 
 # 如何使用
 
@@ -90,9 +116,6 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `startServe`                    | （未完成）开始服务，开启循环检测线程。                               |
 | `stopServe`                     | （未完成）停止服务，停止循环检测线程。                               |
 | ... | ... |
-| `GetGpuCount`                   | （即将删除）获取本机可用GPU设备数。                                 |
-| `SetGpuDevice`                  | （即将删除）设置启用GPU设备。                                       |
-| ... | ... |
 | `SetUseBitbltCaptureMode`       | 设置使用Bitblt截图，默认启用，速度较快，效果好，但某些系统不支持。       |
 | `SetUseDx11CaptureMode`         | 设置使用DirectX截图，效果较差，但支持win11及以上系统。                |
 | `SetHandle`                     | 设置原神客户端的窗口句柄。                                          |
@@ -101,9 +124,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | ... | ... |
 | `DebugCapture`                  | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
 | ... | ... |
-| `GetTransform`                  | （即将删除）获取当前人物所在位置以及角度（箭头朝向）。                  |
 | `GetTransformOfMap`             | 获取当前人物所在位置、角度（箭头朝向）及所在地图区域并重映射坐标区域。    |
-| `GetPosition`                   | （即将删除）获取当前人物所在位置。                                   |
 | `GetPositionOfMap`              | 获取所在位置的所在地图区域并重映射坐标区域。                          |
 | `GetDirection`                  | 获取当前角度（箭头朝向）。                                          |
 | `GetRotation`                   | 获取当前视角方位（视角朝向）。                                      |
@@ -113,7 +134,6 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `GetInfoLoadVideo`              | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
 | ... | ... |
 | `GetLastErr`                    | 获取最后设置的错误码。                                             |
-| `GetLastErrStr`                 | （即将删除）获取最后设置的错误信息。                                 |
 | `GetLastErrMsg`                 | 获取最后设置的错误信息。                                           | 
 
 
