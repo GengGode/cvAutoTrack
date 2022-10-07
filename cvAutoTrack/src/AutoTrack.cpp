@@ -687,14 +687,18 @@ bool AutoTrack::GetDirection(double& a)
 
 	if (capture->mode == Capture::Mode_Bitblt)
 	{
-		getMiniMapRefMat_Bitblt();
+		if (getMiniMapRefMat_Bitblt() == false)
+		{
+			err = { 2001, "Bitblt模式下获取角色朝向时，没有识别到paimon" };
+			return false;
+		}
 	}
 	else
 	{
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 2000 ,"获取角色朝向时，没有识别到Paimon" };
+			err = { 2002 ,"获取角色朝向时，没有识别到Paimon" };
 			return false;
 		}
 
@@ -800,14 +804,18 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (capture->mode == Capture::Mode_Bitblt)
 	{
-		getMiniMapRefMat_Bitblt();
+		if (getMiniMapRefMat_Bitblt() == false)
+		{
+			err = { 3001, "Bitblt模式下获取视角朝向时，没有识别到paimon" };
+			return false;
+		}
 	}
 	else
 	{
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 2000 ,"获取视角朝向时，没有识别到Paimon" };
+			err = { 3002 ,"获取视角朝向时，没有识别到Paimon" };
 			return false;
 		}
 
@@ -819,13 +827,13 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (img_object.channels() != 4)
 	{
-		err = { 401,"获取视角朝向时，原神小地图区域没有取到透明通道" };
+		err = { 3003,"获取视角朝向时，原神小地图区域没有取到透明通道" };
 		return false;
 	}
 
 	if (capture->mode == Capture::Mode_DirectX)
 	{
-		err = { 402,"DX模式下，原神小地图区域无法取到透明通道" };
+		err = { 3004,"DX模式下，原神小地图区域无法取到透明通道" };
 		return false;
 	}
 
@@ -869,7 +877,7 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (contours.size() == 0)
 	{
-		err = { 402 ,"获取视角朝向时，没有提取出视角扇形区域" };
+		err = { 3005 ,"获取视角朝向时，没有提取出视角扇形区域" };
 		return false;
 	}
 
@@ -953,18 +961,28 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		
 		if (capture->mode == Capture::Mode_Bitblt)
 		{
-			getMiniMapRefMat_Bitblt();
+			if (getMiniMapRefMat_Bitblt() == false)
+			{
+				err = { 4001, "Bitblt模式下获取神瞳时，没有识别到paimon" };
+				return false;
+			}
 		}
 		else
 		{
 			cv::Rect paimon_rect;
 			if (!check_paimon(paimon_rect))
 			{
-				err = { 1000, "获取坐标时，没有识别到paimon" };
+				err = { 4002, "获取神瞳时，没有识别到paimon" };
 				return false;
 			}
 
 			getMiniMapRefMat();
+		}
+		
+		if (giMiniMapRef.empty())
+		{
+			err = { 5, "原神小地图区域为空" };
+			return false;
 		}
 
 		cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
@@ -1061,19 +1079,30 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	
 	if (capture->mode == Capture::Mode_Bitblt)
 	{
-		getMiniMapRefMat_Bitblt();
+		if (getMiniMapRefMat_Bitblt() == false)
+		{
+			err = { 4001, "Bitblt模式下获取神瞳时，没有识别到paimon" };
+			return false;
+		}
 	}
 	else
 	{
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 1000, "获取坐标时，没有识别到paimon" };
+			err = { 4002, "获取神瞳时，没有识别到paimon" };
 			return false;
 		}
 
 		getMiniMapRefMat();
 	}
+	
+	if (giMiniMapRef.empty())
+	{
+		err = { 5, "原神小地图区域为空" };
+		return false;
+	}
+	
 	//一个bug 未开游戏而先开应用，开游戏时触发
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
@@ -1263,13 +1292,11 @@ bool AutoTrack::GetUID(int& uid)
 }
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
-	// warning C4100 path uid x y a
 	UNREFERENCED_PARAMETER(path);
 	UNREFERENCED_PARAMETER(uid);
 	UNREFERENCED_PARAMETER(x);
 	UNREFERENCED_PARAMETER(y);
 	UNREFERENCED_PARAMETER(a);
-
 	return false;
 }
 bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
