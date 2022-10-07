@@ -75,7 +75,6 @@ private:
 	int minHessian = 400;
 	double ratio_thresh = 0.66;
 	double mapScale = 1.3;//1.3;
-	int someSizeR = 106;
 	double MatchMatScale = 2.0;
 
 	//用户定义映射关系参数
