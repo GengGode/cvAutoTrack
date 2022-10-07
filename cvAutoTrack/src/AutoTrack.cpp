@@ -310,7 +310,12 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (capture->mode == Capture::Mode_Bitblt)
 	{
-		getMiniMapRefMat_Bitblt();
+		
+		if (getMiniMapRefMat_Bitblt()==false)
+		{
+			err = { 1000, "Bitblt模式下获取坐标时，没有识别到paimon" };
+			return false;
+		}
 	}
 	else
 	{
@@ -1826,7 +1831,12 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
-		err = { 40001,"Bitblt模式下没有发现Paimon" };
+		err = { 40001,"Bitblt模式下检测派蒙失败" };
+		return false;
+	}
+	if (genshin_paimon.is_visial == false)
+	{
+		err = { 50001,"Bitblt模式下未能检测到派蒙" };
 		return false;
 	}
 
@@ -1835,7 +1845,12 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
 	{
-		err = { 40002,"minimap cailb not find" };
+		err = { 40002,"Bitblt模式下检测小地图标定失败" };
+		return false;
+	}
+	if (genshin_minimap_cailb.is_visial == false)
+	{
+		err = { 50002,"Bitblt模式下未能检测到小地图标定" };
 		return false;
 	}
 
@@ -1843,9 +1858,10 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
 	{
-		err = { 40003, "splite minimap 失败" };
+		err = { 40003, "Bitblt模式下计算小地图区域失败" };
 		return false;
 	}
+
 	genshin_screen.config.rect_minimap = genshin_minimap.rect_minimap;
 	giMiniMapRef = genshin_minimap.img_minimap;
 
