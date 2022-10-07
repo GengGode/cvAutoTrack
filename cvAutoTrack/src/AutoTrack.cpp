@@ -8,7 +8,6 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
-using namespace TianLi::Utils;
 
 AutoTrack::AutoTrack()
 {
@@ -334,6 +333,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
+	
 
 	cv::Mat img_object(giMiniMapRef(cv::Rect(20, 20, giMiniMapRef.cols - 40, giMiniMapRef.rows - 40)));
 	cv::cvtColor(img_object, img_object, cv::COLOR_RGBA2RGB);
@@ -348,7 +348,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	cv::Point2d pos;
 
 
-	if (dis(hisP[2] - hisP[1]) < 1000)
+	if (TianLi::Utils::dis(hisP[2] - hisP[1]) < 1000)
 	{
 		if (hisP[2].x > someSizeR && hisP[2].x < img_scene.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < img_scene.rows - someSizeR)
 		{
@@ -393,7 +393,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 				double sumx = 0;
 				double sumy = 0;
 
-				calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_not, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
+				TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_not, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
 
 				if (min(lisx.size(), lisy.size()) <= 4)
 				{
@@ -447,7 +447,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 								isOnCity = false;
 							}
 
-							cv::Point2d pos_on_city_maybe = SPC(lisx, sumx, lisy, sumy);
+							cv::Point2d pos_on_city_maybe = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 
 							double x_on_city_maybe = (pos_on_city_maybe.x - someMap.cols / 2.0) / 2.0;
 							double y_on_city_maybe = (pos_on_city_maybe.y - someMap.rows / 2.0) / 2.0;
@@ -461,7 +461,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 				{
 					isOnCity = false;
 
-					cv::Point2d p_on_city_not = SPC(lisx, sumx, lisy, sumy);
+					cv::Point2d p_on_city_not = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 
 					pos = cv::Point2d(p_on_city_not.x + hisP[2].x - someSizeR, p_on_city_not.y + hisP[2].y - someSizeR);
 				}
@@ -501,7 +501,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 				double sumx = 0;
 				double sumy = 0;
 
-				calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+				TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
 
 				if (max(lisx.size(), lisy.size()) > 4)
 				{
@@ -514,7 +514,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 						isOnCity = false;
 					}
 
-					cv::Point2d pos_on_city = SPC(lisx, sumx, lisy, sumy);
+					cv::Point2d pos_on_city = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 
 					double x_on_city = (pos_on_city.x - someMap.cols / 2.0) / 2.0;
 					double y_on_city = (pos_on_city.y - someMap.rows / 2.0) / 2.0;
@@ -564,7 +564,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			double sumx = 0;
 			double sumy = 0;
 
-			calc_good_matches(img_scene, KeyPointAllMap, img_object, KeyPointMiniMap, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
+			TianLi::Utils::calc_good_matches(img_scene, KeyPointAllMap, img_object, KeyPointMiniMap, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
 
 
 
@@ -575,7 +575,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			}
 			else
 			{
-				pos = SPC(lisx, sumx, lisy, sumy);
+				pos = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 				isConveying = true;
 			}
 		}
@@ -602,9 +602,9 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	hisP[1] = hisP[2];
 	hisP[2] = filt_pos;
 
-	cv::Point2d abs_pos = TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 
-	cv::Point2d user_pos = TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 
 	x = user_pos.x;
 	y = user_pos.y;
@@ -623,8 +623,8 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		return false;
 	}
 
-	pos_tr = TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
-	pos_tr = TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
+	pos_tr = TianLi::Utils::TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+	pos_tr = TianLi::Utils::TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
 
 	//cv::Size size_DiXiaCengYan(1250, 1016);
@@ -656,8 +656,8 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 			_x = _x - 0;
 			_y = _y - 5543;
-			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TransferUserAxes(pos, 0, 0, 1);
+			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
 			x = pos.x;
 			y = pos.y;
 			break;
@@ -666,8 +666,8 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		{
 			_x = _x - 0;
 			_y = _y - 0;
-			cv::Point2d pos = TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TransferUserAxes(pos, 0, 0, 1);
+			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
 			x = pos.x;
 			y = pos.y;
 			break;
