@@ -358,6 +358,7 @@ namespace TianLi::Match
 		cv::Point paimon_match_minLoc, paimon_match_maxLoc;
 		cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
 
+		// 如果小于阈值，则尝试判断是否为手柄模式，否则为检测到派蒙
 		if (paimon_match_maxVal < out_genshin_paimon.config.check_match_paimon_params || paimon_match_maxVal == 1)
 		{
 			if (paimon_match_maxVal > 0.5)
