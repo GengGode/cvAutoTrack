@@ -430,7 +430,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 						sumx = 0;
 						sumy = 0;
 
-						calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_maybe, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+						TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_maybe, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
 
 						if (min(lisx.size(), lisy.size()) <= 4)
 						{
@@ -768,9 +768,9 @@ bool AutoTrack::GetDirection(double& a)
 		AvatarKeyPoint.push_back(cv::Point(cvRound(boundRect[i].x + boundRect[i].width / 2), cvRound(boundRect[i].y + boundRect[i].height / 2)));
 	}
 
-	AvatarKeyPointLine[0] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-	AvatarKeyPointLine[1] = dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
-	AvatarKeyPointLine[2] = dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+	AvatarKeyPointLine[0] = TianLi::Utils::dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+	AvatarKeyPointLine[1] = TianLi::Utils::dis(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+	AvatarKeyPointLine[2] = TianLi::Utils::dis(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
 
 	if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 	{
@@ -788,10 +788,10 @@ bool AutoTrack::GetDirection(double& a)
 		AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
 	}
 
-	AvatarKeyLine = Vector2UnitVector(AvatarKeyLine);
+	AvatarKeyLine = TianLi::Utils::Vector2UnitVector(AvatarKeyLine);
 	KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
 
-	a = Line2Angle(KeyLine);
+	a = TianLi::Utils::Line2Angle(KeyLine);
 
 	err = 0;
 	return true;
@@ -910,7 +910,7 @@ bool AutoTrack::GetRotation(double& a)
 #endif
 	p = p - cv::Point(img_object.cols / 2, img_object.rows / 2);
 
-	a = Line2Angle(p);
+	a = TianLi::Utils::Line2Angle(p);
 
 	return true;
 }
@@ -1270,7 +1270,7 @@ bool AutoTrack::GetUID(int& uid)
 				}
 				if (i == 10 - 1)
 				{
-					_NumBit[p] = getMaxID(tmplis, 10);
+					_NumBit[p] = TianLi::Utils::getMaxID(tmplis, 10);
 					x_uid_ = x_uid_ + tmplisx[_NumBit[p]];
 				}
 			}

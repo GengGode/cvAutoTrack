@@ -56,6 +56,21 @@ namespace TianLi::Utils
 		return pos;
 	}
 
+	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
+	{
+		double accumx = 0.0;
+		double accumy = 0.0;
+		for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
+		{
+			accumx = (lisx[i] - sumx) * (lisx[i] - sumx);
+			accumy = (lisy[i] - sumy) * (lisy[i] - sumy);
+		}
+		double stdevx = sqrt(accumx / (lisx.size() - 1));
+		double stdevy = sqrt(accumy / (lisy.size() - 1));
+
+		return sqrt(stdevx * stdevx + stdevy * stdevy);
+	}
+
 	int getMaxID(double lis[], int len)
 	{
 		int maxId = 0;

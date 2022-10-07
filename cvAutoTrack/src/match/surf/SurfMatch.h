@@ -49,13 +49,5 @@ public:
 	cv::Point2d SURFMatch(cv::Mat minMapMat);
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
-private:
-	double dis(cv::Point2d& p);
-	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
-	//Point SPC2(vector<double> lisx, double sumx, vector<double> lisy, double sumy);
-	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 };
 
-void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
-
-void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double render_map_scale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy);

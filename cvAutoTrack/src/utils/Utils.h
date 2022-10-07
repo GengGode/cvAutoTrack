@@ -6,6 +6,8 @@ namespace TianLi::Utils
 {
 	double dis(cv::Point2d p);
 	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
+	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
+	
 	int getMaxID(double lis[], int len);
 	int getMinID(double lis[], int len);
 
