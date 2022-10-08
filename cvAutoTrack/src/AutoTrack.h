@@ -11,6 +11,7 @@
 #include "capture/Capture.h"
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
+#include "version/Version.h"
 
 // 此类是不导出的
 class AutoTrack {
@@ -48,6 +49,8 @@ public:
 	int GetLastErrMsg(char* msg_buff, int buff_size);
 	bool startServe();
 	bool stopServe();
+
+	bool GetVersion(char* version_buff, int buff_size);
 
 	bool DebugCapture();
 
