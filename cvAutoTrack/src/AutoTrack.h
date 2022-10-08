@@ -204,6 +204,7 @@ private:
 	GenshinPaimon genshin_paimon;
 	GenshinMinimapCailb genshin_minimap_cailb;
 	GenshinMinimap genshin_minimap;
+	GenshinAvatarPosition genshin_avatar_position;
 	
 private:
 	bool getAutoTrackIsInit();

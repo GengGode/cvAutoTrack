@@ -177,7 +177,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
 
 	// 如果搜索范围内可识别特征点数量为0，则认为计算失败
-	if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() == 0)
+	if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;

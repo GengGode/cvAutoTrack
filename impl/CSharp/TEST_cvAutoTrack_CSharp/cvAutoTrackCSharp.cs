@@ -13,12 +13,6 @@ namespace cvAutoTrackCSharp
         [DllImport("cvAutoTrack.dll", EntryPoint = "uninit")]
         public static extern bool uninit();
 
-        //[DllImport("cvAutoTrack.dll", EntryPoint = "GetGpuCount")]
-        //public static extern int GetGpuCount();
-
-        //[DllImport("cvAutoTrack.dll", EntryPoint = "SetGpuDevice")]
-        //public static extern bool SetGpuDevice(int deviceId);
-
         [DllImport("cvAutoTrack.dll", EntryPoint = "SetUseBitbltCaptureMode")]
         public static extern bool SetUseBitbltCaptureMode();
 
@@ -34,14 +28,8 @@ namespace cvAutoTrackCSharp
         [DllImport("cvAutoTrack.dll", EntryPoint = "SetWorldScale")]
         public static extern bool SetWorldScale(double scale);
 
-        //[DllImport("cvAutoTrack.dll", EntryPoint = "GetTransform")]
-        //public static extern bool GetTransform(ref float x, ref float y, ref float a);
-
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetTransformOfMap")]
         public static extern bool GetTransformOfMap(ref double x, ref double y, ref double a, ref int mapId);
-
-        //[DllImport("cvAutoTrack.dll", EntryPoint = "GetPosition")]
-        //public static extern bool GetPosition(ref double x, ref double y);
 
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetPositionOfMap")]
         public static extern bool GetPositionOfMap(ref double x, ref double y, ref int mapId);

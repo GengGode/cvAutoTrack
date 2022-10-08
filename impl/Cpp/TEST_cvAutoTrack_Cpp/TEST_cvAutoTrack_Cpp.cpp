@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 //#include <cvAutoTrack.h>
 #include "../../../cvAutoTrack/include/cvAutoTrack.h"
 
@@ -8,10 +8,10 @@
 
 void Test_video()
 {
-	// é™æ€æ–¹æ³•è°ƒç”¨
-	// åˆå§‹åŒ–
+	// ¾²Ì¬·½·¨µ÷ÓÃ
+	// ³õÊ¼»¯
 	//init();
-	// å‡†å¤‡å˜é‡
+	// ×¼±¸±äÁ¿
 	float x = 0;
 	float y = 0;
 	float a = 0;
@@ -20,7 +20,7 @@ void Test_video()
 	double a2 = 0;
 	double aa2 = 0;
 	int uid = 0;
-	// è°ƒç”¨å¾ªç¯
+	// µ÷ÓÃÑ­»·
 
 	std::vector<std::vector<double>> his;
 	char path[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Picture/001.png" };
@@ -30,7 +30,7 @@ void Test_video()
 
 	//char pathTxt[256] = { "C:/Users/GengG/source/repos/cvAutoTrack/cvAutoTrack/Video/000.txt" };
 	/*GetInfoLoadVideo(pathV, pathTxt);
-	std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";*/
+	std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";*/
 
 	if (init())
 	{
@@ -50,7 +50,7 @@ void Test_video()
 	}
 	else
 	{
-		std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+		std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 	}
 	//SetWorldScale(1.0);
 	if (GetInfoLoadPicture(path, uid, x2, y2, a2))
@@ -59,13 +59,13 @@ void Test_video()
 	}
 	else
 	{
-		std::cout << "é”™è¯¯ç        : " << " " << GetLastErr() << " " << "\n";
+		std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 	}
 	char buff[1024] = { 0 };
 #ifdef _DEBUG
 	if (GetStarJson(buff))
 	{
-		//åæ ‡éœ€è¦æ˜ å°„ p * 1.33 + AvatarPos
+		//×ø±êĞèÒªÓ³Éä p * 1.33 + AvatarPos
 		std::cout << buff << "\n";
 	}
 #endif
@@ -75,20 +75,17 @@ void Test_video()
 
 int TEST()
 {
-	double x = 0;
-	double y = 0;
-	double a = 0;
-	int map_id = 0;
+	char version_buff[1024] = { 0 };
 
-	if (GetTransformOfMap(x, y, a, map_id))
+	if (verison(version_buff))
 	{
-		std::cout << "åæ ‡å’Œè§’åº¦   : " << " " << map_id << x << " " << y << " " << a << "\n";
+		std::cout << "°æ±¾ºÅ       : " << " " << version_buff << " " << "\n";
 	}
 	else
 	{
-		std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+		std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 	}
-
+	std::cout << "²âÊÔÍê³É\n";
 	return 0;
 }
 
@@ -101,7 +98,7 @@ int Run()
 	FILE* fptr = NULL;
 	fopen_s(&fptr, "./Output.txt", "w+");
 
-	// å‡†å¤‡å˜é‡
+	// ×¼±¸±äÁ¿
 	double x = 0;
 	double y = 0;
 	double a = 0;
@@ -113,82 +110,82 @@ int Run()
 	int uid = 0;
 	char buff[1024] = { 0 };
 
-	// è°ƒç”¨å¾ªç¯
+	// µ÷ÓÃÑ­»·
 	while (1)
 	{
-		// è®¾ç½®Dxæˆªå›¾
+		// ÉèÖÃDx½ØÍ¼
 		/*if (SetUseDx11CaptureMode())
 		{
-			std::cout << "è®¾ç½®Dxæˆªå›¾æˆåŠŸ" << "\n";
+			std::cout << "ÉèÖÃDx½ØÍ¼³É¹¦" << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}*/
 #pragma warning(suppress : 4996)
 		if (GetTransformOfMap(x, y, a, map_id))
 		{
-			std::cout << "åæ ‡å’Œè§’åº¦   : " << " " << map_id << x << " " << y << " " << a << "\n";
+			std::cout << "×ø±êºÍ½Ç¶È   : " << " " << map_id << x << " " << y << " " << a << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		//#pragma warning(suppress : 4996)
 		//		if (GetPosition(x2, y2))
 		//		{
 		//			int mapid = 0;
 		//			GetPositionOfMap(x2, y2, mapid);
-		//			std::cout << "åæ ‡         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
+		//			std::cout << "×ø±ê         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
 		//		}
 		//		else
 		//		{
-		//			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+		//			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		//		}
 		//		if (GetDirection(a2))
 		//		{
-		//			std::cout << "è§’åº¦         : " << " " << a2 << "\n";
+		//			std::cout << "½Ç¶È         : " << " " << a2 << "\n";
 		//		}
 		//		else
 		//		{
-		//			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+		//			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		//		}
 		//		if (GetRotation(aa2))
 		//		{
-		//			std::cout << "è§†è§’æœå‘     : " << " " << aa2 << "\n";
+		//			std::cout << "ÊÓ½Ç³¯Ïò     : " << " " << aa2 << "\n";
 		//		}
 		//		else
 		//		{
-		//			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+		//			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		//		}
 		if (GetUID(uid))
 		{
-			std::cout << "å½“å‰UID      : " << " " << uid << " " << "\n";
+			std::cout << "µ±Ç°UID      : " << " " << uid << " " << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 		if (GetStarJson(buff))
 		{
-			//åæ ‡éœ€è¦æ˜ å°„ p + AvatarPos
-			std::cout << "å½“å‰ç¥ç³Json : " << buff << "\n";
+			//×ø±êĞèÒªÓ³Éä p + AvatarPos
+			std::cout << "µ±Ç°ÉñÍ«Json : " << buff << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
-		// è®¾ç½®Dxæˆªå›¾
+		// ÉèÖÃDx½ØÍ¼
 		if (DebugCapture())
 		{
-			std::cout << "æˆªå›¾æˆåŠŸ" << "\n";
+			std::cout << "½ØÍ¼³É¹¦" << "\n";
 		}
 		else
 		{
-			std::cout << "é”™è¯¯ç        : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
 		}
 
-		// æ¨é€ioæµç¼“å­˜
+		// ÍÆËÍioÁ÷»º´æ
 		std::cout << std::flush;
 
 		Sleep(30);
@@ -200,14 +197,14 @@ int Run()
 
 int main(int argc, char* argv[])
 {
-	// å¦‚æœè¾“å…¥å‚æ•° -test å°±æ‰§è¡Œæµ‹è¯•
+	// Èç¹ûÊäÈë²ÎÊı -test ¾ÍÖ´ĞĞ²âÊÔ
 	if (argc > 1 && strcmp(argv[1], "-test") == 0)
 	{
 		return TEST();
 	}
 	else
 	{
-		// å¦åˆ™æ‰§è¡Œæ­£å¸¸çš„ç¨‹åº
+		// ·ñÔòÖ´ĞĞÕı³£µÄ³ÌĞò
 		return Run();
 	}
 }
