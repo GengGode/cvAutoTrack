@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,19 +15,26 @@ namespace TEST_cvAutoTrack_CSharp
         static int Main(string[] args)
         {
 
-            // å¦‚æœè¾“å…¥å‚æ•° -test å°±æ‰§è¡Œæµ‹è¯•
+            // Èç¹ûÊäÈë²ÎÊı -test ¾ÍÖ´ĞĞ²âÊÔ
             if (args.Length > 0 && args[0] == "-test")
             {
-                // æµ‹è¯•ç‰ˆæœ¬å·
+                // ²âÊÔ°æ±¾ºÅ
                 byte[] version_buff = new byte[256];
-                cvAutoTrack.verison(version_buff);
-                string version_str = Encoding.UTF8.GetString(version_buff);
-                Console.WriteLine("version: " + version_str);
+                if (cvAutoTrack.verison(version_buff))
+                {
+                    string version_str = Encoding.UTF8.GetString(version_buff);
+                    Console.WriteLine("°æ±¾ºÅ       : " + version_str);
+                }
+                else
+                {
+                    Console.WriteLine("´íÎóÂë       : " + cvAutoTrack.GetLastErr().ToString());
+                }
+                Console.WriteLine("²âÊÔÍê³É");
                 return 0;
             }
             else
             {
-                // è·å–ç‰ˆæœ¬å·
+                // »ñÈ¡°æ±¾ºÅ
                 byte[] versionBuff = new byte[1024];
                 //string version = "       ";
 
@@ -39,13 +46,13 @@ namespace TEST_cvAutoTrack_CSharp
 
 
 
-                // ç”³è¯·å†…å­˜
+                // ÉêÇëÄÚ´æ
                 byte[] jsonBuffer = new byte[1024];
 
-                // è°ƒç”¨ cvAutoTrack.dll
+                // µ÷ÓÃ cvAutoTrack.dll
                 bool ret = cvAutoTrackCSharp.cvAutoTrack.GetStarJson(jsonBuffer);
 
-                // è¾“å‡ºç»“æœ
+                // Êä³ö½á¹û
                 Console.WriteLine("ret = " + ret);
                 Console.WriteLine("jsonBuffer = " + Encoding.UTF8.GetString(jsonBuffer));
 
@@ -55,12 +62,12 @@ namespace TEST_cvAutoTrack_CSharp
                     if (count == 1)
                     {
                         cvAutoTrackCSharp.cvAutoTrack.SetUseDx11CaptureMode();
-                        Console.WriteLine("å¯ç”¨Dxæ¨¡å¼");
+                        Console.WriteLine("ÆôÓÃDxÄ£Ê½");
                     }
                     if (count == 15)
                     {
                         cvAutoTrackCSharp.cvAutoTrack.SetUseBitbltCaptureMode();
-                        Console.WriteLine("å¯ç”¨Bitbltæ¨¡å¼");
+                        Console.WriteLine("ÆôÓÃBitbltÄ£Ê½");
                     }
 
                     if (count >= 30)
@@ -77,7 +84,7 @@ namespace TEST_cvAutoTrack_CSharp
                     cvAutoTrackCSharp.cvAutoTrack.GetTransformOfMap(ref x, ref y, ref a, ref mapid);
                     Console.WriteLine("x = " + x + " y = " + y + " a = " + a + " mapid = " + mapid);
 
-                    // è·å–é”™è¯¯ç åŠé”™è¯¯ä¿¡æ¯
+                    // »ñÈ¡´íÎóÂë¼°´íÎóĞÅÏ¢
                     byte[] errorBuff = new byte[1024];
                     for (int i = 0; i < 1024; i++)
                     {

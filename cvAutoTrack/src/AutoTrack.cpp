@@ -4,6 +4,7 @@
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "utils/Utils.h"
+#include "match/Match.h"
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
@@ -290,14 +291,6 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 
 bool AutoTrack::GetPosition(double& x, double& y)
 {
-	static cv::Mat img_scene(res.MapTemplate);
-	static bool is_frist = true;
-	if (is_frist)
-	{
-		cv::cvtColor(img_scene, img_scene, cv::COLOR_RGBA2RGB);
-		is_frist = false;
-	}
-
 	if (wForAfter.run() == false)
 	{
 		return false;
@@ -333,253 +326,11 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
+	genshin_minimap.config.is_find_paimon = true;
+
+	TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 	
-
-	cv::Mat img_object(giMiniMapRef(cv::Rect(20, 20, giMiniMapRef.cols - 40, giMiniMapRef.rows - 40)));
-	cv::cvtColor(img_object, img_object, cv::COLOR_RGBA2RGB);
-
-	int someSizeR = (img_object.cols + img_object.rows) / 4;
-		 
-	isContinuity = false;
-	isConveying = false;
-
-	cv::Point2d* hisP = _TransformHistory;
-
-	cv::Point2d pos;
-
-
-	if (TianLi::Utils::dis(hisP[2] - hisP[1]) < 1000)
-	{
-		if (hisP[2].x > someSizeR && hisP[2].x < img_scene.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < img_scene.rows - someSizeR)
-		{
-			isContinuity = true;
-		}
-	}
-
-	if (isContinuity)
-	{
-		if (isOnCity == false)
-		{
-			cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
-			//cv::Mat someMap(img_scene(cv::Rect(cvRound(hisP[2].x - someSizeR), cvRound(hisP[2].y - someSizeR), cvRound(someSizeR * 2), cvRound(someSizeR * 2))));
-			cv::Mat minMap(img_object);
-
-
-			cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
-			std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
-			cv::Mat& DataPointSomeMap = _DataPointSomeMap;
-			std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
-			cv::Mat& DataPointMiniMap = _DataPointMiniMap;
-
-			detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
-			detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
-			detectorSomeMap->detectAndCompute(minMap, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
-
-
-
-			if (KeyPointMiniMap.size() == 0 || KeyPointSomeMap.size() <= 2)
-			{
-				isContinuity = false;
-			}
-			else
-			{
-				cv::Ptr<cv::DescriptorMatcher> matcher_on_city_not = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-				std::vector< std::vector<cv::DMatch> > KNN_m_on_city_not;
-
-				matcher_on_city_not->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_m_on_city_not, 2);
-
-				std::vector<double> lisx;
-				std::vector<double> lisy;
-				double sumx = 0;
-				double sumy = 0;
-
-				TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_not, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
-
-				if (min(lisx.size(), lisy.size()) <= 4)
-				{
-					//有可能处于城镇中
-
-					/***********************/
-					//重新从完整中地图取出角色周围部分地图
-					cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
-					//img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
-					//Mat minMap(img_object);
-
-					resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
-					//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
-
-					detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
-					detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
-					//detectorSomeMap->detectAndCompute(minMap, noArray(), KeyPointMinMap, DataPointMinMap);
-					if (KeyPointSomeMap.size() == 0 || KeyPointMiniMap.size() == 0)
-					{
-						isContinuity = false;
-					}
-					else
-					{
-						cv::Ptr<cv::DescriptorMatcher> matcher_on_city_maybe = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-						std::vector< std::vector<cv::DMatch> > KNN_m_on_city_maybe;
-
-						matcher_on_city_maybe->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_m_on_city_maybe, 2);
-						//std::vector<double> lisx;
-						//std::vector<double> lisy;
-						lisx.clear();
-						lisy.clear();
-						//double sumx = 0;
-						//double sumy = 0;
-						sumx = 0;
-						sumy = 0;
-
-						TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city_maybe, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
-
-						if (min(lisx.size(), lisy.size()) <= 4)
-						{
-							isContinuity = false;
-						}
-						else
-						{
-							if (min(lisx.size(), lisy.size()) >= 10)
-							{
-								isOnCity = true;
-							}
-							else
-							{
-								isOnCity = false;
-							}
-
-							cv::Point2d pos_on_city_maybe = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-
-							double x_on_city_maybe = (pos_on_city_maybe.x - someMap.cols / 2.0) / 2.0;
-							double y_on_city_maybe = (pos_on_city_maybe.y - someMap.rows / 2.0) / 2.0;
-
-							pos = cv::Point2d(x_on_city_maybe + hisP[2].x, y_on_city_maybe + hisP[2].y);
-						}
-
-					}
-				}
-				else
-				{
-					isOnCity = false;
-
-					cv::Point2d p_on_city_not = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-
-					pos = cv::Point2d(p_on_city_not.x + hisP[2].x - someSizeR, p_on_city_not.y + hisP[2].y - someSizeR);
-				}
-			}
-		}
-		else
-		{
-			//在城镇中
-				/***********************/
-				//重新从完整中地图取出角色周围部分地图
-			cv::Mat someMap = img_scene(cv::Rect(cvCeil(hisP[2].x - someSizeR), cvCeil(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).clone();
-			cv::Mat minMap(img_object);
-
-
-			cv::Ptr<cv::xfeatures2d::SURF>& detectorSomeMap = _detectorSomeMap;
-			std::vector<cv::KeyPoint>& KeyPointSomeMap = _KeyPointSomeMap;
-			cv::Mat& DataPointSomeMap = _DataPointSomeMap;
-			std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
-			cv::Mat& DataPointMiniMap = _DataPointMiniMap;
-
-
-			resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
-			//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
-
-			detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
-			detectorSomeMap->detectAndCompute(someMap, cv::noArray(), KeyPointSomeMap, DataPointSomeMap);
-			detectorSomeMap->detectAndCompute(minMap, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
-
-			if (KeyPointSomeMap.size() != 0 && KeyPointMiniMap.size() != 0)
-			{
-				cv::Ptr<cv::DescriptorMatcher> matcher_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-				std::vector< std::vector<cv::DMatch> > KNN_m_on_city;
-
-				matcher_on_city->knnMatch(DataPointMiniMap, DataPointSomeMap, KNN_m_on_city, 2);
-				std::vector<double> lisx;
-				std::vector<double> lisy;
-				double sumx = 0;
-				double sumy = 0;
-
-				TianLi::Utils::calc_good_matches(someMap, KeyPointSomeMap, img_object, KeyPointMiniMap, KNN_m_on_city, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
-
-				if (max(lisx.size(), lisy.size()) > 4)
-				{
-					if (min(lisx.size(), lisy.size()) >= 10)
-					{
-						isOnCity = true;
-					}
-					else
-					{
-						isOnCity = false;
-					}
-
-					cv::Point2d pos_on_city = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-
-					double x_on_city = (pos_on_city.x - someMap.cols / 2.0) / 2.0;
-					double y_on_city = (pos_on_city.y - someMap.rows / 2.0) / 2.0;
-
-					pos = cv::Point2d(x_on_city + hisP[2].x, y_on_city + hisP[2].y);
-				}
-				else
-				{
-					isContinuity = false;
-				}//if (max(lisx.size(), lisy.size()) > 4)
-			}
-			else
-			{
-				isContinuity = false;
-			}//if (KeyPointSomeMap.size() != 0 && KeyPointMinMap.size() != 0)
-		}
-	}
-	else
-	{
-		isConveying = true;
-	}
-
-	if (!isContinuity)
-	{
-		cv::Ptr<cv::xfeatures2d::SURF>& detectorAllMap = _detectorAllMap;
-		std::vector<cv::KeyPoint>& KeyPointAllMap = _KeyPointAllMap;
-		cv::Mat& DataPointAllMap = _DataPointAllMap;
-		std::vector<cv::KeyPoint>& KeyPointMiniMap = _KeyPointMiniMap;
-		cv::Mat& DataPointMiniMap = _DataPointMiniMap;
-
-		detectorAllMap->detectAndCompute(img_object, cv::noArray(), KeyPointMiniMap, DataPointMiniMap);
-
-		if (KeyPointMiniMap.size() == 0)
-		{
-			err = { 4, "小地图未能计算出可识别特征点" };//未能匹配到特征点
-			return false;
-		}
-		else
-		{
-			cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-			std::vector< std::vector<cv::DMatch> > KNN_m;
-
-			matcher->knnMatch(DataPointMiniMap, DataPointAllMap, KNN_m, 2);
-
-			std::vector<double> lisx;
-			std::vector<double> lisy;
-			double sumx = 0;
-			double sumy = 0;
-
-			TianLi::Utils::calc_good_matches(img_scene, KeyPointAllMap, img_object, KeyPointMiniMap, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
-
-
-
-			if (lisx.size() == 0 || lisy.size() == 0)
-			{
-				err = { 42, "未能匹配到特征点" };
-				return false;
-			}
-			else
-			{
-				pos = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-				isConveying = true;
-			}
-		}
-	}
+	cv::Point2d pos = genshin_avatar_position.position;
 
 	cv::Point2d filt_pos;
 
@@ -597,10 +348,6 @@ bool AutoTrack::GetPosition(double& x, double& y)
 #else
 	filt_pos = pos;
 #endif // USE_Filt
-
-	hisP[0] = hisP[1];
-	hisP[1] = hisP[2];
-	hisP[2] = filt_pos;
 
 	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 
