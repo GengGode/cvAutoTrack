@@ -181,6 +181,17 @@ bool AutoTrack::stopServe()
 	return false;
 }
 
+bool AutoTrack::GetVersion(char* version_buff, int buff_size)
+{
+	if (version_buff == NULL || buff_size < 1)
+	{
+		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
+		return false;
+	}
+	strncpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str(), _TRUNCATE);
+	return true;
+}
+
 bool AutoTrack::DebugCapture()
 {
 	if (giFrame.empty())

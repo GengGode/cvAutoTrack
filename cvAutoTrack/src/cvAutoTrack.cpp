@@ -11,9 +11,7 @@ static AutoTrack _at;
 
 bool __stdcall verison(char* versionBuff)
 {
-	const char version_cstr[] = "6.4.1";
-	strcpy_s(versionBuff,9, version_cstr);
-	return true;
+	return _at.GetVersion(versionBuff,32);
 }
 
 bool __stdcall init()

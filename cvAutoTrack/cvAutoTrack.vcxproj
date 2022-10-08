@@ -173,6 +173,13 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>cd cvAutoTrack\src\version
+echo succ</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>src\version\build_version_before.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -259,6 +266,13 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>src\version\build_version_before.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">
     <ClCompile>
@@ -302,10 +316,14 @@
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>src\version\build_version_before.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
     <None Include="resource\Source.def" />
+    <None Include="src\version\build_version_before.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h" />
@@ -329,6 +347,7 @@
     <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\utils\Utils.h" />
+    <ClInclude Include="src\version\Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">

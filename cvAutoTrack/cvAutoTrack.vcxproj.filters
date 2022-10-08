@@ -38,6 +38,9 @@
     <Filter Include="src\match\type">
       <UniqueIdentifier>{3c973a25-eb85-4aad-a785-98e5dff329a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\version">
+      <UniqueIdentifier>{7db5a72c-9d86-4d25-b586-4d0e7bfa2298}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -45,6 +48,9 @@
     </None>
     <None Include="resource\Source.def">
       <Filter>resource</Filter>
+    </None>
+    <None Include="src\version\build_version_before.bat">
+      <Filter>src\version</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="src\match\Match.h">
       <Filter>src\match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\version\Version.h">
+      <Filter>src\version</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
