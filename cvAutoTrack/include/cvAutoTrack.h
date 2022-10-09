@@ -4,40 +4,39 @@
 #else
 #define CVAUTOTRACK_PORT __declspec(dllimport)
 #endif
-#define CVAUTOTRACK_CALL  
-//__stdcall
+#define CVAUTOTRACK_CALL __stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
 
-extern "C" CVAUTOTRACK_API bool verison(char* versionBuff);
+extern "C" bool CVAUTOTRACK_API verison(char* versionBuff);
 
-extern "C" CVAUTOTRACK_API bool init();
-extern "C" CVAUTOTRACK_API bool uninit();
+extern "C" bool CVAUTOTRACK_API init();
+extern "C" bool CVAUTOTRACK_API uninit();
 
-extern "C" CVAUTOTRACK_API bool startServe();
-extern "C" CVAUTOTRACK_API bool stopServe();
+extern "C" bool CVAUTOTRACK_API startServe();
+extern "C" bool CVAUTOTRACK_API stopServe();
 
-extern "C" CVAUTOTRACK_API bool SetUseBitbltCaptureMode();
-extern "C" CVAUTOTRACK_API bool SetUseDx11CaptureMode();
+extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
+extern "C" bool CVAUTOTRACK_API SetUseDx11CaptureMode();
+extern "C" bool CVAUTOTRACK_API SetHandle(long long int handle);
+extern "C" bool CVAUTOTRACK_API SetWorldCenter(double x, double y);
+extern "C" bool CVAUTOTRACK_API SetWorldScale(double scale);
 
-extern "C" CVAUTOTRACK_API bool SetHandle(long long int handle);
-extern "C" CVAUTOTRACK_API bool SetWorldCenter(double x, double y);
-extern "C" CVAUTOTRACK_API bool SetWorldScale(double scale);
-extern "C" CVAUTOTRACK_API bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
-extern "C" CVAUTOTRACK_API bool GetPositionOfMap(double& x,double& y,int& mapId);
-extern "C" CVAUTOTRACK_API bool GetDirection(double& a);
-extern "C" CVAUTOTRACK_API bool GetRotation(double& a);
-extern "C" CVAUTOTRACK_API bool GetStar(double &x, double &y, bool &isEnd);
-extern "C" CVAUTOTRACK_API bool GetStarJson(char *jsonBuff);
-extern "C" CVAUTOTRACK_API bool GetUID(int &uid);
+extern "C" bool CVAUTOTRACK_API GetTransformOfMap(double& x, double& y, double& a, int& mapId);
+extern "C" bool CVAUTOTRACK_API GetPositionOfMap(double& x,double& y,int& mapId);
+extern "C" bool CVAUTOTRACK_API GetDirection(double& a);
+extern "C" bool CVAUTOTRACK_API GetRotation(double& a);
+extern "C" bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
+extern "C" bool CVAUTOTRACK_API GetStarJson(char *jsonBuff);
+extern "C" bool CVAUTOTRACK_API GetUID(int &uid);
 
-extern "C" CVAUTOTRACK_API bool GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
-extern "C" CVAUTOTRACK_API bool GetInfoLoadVideo(char* path, char* pathOutFile);
+extern "C" bool CVAUTOTRACK_API GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
+extern "C" bool CVAUTOTRACK_API GetInfoLoadVideo(char* path, char* pathOutFile);
 
-extern "C" CVAUTOTRACK_API bool DebugCapture();
+extern "C" bool CVAUTOTRACK_API DebugCapture();
 
-extern "C" CVAUTOTRACK_API int GetLastErr();
-extern "C" CVAUTOTRACK_API int GetLastErrMsg(char* msg_buff,int buff_size);
+extern "C" int  CVAUTOTRACK_API GetLastErr();
+extern "C" int  CVAUTOTRACK_API GetLastErrMsg(char* msg_buff,int buff_size);
 
-
-
+extern "C" bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
+extern "C" bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);

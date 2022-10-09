@@ -75,9 +75,9 @@ void Test_video()
 
 int TEST()
 {
-	char version_buff[1024] = { 0 };
+	char version_buff[256] = { 0 };
 
-	if (verison(version_buff))
+	if (GetCompileVersion(version_buff,256))
 	{
 		std::cout << "°æ±¾ºÅ       : " << " " << version_buff << " " << "\n";
 	}
@@ -85,6 +85,18 @@ int TEST()
 	{
 		std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
 	}
+	
+	char version_time_buff[256] = {0};
+	
+	if (GetCompileTime(version_time_buff, 256))
+	{
+		std::cout << "±àÒëÊ±¼ä     : " << " " << version_time_buff << " " << "\n";
+	}
+	else
+	{
+		std::cout << "´íÎóÂë       : " << " " << GetLastErr() << " " << "\n";
+	}
+	
 	std::cout << "²âÊÔÍê³É\n";
 	return 0;
 }

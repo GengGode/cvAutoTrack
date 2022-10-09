@@ -188,7 +188,18 @@ bool AutoTrack::GetVersion(char* version_buff, int buff_size)
 		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
 		return false;
 	}
-	strncpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str(), _TRUNCATE);
+	strncpy_s(version_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_version.size())), TianLi::Version::build_version.c_str(), _TRUNCATE);
+	return true;
+}
+
+bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
+{
+	if (time_buff == NULL || buff_size < 1)
+	{
+		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
+		return false;
+	}
+	strncpy_s(time_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_time.size())), TianLi::Version::build_time.c_str(), _TRUNCATE);
 	return true;
 }
 
