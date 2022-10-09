@@ -34,7 +34,7 @@ echo    const std::string build_version = "%v1%.%v2%.%v3%.%v4%-%v6%";>>src\versi
 echo %#ifndef _DEBUG>>src\version\Version.h
 echo    const std::string build_time = "%date%";>>src\version\Version.h
 echo #else>>src\version\Version.h
-echo    const std::string build_time = "%date%%time%";>>src\version\Version.h
+echo    const std::string build_time = "%date% %time%";>>src\version\Version.h
 echo %#endif>>src\version\Version.h
 echo }>>src\version\Version.h
 echo //该文件自动生成，无需更改 >>src\version\Version.h
