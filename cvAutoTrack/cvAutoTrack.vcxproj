@@ -324,6 +324,7 @@ echo succ</Command>
     <None Include="cpp.hint" />
     <None Include="resource\Source.def" />
     <None Include="src\version\build_version_before.bat" />
+    <None Include="src\version\GetNextBuildVersion.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h" />
