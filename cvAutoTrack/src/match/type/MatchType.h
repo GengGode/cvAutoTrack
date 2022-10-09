@@ -143,6 +143,8 @@ struct GenshinAvatarPositionConfig
 	bool is_con = false;
 	bool is_cov = false;
 	bool is_on_city = false;
+	bool is_exist_last_match_minimap = false;
+	cv::Mat img_last_match_minimap;
 };
 struct GenshinAvatarPosition
 {
