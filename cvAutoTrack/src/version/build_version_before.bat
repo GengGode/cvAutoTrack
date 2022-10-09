@@ -1,17 +1,22 @@
 del src\version\Version.h
 del src\version\version.ver
 del src\version\version_hash.hash
+
 git describe --tags >> src\version\version.ver
 git log -n1 --format=format:"%%h" >> src\version\version_hash.hash
+powershell src\version\GetNextBuildVersion.ps1 >> src\version\version_next.number
+
 for /f %%x in (src\version\version.ver) do (
 	set version=%%x
 )
-for /f  "tokens=1,2,3,4,5,6 delims=.-"  %%a  in  ("%version%")  do (
+for /f  "tokens=1,2,3,4,5,6 delims=.-" %%a  in  ("%version%")  do (
 	set v1=%%a
 	set v2=%%b
 	set v3=%%c
-	set /a v4=%%d+1
 	set v5=%%e
+)
+for /f %%x in (src\version\version_next.number) do (
+	set /a v4=%%x-1
 )
 for /f %%x in (src\version\version_hash.hash) do (
 	set v6=%%x
@@ -36,3 +41,4 @@ echo //该文件自动生成，无需更改 >>src\version\Version.h
 
 del src\version\version.ver
 del src\version\version_hash.hash
+del src\version\version_next.number
