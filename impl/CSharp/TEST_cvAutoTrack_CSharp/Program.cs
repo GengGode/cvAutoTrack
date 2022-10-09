@@ -20,7 +20,7 @@ namespace TEST_cvAutoTrack_CSharp
             {
                 // ≤‚ ‘∞Ê±æ∫≈
                 byte[] version_buff = new byte[256];
-                if (cvAutoTrack.verison(version_buff))
+                if (cvAutoTrack.GetCompileVersion(version_buff,256))
                 {
                     string version_str = Encoding.UTF8.GetString(version_buff);
                     Console.WriteLine("∞Ê±æ∫≈       : " + version_str);
@@ -29,6 +29,17 @@ namespace TEST_cvAutoTrack_CSharp
                 {
                     Console.WriteLine("¥ÌŒÛ¬Î       : " + cvAutoTrack.GetLastErr().ToString());
                 }
+                byte[] version_time_buff = new byte[256];
+                if (cvAutoTrack.GetCompileTime(version_time_buff, 256))
+                {
+                    string version_time_str = Encoding.UTF8.GetString(version_time_buff);
+                    Console.WriteLine("±‡“Î ±º‰     : " + version_time_str);
+                }
+                else
+                {
+                    Console.WriteLine("¥ÌŒÛ¬Î       : " + cvAutoTrack.GetLastErr().ToString());
+                }
+
                 Console.WriteLine("≤‚ ‘ÕÍ≥…");
                 return 0;
             }

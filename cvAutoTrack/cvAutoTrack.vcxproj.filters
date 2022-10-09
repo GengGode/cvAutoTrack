@@ -120,9 +120,6 @@
     <ClInclude Include="src\match\Match.h">
       <Filter>src\match</Filter>
     </ClInclude>
-    <ClInclude Include="src\version\Version.h">
-      <Filter>src\version</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">

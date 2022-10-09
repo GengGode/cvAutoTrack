@@ -66,5 +66,12 @@ namespace cvAutoTrackCSharp
 
         [DllImport("cvAutoTrack.dll", EntryPoint = "stopServe")]
         public static extern bool stopServe();
+        
+        [DllImport("cvAutoTrack.dll", EntryPoint = "GetCompileVersion")]
+        public static extern bool GetCompileVersion(byte[] version_buff, int buff_size);
+        
+        [DllImport("cvAutoTrack.dll", EntryPoint = "GetCompileTime")]
+        public static extern bool GetCompileTime(byte[] time_buff, int buff_size);
+        
     }
 }

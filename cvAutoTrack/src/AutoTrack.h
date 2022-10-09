@@ -51,7 +51,9 @@ public:
 	bool stopServe();
 
 	bool GetVersion(char* version_buff, int buff_size);
-
+	bool GetCompileTime(char* time_buff, int buff_size);
+	
+	
 	bool DebugCapture();
 
 private:
