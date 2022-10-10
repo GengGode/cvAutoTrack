@@ -35,20 +35,21 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 |  6.5.92 |  - | - |  - |
 |  7.0.1 |  √ | √(DX模式下不支持) |  16:9 系列(但不包括4K及以上), 21:9 系列, 以及1920*1080以下的所有分辨率 |
 
-## 新版本计划 7.0.0
+## 新版本计划 7.1
 
-- [ ] 添加定位的惯性加速度导航算法
+- [ ] 添加定位的惯性加速度导航算法（见 dev-inrtial-position 分支）
 - [ ] 添加定位的平滑过渡算法
 - [ ] 添加定位的自动校准算法
 - [ ] 完全支持手柄模式
-- [ ] 完全支持任意分辨率，4K及以上
+- [x] 完全支持任意分辨率，4K及以上
 - [ ] 支持任意地图区域
 - [ ] 支持传入地图而非内嵌
 - [ ] 可选的嵌入预计算结果
+- [ ] 更高的匹配精度
 
 ### 7.0 接口修改方案
 
-- [ ] 重构接口，统一使用double作为浮点参数
+- [x] 重构接口，统一使用double作为浮点参数
     - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
 - [ ] 重构接口，统一使用int作为接口返回值
     - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
@@ -100,6 +101,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 ## 项目结构
 
 - **cvAutoTrack**，dll工程
+- **doc**，文档及部分插图
 - **impl**，部分语言的调用示例
     - **Cpp/TEST_cvAutoTrack_Cpp** C++调用
     - **CSharp/TEST_cvAutoTrack_CSharp** C#调用
@@ -136,8 +138,11 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `GetLastErr`                    | 获取最后设置的错误码。                                             |
 | `GetLastErrMsg`                 | 获取最后设置的错误信息。                                           | 
 
+## 错误处理
+- ###  [运行时错误](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C.md) 
+- ### [编译、链接、打包过程中的异常及错误]()
 
-## 天理坐标模型
+## 天理坐标模型（待重写）
 
 由于原神游戏中地图会不断扩展，而且不同的物理区块对应的地图贴图分辨率存在差异，所以直接根据贴图像素坐标系不可取，对未来的扩展不利。
 
