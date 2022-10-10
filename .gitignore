@@ -281,3 +281,4 @@ __pycache__/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt
 /cvAutoTrack/Video
+/cvAutoTrack/src/version/Version.h
