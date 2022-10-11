@@ -53,6 +53,7 @@ public:
 	
 	
 	bool DebugCapture();
+	bool DebugCapturePath(const char* path_buff, int buff_size);
 
 private:
 	Resources& res = Resources::getInstance();

@@ -251,34 +251,66 @@ bool AutoTrack::DebugCapture()
 	{
 		err = { 252,"保存画面失败 " };
 		return false;
-	}
-	err = 0;
+	}	
 	return true;
 }
 
-bool AutoTrack::GetTransform(double& x, double& y, double& a)
+bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 {
-	double x2 = 0, y2 = 0, a2 = 0;
-	if (!is_init_end)
+	if (path_buff == NULL || buff_size < 1)
 	{
-		init();//初始化
+		err = { 251,"路径缓存区为空指针或是路径缓存区大小为小于1" };
+		return false;
 	}
 
-	/*
-	分别判断是否成功获取，避免前一个error_code被后一个error_code覆盖
-	而导致本函数返回false（表示失败）但error_code为0（表示成功）。
-	*/
-	if (!GetPosition(x2, y2))
+	if (giFrame.empty())
 	{
+		err = { 252,"画面为空" };
 		return false;
 	}
-	if (!GetDirection(a2))
+	cv::Mat out_info_img = giFrame.clone();
+	switch (capture->mode)
 	{
+	case Capture::Mode_Bitblt:
+	{
+		// 绘制paimon Rect
+		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
+		// 绘制miniMap Rect
+		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = Area_Avatar_mayArea;
+		Avatar.x += genshin_screen.config.rect_minimap.x;
+		Avatar.y += genshin_screen.config.rect_minimap.y;
+
+		// 绘制avatar Rect
+		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+		// 绘制UID Rect
+		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		break;
+	}
+	case Capture::Mode_DirectX:
+	{
+		// 绘制paimon Rect
+		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
+		// 绘制miniMap Rect
+		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = Area_Avatar_mayArea;
+		Avatar.x += Area_Minimap_mayArea.x;
+		Avatar.y += Area_Minimap_mayArea.y;
+
+		// 绘制avatar Rect
+		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+		// 绘制UID Rect
+		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+	}
+	}
+
+	bool rel = cv::imwrite(path_buff, out_info_img);
+
+	if (!rel)
+	{
+		err = { 252,std::string("保存画面失败，请检查文件路径是否合法")+std::string(path_buff)};
 		return false;
 	}
-	x = x2;
-	y = y2;
-	a = a2;
 	return true;
 }
 
