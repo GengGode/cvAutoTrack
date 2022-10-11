@@ -638,7 +638,6 @@ bool AutoTrack::GetRotation(double& a)
 	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
 	cv::dilate(Alpha, Alpha, dilate_element);
 
-
 	//传入黑白图
 	//根据白块部分计算视角中心坐标
 	std::vector<std::vector<cv::Point>> contours;
@@ -1063,6 +1062,7 @@ bool AutoTrack::GetUID(int& uid)
 	return true;
 
 }
+
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
 	UNREFERENCED_PARAMETER(path);
@@ -1072,6 +1072,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
 	UNREFERENCED_PARAMETER(a);
 	return false;
 }
+
 bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 {
 	UNREFERENCED_PARAMETER(path);
@@ -1087,6 +1088,18 @@ int AutoTrack::GetLastError()
 	return err;
 }
 
+int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
+{
+	if (msg_buff == NULL || buff_size < 1)
+	{
+		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
+		return false;
+	}
+	std::string msg = err.getLastErrorMsg();
+	strncpy_s(msg_buff, std::min(buff_size, static_cast<int>(msg.size())), msg.c_str(), _TRUNCATE);
+	return true;
+}
+
 bool AutoTrack::getAutoTrackIsInit()
 {
 	if (is_init_end)
@@ -1097,25 +1110,6 @@ bool AutoTrack::getAutoTrackIsInit()
 	else
 	{
 		return true;
-	}
-}
-
-const char* AutoTrack::GetLastErrorStr()
-{
-	return nullptr;
-}
-
-int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
-{
-	std::string msg = err.getLastErrorMsg();
-	if (msg.size() > buff_size)
-	{
-		return -1;
-	}
-	else
-	{
-		strcpy_s(msg_buff, msg.size(), msg.c_str());
-		return 0;
 	}
 }
 
