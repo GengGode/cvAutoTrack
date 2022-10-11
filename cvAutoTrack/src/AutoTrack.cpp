@@ -21,10 +21,6 @@ AutoTrack::AutoTrack()
 	capture = new Bitblt();
 	capture->init();
 
-	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "正常退出");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "未能找到原神窗口句柄");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102, "获取原神窗口大小失败");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "获取原神画面失败");
 
 	wPaimon.append(this, &AutoTrack::clear_error_logs, 0);
 	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
