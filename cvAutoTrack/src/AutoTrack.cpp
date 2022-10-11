@@ -21,43 +21,10 @@ AutoTrack::AutoTrack()
 	capture = new Bitblt();
 	capture->init();
 
-
-	wPaimon.append(this, &AutoTrack::clear_error_logs, 0);
-	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
-	wPaimon.append(this, &AutoTrack::getGengshinImpactRect, 105);
-	wPaimon.append(this, &AutoTrack::getGengshinImpactScreen, 106);
-	wPaimon.append(this, &AutoTrack::getPaimonRefMat, 107);
-
-	wMiniMap.append(this, &AutoTrack::clear_error_logs, 0);
-	wMiniMap.append(this, &AutoTrack::getAutoTrackIsInit, 108);
-	wMiniMap.append(this, &AutoTrack::getGengshinImpactWnd, 109);
-	wMiniMap.append(this, &AutoTrack::getGengshinImpactRect, 110);
-	wMiniMap.append(this, &AutoTrack::getGengshinImpactScreen, 111);
-	wMiniMap.append(this, &AutoTrack::getMiniMapRefMat, 112);
-
-	wAvatar.append(this, &AutoTrack::clear_error_logs, 0);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactWnd, 113);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactRect, 114);
-	wAvatar.append(this, &AutoTrack::getGengshinImpactScreen, 115);
-	wAvatar.append(this, &AutoTrack::getAvatarRefMat, 116);
-
-	wRotating.append(this, &AutoTrack::clear_error_logs, 0);
-	wRotating.append(this, &AutoTrack::getGengshinImpactWnd, 117);
-	wRotating.append(this, &AutoTrack::getGengshinImpactRect, 118);
-	wRotating.append(this, &AutoTrack::getGengshinImpactScreen, 119);
-	wRotating.append(this, &AutoTrack::getMiniMapRefMat, 120);
-
-	wStar.append(this, &AutoTrack::clear_error_logs, 0);
-	wStar.append(this, &AutoTrack::getGengshinImpactWnd, 121);
-	wStar.append(this, &AutoTrack::getGengshinImpactRect, 122);
-	wStar.append(this, &AutoTrack::getGengshinImpactScreen, 123);
-	wStar.append(this, &AutoTrack::getMiniMapRefMat, 124);
-
-	wUID.append(this, &AutoTrack::clear_error_logs, 0);
-	wUID.append(this, &AutoTrack::getGengshinImpactWnd, 125);
-	wUID.append(this, &AutoTrack::getGengshinImpactRect, 126);
-	wUID.append(this, &AutoTrack::getGengshinImpactScreen, 127);
-	wUID.append(this, &AutoTrack::getUIDRefMat, 128);
+	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "正常退出");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "未能找到原神窗口句柄");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102, "获取原神窗口大小失败");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "获取原神画面失败");
 
 }
 

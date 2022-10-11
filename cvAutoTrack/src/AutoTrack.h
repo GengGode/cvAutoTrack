@@ -58,13 +58,7 @@ public:
 private:
 	Resources& res = Resources::getInstance();
 	ErrorCode& err = ErrorCode::getInstance();
-	FlowWork wPaimon;
-	FlowWork wMiniMap;
-	FlowWork wAvatar;
-	FlowWork wRotating;
-	FlowWork wStar;
 
-	FlowWork wUID;
 
 	FlowWork wForAfter;
 
