@@ -21,10 +21,10 @@ AutoTrack::AutoTrack()
 	capture = new Bitblt();
 	capture->init();
 
-	wForAfter.append(this, &AutoTrack::clear_error_logs, 0);
-	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101);
-	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102);
-	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103);
+	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "æ­£å¸¸é€€å‡º");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "æœªèƒ½æ‰¾åˆ°åŽŸç¥žçª—å£å¥æŸ„");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102, "èŽ·å–åŽŸç¥žçª—å£å¤§å°å¤±è´¥");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "èŽ·å–åŽŸç¥žç”»é¢å¤±è´¥");
 
 	wPaimon.append(this, &AutoTrack::clear_error_logs, 0);
 	wPaimon.append(this, &AutoTrack::getGengshinImpactWnd, 104);
@@ -140,7 +140,6 @@ bool AutoTrack::SetUseDx11CaptureMode()
 
 	return true;
 }
-
 
 bool AutoTrack::SetHandle(long long int handle)
 {
@@ -308,7 +307,7 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 	y = y2;
 	a = a2;
 	mapId = mapId2;
-	return true;
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetPosition(double& x, double& y)
@@ -327,7 +326,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		
 		if (getMiniMapRefMat_Bitblt()==false)
 		{
-			err = { 1001, "BitbltÄ£Ê½ÏÂ»ñÈ¡×ø±êÊ±£¬Ã»ÓÐÊ¶±ðµ½paimon" };
+			err = { 1001, "BitbltÄ£Ê½ÏÂ»ñÈ¡×ø±êÊ±£¬Ã»ÓÐÊ¶±ðµ½paimon£¬½¨ÒéÊ¹ÓÃDXÄ£Ê½" };
 			return false;
 		}
 	}
@@ -378,8 +377,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	x = user_pos.x;
 	y = user_pos.y;
 
-	err = 0;
-	return true;
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
@@ -445,17 +443,16 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 			break;
 		}
 	}
-	return true;
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetDirection(double& a)
 {
-	if (wAvatar.run() == false)
+	if (wForAfter.run() == false)
 	{
 		return false;
 	}
 	
-
 	if (capture->mode == Capture::Mode_Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
@@ -476,13 +473,10 @@ bool AutoTrack::GetDirection(double& a)
 		getMiniMapRefMat();
 	}
 
-	if (giMiniMapRef.empty())
+	if (getAvatarRefMat())
 	{
-		err = { 5,"Ô­ÉñÐ¡µØÍ¼ÇøÓòÎª¿Õ" };
 		return false;
 	}
-
-	getAvatarRefMat();
 
 	if (giAvatarRef.empty())
 	{
@@ -561,9 +555,8 @@ bool AutoTrack::GetDirection(double& a)
 	KeyLine = AvatarKeyLine[0] + AvatarKeyLine[1];
 
 	a = TianLi::Utils::Line2Angle(KeyLine);
-
-	err = 0;
-	return true;
+	
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetRotation(double& a)
@@ -592,8 +585,7 @@ bool AutoTrack::GetRotation(double& a)
 
 		getMiniMapRefMat();
 	}
-
-	//cv::Mat img_scene(res.MapTemplate);
+	
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
 
 	if (img_object.channels() != 4)
@@ -669,9 +661,7 @@ bool AutoTrack::GetRotation(double& a)
 	}
 
 	p = cv::Point(boundRect[maxId].x + boundRect[maxId].width / 2, boundRect[maxId].y + boundRect[maxId].height / 2);
-
-
-
+	
 	// double res;
 #ifdef _DEBUG
 	circle(Alpha, p, 3, cv::Scalar(255, 0, 0));
@@ -682,7 +672,7 @@ bool AutoTrack::GetRotation(double& a)
 
 	a = TianLi::Utils::Line2Angle(p);
 
-	return true;
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
@@ -717,14 +707,14 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			isEnd = false;
 			isNotSee = true;
 		}
-		return true;
+		return clear_error_logs();
 	}
 	else
 	{
 		pos.clear();
 		seeId = 0;
 
-		if (wStar.run() == false)
+		if (wForAfter.run() == false)
 		{
 			return false;
 		}
@@ -822,13 +812,11 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 				isEnd = false;
 				isNotSee = true;
 			}
-			return true;
+			return clear_error_logs();
 		}
-		err = 601;
+		err = { 601,"»ñÈ¡ÉñÍ«Ê§°Ü£¬Î´È·¶¨Ô­Òò" };
 		return false;
 	}
-
-	return false;
 }
 
 bool AutoTrack::GetStarJson(char* jsonBuff)
@@ -842,7 +830,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	double scale = 1.3;
 
 
-	if (wStar.run() == false)
+	if (wForAfter.run() == false)
 	{
 		return false;
 	}
@@ -943,19 +931,18 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 			strncat_s(jsonBuff, 1024, buff, 99);
 		}
 		strncat_s(jsonBuff, 1024, "]}", 3);
-		err = 0;
-		return true;
+		
+		return clear_error_logs();
 	}
 	sprintf_s(jsonBuff, 99, "{\"n\": 0 ,\"list\":[]}");
-	err = 0;
-	return true;
+	
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetUID(int& uid)
 {
 	if (wForAfter.run() == false)
 	{
-		err = 300;
 		return false;
 	}
 	if (getUIDRefMat() == false)
@@ -1057,10 +1044,9 @@ bool AutoTrack::GetUID(int& uid)
 		err = { 8,"Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓÐÐ§UID" };
 		return false;
 	}
-	uid = _uid;
-	err = 0;
-	return true;
-
+	uid = _uid;	
+	
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
@@ -1077,7 +1063,7 @@ bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
 {
 	UNREFERENCED_PARAMETER(path);
 	UNREFERENCED_PARAMETER(pathOutFile);
-	return true;
+	return false;
 }
 
 int AutoTrack::GetLastError()
@@ -1144,7 +1130,7 @@ bool AutoTrack::getGengshinImpactWnd()
 
 		if (giHandle == NULL)
 		{
-			err = 10; //ÎÞÐ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ
+			err = { 10,"ÎÞÐ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
 			return false;
 		}
 	}
@@ -1156,7 +1142,7 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		else
 		{
-			err = 10; //ÎÞÐ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ
+			err = { 10,"ÎÞÐ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
 			return false;
 		}
 	}
@@ -1170,12 +1156,12 @@ bool AutoTrack::getGengshinImpactRect()
 {
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		err = 12;//´°¿Ú¾ä±úÊ§Ð§
+		err = { 12,"´°¿Ú¾ä±úÊ§Ð§" };
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		err = 12;//´°¿Ú¾ä±úÊ§Ð§
+		err = { 12,"´°¿Ú¾ä±úÊ§Ð§" };
 		return false;
 	}
 
@@ -1738,7 +1724,7 @@ bool AutoTrack::getAvatarRefMat()
 {
 	if (giMiniMapRef.empty())
 	{
-		err = 21;
+		err = { 21,"»ñÈ¡½ÇÉ«ÇøÓòÊ±£¬Ð¡µØÍ¼ÇøÓòÎª¿Õ"};
 		return false;
 	}
 	int Avatar_Rect_x = cvRound(giMiniMapRef.cols * 0.4);
@@ -1764,7 +1750,7 @@ bool AutoTrack::getAvatarRefMat()
 
 bool AutoTrack::clear_error_logs()
 {
-	err = 0;
+	err = { 0,"µ÷ÓÃ³É¹¦"};
 	return true;
 }
 
@@ -1813,10 +1799,11 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 
 	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
 	{
-		err = 6;//Î´ÄÜÆ¥Åäµ½ÅÉÃÉ
+		err = { 6,"Î´ÄÜÆ¥Åäµ½ÅÉÃÉ" };
 		return false;
 	}
 	paimon_rect = cv::Rect(paimon_match_maxLoc, paimon_template.size());
-	return true;
+	
+	return clear_error_logs();
 }
 

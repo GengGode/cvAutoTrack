@@ -29,22 +29,22 @@ bool Bitblt::capture(cv::Mat& frame)
 
 	if (giHandle == NULL)
 	{
-		err = 12;//窗口句柄失效
+		err = { 12, "窗口句柄失效" };
 		return false;
 	}
 	if (!IsWindow(giHandle))
 	{
-		err = 12;//窗口句柄失效
+		err = { 11, "无效句柄或指定句柄所指向窗口不存在" };
 		return false;
 	}
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		err = 12;//窗口句柄失效
+		err = { 11, "无效句柄或指定句柄所指向窗口不存在" };
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		err = 12;//窗口句柄失效
+		err = { 11, "无效句柄或指定句柄所指向窗口不存在" };
 		return false;
 	}
 
@@ -112,13 +112,13 @@ bool Bitblt::capture(cv::Mat& frame)
 
 	if (giFrame.empty())
 	{
-		err = 3;
+		err = { 3, "窗口画面为空" };
 		return false;
 	}
 
 	if (giFrame.cols < 480 || giFrame.rows < 360)
 	{
-		err = 13;
+		err = { 14, "窗口画面大小小于480x360，无法使用" };
 		return false;
 	}
 	frame = giFrame;
