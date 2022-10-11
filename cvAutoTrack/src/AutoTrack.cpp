@@ -622,10 +622,12 @@ bool AutoTrack::GetRotation(double& a)
 	cv::threshold(Alpha, Alpha, 50, 0, cv::THRESH_TOZERO);
 	cv::threshold(Alpha, Alpha, 50, 255, cv::THRESH_BINARY);
 
-	cv::circle(Alpha, cv::Point(Alpha.cols / 2, Alpha.rows / 2), static_cast<int>(min(Alpha.cols / 2, Alpha.rows / 2) * 1.21), cv::Scalar(0, 0, 0), static_cast<int>(min(Alpha.cols / 2, Alpha.rows / 2) * 0.42));
-	cv::circle(Alpha, cv::Point(Alpha.cols / 2, Alpha.rows / 2), static_cast<int>(min(Alpha.cols / 2, Alpha.rows / 2) * 0.3), cv::Scalar(0, 0, 0), -1);
-
-
+	cv::Point center = cv::Point(Alpha.cols / 2, Alpha.rows / 2);
+	double min_radius = center.x < center.y ? center.x : center.y;
+	
+	cv::circle(Alpha, center, static_cast<int>(min_radius * 1.21), cv::Scalar(0, 0, 0), static_cast<int>(min_radius * 0.42));
+	cv::circle(Alpha, center, static_cast<int>(min_radius * 0.3), cv::Scalar(0, 0, 0), -1);
+	
 	cv::Mat dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
 	cv::dilate(Alpha, Alpha, dilate_element);
 	cv::Mat erode_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
