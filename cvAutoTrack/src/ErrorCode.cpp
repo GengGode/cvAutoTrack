@@ -32,16 +32,6 @@ ErrorCode & ErrorCode::getInstance()
 	return instance;
 }
 
-ErrorCode & ErrorCode::operator=(const int & code)
-{
-	string msg = "未定义错误信息";
-	if (code < errCodeMsg.size())
-	{
-		msg = errCodeMsg[code];
-	}
-	(* this) = {code,msg};
-	return *this;
-}
 inline std::tm localtime_xp(std::time_t timer)
 {
 	std::tm bt{};

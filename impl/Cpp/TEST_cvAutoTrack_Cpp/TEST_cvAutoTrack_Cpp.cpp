@@ -141,7 +141,10 @@ int Run()
 		}
 		else
 		{
+			char buff[1024] = { 0 };
+			GetLastErrMsg(buff, 1024);
 			std::cout << "´íÎóÂë       : " << " \n" << GetLastErr() << " " << "\n";
+			std::cout << "´íÎóÐÅÏ¢    : " << buff << " " << "\n";
 		}
 		//#pragma warning(suppress : 4996)
 		//		if (GetPosition(x2, y2))

@@ -15,7 +15,6 @@ public:
 	ErrorCode(const ErrorCode&) = delete;
 	ErrorCode& operator=(const ErrorCode&) = delete;
 	static ErrorCode& getInstance();
-	ErrorCode& operator=(const int& code);
 	ErrorCode& operator=(const std::pair<int,string>& err_code_msg);
 	operator int();
 

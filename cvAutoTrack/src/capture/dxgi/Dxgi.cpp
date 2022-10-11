@@ -120,7 +120,7 @@ bool Dxgi::capture(cv::Mat& frame)
         return false;
     }
 	auto frame_size = new_frame.ContentSize();
-    if(desc.Width != m_lastSize.Width || desc.Height != m_lastSize.Height)
+    if(desc.Width != static_cast<UINT>(m_lastSize.Width) || desc.Height != static_cast<UINT>(m_lastSize.Height))
     {
         desc.Width = m_lastSize.Width;
         desc.Height = m_lastSize.Height;

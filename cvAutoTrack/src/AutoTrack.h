@@ -29,7 +29,6 @@ public:
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
-	bool GetTransform(double&x, double&y, double&a);
 	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
 	bool GetPosition(double &x, double &y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
@@ -45,7 +44,6 @@ public:
 	bool GetInfoLoadVideo(char* path, char* pathOutFile);
 	/*********/
 	int GetLastError();
-	const char* GetLastErrorStr();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
 	bool startServe();
 	bool stopServe();

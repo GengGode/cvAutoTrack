@@ -98,6 +98,10 @@ bool __stdcall DebugCapture()
 {
 	return _at.DebugCapture();
 }
+bool __stdcall DebugCapturePath(const char* path_buff, int buff_size)
+{
+	return _at.DebugCapturePath(path_buff, buff_size);
+}
 bool __stdcall startServe()
 {
 	return _at.startServe();

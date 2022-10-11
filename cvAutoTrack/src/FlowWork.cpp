@@ -10,32 +10,21 @@ FlowWork::~FlowWork()
 {
 }
 
-void FlowWork::append(AutoTrack* at, bool(AutoTrack::*funPtr)(void), int errCode)
+void FlowWork::append(AutoTrack* at_ptr, bool(AutoTrack::* fun_ptr)(void), int err_code, std::string err_msg)
 {
-	AT = at;
-	funPtrList.push_back(funPtr);
-	funErrCodeList.push_back(errCode);
+	at = at_ptr;
+	fun_ptr_err_list.push_back(std::make_pair(fun_ptr, std::make_pair(err_code, err_msg)));
 }
 
 bool FlowWork::run()
 {
-	if (funPtrList.size() > 0)
+	for (auto& fun_ptr_err : fun_ptr_err_list)
 	{
-		for (int i = 0; i < funPtrList.size(); i++)
+		if (!(at->*fun_ptr_err.first)())
 		{
-			if ((AT->*funPtrList[i])() == false)
-			{
-				//err.push(0);
-				err = funErrCodeList[i];
-				return false;
-			}
+			err = fun_ptr_err.second;
+			return false;
 		}
-		return true;
 	}
-	else
-	{
-		err = 14;
-		return false;
-	}
-
+	return true;
 }
