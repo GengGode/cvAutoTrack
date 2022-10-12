@@ -19,7 +19,7 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-
+        - ps: echo $env:APPVEYOR_BUILD_VERSION>>$env:MyProjectDir\cvAutoTrack\src\version\appVeyor_version_tag.tag
         - mkdir %OpenCvDir%
         - appveyor DownloadFile %OpenCvUrl%
         - 7z x ./*.zip -y -o%OpenCvDir%
