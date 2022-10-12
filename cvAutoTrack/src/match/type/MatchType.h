@@ -113,6 +113,7 @@ struct GenshinMinimapConfig
 struct GenshinMinimap
 {
 	bool is_init_finish = false;
+	bool is_run_init_start = false;
 	bool is_run_uninit_start = false;
 	bool is_cailb = false;
 	cv::Mat img_minimap;

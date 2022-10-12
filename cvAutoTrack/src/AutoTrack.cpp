@@ -35,36 +35,28 @@ AutoTrack::~AutoTrack(void)
 
 bool AutoTrack::init()
 {
-	if (!is_init_end)
+	if (!genshin_minimap.is_init_finish)
 	{
-		res.install();
-
-		_detectorAllMap = cv::xfeatures2d::SURF::create(minHessian);
+		genshin_minimap.is_run_init_start = true;
+		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		genshin_minimap.is_run_init_start = false;
 		
-		std::string xml_string(res.xmlPtr.ptr);
-		cv::FileStorage fs(xml_string, cv::FileStorage::MEMORY | cv::FileStorage::READ);
-		fs["keypoints"] >> _KeyPointAllMap;
-		fs["descriptors"] >> _DataPointAllMap;
-
-		is_init_end = true;
+		genshin_minimap.is_init_finish = true;
 	}
-	return is_init_end;
+	return genshin_minimap.is_init_finish;
 }
 
 bool AutoTrack::uninit()
 {
-	if (is_init_end)
+	if (genshin_minimap.is_init_finish)
 	{
-		_detectorAllMap.release();
-		_KeyPointAllMap.resize(0);
-		_KeyPointAllMap.reserve(0);
-		_DataPointAllMap.release();
-
-		res.release();
-
-		is_init_end = false;
+		genshin_minimap.is_run_uninit_start = true;
+		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		genshin_minimap.is_run_uninit_start = false;
+		
+		genshin_minimap.is_init_finish = false;
 	}
-	return !is_init_end;
+	return !genshin_minimap.is_init_finish;
 }
 
 bool AutoTrack::SetUseBitbltCaptureMode()
@@ -281,7 +273,7 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
 	double x2 = 0, y2 = 0, a2 = 0;
 	int mapId2 = 0;
-	if (!is_init_end)
+	if (!genshin_minimap.is_init_finish)
 	{
 		init();//初始化
 	}
@@ -311,7 +303,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	{
 		return false;
 	}
-	if (!is_init_end)
+	if (!genshin_minimap.is_init_finish)
 	{
 		err = { 1, "没有初始化" };
 		return false;
