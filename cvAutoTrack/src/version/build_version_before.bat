@@ -19,10 +19,10 @@ if exist src\version\version_tag.tag (
 	del src\version\version_tag.tag
 )
 
-git describe --tags >> src\version\version.ver
-git rev-parse --abbrev-ref HEAD >>  src\version\version.branch
-git log -n1 --format=format:"%%h" >> src\version\version_hash.hash
-powershell src\version\GetNextBuildVersion.ps1 >> src\version\version_next.number
+git describe --tags>> src\version\version.ver
+git rev-parse --abbrev-ref HEAD>>  src\version\version.branch
+git log -n1 --format=format:"%%h">> src\version\version_hash.hash
+powershell src\version\GetNextBuildVersion.ps1>> src\version\version_next.number
 
 for /f %%x in (src\version\version.ver) do (
 	set version=%%x
@@ -59,6 +59,6 @@ echo %#endif>>src\version\Version.h
 echo }>>src\version\Version.h
 echo //该文件自动生成，无需更改 >>src\version\Version.h
 
-echo %v1%.%v2%.%v3% >> src\version\version_tag.tag
+echo %v1%.%v2%.%v3%>>src\version\version_tag.tag
 
 echo build version : %v1%.%v2%.%v3%.%v4%-%v5%-%v6% 

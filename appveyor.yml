@@ -1,5 +1,5 @@
 -
-    version: '7.0.1.{build}'
+    version: '7.1.0.{build}'
     os: Visual Studio 2022
 
     configuration: Release
@@ -94,7 +94,7 @@
           auth_token:
              secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
           draft: false
-          tag: 7.0.2
+          tag: $(APPVEYOR_BUILD_VERSION)
           force_update: true
           on:  
             APPVEYOR_REPO_TAG: false
