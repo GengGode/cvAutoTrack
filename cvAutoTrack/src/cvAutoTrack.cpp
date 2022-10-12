@@ -86,6 +86,10 @@ int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
 {
 	return _at.GetLastErrMsg(msg_buff, buff_size);
 }
+int CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size)
+{
+	return _at.GetLastErrJson(json_buff, buff_size);
+}
 bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 {
 	return _at.GetVersion(version_buff, buff_size);

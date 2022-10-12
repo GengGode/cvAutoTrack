@@ -23,6 +23,7 @@ public:
 public:
 	int getLastError();
 	string getLastErrorMsg();
+	string toJson();
 
 private:
 	int errorCode=0;
