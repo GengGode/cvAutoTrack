@@ -94,7 +94,7 @@
           auth_token:
              secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
           draft: false
-          tag: $(APPVEYOR_BUILD_VERSION)
+          tag: 7.0.2
           force_update: true
           on:  
             APPVEYOR_REPO_TAG: false
