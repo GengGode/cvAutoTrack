@@ -67,9 +67,6 @@ private:
 	int error_code = 0;
 
 private:
-	bool is_init_end = false;
-
-private:
 	int minHessian = 400;
 	double ratio_thresh = 0.66;
 	double mapScale = 1.3;//1.3;
