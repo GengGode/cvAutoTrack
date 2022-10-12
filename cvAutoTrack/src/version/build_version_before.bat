@@ -18,12 +18,6 @@ if exist src\version\version_next.number (
 if exist src\version\version_tag.tag (
 	del src\version\version_tag.tag
 )
-if exist src\version\appVeyor_version_tag.tag(
-	for /f "tokens=1,2 delims=:" %%a in (src\version\appVeyor_version_tag.tag) do (
-		set appVeyorV1=%a
-		set appVeyorV2=%b
-	)
-)
 
 git describe --tags>> src\version\version.ver
 git rev-parse --abbrev-ref HEAD>>  src\version\version.branch
@@ -33,23 +27,31 @@ powershell src\version\GetNextBuildVersion.ps1>> src\version\version_next.number
 for /f %%x in (src\version\version.ver) do (
 	set version=%%x
 )
-for /f  "tokens=1,2,3 delims=.-" %%a  in  ("%version%")  do (
-	set v1=%%a
-	set v2=%%b
-	set /a v3=%%c+1
+for /f  "tokens=1,2,3 delims=.-" %%x  in  ("%version%")  do (
+	set v1=%%x
+	set v2=%%y
+	set /a v3=%%z+1
 )
 
-if not "%appVeyorV1%"=="" (
+set appVeyorV1=0
+set appVeyorV2=0
+if exist src\version\appVeyor_version_tag.tag (
+	for /f "tokens=1,2 delims=.-" %%a in (src\version\appVeyor_version_tag.tag) do (
+		set appVeyorV1=%%a
+		set appVeyorV2=%%b
+	)
+)
+
+if not "!appVeyorV1!"=="" (
 	if %appVeyorV1% GTR %v1% (
-		set v1=%appVeyorV1%
+		set /a v1=%appVeyorV1%
 		set /a v2=0
 		set /a v3=0
 	)
 )
-
 if not "%appVeyorV2%"=="" (
 	if %appVeyorV2% GTR %v2% (
-		set v2=%appVeyorV2%
+		set /a v2=%appVeyorV2%
 		set /a v3=0
 	)
 )
