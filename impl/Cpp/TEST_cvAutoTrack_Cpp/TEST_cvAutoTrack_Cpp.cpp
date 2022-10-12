@@ -100,11 +100,39 @@ int TEST()
 	std::cout << "测试完成\n";
 	return 0;
 }
+int TEST_init_and_uninit()
+{
+	std::cout << "测试 init 与 uninit\n";
 
+	init();
+
+	Sleep(1000);
+
+	uninit();
+
+	Sleep(1000);
+
+	init();
+
+	Sleep(1000);
+
+	uninit();
+
+	Sleep(1000);
+
+	init();
+
+	Sleep(1000);
+
+	uninit();
+
+	Sleep(1000);
+
+	std::cout << "测试完成\n";
+	return 0;
+}
 int Run()
 {
-
-
 	std::ios::sync_with_stdio(false);
 
 	FILE* fptr = NULL;
@@ -121,6 +149,8 @@ int Run()
 	double aa2 = 0;
 	int uid = 0;
 	char buff[1024] = { 0 };
+
+	
 
 	// 调用循环
 	while (1)
