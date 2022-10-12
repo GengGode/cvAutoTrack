@@ -49,7 +49,8 @@
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
         
         # 从文件中读取 $version_tag.tag 设置 AppVeyor 版本
-        - ps: $env:APPVEYOR_BUILD_VERSION=$(Get-Content -Path $env:MyProjectDir\cvAutoTrack\src\version\version_tag.tag)   
+        - ps: $env:APPVEYOR_BUILD_VERSION=$(Get-Content -Path $env:MyProjectDir\cvAutoTrack\src\version\version_tag.tag)  
+        - ps: echo $env:APPVEYOR_BUILD_VERSION
         
     before_test:
         # 移动测试文件到test目录
