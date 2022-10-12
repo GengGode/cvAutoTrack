@@ -4,21 +4,6 @@
 ErrorCode::ErrorCode()
 {
 	fopen_s(&fptr, "./autoTrack.log", "w+");
-
-	errCodeMsg.push_back("执行成功");
-	errCodeMsg.push_back("未初始化");
-	errCodeMsg.push_back("未能找到原神窗口句柄");
-	errCodeMsg.push_back("窗口画面为空");
-	errCodeMsg.push_back("未能匹配到特征点");
-	errCodeMsg.push_back("原神小地图区域为空或者区域长宽小于60px");
-	errCodeMsg.push_back("未能匹配到派蒙");
-	errCodeMsg.push_back("特征点数组访问越界");
-	errCodeMsg.push_back("未能在UID区域检测到有效UID");
-	errCodeMsg.push_back("提取小箭头特征误差过大");
-	errCodeMsg.push_back("无效句柄或指定句柄所指向窗口不存在");
-	errCodeMsg.push_back("未能取到小箭头区域");
-	errCodeMsg.push_back("窗口句柄为空");
-	errCodeMsg.push_back("窗口句柄失效");
 }
 
 ErrorCode::~ErrorCode()
