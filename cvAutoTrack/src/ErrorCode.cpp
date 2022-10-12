@@ -84,6 +84,25 @@ string ErrorCode::getLastErrorMsg()
 	}
 }
 
+string ErrorCode::toJson()
+{
+	std::string json;
+	json += "{";
+	json += "\"errorCode\":" + to_string(this->errorCode) + ",";
+	json += "\"errorList\":[";
+	for (auto& item : error_code_msg_list)
+	{
+		json += "{\"code\":" + to_string(item.first) + ",\"msg\":\"" + item.second + "\"},";
+	}
+	if (json.back() == ',')
+	{
+		json.pop_back();
+	}
+	json += "]";
+	json += "}";
+	return json;
+}
+
 void ErrorCode::push(int code, string msg)
 {
 	error_code_msg_list.push_back({ code,msg });

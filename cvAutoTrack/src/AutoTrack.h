@@ -45,6 +45,8 @@ public:
 	/*********/
 	int GetLastError();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
+	int GetLastErrJson(char* json_buff, int buff_size);
+	
 	bool startServe();
 	bool stopServe();
 

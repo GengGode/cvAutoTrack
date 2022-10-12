@@ -1073,6 +1073,18 @@ int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
 	return true;
 }
 
+int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
+{
+	if (json_buff == NULL || buff_size < 1)
+	{
+		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
+		return false;
+	}
+	std::string msg = err.toJson();
+	strncpy_s(json_buff, std::min(buff_size, static_cast<int>(msg.size())), msg.c_str(), _TRUNCATE);
+	return true;
+}
+
 bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
