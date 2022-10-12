@@ -41,6 +41,16 @@ void SurfMatch::Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_ma
 	isInit = true;
 }
 
+void SurfMatch::UnInit()
+{
+	if (!isInit)return;
+	_mapMat.release();
+	_mapMat = cv::Mat();
+	Kp_Map.clear();
+	Dp_Map.release();
+	isInit = false;
+}
+
 void SurfMatch::match()
 {
 	cv::Point2d dp1 = hisP[1] - hisP[0];
