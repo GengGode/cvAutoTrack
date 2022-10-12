@@ -181,9 +181,9 @@ private:
 	Capture* capture = nullptr;
 
 private:
-	HWND giHandle =0;
-	RECT giRect;
-	RECT giClientRect;
+	HWND giHandle = nullptr;
+	RECT giRect = { 0,0,0,0 };
+	RECT giClientRect = { 0,0,0,0 };
 	cv::Size giClientSize;
 	cv::Mat giFrame;
 	cv::Mat giPaimonRef;
