@@ -144,7 +144,7 @@ Resources::Resources()
 		cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGBA2GRAY);
 	}
 	
-	install();
+	// install();
 }
 
 Resources::~Resources()
