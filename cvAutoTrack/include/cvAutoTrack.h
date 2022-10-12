@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifdef CVAUTOTRACK_EXPORTS
 #define CVAUTOTRACK_PORT __declspec(dllexport)
 #else

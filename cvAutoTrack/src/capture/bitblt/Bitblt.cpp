@@ -29,37 +29,37 @@ bool Bitblt::capture(cv::Mat& frame)
 
 	if (giHandle == NULL)
 	{
-		err = { 12, "´°¿Ú¾ä±úÊ§Ğ§" };
+		err = { 12, "çª—å£å¥æŸ„å¤±æ•ˆ" };
 		return false;
 	}
 	if (!IsWindow(giHandle))
 	{
-		err = { 11, "ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
+		err = { 11, "æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨" };
 		return false;
 	}
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		err = { 11, "ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
+		err = { 11, "æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨" };
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		err = { 11, "ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
+		err = { 11, "æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨" };
 		return false;
 	}
 
-	//»ñÈ¡ÆÁÄ»Ëõ·Å±ÈÀı
+	//è·å–å±å¹•ç¼©æ”¾æ¯”ä¾‹
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
-	// »ñÈ¡¼àÊÓÆ÷Âß¼­¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨é€»è¾‘å®½åº¦ä¸é«˜åº¦
 	MONITORINFOEX miex;
 	miex.cbSize = sizeof(miex);
 	GetMonitorInfo(hMonitor, &miex);
 	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
 	//int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
 
-	// »ñÈ¡¼àÊÓÆ÷ÎïÀí¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨ç‰©ç†å®½åº¦ä¸é«˜åº¦
 	DEVMODE dm;
 	dm.dmSize = sizeof(dm);
 	dm.dmDriverExtra = 0;
@@ -73,36 +73,36 @@ bool Bitblt::capture(cv::Mat& frame)
 	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));
 	giClientSize.height = (int)(screen_scale * (giClientRect.bottom - giClientRect.top));
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ´°¿Ú´óĞ¡RECT
-	GetWindowRect(giHandle, &giRect);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„çª—å£å¤§å°RECT
+	GetWindowRect(giHandle, &giRect);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄDC
-	HDC hScreen = GetDC(giHandle);/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
+	//è·å–ç›®æ ‡å¥æŸ„çš„DC
+	HDC hScreen = GetDC(giHandle);/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
 	HDC hCompDC = CreateCompatibleDC(hScreen);
 
-	//»ñÈ¡Ä¿±ê¾ä±úµÄ¿í¶ÈºÍ¸ß¶È
+	//è·å–ç›®æ ‡å¥æŸ„çš„å®½åº¦å’Œé«˜åº¦
 	int	nWidth = (int)((screen_scale) * (giRect.right - giRect.left));
 	int	nHeight = (int)((screen_scale) * (giRect.bottom - giRect.top));
 
-	//´´½¨Bitmap¶ÔÏó
-	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//µÃµ½Î»Í¼
+	//åˆ›å»ºBitmapå¯¹è±¡
+	hBmp = CreateCompatibleBitmap(hScreen, nWidth, nHeight);//å¾—åˆ°ä½å›¾
 
-	SelectObject(hCompDC, hBmp); //²»Ğ´¾ÍÈ«ºÚ
+	SelectObject(hCompDC, hBmp); //ä¸å†™å°±å…¨é»‘
 
 	BitBlt(hCompDC, 0, 0, nWidth, nHeight, hScreen, 0, 0, SRCCOPY);
 	
-	////ÊÍ·Å¶ÔÏó
+	////é‡Šæ”¾å¯¹è±¡
 	DeleteDC(hScreen);
 	DeleteDC(hCompDC);
 
-	//ÀàĞÍ×ª»»
-	//ÕâÀï»ñÈ¡Î»Í¼µÄ´óĞ¡ĞÅÏ¢,ÊÂÊµÉÏÒ²ÊÇ¼æÈİDC»æÍ¼Êä³öµÄ·¶Î§
+	//ç±»å‹è½¬æ¢
+	//è¿™é‡Œè·å–ä½å›¾çš„å¤§å°ä¿¡æ¯,äº‹å®ä¸Šä¹Ÿæ˜¯å…¼å®¹DCç»˜å›¾è¾“å‡ºçš„èŒƒå›´
 	GetObject(hBmp, sizeof(BITMAP), &bmp);
 
 	int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 	//int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
 
-	//mat²Ù×÷
+	//matæ“ä½œ
 	giFrame.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
 
 	GetBitmapBits(hBmp, bmp.bmHeight * bmp.bmWidth * nChannels, giFrame.data);
@@ -112,13 +112,13 @@ bool Bitblt::capture(cv::Mat& frame)
 
 	if (giFrame.empty())
 	{
-		err = { 3, "´°¿Ú»­ÃæÎª¿Õ" };
+		err = { 3, "çª—å£ç”»é¢ä¸ºç©º" };
 		return false;
 	}
 
 	if (giFrame.cols < 480 || giFrame.rows < 360)
 	{
-		err = { 14, "´°¿Ú»­Ãæ´óĞ¡Ğ¡ÓÚ480x360£¬ÎŞ·¨Ê¹ÓÃ" };
+		err = { 14, "çª—å£ç”»é¢å¤§å°å°äº480x360ï¼Œæ— æ³•ä½¿ç”¨" };
 		return false;
 	}
 	frame = giFrame;

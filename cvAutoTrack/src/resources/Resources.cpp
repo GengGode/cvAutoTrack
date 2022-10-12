@@ -18,12 +18,12 @@ namespace TianLi::Resource::Utils
 	}
 	bool HBitmap2MatAlpha(HBITMAP& _hBmp, cv::Mat& _mat)
 	{
-		//BITMAP≤Ÿ◊˜
+		//BITMAPÊìç‰Ωú
 		BITMAP bmp;
 		GetObject(_hBmp, sizeof(BITMAP), &bmp);
 		int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
 		//int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
-		//mat≤Ÿ◊˜
+		//matÊìç‰Ωú
 		cv::Mat v_mat;
 		v_mat.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
 		GetBitmapBits(_hBmp, bmp.bmHeight * bmp.bmWidth * nChannels, v_mat.data);
