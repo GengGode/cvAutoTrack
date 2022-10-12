@@ -15,6 +15,9 @@ if exist src\version\version_hash.hash (
 if exist src\version\version_next.number (
 	del src\version\version_next.number
 )
+if exist src\version\version_tag.tag (
+	del src\version\version_tag.tag
+)
 
 git describe --tags >> src\version\version.ver
 git branch --show-current >>  src\version\version.branch
@@ -54,11 +57,8 @@ echo #else>>src\version\Version.h
 echo    const std::string build_time = "%date% %time%";>>src\version\Version.h
 echo %#endif>>src\version\Version.h
 echo }>>src\version\Version.h
-echo //该文件自动生成，无需更改 >>src\version\Version.h
+echo //璇ユ枃浠惰嚜鍔ㄧ敓鎴愶紝鏃犻渶鏇存敼 >>src\version\Version.h
+
+echo %v1%.%v2%.%v3% >> src\version\version_tag.tag
 
 echo build version : %v1%.%v2%.%v3%.%v4%-%v5%-%v6% 
-
-del src\version\version.ver
-del src\version\version.branch
-del src\version\version_hash.hash
-del src\version\version_next.number

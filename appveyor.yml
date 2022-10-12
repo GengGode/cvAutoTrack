@@ -19,9 +19,9 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
+        # 鍙戝竷鐗堟湰鍙蜂负 APPVEYOR_BUILD_VERSION 鍘婚櫎 {build}
         - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
-        # 显示运行名称和版本号
+        # 鏄剧ず杩愯鍚嶇О鍜岀増鏈彿
         - ps: echo %APPVEYOR_BUILD_VERSION% 
         - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
 
@@ -40,22 +40,24 @@
 
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
-        # 编译测试文件
+        # 缂栬瘧娴嬭瘯鏂囦欢
         - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
 
     after_build:
-        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - echo %MyProjectDir%cvAutoTrack.sln 缂栬瘧瀹屾垚 绛夊緟娴嬭瘯
         - mkdir %MyProjectDir%x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
-    
+        
+        # 浠庢枃浠朵腑璇诲彇 $version_tag.tag 璁剧疆 AppVeyor 鐗堟湰
+        - $env:APPVEYOR_BUILD_VERSION = Get-Content -Path %MyProjectDir%\cvAutoTrack\src\version\version_tag.tag   
         
     before_test:
-        # 移动测试文件到test目录
+        # 绉诲姩娴嬭瘯鏂囦欢鍒皌est鐩綍
         - mkdir %MyProjectDir%x64\test\
         - cd %MyProjectDir% 
         - ls -R
@@ -68,9 +70,9 @@
     test_script:
         - cd %MyProjectDir%\x64\test\
         - dir
-        # 运行 C++ 测试
+        # 杩愯 C++ 娴嬭瘯
         - TEST_cvAutoTrack_Cpp.exe -test
-        # 运行 C# 测试
+        # 杩愯 C# 娴嬭瘯
         - TEST_cvAutoTrack_CSharp.exe -test
         
     after_test:
@@ -116,7 +118,7 @@
         on_build_failure: false
         on_build_status_changed: false
 -
-    version: '7.0.0.{build}'
+    #version: '7.0.0.{build}'
     os: Visual Studio 2022
     configuration: Dev
     platform:
@@ -135,12 +137,11 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
+        # 鍙戝竷鐗堟湰鍙蜂负 APPVEYOR_BUILD_VERSION 鍘婚櫎 {build}
         - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
-        # 显示运行名称和版本号
+        # 鏄剧ず杩愯鍚嶇О鍜岀増鏈彿
         - ps: echo %APPVEYOR_BUILD_VERSION% 
         - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
-        
 
         - mkdir %OpenCvDir%
         - appveyor DownloadFile %OpenCvUrl%
@@ -152,22 +153,25 @@
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
-        # 编译测试文件
+        # 缂栬瘧娴嬭瘯鏂囦欢
         - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
         
     after_build:
-        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - echo %MyProjectDir%cvAutoTrack.sln 缂栬瘧瀹屾垚 绛夊緟娴嬭瘯
         - mkdir %MyProjectDir%x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
-    
+        
+        # 浠庢枃浠朵腑璇诲彇 $version_tag.tag 璁剧疆 AppVeyor 鐗堟湰
+        #- $env:APPVEYOR_BUILD_VERSION = Get-Content -Path %MyProjectDir%\cvAutoTrack\src\version\version_tag.tag   
+        
         
     before_test:
-        # 移动测试文件到test目录
+        # 绉诲姩娴嬭瘯鏂囦欢鍒皌est鐩綍
         - mkdir %MyProjectDir%x64\test\
         - cd %MyProjectDir% 
         - ls -R
@@ -180,9 +184,9 @@
     test_script:
         - cd %MyProjectDir%\x64\test\
         - dir
-        # 运行 C++ 测试
+        # 杩愯 C++ 娴嬭瘯
         - TEST_cvAutoTrack_Cpp.exe -test
-        # 运行 C# 测试
+        # 杩愯 C# 娴嬭瘯
         - TEST_cvAutoTrack_CSharp.exe -test
         
     after_test:
@@ -253,13 +257,13 @@
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
-        # 编译测试文件
+        # 缂栬瘧娴嬭瘯鏂囦欢
         - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
         
     after_build:
-        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - echo %MyProjectDir%cvAutoTrack.sln 缂栬瘧瀹屾垚 绛夊緟娴嬭瘯
         - mkdir %MyProjectDir%x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
@@ -268,7 +272,7 @@
     
         
     before_test:
-        # 移动测试文件到test目录
+        # 绉诲姩娴嬭瘯鏂囦欢鍒皌est鐩綍
         - mkdir %MyProjectDir%x64\test\
         - cd %MyProjectDir% 
         - ls -R
@@ -281,8 +285,8 @@
     test_script:
         - cd %MyProjectDir%\x64\test\
         - dir
-        # 运行 C++ 测试
+        # 杩愯 C++ 娴嬭瘯
         - TEST_cvAutoTrack_Cpp.exe -test
-        # 运行 C# 测试
+        # 杩愯 C# 娴嬭瘯
         - TEST_cvAutoTrack_CSharp.exe -test
         
