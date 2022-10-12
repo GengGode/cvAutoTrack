@@ -20,7 +20,7 @@ if exist src\version\version_tag.tag (
 )
 
 git describe --tags >> src\version\version.ver
-git branch --show-current >>  src\version\version.branch
+git rev-parse --abbrev-ref HEAD >>  src\version\version.branch
 git log -n1 --format=format:"%%h" >> src\version\version_hash.hash
 powershell src\version\GetNextBuildVersion.ps1 >> src\version\version_next.number
 

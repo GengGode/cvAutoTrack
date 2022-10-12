@@ -282,3 +282,8 @@ __pycache__/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt
 /cvAutoTrack/Video
 /cvAutoTrack/src/version/Version.h
+/cvAutoTrack/src/version/version_tag.tag
+/cvAutoTrack/src/version/version_next.number
+/cvAutoTrack/src/version/version_hash.hash
+/cvAutoTrack/src/version/version.ver
+/cvAutoTrack/src/version/version.branch
