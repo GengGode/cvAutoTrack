@@ -24,11 +24,11 @@ public:
 	
 	struct XmlPtr
 	{
-		char* ptr;
-		int size;
+		char* ptr = nullptr;
+		int size = 0;
 	};
 	
-	XmlPtr xmlPtr;
+	XmlPtr xmlPtr = { nullptr,0 };
 public:
 	void install();
 	void release();
