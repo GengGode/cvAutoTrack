@@ -205,7 +205,6 @@ private:
 	GenshinAvatarPosition genshin_avatar_position;
 	
 private:
-	bool getAutoTrackIsInit();
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactRect();
 	bool getGengshinImpactScale();

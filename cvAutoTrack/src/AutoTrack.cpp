@@ -1081,19 +1081,6 @@ int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
 	return true;
 }
 
-bool AutoTrack::getAutoTrackIsInit()
-{
-	if (is_init_end)
-	{
-		err = { 1,"Œ¥≥ı ºªØ" };
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-
 bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
