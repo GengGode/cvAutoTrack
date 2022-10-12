@@ -19,6 +19,11 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+        # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
+        - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
+        # 显示运行名称和版本号
+        - ps: echo %APPVEYOR_BUILD_VERSION% 
+        - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
 
         - mkdir %OpenCvDir%
         - appveyor DownloadFile %OpenCvUrl%
@@ -87,7 +92,7 @@
   
     deploy:
         - provider: GitHub
-          description: '$(APPVEYOR_PROJECT_SLUG): cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)' 
+          description: '$(APPVEYOR_PROJECT_SLUG): cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION).$(APPVEYOR_BUILD_NUMBER)' 
           auth_token:
              secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
           draft: false
@@ -130,6 +135,12 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+        # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
+        - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
+        # 显示运行名称和版本号
+        - ps: echo %APPVEYOR_BUILD_VERSION% 
+        - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
+        
 
         - mkdir %OpenCvDir%
         - appveyor DownloadFile %OpenCvUrl%
@@ -188,7 +199,7 @@
 
     deploy:
         - provider: GitHub
-          description: '$(APPVEYOR_PROJECT_SLUG): DEV cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION)' 
+          description: '$(APPVEYOR_PROJECT_SLUG): DEV cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION).$(APPVEYOR_BUILD_NUMBER)' 
           auth_token:
              secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
           draft: true
