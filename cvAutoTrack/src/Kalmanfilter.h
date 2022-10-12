@@ -1,7 +1,7 @@
 #pragma once
 #include <opencv2\opencv.hpp>
 
-//二维卡尔曼滤波类
+//浜岀淮鍗″皵鏇兼护娉㈢被
 class Kalmanfilter
 {
 	int stateNum = 4;

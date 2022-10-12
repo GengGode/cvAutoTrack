@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ ���ɵİ����ļ���
-// �� cvAutoTrack.rc ʹ��
+// Microsoft Visual C++ 生成的包含文件。
+// 供 cvAutoTrack.rc 使用
 //
 #define IDB_BITMAP_STAR                 101
 #define IDB_BITMAP_PAIMON               102

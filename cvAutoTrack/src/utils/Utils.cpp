@@ -10,8 +10,8 @@ namespace TianLi::Utils
 	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
 	{
 		cv::Point2d pos;
-		double meanx = sumx / lisx.size(); //¾ùÖµ
-		double meany = sumy / lisy.size(); //¾ùÖµ
+		double meanx = sumx / lisx.size(); //å‡å€¼
+		double meany = sumy / lisy.size(); //å‡å€¼
 		double x = meanx;
 		double y = meany;
 		if (lisx.size() > 3 && lisy.size() > 3)
@@ -24,8 +24,8 @@ namespace TianLi::Utils
 				accumy += (lisy[i] - meany) * (lisy[i] - meany);
 			}
 
-			double stdevx = sqrt(accumx / (lisx.size() - 1)); //±ê×¼²î
-			double stdevy = sqrt(accumy / (lisy.size() - 1)); //±ê×¼²î
+			double stdevx = sqrt(accumx / (lisx.size() - 1)); //æ ‡å‡†å·®
+			double stdevy = sqrt(accumy / (lisy.size() - 1)); //æ ‡å‡†å·®
 
 			sumx = 0;
 			sumy = 0;
@@ -113,7 +113,7 @@ namespace TianLi::Utils
 	{
 		const double rad2degScale = 180 / CV_PI;
 		double res = atan2(-p.y, p.x) * rad2degScale;
-		res = res - 90; //´ÓÆÁÄ»¿Õ¼ä×ó²àË®Æ½ÏßÎª0¶È×ªµ½ÊúÖ±ÏòÉÏÎª0¶È
+		res = res - 90; //ä»å±å¹•ç©ºé—´å·¦ä¾§æ°´å¹³çº¿ä¸º0åº¦è½¬åˆ°ç«–ç›´å‘ä¸Šä¸º0åº¦
 		if (res < -180.0)res = res + 360;
 		return res;
 	}

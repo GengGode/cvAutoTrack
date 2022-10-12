@@ -10,14 +10,14 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 	if (!is_init && false)
 	{
 		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		// ´ÓÄÚ´æÖĞ¼ÓÔØxmlÎÄ¼şµÄstring
+		// ä»å†…å­˜ä¸­åŠ è½½xmlæ–‡ä»¶çš„string
 		std::string xml_str(xml_db_mem.ptr);
-		// ½«xmlÎÄ¼şµÄstring×ª»»ÎªxmlÎÄ¼ş
+		// å°†xmlæ–‡ä»¶çš„stringè½¬æ¢ä¸ºxmlæ–‡ä»¶
 		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		// ´Ófs¼ÓÔØ keypoints ºÍ descriptor
+		// ä»fsåŠ è½½ keypoints å’Œ descriptor
 		fs["keypoints"] >> gi_map_keypoints;
 		fs["descriptors"] >> gi_map_descriptors;
 
@@ -36,14 +36,14 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 		Resources::getInstance().install();
 		
 		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		// ´ÓÄÚ´æÖĞ¼ÓÔØxmlÎÄ¼şµÄstring
+		// ä»å†…å­˜ä¸­åŠ è½½xmlæ–‡ä»¶çš„string
 		std::string xml_str(xml_db_mem.ptr);
-		// ½«xmlÎÄ¼şµÄstring×ª»»ÎªxmlÎÄ¼ş
+		// å°†xmlæ–‡ä»¶çš„stringè½¬æ¢ä¸ºxmlæ–‡ä»¶
 		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		// ´Ófs¼ÓÔØ keypoints ºÍ descriptor
+		// ä»fsåŠ è½½ keypoints å’Œ descriptor
 		fs["keypoints"] >> gi_map_keypoints;
 		fs["descriptors"] >> gi_map_descriptors;
 

@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-//м╪ф╛вйт╢ ╪стьюЮ
+//Е⌡╬Г┴┤Х╣└Ф╨░ Е┼═Х╫╫Г╠╩
 class Resources
 {
 private:

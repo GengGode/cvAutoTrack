@@ -21,10 +21,10 @@ AutoTrack::AutoTrack()
 	capture = new Bitblt();
 	capture->init();
 
-	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "Õı³£ÍË³ö");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "Î´ÄÜÕÒµ½Ô­Éñ´°¿Ú¾ä±ú");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102, "»ñÈ¡Ô­Éñ´°¿Ú´óĞ¡Ê§°Ü");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "»ñÈ¡Ô­Éñ»­ÃæÊ§°Ü");
+	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "æ­£å¸¸é€€å‡º");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "æœªèƒ½æ‰¾åˆ°åŸç¥çª—å£å¥æŸ„");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactRect, 102, "è·å–åŸç¥çª—å£å¤§å°å¤±è´¥");
+	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "è·å–åŸç¥ç”»é¢å¤±è´¥");
 
 }
 
@@ -139,7 +139,7 @@ bool AutoTrack::GetVersion(char* version_buff, int buff_size)
 {
 	if (version_buff == NULL || buff_size < 1)
 	{
-		err = { 291,"»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1" };
+		err = { 291,"ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1" };
 		return false;
 	}
 	strncpy_s(version_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_version.size())), TianLi::Version::build_version.c_str(), _TRUNCATE);
@@ -150,7 +150,7 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 {
 	if (time_buff == NULL || buff_size < 1)
 	{
-		err = { 291,"»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1" };
+		err = { 291,"ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1" };
 		return false;
 	}
 	strncpy_s(time_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_time.size())), TianLi::Version::build_time.c_str(), _TRUNCATE);
@@ -161,7 +161,7 @@ bool AutoTrack::DebugCapture()
 {
 	if (giFrame.empty())
 	{
-		err = { 251,"»­ÃæÎª¿Õ" };
+		err = { 251,"ç”»é¢ä¸ºç©º" };
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
@@ -169,33 +169,33 @@ bool AutoTrack::DebugCapture()
 	{
 	case Capture::Mode_Bitblt:
 	{
-		// »æÖÆpaimon Rect
+		// ç»˜åˆ¶paimon Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆminiMap Rect
+		// ç»˜åˆ¶miniMap Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
 		Avatar.x += genshin_screen.config.rect_minimap.x;
 		Avatar.y += genshin_screen.config.rect_minimap.y;
 
-		// »æÖÆavatar Rect
+		// ç»˜åˆ¶avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆUID Rect
+		// ç»˜åˆ¶UID Rect
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
 	case Capture::Mode_DirectX:
 	{
-		// »æÖÆpaimon Rect
+		// ç»˜åˆ¶paimon Rect
 		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆminiMap Rect
+		// ç»˜åˆ¶miniMap Rect
 		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
 		Avatar.x += Area_Minimap_mayArea.x;
 		Avatar.y += Area_Minimap_mayArea.y;
 
-		// »æÖÆavatar Rect
+		// ç»˜åˆ¶avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆUID Rect
+		// ç»˜åˆ¶UID Rect
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 	}
 	}
@@ -204,7 +204,7 @@ bool AutoTrack::DebugCapture()
 
 	if (!rel)
 	{
-		err = { 252,"±£´æ»­ÃæÊ§°Ü " };
+		err = { 252,"ä¿å­˜ç”»é¢å¤±è´¥ " };
 		return false;
 	}	
 	return true;
@@ -214,13 +214,13 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 {
 	if (path_buff == NULL || buff_size < 1)
 	{
-		err = { 251,"Â·¾¶»º´æÇøÎª¿ÕÖ¸Õë»òÊÇÂ·¾¶»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1" };
+		err = { 251,"è·¯å¾„ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯è·¯å¾„ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1" };
 		return false;
 	}
 
 	if (giFrame.empty())
 	{
-		err = { 252,"»­ÃæÎª¿Õ" };
+		err = { 252,"ç”»é¢ä¸ºç©º" };
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
@@ -228,33 +228,33 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	{
 	case Capture::Mode_Bitblt:
 	{
-		// »æÖÆpaimon Rect
+		// ç»˜åˆ¶paimon Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆminiMap Rect
+		// ç»˜åˆ¶miniMap Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
 		Avatar.x += genshin_screen.config.rect_minimap.x;
 		Avatar.y += genshin_screen.config.rect_minimap.y;
 
-		// »æÖÆavatar Rect
+		// ç»˜åˆ¶avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆUID Rect
+		// ç»˜åˆ¶UID Rect
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
 	case Capture::Mode_DirectX:
 	{
-		// »æÖÆpaimon Rect
+		// ç»˜åˆ¶paimon Rect
 		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆminiMap Rect
+		// ç»˜åˆ¶miniMap Rect
 		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
 		Avatar.x += Area_Minimap_mayArea.x;
 		Avatar.y += Area_Minimap_mayArea.y;
 
-		// »æÖÆavatar Rect
+		// ç»˜åˆ¶avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// »æÖÆUID Rect
+		// ç»˜åˆ¶UID Rect
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 	}
 	}
@@ -263,7 +263,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 
 	if (!rel)
 	{
-		err = { 252,std::string("±£´æ»­ÃæÊ§°Ü£¬Çë¼ì²éÎÄ¼şÂ·¾¶ÊÇ·ñºÏ·¨")+std::string(path_buff)};
+		err = { 252,std::string("ä¿å­˜ç”»é¢å¤±è´¥ï¼Œè¯·æ£€æŸ¥æ–‡ä»¶è·¯å¾„æ˜¯å¦åˆæ³•")+std::string(path_buff)};
 		return false;
 	}
 	return true;
@@ -275,12 +275,12 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 	int mapId2 = 0;
 	if (!genshin_minimap.is_init_finish)
 	{
-		init();//³õÊ¼»¯
+		init();//åˆå§‹åŒ–
 	}
 
 	/*
-	·Ö±ğÅĞ¶ÏÊÇ·ñ³É¹¦»ñÈ¡£¬±ÜÃâÇ°Ò»¸öerror_code±»ºóÒ»¸öerror_code¸²¸Ç
-	¶øµ¼ÖÂ±¾º¯Êı·µ»Øfalse£¨±íÊ¾Ê§°Ü£©µ«error_codeÎª0£¨±íÊ¾³É¹¦£©¡£
+	åˆ†åˆ«åˆ¤æ–­æ˜¯å¦æˆåŠŸè·å–ï¼Œé¿å…å‰ä¸€ä¸ªerror_codeè¢«åä¸€ä¸ªerror_codeè¦†ç›–
+	è€Œå¯¼è‡´æœ¬å‡½æ•°è¿”å›falseï¼ˆè¡¨ç¤ºå¤±è´¥ï¼‰ä½†error_codeä¸º0ï¼ˆè¡¨ç¤ºæˆåŠŸï¼‰ã€‚
 	*/
 	if (!GetPositionOfMap(x2, y2, mapId2))
 	{
@@ -305,7 +305,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (!genshin_minimap.is_init_finish)
 	{
-		err = { 1, "Ã»ÓĞ³õÊ¼»¯" };
+		err = { 1, "æ²¡æœ‰åˆå§‹åŒ–" };
 		return false;
 	}
 	if (capture->mode == Capture::Mode_Bitblt)
@@ -313,7 +313,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		
 		if (getMiniMapRefMat_Bitblt()==false)
 		{
-			err = { 1001, "BitbltÄ£Ê½ÏÂ»ñÈ¡×ø±êÊ±£¬Ã»ÓĞÊ¶±ğµ½paimon£¬½¨ÒéÊ¹ÓÃDXÄ£Ê½" };
+			err = { 1001, "Bitbltæ¨¡å¼ä¸‹è·å–åæ ‡æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimonï¼Œå»ºè®®ä½¿ç”¨DXæ¨¡å¼" };
 			return false;
 		}
 	}
@@ -322,7 +322,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 1002, "»ñÈ¡×ø±êÊ±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+			err = { 1002, "è·å–åæ ‡æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 			return false;
 		}
 
@@ -331,7 +331,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 
 	if (giMiniMapRef.empty())
 	{
-		err = { 5, "Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ" };
+		err = { 5, "åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©º" };
 		return false;
 	}
 	genshin_minimap.config.is_find_paimon = true;
@@ -389,12 +389,12 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	{
 		double _x = pos_tr.x;
 		double _y = pos_tr.y;
-		// Ô¨ÏÂ¹¬
+		// æ¸Šä¸‹å®«
 		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
 		{
 			mapId = 1;
 		}
-		// µØÏÂ²ãÑÒ
+		// åœ°ä¸‹å±‚å²©
 		if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
 		{
 			mapId = 2;
@@ -444,7 +444,7 @@ bool AutoTrack::GetDirection(double& a)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
-			err = { 2001, "BitbltÄ£Ê½ÏÂ»ñÈ¡½ÇÉ«³¯ÏòÊ±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+			err = { 2001, "Bitbltæ¨¡å¼ä¸‹è·å–è§’è‰²æœå‘æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 			return false;
 		}
 	}
@@ -453,7 +453,7 @@ bool AutoTrack::GetDirection(double& a)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 2002 ,"»ñÈ¡½ÇÉ«³¯ÏòÊ±£¬Ã»ÓĞÊ¶±ğµ½Paimon" };
+			err = { 2002 ,"è·å–è§’è‰²æœå‘æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°Paimon" };
 			return false;
 		}
 
@@ -467,7 +467,7 @@ bool AutoTrack::GetDirection(double& a)
 
 	if (giAvatarRef.empty())
 	{
-		err = { 11,"Ô­Éñ½ÇÉ«Ğ¡¼ıÍ·ÇøÓòÎª¿Õ" };
+		err = { 11,"åŸç¥è§’è‰²å°ç®­å¤´åŒºåŸŸä¸ºç©º" };
 		return false;
 	}
 
@@ -498,7 +498,7 @@ bool AutoTrack::GetDirection(double& a)
 
 	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
-	std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+	std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
 	cv::Point2f rect[4];
 
 	std::vector<cv::Point2d> AvatarKeyPoint;
@@ -508,7 +508,7 @@ bool AutoTrack::GetDirection(double& a)
 
 	if (contours.size() != 3)
 	{
-		err = { 9,"ÌáÈ¡Ğ¡¼ıÍ·ÌØÕ÷Îó²î¹ı´ó" };
+		err = { 9,"æå–å°ç®­å¤´ç‰¹å¾è¯¯å·®è¿‡å¤§" };
 		return false;
 	}
 
@@ -557,7 +557,7 @@ bool AutoTrack::GetRotation(double& a)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
-			err = { 3001, "BitbltÄ£Ê½ÏÂ»ñÈ¡ÊÓ½Ç³¯ÏòÊ±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+			err = { 3001, "Bitbltæ¨¡å¼ä¸‹è·å–è§†è§’æœå‘æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 			return false;
 		}
 	}
@@ -566,7 +566,7 @@ bool AutoTrack::GetRotation(double& a)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 3002 ,"»ñÈ¡ÊÓ½Ç³¯ÏòÊ±£¬Ã»ÓĞÊ¶±ğµ½Paimon" };
+			err = { 3002 ,"è·å–è§†è§’æœå‘æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°Paimon" };
 			return false;
 		}
 
@@ -577,13 +577,13 @@ bool AutoTrack::GetRotation(double& a)
 
 	if (img_object.channels() != 4)
 	{
-		err = { 3003,"»ñÈ¡ÊÓ½Ç³¯ÏòÊ±£¬Ô­ÉñĞ¡µØÍ¼ÇøÓòÃ»ÓĞÈ¡µ½Í¸Ã÷Í¨µÀ" };
+		err = { 3003,"è·å–è§†è§’æœå‘æ—¶ï¼ŒåŸç¥å°åœ°å›¾åŒºåŸŸæ²¡æœ‰å–åˆ°é€æ˜é€šé“" };
 		return false;
 	}
 
 	if (capture->mode == Capture::Mode_DirectX)
 	{
-		err = { 3004,"DXÄ£Ê½ÏÂ£¬Ô­ÉñĞ¡µØÍ¼ÇøÓòÎŞ·¨È¡µ½Í¸Ã÷Í¨µÀ" };
+		err = { 3004,"DXæ¨¡å¼ä¸‹ï¼ŒåŸç¥å°åœ°å›¾åŒºåŸŸæ— æ³•å–åˆ°é€æ˜é€šé“" };
 		return false;
 	}
 
@@ -617,18 +617,18 @@ bool AutoTrack::GetRotation(double& a)
 	dilate_element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(4, 4));
 	cv::dilate(Alpha, Alpha, dilate_element);
 
-	//´«ÈëºÚ°×Í¼
-	//¸ù¾İ°×¿é²¿·Ö¼ÆËãÊÓ½ÇÖĞĞÄ×ø±ê
+	//ä¼ å…¥é»‘ç™½å›¾
+	//æ ¹æ®ç™½å—éƒ¨åˆ†è®¡ç®—è§†è§’ä¸­å¿ƒåæ ‡
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 
 	cv::findContours(Alpha, contours, hierarcy, 0, 1);
 
-	std::vector<cv::Rect> boundRect(contours.size());  //¶¨ÒåÍâ½Ó¾ØĞÎ¼¯ºÏ
+	std::vector<cv::Rect> boundRect(contours.size());  //å®šä¹‰å¤–æ¥çŸ©å½¢é›†åˆ
 
 	if (contours.size() == 0)
 	{
-		err = { 3005 ,"»ñÈ¡ÊÓ½Ç³¯ÏòÊ±£¬Ã»ÓĞÌáÈ¡³öÊÓ½ÇÉÈĞÎÇøÓò" };
+		err = { 3005 ,"è·å–è§†è§’æœå‘æ—¶ï¼Œæ²¡æœ‰æå–å‡ºè§†è§’æ‰‡å½¢åŒºåŸŸ" };
 		return false;
 	}
 
@@ -712,7 +712,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		{
 			if (getMiniMapRefMat_Bitblt() == false)
 			{
-				err = { 4001, "BitbltÄ£Ê½ÏÂ»ñÈ¡ÉñÍ«Ê±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+				err = { 4001, "Bitbltæ¨¡å¼ä¸‹è·å–ç¥ç³æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 				return false;
 			}
 		}
@@ -721,7 +721,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			cv::Rect paimon_rect;
 			if (!check_paimon(paimon_rect))
 			{
-				err = { 4002, "»ñÈ¡ÉñÍ«Ê±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+				err = { 4002, "è·å–ç¥ç³æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 				return false;
 			}
 
@@ -730,7 +730,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		
 		if (giMiniMapRef.empty())
 		{
-			err = { 5, "Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ" };
+			err = { 5, "åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©º" };
 			return false;
 		}
 
@@ -801,7 +801,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			}
 			return clear_error_logs();
 		}
-		err = { 601,"»ñÈ¡ÉñÍ«Ê§°Ü£¬Î´È·¶¨Ô­Òò" };
+		err = { 601,"è·å–ç¥ç³å¤±è´¥ï¼Œæœªç¡®å®šåŸå› " };
 		return false;
 	}
 }
@@ -828,7 +828,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
-			err = { 4001, "BitbltÄ£Ê½ÏÂ»ñÈ¡ÉñÍ«Ê±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+			err = { 4001, "Bitbltæ¨¡å¼ä¸‹è·å–ç¥ç³æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 			return false;
 		}
 	}
@@ -837,7 +837,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 4002, "»ñÈ¡ÉñÍ«Ê±£¬Ã»ÓĞÊ¶±ğµ½paimon" };
+			err = { 4002, "è·å–ç¥ç³æ—¶ï¼Œæ²¡æœ‰è¯†åˆ«åˆ°paimon" };
 			return false;
 		}
 
@@ -846,11 +846,11 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	
 	if (giMiniMapRef.empty())
 	{
-		err = { 5, "Ô­ÉñĞ¡µØÍ¼ÇøÓòÎª¿Õ" };
+		err = { 5, "åŸç¥å°åœ°å›¾åŒºåŸŸä¸ºç©º" };
 		return false;
 	}
 	
-	//Ò»¸öbug Î´¿ªÓÎÏ·¶øÏÈ¿ªÓ¦ÓÃ£¬¿ªÓÎÏ·Ê±´¥·¢
+	//ä¸€ä¸ªbug æœªå¼€æ¸¸æˆè€Œå…ˆå¼€åº”ç”¨ï¼Œå¼€æ¸¸æˆæ—¶è§¦å‘
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
 
@@ -975,7 +975,7 @@ bool AutoTrack::GetUID(int& uid)
 
 	double minVal, maxVal;
 	cv::Point minLoc, maxLoc;
-	//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+	//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 	cv::minMaxLoc(matchTmp, &minVal, &maxVal, &minLoc, &maxLoc);
 	if (maxVal > 0.75)
 	{
@@ -1001,7 +1001,7 @@ bool AutoTrack::GetUID(int& uid)
 
 				double minVali, maxVali;
 				cv::Point minLoci, maxLoci;
-				//Ñ°ÕÒ×î¼ÑÆ¥ÅäÎ»ÖÃ
+				//å¯»æ‰¾æœ€ä½³åŒ¹é…ä½ç½®
 				cv::minMaxLoc(matchTmp, &minVali, &maxVali, &minLoci, &maxLoci);
 
 				tmplis[i] = maxVali;
@@ -1028,7 +1028,7 @@ bool AutoTrack::GetUID(int& uid)
 	}
 	if (_uid == 0)
 	{
-		err = { 8,"Î´ÄÜÔÚUIDÇøÓò¼ì²âµ½ÓĞĞ§UID" };
+		err = { 8,"æœªèƒ½åœ¨UIDåŒºåŸŸæ£€æµ‹åˆ°æœ‰æ•ˆUID" };
 		return false;
 	}
 	uid = _uid;	
@@ -1065,7 +1065,7 @@ int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
 {
 	if (msg_buff == NULL || buff_size < 1)
 	{
-		err = { 291,"»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1" };
+		err = { 291,"ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1" };
 		return false;
 	}
 	std::string msg = err.getLastErrorMsg();
@@ -1077,7 +1077,7 @@ int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
 {
 	if (json_buff == NULL || buff_size < 1)
 	{
-		err = { 291,"»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1" };
+		err = { 291,"ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1" };
 		return false;
 	}
 	std::string msg = err.toJson();
@@ -1089,34 +1089,34 @@ bool AutoTrack::getGengshinImpactWnd()
 {
 	if (is_Auto_getHandle)
 	{
-		LPCWSTR giWindowName = { L"Ô­Éñ" };
-		/* ¶ÔÔ­Éñ´°¿ÚµÄ²Ù×÷ */
-		giWindowName = L"Ô­Éñ";
+		LPCWSTR giWindowName = { L"åŸç¥" };
+		/* å¯¹åŸç¥çª—å£çš„æ“ä½œ */
+		giWindowName = L"åŸç¥";
 		giHandle = FindWindowW(L"UnityWndClass", giWindowName);
 		if (giHandle == NULL)
 		{
 			giWindowName = L"Genshin Impact";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£ºÔ­Éñ */
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼šåŸç¥ */
 		}
 		if (giHandle == NULL)
 		{
 			giWindowName = L"??";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£º?? */
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼š?? */
 		}
 		if (giHandle == NULL)
 		{
 			giWindowName = L"\u539F\u795E";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£ºÔ­Éñ */
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼šåŸç¥ */
 		}
 		if (giHandle == NULL)
 		{
 			giWindowName = L"\uC6D0\uC2E0";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* Æ¥ÅäÃû³Æ£º?? */
+			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* åŒ¹é…åç§°ï¼š?? */
 		}
 
 		if (giHandle == NULL)
 		{
-			err = { 10,"ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
+			err = { 10,"æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨" };
 			return false;
 		}
 	}
@@ -1128,7 +1128,7 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		else
 		{
-			err = { 10,"ÎŞĞ§¾ä±ú»òÖ¸¶¨¾ä±úËùÖ¸Ïò´°¿Ú²»´æÔÚ" };
+			err = { 10,"æ— æ•ˆå¥æŸ„æˆ–æŒ‡å®šå¥æŸ„æ‰€æŒ‡å‘çª—å£ä¸å­˜åœ¨" };
 			return false;
 		}
 	}
@@ -1142,16 +1142,16 @@ bool AutoTrack::getGengshinImpactRect()
 {
 	if (!GetWindowRect(giHandle, &giRect))
 	{
-		err = { 12,"´°¿Ú¾ä±úÊ§Ğ§" };
+		err = { 12,"çª—å£å¥æŸ„å¤±æ•ˆ" };
 		return false;
 	}
 	if (!GetClientRect(giHandle, &giClientRect))
 	{
-		err = { 12,"´°¿Ú¾ä±úÊ§Ğ§" };
+		err = { 12,"çª—å£å¥æŸ„å¤±æ•ˆ" };
 		return false;
 	}
 
-	//»ñÈ¡ÆÁÄ»Ëõ·Å±ÈÀı
+	//è·å–å±å¹•ç¼©æ”¾æ¯”ä¾‹
 	getGengshinImpactScale();
 
 	giClientSize.width = (int)(screen_scale * (giClientRect.right - giClientRect.left));
@@ -1168,36 +1168,36 @@ bool AutoTrack::getGengshinImpactRect()
 	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
 	{
 
-		//¸ßĞÍ£¬ÒÔ¿íÎª±ÈÀı
+		//é«˜å‹ï¼Œä»¥å®½ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = y / 1080.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fx = x / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		genshin_handle.size_frame = cv::Size(static_cast<int>(fx), 1080);
 
 	}
 	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
 	{
 
-		//¿íĞÍ£¬ÒÔ¸ßÎª±ÈÀı
+		//å®½å‹ï¼Œä»¥é«˜ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = x / 1920.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fy = y / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		genshin_handle.size_frame = cv::Size(1920, static_cast<int>(fy));
 	}
 	x = genshin_handle.size_frame.width;
 	y = genshin_handle.size_frame.height;
-	// ÅÉÃÉ¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// æ´¾è’™å¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int paimon_mayArea_left = 0;
 	int paimon_mayArea_top = 0;
 	int paimon_mayArea_width = static_cast<int>(x * 0.10);
 	int paimon_mayArea_height = static_cast<int>(y * 0.10);
-	// ÅÉÃÉ¿ÉÄÜĞÔÇøÓò
+	// æ´¾è’™å¯èƒ½æ€§åŒºåŸŸ
 	//cv::Rect Area_Paimon_mayArea(
 	genshin_handle.rect_paimon_maybe=cv::Rect(
 		paimon_mayArea_left,
@@ -1206,12 +1206,12 @@ bool AutoTrack::getGengshinImpactRect()
 		paimon_mayArea_height);
 	//genshin_handle.rect_paimon_maybe = Area_Paimon_mayArea;
 
-	// Ğ¡µØÍ¼±ê¶¨¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// å°åœ°å›¾æ ‡å®šå¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int miniMap_Cailb_mayArea_left = static_cast<int>(x * 0.10);
 	int miniMap_Cailb_mayArea_top = 0;
 	int miniMap_Cailb_mayArea_width = static_cast<int>(x * 0.10);
 	int miniMap_Cailb_mayArea_height = static_cast<int>(y * 0.10);
-	// Ğ¡µØÍ¼±ê¶¨¿ÉÄÜĞÔÇøÓò
+	// å°åœ°å›¾æ ‡å®šå¯èƒ½æ€§åŒºåŸŸ
 	cv::Rect Area_MiniMap_Cailb_mayArea(
 		miniMap_Cailb_mayArea_left,
 		miniMap_Cailb_mayArea_top,
@@ -1219,12 +1219,12 @@ bool AutoTrack::getGengshinImpactRect()
 		miniMap_Cailb_mayArea_height);
 	genshin_handle.rect_minimap_cailb_maybe = Area_MiniMap_Cailb_mayArea;
 
-	// Ğ¡µØÍ¼¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// å°åœ°å›¾å¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int miniMap_mayArea_left = 0;
 	int miniMap_mayArea_top = 0;
 	int miniMap_mayArea_width = static_cast<int>(x * 0.18);
 	int miniMap_mayArea_height = static_cast<int>(y * 0.22);
-	// Ğ¡µØÍ¼¿ÉÄÜĞÔÇøÓò
+	// å°åœ°å›¾å¯èƒ½æ€§åŒºåŸŸ
 	cv::Rect Area_MiniMap_mayArea(
 		miniMap_mayArea_left,
 		miniMap_mayArea_top,
@@ -1232,12 +1232,12 @@ bool AutoTrack::getGengshinImpactRect()
 		miniMap_mayArea_height);
 	genshin_handle.rect_minimap_maybe = Area_MiniMap_mayArea;
 
-	// UID¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// UIDå¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int UID_mayArea_left = static_cast<int>(x * 0.88);
 	int UID_mayArea_top = static_cast<int>(y * 0.97);
 	int UID_mayArea_width = x - UID_mayArea_left;
 	int UID_mayArea_height = y - UID_mayArea_top;
-	// UID¿ÉÄÜĞÔÇøÓò
+	// UIDå¯èƒ½æ€§åŒºåŸŸ
 	//cv::Rect Area_UID_mayArea(
 	genshin_handle.rect_uid_maybe =cv::Rect(
 		UID_mayArea_left,
@@ -1254,12 +1254,12 @@ bool AutoTrack::getGengshinImpactRect()
 
 	genshin_handle.rect_uid = cv::Rect(UID_Rect_x, UID_Rect_y, UID_Rect_w, UID_Rect_h);
 
-	// ×ó²àÒÑ»ñÈ¡ÎïÆ·¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// å·¦ä¾§å·²è·å–ç‰©å“å¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int leftGetItems_mayArea_left = static_cast<int>(x * 0.570);
 	int leftGetItems_mayArea_top = static_cast<int>(y * 0.250);
 	int leftGetItems_mayArea_width = static_cast<int>(x * 0.225);
 	int leftGetItems_mayArea_height = static_cast<int>(y * 0.500);
-	// ×ó²àÒÑ»ñÈ¡ÎïÆ·¿ÉÄÜĞÔÇøÓò
+	// å·¦ä¾§å·²è·å–ç‰©å“å¯èƒ½æ€§åŒºåŸŸ
 	cv::Rect Area_LeftGetItems_mayArea(
 		leftGetItems_mayArea_left,
 		leftGetItems_mayArea_top,
@@ -1267,12 +1267,12 @@ bool AutoTrack::getGengshinImpactRect()
 		leftGetItems_mayArea_height);
 	genshin_handle.rect_left_give_items_maybe = Area_LeftGetItems_mayArea;
 
-	// ÓÒ²à¿É¼ñÈ¡ÎïÆ·¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// å³ä¾§å¯æ¡å–ç‰©å“å¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int rightGetItems_mayArea_left = static_cast<int>(x * 0.050);
 	int rightGetItems_mayArea_top = static_cast<int>(y * 0.460);
 	int rightGetItems_mayArea_width = static_cast<int>(x * 0.160);
 	int rightGetItems_mayArea_height = static_cast<int>(y * 0.480);
-	// ÓÒ²à¿É¼ñÈ¡ÎïÆ·¿ÉÄÜĞÔÇøÓò
+	// å³ä¾§å¯æ¡å–ç‰©å“å¯èƒ½æ€§åŒºåŸŸ
 	cv::Rect Area_RightGetItems_mayArea(
 		rightGetItems_mayArea_left,
 		rightGetItems_mayArea_top,
@@ -1291,14 +1291,14 @@ bool AutoTrack::getGengshinImpactScale()
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
-	// »ñÈ¡¼àÊÓÆ÷Âß¼­¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨é€»è¾‘å®½åº¦ä¸é«˜åº¦
 	MONITORINFOEX miex;
 	miex.cbSize = sizeof(miex);
 	GetMonitorInfo(hMonitor, &miex);
 	int cxLogical = (miex.rcMonitor.right - miex.rcMonitor.left);
 	//int cyLogical = (miex.rcMonitor.bottom - miex.rcMonitor.top);
 
-	// »ñÈ¡¼àÊÓÆ÷ÎïÀí¿í¶ÈÓë¸ß¶È
+	// è·å–ç›‘è§†å™¨ç‰©ç†å®½åº¦ä¸é«˜åº¦
 	DEVMODE dm;
 	dm.dmSize = sizeof(dm);
 	dm.dmDriverExtra = 0;
@@ -1333,7 +1333,7 @@ bool AutoTrack::getGengshinImpactScreen()
 		
 		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
 
-		// »ñÈ¡maybeÇøÓò
+		// è·å–maybeåŒºåŸŸ
 		genshin_screen.img_paimon_maybe = giFrame(genshin_handle.rect_paimon_maybe);
 		genshin_screen.img_minimap_cailb_maybe = giFrame(genshin_handle.rect_minimap_cailb_maybe);
 		genshin_screen.img_minimap_maybe = giFrame(genshin_handle.rect_minimap_maybe);
@@ -1352,7 +1352,7 @@ bool AutoTrack::getGengshinImpactScreen()
 	}
 	else
 	{
-		err = { 433, "½ØÍ¼Ê§°Ü" };
+		err = { 433, "æˆªå›¾å¤±è´¥" };
 		return false;
 	}
 }
@@ -1364,7 +1364,7 @@ bool AutoTrack::getPaimonRefMat()
 	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
 	{
 
-		//Õı³££¬²»×ö´¦Àí
+		//æ­£å¸¸ï¼Œä¸åšå¤„ç†
 		if (x != 1920 && y != 1080)
 		{
 			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
@@ -1373,31 +1373,31 @@ bool AutoTrack::getPaimonRefMat()
 	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
 	{
 
-		//¸ßĞÍ£¬ÒÔ¿íÎª±ÈÀı
+		//é«˜å‹ï¼Œä»¥å®½ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = y / 1080.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fx = x / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
 
 	}
 	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
 	{
 
-		//¿íĞÍ£¬ÒÔ¸ßÎª±ÈÀı
+		//å®½å‹ï¼Œä»¥é«˜ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = x / 1920.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fy = y / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
 	}
 	else
 	{
-		//³ö´í
+		//å‡ºé”™
 
 	}
 
@@ -1419,12 +1419,12 @@ bool AutoTrack::getPaimonRefMat()
 		Paimon_Rect_h = cvCeil(1920 * 0.0406);
 	}
 
-	// ÅÉÃÉ¿ÉÄÜĞÔÇøÓò¼ÆËã²ÎÊı
+	// æ´¾è’™å¯èƒ½æ€§åŒºåŸŸè®¡ç®—å‚æ•°
 	int paimon_mayArea_left = 0;
 	int paimon_mayArea_top = 0;
 	int paimon_mayArea_width = static_cast<int>(x * 0.10);
 	int paimon_mayArea_height = static_cast<int>(y * 0.10);
-	// ÅÉÃÉ¿ÉÄÜĞÔÇøÓò
+	// æ´¾è’™å¯èƒ½æ€§åŒºåŸŸ
 	Area_Paimon_mayArea = cv::Rect(
 		paimon_mayArea_left,
 		paimon_mayArea_top,
@@ -1451,7 +1451,7 @@ bool AutoTrack::getMiniMapRefMat()
 	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
 	{
 
-		//Õı³££¬²»×ö´¦Àí
+		//æ­£å¸¸ï¼Œä¸åšå¤„ç†
 		if (x != 1920 && y != 1080)
 		{
 			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
@@ -1460,31 +1460,31 @@ bool AutoTrack::getMiniMapRefMat()
 	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
 	{
 
-		//¸ßĞÍ£¬ÒÔ¿íÎª±ÈÀı
+		//é«˜å‹ï¼Œä»¥å®½ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = y / 1080.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fx = x / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
 
 	}
 	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
 	{
 
-		//¿íĞÍ£¬ÒÔ¸ßÎª±ÈÀı
+		//å®½å‹ï¼Œä»¥é«˜ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = x / 1920.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fy = y / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
 	}
 	else
 	{
-		//³ö´í
+		//å‡ºé”™
 
 	}
 
@@ -1530,7 +1530,7 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
 	{
 
-		//Õı³££¬²»×ö´¦Àí
+		//æ­£å¸¸ï¼Œä¸åšå¤„ç†
 		if (x != 1920 && y != 1080)
 		{
 			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
@@ -1539,31 +1539,31 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
 	{
 
-		//¸ßĞÍ£¬ÒÔ¿íÎª±ÈÀı
+		//é«˜å‹ï¼Œä»¥å®½ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = y / 1080.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fx = x / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
 
 	}
 	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
 	{
 
-		//¿íĞÍ£¬ÒÔ¸ßÎª±ÈÀı
+		//å®½å‹ï¼Œä»¥é«˜ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = x / 1920.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fy = y / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
 	}
 	else
 	{
-		//³ö´í
+		//å‡ºé”™
 
 	}
 
@@ -1593,16 +1593,16 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
 
 
-	// ¼ì²âÅÉÃÉ -> ¼ì²âĞ¡µØÍ¼±ê¶¨ -> ¼ÆËãĞ¡µØÍ¼×ø±ê
+	// æ£€æµ‹æ´¾è’™ -> æ£€æµ‹å°åœ°å›¾æ ‡å®š -> è®¡ç®—å°åœ°å›¾åæ ‡
 
 	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
-		err = { 40001,"BitbltÄ£Ê½ÏÂ¼ì²âÅÉÃÉÊ§°Ü" };
+		err = { 40001,"Bitbltæ¨¡å¼ä¸‹æ£€æµ‹æ´¾è’™å¤±è´¥" };
 		return false;
 	}
 	if (genshin_paimon.is_visial == false)
 	{
-		err = { 50001,"BitbltÄ£Ê½ÏÂÎ´ÄÜ¼ì²âµ½ÅÉÃÉ" };
+		err = { 50001,"Bitbltæ¨¡å¼ä¸‹æœªèƒ½æ£€æµ‹åˆ°æ´¾è’™" };
 		return false;
 	}
 
@@ -1611,12 +1611,12 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
 	{
-		err = { 40002,"BitbltÄ£Ê½ÏÂ¼ì²âĞ¡µØÍ¼±ê¶¨Ê§°Ü" };
+		err = { 40002,"Bitbltæ¨¡å¼ä¸‹æ£€æµ‹å°åœ°å›¾æ ‡å®šå¤±è´¥" };
 		return false;
 	}
 	if (genshin_minimap_cailb.is_visial == false)
 	{
-		err = { 50002,"BitbltÄ£Ê½ÏÂÎ´ÄÜ¼ì²âµ½Ğ¡µØÍ¼±ê¶¨" };
+		err = { 50002,"Bitbltæ¨¡å¼ä¸‹æœªèƒ½æ£€æµ‹åˆ°å°åœ°å›¾æ ‡å®š" };
 		return false;
 	}
 
@@ -1624,7 +1624,7 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
 	{
-		err = { 40003, "BitbltÄ£Ê½ÏÂ¼ÆËãĞ¡µØÍ¼ÇøÓòÊ§°Ü" };
+		err = { 40003, "Bitbltæ¨¡å¼ä¸‹è®¡ç®—å°åœ°å›¾åŒºåŸŸå¤±è´¥" };
 		return false;
 	}
 
@@ -1647,7 +1647,7 @@ bool AutoTrack::getUIDRefMat()
 	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
 	{
 
-		//Õı³££¬²»×ö´¦Àí
+		//æ­£å¸¸ï¼Œä¸åšå¤„ç†
 		if (x != 1920 && y != 1080)
 		{
 			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
@@ -1656,31 +1656,31 @@ bool AutoTrack::getUIDRefMat()
 	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
 	{
 
-		//¸ßĞÍ£¬ÒÔ¿íÎª±ÈÀı
+		//é«˜å‹ï¼Œä»¥å®½ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = y / 1080.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fx = x / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
 
 	}
 	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
 	{
 
-		//¿íĞÍ£¬ÒÔ¸ßÎª±ÈÀı
+		//å®½å‹ï¼Œä»¥é«˜ä¸ºæ¯”ä¾‹
 
 		// x = (y * 16) / 9;
 		f = x / 1920.0;
-		//½«giFrameËõ·Åµ½1920*1080µÄ±ÈÀı
+		//å°†giFrameç¼©æ”¾åˆ°1920*1080çš„æ¯”ä¾‹
 		fy = y / f;
-		// ½«Í¼Æ¬Ëõ·Å
+		// å°†å›¾ç‰‡ç¼©æ”¾
 		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
 	}
 	else
 	{
-		//³ö´í
+		//å‡ºé”™
 
 	}
 
@@ -1710,7 +1710,7 @@ bool AutoTrack::getAvatarRefMat()
 {
 	if (giMiniMapRef.empty())
 	{
-		err = { 21,"»ñÈ¡½ÇÉ«ÇøÓòÊ±£¬Ğ¡µØÍ¼ÇøÓòÎª¿Õ"};
+		err = { 21,"è·å–è§’è‰²åŒºåŸŸæ—¶ï¼Œå°åœ°å›¾åŒºåŸŸä¸ºç©º"};
 		return false;
 	}
 	int Avatar_Rect_x = cvRound(giMiniMapRef.cols * 0.4);
@@ -1736,7 +1736,7 @@ bool AutoTrack::getAvatarRefMat()
 
 bool AutoTrack::clear_error_logs()
 {
-	err = { 0,"µ÷ÓÃ³É¹¦"};
+	err = { 0,"è°ƒç”¨æˆåŠŸ"};
 	return true;
 }
 
@@ -1785,7 +1785,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 
 	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
 	{
-		err = { 6,"Î´ÄÜÆ¥Åäµ½ÅÉÃÉ" };
+		err = { 6,"æœªèƒ½åŒ¹é…åˆ°æ´¾è’™" };
 		return false;
 	}
 	paimon_rect = cv::Rect(paimon_match_maxLoc, paimon_template.size());
