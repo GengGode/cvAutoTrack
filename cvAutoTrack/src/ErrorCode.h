@@ -26,12 +26,7 @@ public:
 
 private:
 	int errorCode=0;
-	vector<int> errCodeList;
-	vector<string> errCodeMsg;
-
 	std::vector<std::pair<int, std::string>> error_code_msg_list;
-	
-
 private:
 	void push(int code, string msg);
 };
