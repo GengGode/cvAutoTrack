@@ -14,6 +14,8 @@ namespace TEST_cvAutoTrack_CSharp
     {
         static int Main(string[] args)
         {
+            // 设置控制台编码为65001
+            Console.OutputEncoding = Encoding.UTF8;
 
             // 如果输入参数 -test 就执行测试
             if (args.Length > 0 && args[0] == "-test")
