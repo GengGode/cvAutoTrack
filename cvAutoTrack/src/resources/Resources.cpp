@@ -105,6 +105,16 @@ namespace TianLi::Resource::Utils
 		xml_ptr.size = XmlDB_Size;
 		return true;
 	}
+	
+	bool ReleaseXml(Resources::XmlPtr& xml_ptr)
+	{
+		// delete xml_ptr.ptr;
+		LPVOID H_XmlDB_Ptr = xml_ptr.ptr;
+		UnlockResource(H_XmlDB_Ptr);
+		xml_ptr.ptr = nullptr;
+		xml_ptr.size = 0;
+		return true;
+	}
 }
 using namespace TianLi::Resource::Utils;
 
@@ -175,21 +185,11 @@ void Resources::install()
 
 void Resources::release()
 {
-	// PaimonTemplate.release();
-	// MinimapCailbTemplate.release();
-	// StarTemplate.release();
-	MapTemplate.release();
-	// UID.release();
-	// UIDnumber[0].release();
-	// UIDnumber[1].release();
-	// UIDnumber[2].release();
-	// UIDnumber[3].release();
-	// UIDnumber[4].release();
-	// UIDnumber[5].release();
-	// UIDnumber[6].release();
-	// UIDnumber[7].release();
-	// UIDnumber[8].release();
-	// UIDnumber[9].release();
-	
-	is_installed = false;
+	if (is_installed == true)
+	{
+		MapTemplate.release();
+		MapTemplate = cv::Mat();
+		ReleaseXml(xmlPtr);
+		is_installed = false;
+	}
 }
