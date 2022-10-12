@@ -19,11 +19,6 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
-        - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
-        # 显示运行名称和版本号
-        - ps: echo %APPVEYOR_BUILD_VERSION% 
-        - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
 
         - mkdir %OpenCvDir%
         - appveyor DownloadFile %OpenCvUrl%
@@ -54,7 +49,7 @@
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
         
         # 从文件中读取 $version_tag.tag 设置 AppVeyor 版本
-        - ps: $env:APPVEYOR_BUILD_VERSION = Get-Content -Path $env:MyProjectDir\cvAutoTrack\src\version\version_tag.tag   
+        - ps: $env:APPVEYOR_BUILD_VERSION=$(Get-Content -Path $env:MyProjectDir\cvAutoTrack\src\version\version_tag.tag)   
         
     before_test:
         # 移动测试文件到test目录
@@ -118,7 +113,7 @@
         on_build_failure: false
         on_build_status_changed: false
 -
-    #version: '7.0.0.{build}'
+    version: '7.0.0.{build}'
     os: Visual Studio 2022
     configuration: Dev
     platform:
