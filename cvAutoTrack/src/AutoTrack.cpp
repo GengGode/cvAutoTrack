@@ -142,7 +142,12 @@ bool AutoTrack::GetVersion(char* version_buff, int buff_size)
 		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
 		return false;
 	}
-	strncpy_s(version_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_version.size())), TianLi::Version::build_version.c_str(), _TRUNCATE);
+	if (TianLi::Version::build_version.size() > buff_size)
+	{
+		err = { 292,"缓存区大小不足" };
+		return false;
+	}
+	strcpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str());
 	return true;
 }
 
@@ -153,7 +158,12 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 		err = { 291,"缓存区为空指针或是缓存区大小为小于1" };
 		return false;
 	}
-	strncpy_s(time_buff, std::min(buff_size, static_cast<int>(TianLi::Version::build_time.size())), TianLi::Version::build_time.c_str(), _TRUNCATE);
+	if (TianLi::Version::build_time.size() > buff_size)
+	{
+		err = { 292,"缓存区大小不足" };
+		return false;
+	}
+	strcpy_s(time_buff, buff_size, TianLi::Version::build_time.c_str());	
 	return true;
 }
 
@@ -1069,7 +1079,12 @@ int AutoTrack::GetLastErrMsg(char* msg_buff, int buff_size)
 		return false;
 	}
 	std::string msg = err.getLastErrorMsg();
-	strncpy_s(msg_buff, std::min(buff_size, static_cast<int>(msg.size())), msg.c_str(), _TRUNCATE);
+	if (msg.size() > buff_size)
+	{
+		err = { 292,"缓存区大小不足" };
+		return false;
+	}
+	strcpy_s(msg_buff, buff_size, msg.c_str());
 	return true;
 }
 
@@ -1081,7 +1096,12 @@ int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
 		return false;
 	}
 	std::string msg = err.toJson();
-	strncpy_s(json_buff, std::min(buff_size, static_cast<int>(msg.size())), msg.c_str(), _TRUNCATE);
+	if (msg.size() > buff_size)
+	{
+		err = { 292,"缓存区大小不足" };
+		return false;
+	}
+	strcpy_s(json_buff, buff_size, msg.c_str());
 	return true;
 }
 
