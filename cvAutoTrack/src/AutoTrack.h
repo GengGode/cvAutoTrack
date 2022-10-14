@@ -64,46 +64,15 @@ private:
 
 
 	FlowWork wForAfter;
-
 	Kalmanfilter posFilter;
-private:
-	int error_code = 0;
 
 private:
-	int minHessian = 400;
-	double ratio_thresh = 0.66;
-	double mapScale = 1.3;//1.3;
-	double MatchMatScale = 2.0;
-
 	//用户定义映射关系参数
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
 
 #define MAP_3_1
-
-
-#ifdef MAP_3_0
-	// 绝对世界中心 绝对世界缩放系数
-	//World Center on AbsAllMap Coor
-	double WorldCenter_X = 7400; //Abs 2871   * MapAbsScale = 7392.2870
-	double WorldCenter_Y = 9432; //Abs 3015.5 * MapAbsScale = 7710.6335
-	double WorldScale = 1.0; //Abs
-
-	//相对绝对空间原点坐标
-	//Map Origin Point on AbsAllMap Coor.
-	double MapWorldAbsOffset_X = 7.7130; // 7400 - 7392.2870
-	double MapWorldAbsOffset_Y = 1721.3665; // 9432 - 7710.6335
-
-	//相对绝对空间缩放系数
-	//Map and AbsAllMap Scale Value, Map * MapAbsScale = AbsAllMap.
-	double MapAbsScale = 2.557; //from diff Image 67.40%
-
-	//2021-09-07 是个固定值，不用变
-	//2022-09-26 构造函数中初始化
-	cv::Point2d MapWorldOffset;
-#endif
-
 #ifdef MAP_3_1
 	// 绝对世界中心 天理坐标系原点在实际画布的位置
 	// World Center on AbsAllMap Coor
@@ -146,19 +115,12 @@ private:
 
 private:
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
-	//
 	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap;
-	//
 	std::vector<cv::KeyPoint> _KeyPointAllMap;
-	//std::vector<cv::KeyPoint>
 	std::vector<cv::KeyPoint> _KeyPointSomeMap;
-	//std::vector<cv::KeyPoint>
 	std::vector<cv::KeyPoint> _KeyPointMiniMap;
-	//cv::Mat
 	cv::Mat _DataPointAllMap;
-	//cv::Mat
 	cv::Mat _DataPointSomeMap;
-	//cv::Mat
 	cv::Mat _DataPointMiniMap;
 private:
 	bool isOnCity = false;
@@ -171,11 +133,6 @@ private:
 private:
 	double check_match_paimon_params = 0.9;
 private:
-	// GPU设备数量
-	int gpuDeviceNumber = 0;
-	// 使能GPU设备id
-	int gpuDeviceId = -1;
-
 	// 界面处于手柄模式
 	bool isHandleGameMode = false;
 
