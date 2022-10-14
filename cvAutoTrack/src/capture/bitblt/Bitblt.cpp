@@ -3,7 +3,7 @@
 
 Bitblt::Bitblt()
 {
-	mode = Capture::Mode_Bitblt;
+	mode = Capture::Bitblt;
 }
 
 Bitblt::~Bitblt()
