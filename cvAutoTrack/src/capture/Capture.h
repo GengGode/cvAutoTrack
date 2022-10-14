@@ -8,6 +8,7 @@ public:
 	{
 		Bitblt,
 		DirectX,
+		Video,
 		Unknown
 	};
 	CaptureMode mode = CaptureMode::Unknown;
