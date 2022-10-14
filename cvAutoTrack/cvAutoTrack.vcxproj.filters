@@ -44,6 +44,18 @@
     <Filter Include="src\match\diff">
       <UniqueIdentifier>{5543bbc3-35f9-4e82-bebc-99240de45369}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\filter">
+      <UniqueIdentifier>{3d275b7b-5da4-4077-994c-107007d10d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filter\kalman">
+      <UniqueIdentifier>{a771a5a6-a2f6-41f2-a3bc-ba39c1746c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filter\smooth">
+      <UniqueIdentifier>{4565e7e5-0a65-4824-a27a-504593ffcdc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\filter\untouched">
+      <UniqueIdentifier>{507751c9-0c0a-40f3-a833-f2d62a3f00a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -126,6 +138,18 @@
     <ClInclude Include="src\match\diff\DiffMatch.h">
       <Filter>src\match\diff</Filter>
     </ClInclude>
+    <ClInclude Include="src\filter\Filter.h">
+      <Filter>src\filter</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filter\kalman\Kalman.h">
+      <Filter>src\filter\kalman</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filter\smooth\Smooth.h">
+      <Filter>src\filter\smooth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\filter\untouched\Untouched.h">
+      <Filter>src\filter\untouched</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -173,7 +197,19 @@
     <ClCompile Include="src\match\Match.cpp">
       <Filter>src\match</Filter>
     </ClCompile>
-    <ClCompile Include="src\match\diff\DiffMatch.cpp" />
+    <ClCompile Include="src\match\diff\DiffMatch.cpp">
+      <Filter>src\match\diff</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filter\Filter.cpp">
+      <Filter>src\filter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filter\kalman\Kalman.cpp">
+      <Filter>src\filter\kalman</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filter\smooth\Smooth.cpp">
+      <Filter>src\filter\smooth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filter\untouched\Untouched.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">

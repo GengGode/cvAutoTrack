@@ -340,6 +340,10 @@
     <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h" />
     <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h" />
     <ClInclude Include="src\ErrorCode.h" />
+    <ClInclude Include="src\filter\Filter.h" />
+    <ClInclude Include="src\filter\kalman\Kalman.h" />
+    <ClInclude Include="src\filter\smooth\Smooth.h" />
+    <ClInclude Include="src\filter\untouched\Untouched.h" />
     <ClInclude Include="src\FlowWork.h" />
     <ClInclude Include="src\framework.h" />
     <ClInclude Include="src\Kalmanfilter.h" />
@@ -369,6 +373,10 @@
     <ClCompile Include="src\cvAutoTrack.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />
+    <ClCompile Include="src\filter\Filter.cpp" />
+    <ClCompile Include="src\filter\kalman\Kalman.cpp" />
+    <ClCompile Include="src\filter\smooth\Smooth.cpp" />
+    <ClCompile Include="src\filter\untouched\Untouched.cpp" />
     <ClCompile Include="src\FlowWork.cpp" />
     <ClCompile Include="src\Kalmanfilter.cpp" />
     <ClCompile Include="src\match\diff\DiffMatch.cpp" />
