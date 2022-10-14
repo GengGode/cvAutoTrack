@@ -339,6 +339,7 @@
     <ClInclude Include="src\capture\dxgi\include\composition.interop.h" />
     <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h" />
     <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h" />
+    <ClInclude Include="src\capture\video\video.h" />
     <ClInclude Include="src\ErrorCode.h" />
     <ClInclude Include="src\filter\Filter.h" />
     <ClInclude Include="src\filter\kalman\Kalman.h" />
@@ -370,6 +371,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="src\capture\video\video.cpp" />
     <ClCompile Include="src\cvAutoTrack.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />

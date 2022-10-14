@@ -56,6 +56,12 @@
     <Filter Include="src\filter\untouched">
       <UniqueIdentifier>{507751c9-0c0a-40f3-a833-f2d62a3f00a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\capture\video">
+      <UniqueIdentifier>{3685c184-17eb-4d9c-820d-bdedebf3c3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\match\surf\filter">
+      <UniqueIdentifier>{dcabbda0-572b-43c0-a67e-0964167f83d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -150,6 +156,9 @@
     <ClInclude Include="src\filter\untouched\Untouched.h">
       <Filter>src\filter\untouched</Filter>
     </ClInclude>
+    <ClInclude Include="src\capture\video\video.h">
+      <Filter>src\capture\video</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -209,7 +218,12 @@
     <ClCompile Include="src\filter\smooth\Smooth.cpp">
       <Filter>src\filter\smooth</Filter>
     </ClCompile>
-    <ClCompile Include="src\filter\untouched\Untouched.cpp" />
+    <ClCompile Include="src\capture\video\video.cpp">
+      <Filter>src\capture\video</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filter\untouched\Untouched.cpp">
+      <Filter>src\filter\untouched</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
