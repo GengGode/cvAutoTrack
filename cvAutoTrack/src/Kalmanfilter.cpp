@@ -98,7 +98,7 @@ cv::Point2d Kalmanfilter::reinitfilterting(cv::Point2d p)
 	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
 
 	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
-//initialize post state of kalman filter at random 
+	//initialize post state of kalman filter at random 
 	randn(KF.statePost, cv::Scalar::all(0), cv::Scalar::all(0.1));
 
 	KF.statePost.at<float>(0) = static_cast<float>(p.x);
@@ -115,7 +115,5 @@ cv::Point2d Kalmanfilter::reinitfilterting(cv::Point2d p)
 	KF.correct(measurement);
 
 	resP = cv::Point2d(KF.statePost.at<float>(0), KF.statePost.at<float>(1));
-
-	/***************/
 	return resP;
 }
