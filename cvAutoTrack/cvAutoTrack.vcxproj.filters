@@ -41,6 +41,9 @@
     <Filter Include="src\version">
       <UniqueIdentifier>{7db5a72c-9d86-4d25-b586-4d0e7bfa2298}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\match\diff">
+      <UniqueIdentifier>{5543bbc3-35f9-4e82-bebc-99240de45369}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint">
@@ -120,6 +123,9 @@
     <ClInclude Include="src\match\Match.h">
       <Filter>src\match</Filter>
     </ClInclude>
+    <ClInclude Include="src\match\diff\DiffMatch.h">
+      <Filter>src\match\diff</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -167,6 +173,7 @@
     <ClCompile Include="src\match\Match.cpp">
       <Filter>src\match</Filter>
     </ClCompile>
+    <ClCompile Include="src\match\diff\DiffMatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
