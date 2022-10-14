@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace cvAutoTrackCSharp
 {
@@ -59,7 +59,10 @@ namespace cvAutoTrackCSharp
         public static extern int GetLastErr();
 
         [DllImport("cvAutoTrack.dll", EntryPoint = "GetLastErrMsg")]
-        public static extern int GetLastErrMsg(byte[] msg_buff, int buff_size);
+        public static extern int GetLastErrMsg(byte[] msg_buff, int buff_size); 
+        
+        [DllImport("cvAutoTrack.dll", EntryPoint = "GetLastErrJson")]
+        public static extern int GetLastErrJson(byte[] json_buff, int buff_size);
 
         [DllImport("cvAutoTrack.dll", EntryPoint = "startServe")]
         public static extern bool startServe();

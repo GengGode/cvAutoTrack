@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #ifdef CVAUTOTRACK_EXPORTS
 #define CVAUTOTRACK_PORT __declspec(dllexport)
 #else
@@ -34,9 +34,11 @@ extern "C" bool CVAUTOTRACK_API GetInfoLoadPicture(char* path, int &uid, double 
 extern "C" bool CVAUTOTRACK_API GetInfoLoadVideo(char* path, char* pathOutFile);
 
 extern "C" bool CVAUTOTRACK_API DebugCapture();
+extern "C" bool CVAUTOTRACK_API DebugCapturePath(const char*path_buff, int buff_size);
 
 extern "C" int  CVAUTOTRACK_API GetLastErr();
-extern "C" int  CVAUTOTRACK_API GetLastErrMsg(char* msg_buff,int buff_size);
+extern "C" int  CVAUTOTRACK_API GetLastErrMsg(char* msg_buff, int buff_size);
+extern "C" int  CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size);
 
 extern "C" bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
 extern "C" bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);

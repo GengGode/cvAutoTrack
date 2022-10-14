@@ -12,8 +12,8 @@ public:
 	bool setHandle(HWND handle = 0) override;
 private:
 	HWND giHandle = nullptr;
-	RECT giRect;
-	RECT giClientRect;
+	RECT giRect = { 0,0,0,0 };
+	RECT giClientRect = { 0,0,0,0 };
 	cv::Size giClientSize;
 	cv::Mat giFrame;
 };

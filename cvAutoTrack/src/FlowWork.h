@@ -7,15 +7,14 @@ class AutoTrack;
 
 class FlowWork
 {
-	vector<bool(AutoTrack::*)(void)> funPtrList;
-	vector<int> funErrCodeList;
-	AutoTrack * AT;
-	ErrorCode& err=ErrorCode::getInstance();
+	std::vector<std::pair<bool(AutoTrack::*)(void), std::pair<int, std::string>>> fun_ptr_err_list;
+	AutoTrack* at = nullptr;
+	ErrorCode& err = ErrorCode::getInstance();
 public:
 	FlowWork();
 	~FlowWork();
-
-	void append(AutoTrack* at,bool(AutoTrack::* funPtr)(void),int errCode);
+	
+	void append(AutoTrack* at_ptr,bool(AutoTrack::* fun_ptr)(void),int err_code,std::string err_msg);
 
 	bool run();
 };

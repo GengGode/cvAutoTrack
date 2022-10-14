@@ -41,6 +41,16 @@ void SurfMatch::Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_ma
 	isInit = true;
 }
 
+void SurfMatch::UnInit()
+{
+	if (!isInit)return;
+	_mapMat.release();
+	_mapMat = cv::Mat();
+	Kp_Map.clear();
+	Dp_Map.release();
+	isInit = false;
+}
+
 void SurfMatch::match()
 {
 	cv::Point2d dp1 = hisP[1] - hisP[0];
@@ -50,7 +60,7 @@ void SurfMatch::match()
 
 	isContinuity = false;
 
-	//½ÇÉ«ÒÆ¶¯Á¬ĞøĞÔÅĞ¶Ï
+	//è§’è‰²ç§»åŠ¨è¿ç»­æ€§åˆ¤æ–­
 	if (((TianLi::Utils::dis(dp1) + TianLi::Utils::dis(dp2)) < 2000) && (hisP[2].x > someSizeR && hisP[2].x < _mapMat.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < _mapMat.rows - someSizeR))
 	{
 		isContinuity = true;
@@ -107,9 +117,9 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat img_scene(_mapMat);
 	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
 
-	//ÔÚ³ÇÕòÖĞ
+	//åœ¨åŸé•‡ä¸­
 		/***********************/
-		//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+		//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat minMap(img_object);
 
@@ -168,7 +178,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Mat img_scene(_mapMat);
 	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
 
-	//²»ÔÚ³ÇÕòÖĞÊ±
+	//ä¸åœ¨åŸé•‡ä¸­æ—¶
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat minMap(img_object);
 
@@ -176,7 +186,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
 
-	// Èç¹ûËÑË÷·¶Î§ÄÚ¿ÉÊ¶±ğÌØÕ÷µãÊıÁ¿Îª0£¬ÔòÈÏÎª¼ÆËãÊ§°Ü
+	// å¦‚æœæœç´¢èŒƒå›´å†…å¯è¯†åˆ«ç‰¹å¾ç‚¹æ•°é‡ä¸º0ï¼Œåˆ™è®¤ä¸ºè®¡ç®—å¤±è´¥
 	if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
@@ -193,7 +203,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
 
-	// Èç¹û·¶Î§ÄÚ×î¼ÑÆ¥ÅäÌØÕ÷µã¶ÔÊıÁ¿´óÓÚ4£¬ÔòÈÏÎª²»¿ÉÄÜ´¦ÓÚ³ÇÕòÖ®ÖĞ£¬Î»ÓÚ³ÇÕòÖ®Íâ
+	// å¦‚æœèŒƒå›´å†…æœ€ä½³åŒ¹é…ç‰¹å¾ç‚¹å¯¹æ•°é‡å¤§äº4ï¼Œåˆ™è®¤ä¸ºä¸å¯èƒ½å¤„äºåŸé•‡ä¹‹ä¸­ï¼Œä½äºåŸé•‡ä¹‹å¤–
 	if (std::min(lisx.size(), lisy.size()) > 4)
 	{
 		isOnCity = false;
@@ -204,10 +214,10 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	else
 	{
 
-		//ÓĞ¿ÉÄÜ´¦ÓÚ³ÇÕòÖĞ
+		//æœ‰å¯èƒ½å¤„äºåŸé•‡ä¸­
 
 		/***********************/
-		//ÖØĞÂ´ÓÍêÕûÖĞµØÍ¼È¡³ö½ÇÉ«ÖÜÎ§²¿·ÖµØÍ¼
+		//é‡æ–°ä»å®Œæ•´ä¸­åœ°å›¾å–å‡ºè§’è‰²å‘¨å›´éƒ¨åˆ†åœ°å›¾
 		img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 		//Mat minMap(img_object);
 
@@ -266,7 +276,7 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 {
 	cv::Point2d pos_continuity_no;
 
-	// TODO: ¿ÉÓÅ»¯Îªstatic
+	// TODO: å¯ä¼˜åŒ–ä¸ºstatic
 	cv::Mat img_scene(_mapMat);
 	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
 
@@ -324,14 +334,14 @@ void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPos
 	if (!is_init)
 	{
 		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		// ´ÓÄÚ´æÖĞ¼ÓÔØxmlÎÄ¼şµÄstring
+		// ä»å†…å­˜ä¸­åŠ è½½xmlæ–‡ä»¶çš„string
 		std::string xml_str(xml_db_mem.ptr);
-		// ½«xmlÎÄ¼şµÄstring×ª»»ÎªxmlÎÄ¼ş
+		// å°†xmlæ–‡ä»¶çš„stringè½¬æ¢ä¸ºxmlæ–‡ä»¶
 		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		// ´Ófs¼ÓÔØ keypoints ºÍ descriptor
+		// ä»fsåŠ è½½ keypoints å’Œ descriptor
 		fs["keypoints"] >> gi_map_keypoints;
 		fs["descriptors"] >> gi_map_descriptors;
 

@@ -7,7 +7,7 @@ This content is from Google Translate.
 
 Through the image matching algorithm, the DLL dynamic link library for obtaining the position of the character on the map from the Genshin Impact client
 
-[![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status](https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https://img.shields.io/badge/cpu-AMD64-purple.svg)
+[![GitHub version](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL.svg)](https://badge.fury.io/gh/GengGode%2FGenshinImpact_AutoTrack_DLL) [![Build status]( https://ci.appveyor.com/api/projects/status/1q2jfn373bc15raa?svg=true)](https://ci.appveyor.com/project/GengGode/genshinimpact-autotrack-dll) ![convention](https ://img.shields.io/badge/convention-__stdcall-orange.svg) ![platform](https://img.shields.io/badge/platform-Windows-blue.svg) ![](https: //img.shields.io/badge/cpu-AMD64-purple.svg)
 
 # introduce 
 
@@ -36,25 +36,27 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 | -------- | ------ | ------ | ------ |
 | 6.4.x | √ | × | 1920x1080 |
 | 6.5.39 | √ | × | 1920x1080, 2560x1440, 2560x1080 |
-| 6.5.92 | √ | √(Not supported in DX mode) | 16:9 series (but not 4K and above), 21:9 series, and all resolutions below 1920*1080 |
+| 6.5.92 | - | - | - |
+| 7.0.1 | √ | √(Not supported in DX mode) | 16:9 series (but not 4K and above), 21:9 series, and all resolutions below 1920*1080 |
 
-## New version planned 7.0.0
+## New version planned 7.1
 
-- [ ] Added inertial acceleration navigation algorithm for positioning
+- [ ] Added inertial acceleration navigation algorithm for positioning (see dev-inrtial-position branch)
 - [ ] Added smooth transition algorithm for positioning
 - [ ] Added automatic calibration algorithm for positioning
 - [ ] Fully support controller mode
-- [ ] Fully supports any resolution, 4K and above
+- [x] Fully supports any resolution, 4K and above
 - [ ] supports any map area
 - [ ] support incoming map instead of inline
 - [ ] optional embedded precomputed result
+- [ ] Higher matching accuracy
 
-### Interface modification scheme
+### 7.0 Interface modification scheme
 
-- [ ] Refactor the interface to uniformly use double as floating-point parameters
-    - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
+- [x] Refactored the interface to uniformly use double as floating-point parameters
+     - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
 - [ ] Refactored the interface to uniformly use int as the return value of the interface
-    - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
+     - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
 - `bool GetDirection(double &a)` -> `int GetDirection(double &a)`
 
 # how to use
@@ -67,7 +69,7 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 
 # How to compile
 
-1. Environment requirements, [Visual Studio 2019+](https://visualstudio.microsoft.com/zh-hans/vs/), [Opencv 4.5.0 static lib zip](https://github.com/GengGode/ opencv450Release/releases/download/v1.0/Release.zip)
+1. Environment requirements, [Visual Studio 2019+](https://visualstudio.microsoft.com/zh-hans/vs/), [Opencv 4.5.0 static lib zip](https://github.com/GengGode/opencv450Release/releases/download/v1.0/Release.zip)
 2. Install Visual Studio 2019+
 3. Create the environment variables of the Opencv library. If you do not use the environment variables, you need to manually modify the `additional include directory` and `additional library directory` of the cvAutoTrack project
 
@@ -103,11 +105,11 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 ## project structure
 
 - **cvAutoTrack**, dll works
+- **doc**, documentation and some illustrations
 - **impl**, calling examples for some languages
-    - **Cpp/TEST_cvAutoTrack_Cpp** C++ call
-    - **CSharp/TEST_cvAutoTrack_CSharp** C# call
-    - **Python** Python call
-
+     - **Cpp/TEST_cvAutoTrack_Cpp** C++ call
+     - **CSharp/TEST_cvAutoTrack_CSharp** C# call
+     - **Python** Python call
 
 # function directory
 
@@ -146,7 +148,11 @@ Through the image matching algorithm, the DLL dynamic link library for obtaining
 | `GetLastErrMsg`            | Get the last set error message.                                                                                                                 |
                           
 
-## Tianli coordinate model                                                                                                                                                     
+## Error handling
+- ### [Runtime Error](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C.md)
+- ### [Exceptions and errors during compilation, linking and packaging]()
+
+## Tianli coordinate model (to be rewritten)                                                                                                                                          
 
 Since the map in the Genshin Impact game will continue to expand, and there are differences in the resolution of map textures corresponding to different physical blocks, it is not advisable to directly base on the pixel coordinate system of the texture, which is not good for future expansion.
 

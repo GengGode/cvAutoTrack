@@ -29,7 +29,6 @@ public:
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
-	bool GetTransform(double&x, double&y, double&a);
 	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
 	bool GetPosition(double &x, double &y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
@@ -45,8 +44,9 @@ public:
 	bool GetInfoLoadVideo(char* path, char* pathOutFile);
 	/*********/
 	int GetLastError();
-	const char* GetLastErrorStr();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
+	int GetLastErrJson(char* json_buff, int buff_size);
+	
 	bool startServe();
 	bool stopServe();
 
@@ -55,26 +55,18 @@ public:
 	
 	
 	bool DebugCapture();
+	bool DebugCapturePath(const char* path_buff, int buff_size);
 
 private:
 	Resources& res = Resources::getInstance();
 	ErrorCode& err = ErrorCode::getInstance();
-	FlowWork wPaimon;
-	FlowWork wMiniMap;
-	FlowWork wAvatar;
-	FlowWork wRotating;
-	FlowWork wStar;
 
-	FlowWork wUID;
 
 	FlowWork wForAfter;
 
 	Kalmanfilter posFilter;
 private:
 	int error_code = 0;
-
-private:
-	bool is_init_end = false;
 
 private:
 	int minHessian = 400;
@@ -189,9 +181,9 @@ private:
 	Capture* capture = nullptr;
 
 private:
-	HWND giHandle =0;
-	RECT giRect;
-	RECT giClientRect;
+	HWND giHandle = nullptr;
+	RECT giRect = { 0,0,0,0 };
+	RECT giClientRect = { 0,0,0,0 };
 	cv::Size giClientSize;
 	cv::Mat giFrame;
 	cv::Mat giPaimonRef;
@@ -212,7 +204,6 @@ private:
 	GenshinAvatarPosition genshin_avatar_position;
 	
 private:
-	bool getAutoTrackIsInit();
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactRect();
 	bool getGengshinImpactScale();

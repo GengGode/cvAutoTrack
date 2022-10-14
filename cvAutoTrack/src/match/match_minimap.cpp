@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "match_minimap.h"
 #include "../resources/Resources.h"
 

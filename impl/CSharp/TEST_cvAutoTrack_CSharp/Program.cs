@@ -14,38 +14,40 @@ namespace TEST_cvAutoTrack_CSharp
     {
         static int Main(string[] args)
         {
+            // è®¾ç½®æ§åˆ¶å°ç¼–ç ä¸º65001
+            Console.OutputEncoding = Encoding.UTF8;
 
-            // Èç¹ûÊäÈë²ÎÊı -test ¾ÍÖ´ĞĞ²âÊÔ
+            // å¦‚æœè¾“å…¥å‚æ•° -test å°±æ‰§è¡Œæµ‹è¯•
             if (args.Length > 0 && args[0] == "-test")
             {
-                // ²âÊÔ°æ±¾ºÅ
+                // æµ‹è¯•ç‰ˆæœ¬å·
                 byte[] version_buff = new byte[256];
                 if (cvAutoTrack.GetCompileVersion(version_buff,256))
                 {
                     string version_str = Encoding.UTF8.GetString(version_buff);
-                    Console.WriteLine("°æ±¾ºÅ       : " + version_str);
+                    Console.WriteLine("ç‰ˆæœ¬å·       : " + version_str);
                 }
                 else
                 {
-                    Console.WriteLine("´íÎóÂë       : " + cvAutoTrack.GetLastErr().ToString());
+                    Console.WriteLine("é”™è¯¯ç        : " + cvAutoTrack.GetLastErr().ToString());
                 }
                 byte[] version_time_buff = new byte[256];
                 if (cvAutoTrack.GetCompileTime(version_time_buff, 256))
                 {
                     string version_time_str = Encoding.UTF8.GetString(version_time_buff);
-                    Console.WriteLine("±àÒëÊ±¼ä     : " + version_time_str);
+                    Console.WriteLine("ç¼–è¯‘æ—¶é—´     : " + version_time_str);
                 }
                 else
                 {
-                    Console.WriteLine("´íÎóÂë       : " + cvAutoTrack.GetLastErr().ToString());
+                    Console.WriteLine("é”™è¯¯ç        : " + cvAutoTrack.GetLastErr().ToString());
                 }
 
-                Console.WriteLine("²âÊÔÍê³É");
+                Console.WriteLine("æµ‹è¯•å®Œæˆ");
                 return 0;
             }
             else
             {
-                // »ñÈ¡°æ±¾ºÅ
+                // è·å–ç‰ˆæœ¬å·
                 byte[] versionBuff = new byte[1024];
                 //string version = "       ";
 
@@ -57,13 +59,13 @@ namespace TEST_cvAutoTrack_CSharp
 
 
 
-                // ÉêÇëÄÚ´æ
+                // ç”³è¯·å†…å­˜
                 byte[] jsonBuffer = new byte[1024];
 
-                // µ÷ÓÃ cvAutoTrack.dll
+                // è°ƒç”¨ cvAutoTrack.dll
                 bool ret = cvAutoTrackCSharp.cvAutoTrack.GetStarJson(jsonBuffer);
 
-                // Êä³ö½á¹û
+                // è¾“å‡ºç»“æœ
                 Console.WriteLine("ret = " + ret);
                 Console.WriteLine("jsonBuffer = " + Encoding.UTF8.GetString(jsonBuffer));
 
@@ -73,12 +75,12 @@ namespace TEST_cvAutoTrack_CSharp
                     if (count == 1)
                     {
                         cvAutoTrackCSharp.cvAutoTrack.SetUseDx11CaptureMode();
-                        Console.WriteLine("ÆôÓÃDxÄ£Ê½");
+                        Console.WriteLine("å¯ç”¨Dxæ¨¡å¼");
                     }
                     if (count == 15)
                     {
                         cvAutoTrackCSharp.cvAutoTrack.SetUseBitbltCaptureMode();
-                        Console.WriteLine("ÆôÓÃBitbltÄ£Ê½");
+                        Console.WriteLine("å¯ç”¨Bitbltæ¨¡å¼");
                     }
 
                     if (count >= 30)
@@ -95,7 +97,7 @@ namespace TEST_cvAutoTrack_CSharp
                     cvAutoTrackCSharp.cvAutoTrack.GetTransformOfMap(ref x, ref y, ref a, ref mapid);
                     Console.WriteLine("x = " + x + " y = " + y + " a = " + a + " mapid = " + mapid);
 
-                    // »ñÈ¡´íÎóÂë¼°´íÎóĞÅÏ¢
+                    // è·å–é”™è¯¯ç åŠé”™è¯¯ä¿¡æ¯
                     byte[] errorBuff = new byte[1024];
                     for (int i = 0; i < 1024; i++)
                     {

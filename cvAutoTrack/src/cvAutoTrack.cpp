@@ -1,4 +1,4 @@
-﻿// cvAutoTrack.cpp : 定义 DLL 的导出函数。
+// cvAutoTrack.cpp : 定义 DLL 的导出函数。
 //
 
 #include "pch.h"
@@ -86,6 +86,10 @@ int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
 {
 	return _at.GetLastErrMsg(msg_buff, buff_size);
 }
+int CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size)
+{
+	return _at.GetLastErrJson(json_buff, buff_size);
+}
 bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 {
 	return _at.GetVersion(version_buff, buff_size);
@@ -97,6 +101,10 @@ bool __stdcall GetCompileTime(char* time_buff, int buff_size)
 bool __stdcall DebugCapture()
 {
 	return _at.DebugCapture();
+}
+bool __stdcall DebugCapturePath(const char* path_buff, int buff_size)
+{
+	return _at.DebugCapturePath(path_buff, buff_size);
 }
 bool __stdcall startServe()
 {

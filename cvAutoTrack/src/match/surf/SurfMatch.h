@@ -38,6 +38,7 @@ public:
 
 	void Init();
 	void Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors);
+	void UnInit();
 	void match();
 
 	cv::Point2d match_continuity(bool& calc_continuity_is_faile);
