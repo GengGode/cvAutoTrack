@@ -11,6 +11,7 @@
 #include "capture/Capture.h"
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
+#include "filter/Filter.h"
 #include "version/Version.h"
 
 // 此类是不导出的
@@ -179,6 +180,7 @@ private:
 	bool isHandleGameMode = false;
 
 	Capture* capture = nullptr;
+	Filter* filter = nullptr;
 
 private:
 	HWND giHandle = nullptr;
