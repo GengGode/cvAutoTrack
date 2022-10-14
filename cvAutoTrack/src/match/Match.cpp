@@ -81,4 +81,13 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 	surf_match.match();
 
 	out_genshin_position.position = surf_match.getLocalPos();
+	if (surf_match.is_success_match)
+	{
+		out_genshin_position.config.img_last_match_minimap = genshin_minimap.img_minimap.clone();
+		out_genshin_position.config.is_exist_last_match_minimap = true;
+	}
+	else
+	{
+		out_genshin_position.config.is_exist_last_match_minimap = false;
+	}
 }

@@ -58,6 +58,8 @@ void SurfMatch::match()
 
 	bool calc_is_faile = false;
 
+	is_success_match = false;
+
 	isContinuity = false;
 
 	//角色移动连续性判断
@@ -91,6 +93,7 @@ void SurfMatch::match()
 	hisP[0] = hisP[1];
 	hisP[1] = hisP[2];
 	hisP[2] = pos;
+	is_success_match = true;
 
 }
 
