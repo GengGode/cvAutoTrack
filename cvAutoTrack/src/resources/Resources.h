@@ -2,7 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-//Í¼Æ¬×ÊÔ´ ¼ÓÔØÀà
+//å›¾ç‰‡èµ„æº åŠ è½½ç±»
 class Resources
 {
 private:
@@ -24,11 +24,11 @@ public:
 	
 	struct XmlPtr
 	{
-		char* ptr;
-		int size;
+		char* ptr = nullptr;
+		int size = 0;
 	};
 	
-	XmlPtr xmlPtr;
+	XmlPtr xmlPtr = { nullptr,0 };
 public:
 	void install();
 	void release();

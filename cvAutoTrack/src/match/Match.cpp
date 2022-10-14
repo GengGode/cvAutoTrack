@@ -7,17 +7,17 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 {
 	static SurfMatch surf_match;
 	static bool is_init = false;
-	if (!is_init)
+	if (!is_init && false)
 	{
 		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		// ´ÓÄÚ´æÖĞ¼ÓÔØxmlÎÄ¼şµÄstring
+		// ä»å†…å­˜ä¸­åŠ è½½xmlæ–‡ä»¶çš„string
 		std::string xml_str(xml_db_mem.ptr);
-		// ½«xmlÎÄ¼şµÄstring×ª»»ÎªxmlÎÄ¼ş
+		// å°†xmlæ–‡ä»¶çš„stringè½¬æ¢ä¸ºxmlæ–‡ä»¶
 		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		// ´Ófs¼ÓÔØ keypoints ºÍ descriptor
+		// ä»fsåŠ è½½ keypoints å’Œ descriptor
 		fs["keypoints"] >> gi_map_keypoints;
 		fs["descriptors"] >> gi_map_descriptors;
 
@@ -30,7 +30,41 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 
 		is_init = true;
 	}
+	if (genshin_minimap.is_run_init_start == true)
+	{
+		if (is_init)return;
+		Resources::getInstance().install();
+		
+		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
+		// ä»å†…å­˜ä¸­åŠ è½½xmlæ–‡ä»¶çš„string
+		std::string xml_str(xml_db_mem.ptr);
+		// å°†xmlæ–‡ä»¶çš„stringè½¬æ¢ä¸ºxmlæ–‡ä»¶
+		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
 
+		std::vector<cv::KeyPoint> gi_map_keypoints;
+		cv::Mat gi_map_descriptors;
+		// ä»fsåŠ è½½ keypoints å’Œ descriptor
+		fs["keypoints"] >> gi_map_keypoints;
+		fs["descriptors"] >> gi_map_descriptors;
+
+		surf_match.setMap(Resources::getInstance().MapTemplate);
+
+		surf_match.detector = cv::xfeatures2d::SURF::create(surf_match.minHessian);
+		surf_match.detectorSomeMap = cv::xfeatures2d::SURF::create(surf_match.minHessian);
+
+		surf_match.Init(gi_map_keypoints, gi_map_descriptors);
+
+		is_init = true;
+		return;
+	}
+
+	if (genshin_minimap.is_run_uninit_start == true)
+	{
+		surf_match.UnInit();
+		Resources::getInstance().release();
+		is_init = false;
+		return;
+	}
 
 	if (genshin_minimap.config.is_find_paimon == false)
 	{

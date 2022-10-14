@@ -32,14 +32,14 @@ private:
 private:
     winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{ nullptr };
     /// <summary>
-    /// ´æ´¢Ó¦ÓÃ³ÌĞò²¶»ñµÄÖ¡¡£
-    /// ³¢ÊÔ´ÓÖ¡³Ø»ñÈ¡ÏÂÒ»¸ö²¶»ñµÄÖ¡¡£
-    /// ²¶»ñÖ¡´æ´¢ÔÚÖ¡³ØÖĞÊ±Òı·¢µÄÊÂ¼ş¡£
+    /// å­˜å‚¨åº”ç”¨ç¨‹åºæ•è·çš„å¸§ã€‚
+    /// å°è¯•ä»å¸§æ± è·å–ä¸‹ä¸€ä¸ªæ•è·çš„å¸§ã€‚
+    /// æ•è·å¸§å­˜å‚¨åœ¨å¸§æ± ä¸­æ—¶å¼•å‘çš„äº‹ä»¶ã€‚
     /// </summary>
     winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool m_framePool{ nullptr };
     /// <summary>
-    /// ÔÊĞíÓ¦ÓÃ³ÌĞò½øĞĞÆÁÄ»²¶»ñ
-    /// Æô¶¯²¶»ñ»á»°£¬ÔÊĞíÓ¦ÓÃ³ÌĞò²¶»ñÖ¡¡£
+    /// å…è®¸åº”ç”¨ç¨‹åºè¿›è¡Œå±å¹•æ•è·
+    /// å¯åŠ¨æ•è·ä¼šè¯ï¼Œå…è®¸åº”ç”¨ç¨‹åºæ•è·å¸§ã€‚
     /// </summary>
     winrt::Windows::Graphics::Capture::GraphicsCaptureSession m_session{ nullptr };
     winrt::Windows::Graphics::SizeInt32 m_lastSize;
