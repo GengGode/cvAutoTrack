@@ -10,27 +10,27 @@ Kalman::Kalman()
 	processNoise = cv::Mat(stateNum, 1, CV_32F);
 	measurement = cv::Mat::zeros(measureNum, 1, CV_32F);	//measurement(x,y)
 
-	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //Ëæ»úÉú³ÉÒ»¸ö¾ØÕó£¬ÆÚÍûÊÇ0£¬±ê×¼²îÎª0.1;
+	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //éšæœºç”Ÿæˆä¸€ä¸ªçŸ©é˜µï¼ŒæœŸæœ›æ˜¯0ï¼Œæ ‡å‡†å·®ä¸º0.1;
 	KF.transitionMatrix = (cv::Mat_<float>(4, 4) <<
 		1, 0, 1, 0,
 		0, 1, 0, 1,
 		0, 0, 1, 0,
-		0, 0, 0, 1);//ÔªËØµ¼Èë¾ØÕó£¬°´ĞĞ;
+		0, 0, 0, 1);//å…ƒç´ å¯¼å…¥çŸ©é˜µï¼ŒæŒ‰è¡Œ;
 
-	//setIdentity: Ëõ·ÅµÄµ¥Î»¶Ô½Ç¾ØÕó;
-	//!< measurement matrix (H) ¹Û²âÄ£ĞÍ
+	//setIdentity: ç¼©æ”¾çš„å•ä½å¯¹è§’çŸ©é˜µ;
+	//!< measurement matrix (H) è§‚æµ‹æ¨¡å‹
 	setIdentity(KF.measurementMatrix);
 
 	//!< process noise covariance matrix (Q)
-	// wk ÊÇ¹ı³ÌÔëÉù£¬²¢¼Ù¶¨Æä·ûºÏ¾ùÖµÎªÁã£¬Ğ­·½²î¾ØÕóÎªQk(Q)µÄ¶àÔªÕıÌ¬·Ö²¼;
+	// wk æ˜¯è¿‡ç¨‹å™ªå£°ï¼Œå¹¶å‡å®šå…¶ç¬¦åˆå‡å€¼ä¸ºé›¶ï¼Œåæ–¹å·®çŸ©é˜µä¸ºQk(Q)çš„å¤šå…ƒæ­£æ€åˆ†å¸ƒ;
 	setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-5));
 
 	//!< measurement noise covariance matrix (R)
-	//vk ÊÇ¹Û²âÔëÉù£¬Æä¾ùÖµÎªÁã£¬Ğ­·½²î¾ØÕóÎªRk,ÇÒ·ş´ÓÕıÌ¬·Ö²¼;
+	//vk æ˜¯è§‚æµ‹å™ªå£°ï¼Œå…¶å‡å€¼ä¸ºé›¶ï¼Œåæ–¹å·®çŸ©é˜µä¸ºRk,ä¸”æœä»æ­£æ€åˆ†å¸ƒ;
 	setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
 
-	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  A´ú±íF: transitionMatrix
-	//Ô¤²â¹À¼ÆĞ­·½²î¾ØÕó;
+	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  Aä»£è¡¨F: transitionMatrix
+	//é¢„æµ‹ä¼°è®¡åæ–¹å·®çŸ©é˜µ;
 	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
 
 	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
@@ -66,27 +66,27 @@ cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 	processNoise = cv::Mat(stateNum, 1, CV_32F);
 	measurement = cv::Mat::zeros(measureNum, 1, CV_32F);	//measurement(x,y)
 
-	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //Ëæ»úÉú³ÉÒ»¸ö¾ØÕó£¬ÆÚÍûÊÇ0£¬±ê×¼²îÎª0.1;
+	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //éšæœºç”Ÿæˆä¸€ä¸ªçŸ©é˜µï¼ŒæœŸæœ›æ˜¯0ï¼Œæ ‡å‡†å·®ä¸º0.1;
 	KF.transitionMatrix = (cv::Mat_<float>(4, 4) <<
 		1, 0, 1, 0,
 		0, 1, 0, 1,
 		0, 0, 1, 0,
-		0, 0, 0, 1);//ÔªËØµ¼Èë¾ØÕó£¬°´ĞĞ;
+		0, 0, 0, 1);//å…ƒç´ å¯¼å…¥çŸ©é˜µï¼ŒæŒ‰è¡Œ;
 
-	//setIdentity: Ëõ·ÅµÄµ¥Î»¶Ô½Ç¾ØÕó;
-	//!< measurement matrix (H) ¹Û²âÄ£ĞÍ
+	//setIdentity: ç¼©æ”¾çš„å•ä½å¯¹è§’çŸ©é˜µ;
+	//!< measurement matrix (H) è§‚æµ‹æ¨¡å‹
 	setIdentity(KF.measurementMatrix);
 
 	//!< process noise covariance matrix (Q)
-	// wk ÊÇ¹ı³ÌÔëÉù£¬²¢¼Ù¶¨Æä·ûºÏ¾ùÖµÎªÁã£¬Ğ­·½²î¾ØÕóÎªQk(Q)µÄ¶àÔªÕıÌ¬·Ö²¼;
+	// wk æ˜¯è¿‡ç¨‹å™ªå£°ï¼Œå¹¶å‡å®šå…¶ç¬¦åˆå‡å€¼ä¸ºé›¶ï¼Œåæ–¹å·®çŸ©é˜µä¸ºQk(Q)çš„å¤šå…ƒæ­£æ€åˆ†å¸ƒ;
 	setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-5));
 
 	//!< measurement noise covariance matrix (R)
-	//vk ÊÇ¹Û²âÔëÉù£¬Æä¾ùÖµÎªÁã£¬Ğ­·½²î¾ØÕóÎªRk,ÇÒ·ş´ÓÕıÌ¬·Ö²¼;
+	//vk æ˜¯è§‚æµ‹å™ªå£°ï¼Œå…¶å‡å€¼ä¸ºé›¶ï¼Œåæ–¹å·®çŸ©é˜µä¸ºRk,ä¸”æœä»æ­£æ€åˆ†å¸ƒ;
 	setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
 
-	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  A´ú±íF: transitionMatrix
-	//Ô¤²â¹À¼ÆĞ­·½²î¾ØÕó;
+	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  Aä»£è¡¨F: transitionMatrix
+	//é¢„æµ‹ä¼°è®¡åæ–¹å·®çŸ©é˜µ;
 	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
 
 	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))

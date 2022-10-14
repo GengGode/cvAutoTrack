@@ -62,11 +62,11 @@
     <Filter Include="src\match\surf\filter">
       <UniqueIdentifier>{dcabbda0-572b-43c0-a67e-0964167f83d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{0e2db87d-ed3a-4eb6-8700-f4adf8f64a35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint">
-      <Filter>resource</Filter>
-    </None>
     <None Include="resource\Source.def">
       <Filter>resource</Filter>
     </None>
@@ -82,15 +82,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="src\AutoTrack.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\framework.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\resource.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\pch.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\capture\dxgi\include\capture.interop.h">
@@ -159,6 +150,15 @@
     <ClInclude Include="src\capture\video\video.h">
       <Filter>src\capture\video</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>resource</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="src\framework.h">
+      <Filter>pch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -168,9 +168,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\capture\Capture.cpp">
@@ -224,54 +221,13 @@
     <ClCompile Include="src\filter\untouched\Untouched.cpp">
       <Filter>src\filter\untouched</Filter>
     </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resource\GIPAIMON.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\UID_.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\UID0.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid1.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid2.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid3.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid4.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid5.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid6.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid7.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid8.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\png\uid9.bmp">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\GIMAP.png">
-      <Filter>resource</Filter>
-    </Image>
-    <Image Include="resource\GISTARTEMPLATE.bmp">
-      <Filter>resource</Filter>
-    </Image>
   </ItemGroup>
 </Project>
