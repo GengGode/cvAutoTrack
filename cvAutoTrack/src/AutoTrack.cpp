@@ -3,6 +3,11 @@
 #include "ErrorCode.h"
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
+//#include "capture/gdi/Gdi.h"
+#include "filter/kalman/Kalman.h"
+#include "filter/smooth/Smooth.h"
+//#include "filter/mean/Mean.h"
+//#include "filter/median/Median.h"
 #include "utils/Utils.h"
 #include "match/Match.h"
 
@@ -20,6 +25,8 @@ AutoTrack::AutoTrack()
 
 	capture = new Bitblt();
 	capture->init();
+	
+	filter = new Kalman();
 
 	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "正常退出");
 	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "未能找到原神窗口句柄");
@@ -351,21 +358,14 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	cv::Point2d pos = genshin_avatar_position.position;
 
 	cv::Point2d filt_pos;
-
-#define USE_Filt
-#ifdef USE_Filt
 	if (isConveying || !isContinuity)
 	{
-		filt_pos = posFilter.reinitfilterting(pos);
-		//isConveying = false;
+		filt_pos = filter->re_init_filterting(pos);
 	}
 	else
 	{
-		filt_pos = posFilter.filterting(pos);
+		filt_pos = filter->filterting(pos);
 	}
-#else
-	filt_pos = pos;
-#endif // USE_Filt
 
 	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 
