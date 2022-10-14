@@ -20,7 +20,7 @@ void SurfMatch::setMap(cv::Mat gi_map)
 	_mapMat = gi_map;
 }
 
-void SurfMatch::setMinMap(cv::Mat minMapMat)
+void SurfMatch::setMiniMap(cv::Mat minMapMat)
 {
 	_minMapMat = minMapMat;
 }
@@ -366,7 +366,7 @@ void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPos
 		return;
 	}
 
-	surf_match.setMinMap(genshin_minimap.img_minimap);
+	surf_match.setMiniMap(genshin_minimap.img_minimap);
 
 	surf_match.match();
 

@@ -34,7 +34,7 @@ public:
 	bool isOnCity = false;
 
 	void setMap(cv::Mat gi_map);
-	void setMinMap(cv::Mat minMapMat);
+	void setMiniMap(cv::Mat minMapMat);
 
 	void Init();
 	void Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors);

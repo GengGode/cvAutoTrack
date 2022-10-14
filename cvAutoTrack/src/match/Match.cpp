@@ -76,7 +76,7 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 		return;
 	}
 
-	surf_match.setMinMap(genshin_minimap.img_minimap);
+	surf_match.setMiniMap(genshin_minimap.img_minimap);
 
 	surf_match.match();
 
