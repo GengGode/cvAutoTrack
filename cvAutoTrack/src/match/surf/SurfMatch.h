@@ -32,6 +32,8 @@ public:
 	bool isInit = false;
 	bool isContinuity = false;
 	bool isOnCity = false;
+	
+	bool is_success_match = false;
 
 	void setMap(cv::Mat gi_map);
 	void setMiniMap(cv::Mat minMapMat);
