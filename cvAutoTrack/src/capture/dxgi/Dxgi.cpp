@@ -17,7 +17,7 @@ using namespace Windows::UI::Composition;
 
 Dxgi::Dxgi()
 {
-    mode = Capture::Mode_DirectX;
+    mode = Capture::DirectX;
 }
 
 bool Dxgi::init()

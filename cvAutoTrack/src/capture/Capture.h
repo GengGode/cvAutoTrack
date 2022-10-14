@@ -4,14 +4,15 @@ class Mat;
 class Capture
 {
 public:
-	enum Mode
+	enum CaptureMode
 	{
-		Mode_Bitblt,
-		Mode_DirectX,
-		Mode_Unknown
+		Bitblt,
+		DirectX,
+		Unknown
 	};
+	CaptureMode mode = CaptureMode::Unknown;
 	ErrorCode& err = ErrorCode::getInstance();
-	Mode mode = Mode_Unknown;
+	
 	Capture();
 	virtual ~Capture();
 	

@@ -66,7 +66,7 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 		capture = new Bitblt();
 		return true;
 	}
-	if (capture->mode == Capture::Mode_Bitblt)
+	if (capture->mode == Capture::Bitblt)
 	{
 		return true;
 	}
@@ -85,7 +85,7 @@ bool AutoTrack::SetUseDx11CaptureMode()
 		return true;
 	}
 
-	if (capture->mode == Capture::Mode_DirectX)
+	if (capture->mode == Capture::DirectX)
 	{
 		return true;
 	}
@@ -177,7 +177,7 @@ bool AutoTrack::DebugCapture()
 	cv::Mat out_info_img = giFrame.clone();
 	switch (capture->mode)
 	{
-	case Capture::Mode_Bitblt:
+	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
@@ -193,7 +193,7 @@ bool AutoTrack::DebugCapture()
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
-	case Capture::Mode_DirectX:
+	case Capture::DirectX:
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
@@ -236,7 +236,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	cv::Mat out_info_img = giFrame.clone();
 	switch (capture->mode)
 	{
-	case Capture::Mode_Bitblt:
+	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
@@ -252,7 +252,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
-	case Capture::Mode_DirectX:
+	case Capture::DirectX:
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
@@ -318,7 +318,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 1, "没有初始化" };
 		return false;
 	}
-	if (capture->mode == Capture::Mode_Bitblt)
+	if (capture->mode == Capture::Bitblt)
 	{
 		
 		if (getMiniMapRefMat_Bitblt()==false)
@@ -450,7 +450,7 @@ bool AutoTrack::GetDirection(double& a)
 		return false;
 	}
 	
-	if (capture->mode == Capture::Mode_Bitblt)
+	if (capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -563,7 +563,7 @@ bool AutoTrack::GetRotation(double& a)
 		return false;
 	}
 
-	if (capture->mode == Capture::Mode_Bitblt)
+	if (capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -591,7 +591,7 @@ bool AutoTrack::GetRotation(double& a)
 		return false;
 	}
 
-	if (capture->mode == Capture::Mode_DirectX)
+	if (capture->mode == Capture::DirectX)
 	{
 		err = { 3004,"DX模式下，原神小地图区域无法取到透明通道" };
 		return false;
@@ -718,7 +718,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 		getPaimonRefMat();
 		
-		if (capture->mode == Capture::Mode_Bitblt)
+		if (capture->mode == Capture::Bitblt)
 		{
 			if (getMiniMapRefMat_Bitblt() == false)
 			{
@@ -834,7 +834,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 	getPaimonRefMat();
 	
-	if (capture->mode == Capture::Mode_Bitblt)
+	if (capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -951,7 +951,7 @@ bool AutoTrack::GetUID(int& uid)
 
 	split(giUIDRef, channels);
 
-	if (capture->mode == Capture::Mode_DirectX)
+	if (capture->mode == Capture::DirectX)
 	{
 		cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
 	}
@@ -1338,7 +1338,7 @@ bool AutoTrack::getGengshinImpactScreen()
 	if (capture->capture(Frame))
 	{
 		giFrame = Frame;
-		if (capture->mode == Capture::Mode_DirectX)
+		if (capture->mode == Capture::DirectX)
 		{
 			int w = giClientRect.right - giClientRect.left;
 			int h = giClientRect.bottom - giClientRect.top;
@@ -1782,7 +1782,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 
 	const double check_match_paimon_params_dx = 0.60;
 	static double check_match_paimon_param = check_match_paimon_params;
-	if (capture->mode == Capture::Mode_DirectX)
+	if (capture->mode == Capture::DirectX)
 	{
 		cv::cvtColor(giPaimonRef, object, cv::COLOR_RGBA2GRAY);
 		check_match_paimon_param = check_match_paimon_params_dx;
