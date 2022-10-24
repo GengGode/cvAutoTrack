@@ -66,6 +66,8 @@ bool Dxgi::init()
 		
         m_session = m_framePool.CreateCaptureSession(m_item);
 		
+// 判断 WindowsSDK 版本大于等于 10.0.22000.0
+#if (WINVER >= _WIN32_WINNT_WIN10_21H1)
         auto f = [=] {
             try {
                 return winrt::Windows::Foundation::Metadata::ApiInformation::
@@ -90,6 +92,7 @@ bool Dxgi::init()
             m_session.IsBorderRequired(false);
             m_session.IsCursorCaptureEnabled(false);
         }
+#endif
 
         m_lastSize = size;
         m_frameArrived = m_framePool.FrameArrived(auto_revoke, { this, &Dxgi::OnFrameArrived });
