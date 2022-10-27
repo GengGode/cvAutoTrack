@@ -11,8 +11,9 @@ public:
 	bool capture(cv::Mat& frame) override;
 	bool setHandle(HWND handle = 0) override;
 	
-public:
 private:
+    winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice m_device{ nullptr };
+    winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{ nullptr };
     winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{ nullptr };
     /// <summary>
     /// 存储应用程序捕获的帧。
@@ -26,18 +27,13 @@ private:
     /// </summary>
     winrt::Windows::Graphics::Capture::GraphicsCaptureSession m_session{ nullptr };
     winrt::Windows::Graphics::SizeInt32 m_lastSize;
-
-    winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice m_device{ nullptr };
     winrt::com_ptr<IDXGISwapChain1> m_swapChain{ nullptr };
-    winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{ nullptr };
 
     std::atomic<bool> m_closed = false;
 private:
     bool is_need_init = false;
 	HWND giHandle = nullptr;
 private:
-    D3D11_TEXTURE2D_DESC desc{
-   0,0,1,1,DXGI_FORMAT_B8G8R8A8_UNORM,{1,0},D3D11_USAGE_STAGING,0,D3D11_CPU_ACCESS_READ,0
-    };
+    D3D11_TEXTURE2D_DESC desc_type{ 0,0,1,1,DXGI_FORMAT_B8G8R8A8_UNORM,{1,0},D3D11_USAGE_STAGING,0,D3D11_CPU_ACCESS_READ,0 };
 };
 
