@@ -472,7 +472,7 @@ bool AutoTrack::GetDirection(double& a)
 		getMiniMapRefMat();
 	}
 
-	if (getAvatarRefMat())
+	if (!getAvatarRefMat())
 	{
 		return false;
 	}
