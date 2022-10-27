@@ -41,9 +41,9 @@ void DiffMatch::match()
 	minimap_now_mat32.convertTo(minimap_now_mat32, CV_32FC1);
 	minimap_last_mat32.convertTo(minimap_last_mat32, CV_32FC1);
 	
-	// ÀûÓÃ phaseCorrelate ·½·¨¼ÆËãÁ½Ö¡Ö®¼äĞ¡µØÍ¼µÄÆ½ÒÆ
+	// åˆ©ç”¨ phaseCorrelate æ–¹æ³•è®¡ç®—ä¸¤å¸§ä¹‹é—´å°åœ°å›¾çš„å¹³ç§»
 	auto diff_pos = cv::phaseCorrelate(minimap_now_mat32, minimap_last_mat32);
-	// TODO: Êı¾İĞèÒª-0.5£¬´ıÑĞ¾¿ 
+	// TODO: æ•°æ®éœ€è¦-0.5ï¼Œå¾…ç ”ç©¶ 
 	diff_pos.x -= 0.5;
 	diff_pos.y -= 0.5;
 	
