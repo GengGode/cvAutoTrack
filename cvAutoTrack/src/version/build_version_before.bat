@@ -56,6 +56,7 @@ if not "%appVeyorV2%"=="" (
 	)
 )
 
+set /a v4=0
 for /f %%x in (src\version\version_next.number) do (
 	set /a v4=%%x-1
 )
