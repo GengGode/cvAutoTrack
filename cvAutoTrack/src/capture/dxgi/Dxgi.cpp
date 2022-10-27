@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Dxgi.h"
-//#include <opencv2/core/directx.hpp>
 #include <future>
 
 using namespace winrt;
@@ -103,9 +102,6 @@ bool Dxgi::init()
         static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
         2);
     try {
-
-        //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-		
         auto fun_get_frame_pool = [=]()->auto {
             auto device= CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
             return winrt::Windows::Graphics::Capture::
@@ -116,14 +112,6 @@ bool Dxgi::init()
         std::future<Direct3D11CaptureFramePool> f_frame_pool = std::async(std::launch::async, fun_get_frame_pool);
         auto frame_pool = f_frame_pool.get();
 		
-
-        /*const winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool
-            frame_pool = winrt::Windows::Graphics::Capture::
-            Direct3D11CaptureFramePool::Create(
-                m_device,
-                DirectXPixelFormat::B8G8R8A8UIntNormalized,
-                2,
-                size);*/
         const winrt::Windows::Graphics::Capture::GraphicsCaptureSession session =
             frame_pool.CreateCaptureSession(m_item);
 
@@ -151,10 +139,6 @@ bool Dxgi::init()
             m_session.IsCursorCaptureEnabled(false);
         }
     }
-    catch (const winrt::hresult_error&)
-    {
-        // Ignore any errors
-    }
     catch (...)
     {
         // Ignore any errors
@@ -169,7 +153,6 @@ bool Dxgi::init()
     }
 
     m_session.StartCapture();
-
 
     is_need_init = false;
     return true;
@@ -193,10 +176,10 @@ bool Dxgi::capture(cv::Mat& frame)
         return false;
     }
 	auto frame_size = new_frame.ContentSize();
-    if(desc.Width != static_cast<UINT>(m_lastSize.Width) || desc.Height != static_cast<UINT>(m_lastSize.Height))
+    if(desc_type.Width != static_cast<UINT>(m_lastSize.Width) || desc_type.Height != static_cast<UINT>(m_lastSize.Height))
     {
-        desc.Width = m_lastSize.Width;
-        desc.Height = m_lastSize.Height;
+        desc_type.Width = m_lastSize.Width;
+        desc_type.Height = m_lastSize.Height;
     }
     if (frame_size.Width != m_lastSize.Width || frame_size.Height != m_lastSize.Height)
     {
@@ -218,7 +201,7 @@ bool Dxgi::capture(cv::Mat& frame)
     auto frameSurface = GetDXGIInterfaceFromObject<ID3D11Texture2D>(new_frame.Surface());
 	
     //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-    TianLi::DirectX::d3dDevice->CreateTexture2D(&desc, nullptr, &bufferTexture);
+    TianLi::DirectX::d3dDevice->CreateTexture2D(&desc_type, nullptr, &bufferTexture);
     m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
     if (bufferTexture == nullptr)
     {
