@@ -12,10 +12,10 @@ Smooth::~Smooth()
 
 cv::Point2d Smooth::filterting(const cv::Point2d& pos)
 {
-	return cv::Point2d();
+	return pos;
 }
 
 cv::Point2d Smooth::re_init_filterting(const cv::Point2d& pos)
 {
-	return cv::Point2d();
+	return pos;
 }

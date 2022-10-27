@@ -22,10 +22,12 @@ bool Video::uninit()
 
 bool Video::capture(cv::Mat& frame)
 {
+	UNREFERENCED_PARAMETER(frame);
 	return false;
 }
 
 bool Video::setHandle(HWND handle)
 {
+	UNREFERENCED_PARAMETER(handle);
 	return false;
 }
