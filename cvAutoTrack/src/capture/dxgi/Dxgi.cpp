@@ -34,35 +34,21 @@ Dxgi::Dxgi()
 
 Dxgi::~Dxgi()
 {
-    auto expected = false;
-    if (m_closed.compare_exchange_strong(expected, true))
+    try
     {
-        if (is_need_init)
-        {
-            return;
-        }
-		
-        try {
-            if (m_session != nullptr) 
-                m_session.Close();
-        }
-        catch (...) {
-			//
-        }
-
-        try {
-        if(m_framePool!= nullptr)    
+        if (m_session != nullptr)
+            m_session.Close();
+        if (m_framePool != nullptr)
             m_framePool.Close();
-        }
-        catch (...) {
-			//
-        }
-		
-        m_session = nullptr;
-        m_framePool = nullptr;
-        m_swapChain = nullptr;
-        m_item = nullptr;
     }
+    catch (...)
+    {
+        //
+    }
+    m_session = nullptr;
+    m_framePool = nullptr;
+    m_swapChain = nullptr;
+    m_item = nullptr;
 }
 
 bool Dxgi::init()
@@ -70,13 +56,6 @@ bool Dxgi::init()
     // 只需要定义一下，不会用上，唯一的作用是避免依赖d3d11.dll
     // 这背后大概有什么科学原理吧，可能
     static cv::VideoCapture Video;
-	
-    static bool is_frist = true;
-    if (is_frist)
-    {
-        m_device = CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
-        is_frist = false;
-    }
 	
     if (is_need_init == false)
     {
@@ -90,33 +69,29 @@ bool Dxgi::init()
     }
 	
     TianLi::DirectX::d3dDevice->GetImmediateContext(m_d3dContext.put());
-
+    m_device = CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
     m_item = CreateCaptureItemForWindow(giHandle);
-
     auto size = m_item.Size();
+    m_swapChain = CreateDXGISwapChain(TianLi::DirectX::d3dDevice, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized), 2);
 
-    m_swapChain = CreateDXGISwapChain(
-        TianLi::DirectX::d3dDevice,
-        static_cast<uint32_t>(size.Width),
-        static_cast<uint32_t>(size.Height),
-        static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized),
-        2);
-    try {
+    if (size.Width < 480 || size.Height < 360)
+    {
+        err = { 14, "窗口画面大小小于480x360，无法使用" };
+        return false;
+    }
+	
+    try 
+    {
         auto fun_get_frame_pool = [=]()->auto {
             auto device= CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
             return winrt::Windows::Graphics::Capture::
                 Direct3D11CaptureFramePool::Create(device, DirectXPixelFormat::B8G8R8A8UIntNormalized, 2, size);
         };
-		
 		// 另一个线程运行 get_frame_pool
         std::future<Direct3D11CaptureFramePool> f_frame_pool = std::async(std::launch::async, fun_get_frame_pool);
-        auto frame_pool = f_frame_pool.get();
 		
-        const winrt::Windows::Graphics::Capture::GraphicsCaptureSession session =
-            frame_pool.CreateCaptureSession(m_item);
-
-        m_framePool = frame_pool;
-        m_session = session;
+        m_framePool = f_frame_pool.get();
+        m_session = m_framePool.CreateCaptureSession(m_item);
     }
     catch (...)
     {
@@ -146,11 +121,6 @@ bool Dxgi::init()
 #endif
 
     m_lastSize = size;
-
-    if (m_closed.load() == true)
-    {
-        throw winrt::hresult_error(RO_E_CLOSED);
-    }
 
     m_session.StartCapture();
 
