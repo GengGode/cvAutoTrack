@@ -1340,8 +1340,12 @@ bool AutoTrack::getGengshinImpactScreen()
 	if (capture->capture(Frame))
 	{
 		giFrame = Frame;
+		cv::resize(giFrame, giFrame, genshin_handle.size_frame);
 		if (capture->mode == Capture::DirectX)
 		{
+			// 此处应对高文字缩放时不能正常获取到全部画面
+			// 此处应为获取去除可能存在的标题栏的区域
+			// 但是有问题暂时去除
 			int w = giClientRect.right - giClientRect.left;
 			int h = giClientRect.bottom - giClientRect.top;
 			int x = 0;
