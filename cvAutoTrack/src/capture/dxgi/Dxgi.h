@@ -4,31 +4,14 @@ class Dxgi : public Capture
 {
 public:
     Dxgi();
-    ~Dxgi() { Close(); }
+    ~Dxgi();
 	
 	bool init() override;
 	bool uninit() override;
 	bool capture(cv::Mat& frame) override;
 	bool setHandle(HWND handle = 0) override;
 	
-
-    void StartCapture();
-
-    void Close();
-
-private:
-    void OnFrameArrived(
-        winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool const& sender,
-        winrt::Windows::Foundation::IInspectable const& args);
-
-    void CheckClosed()
-    {
-        if (m_closed.load() == true)
-        {
-            throw winrt::hresult_error(RO_E_CLOSED);
-        }
-    }
-
+public:
 private:
     winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{ nullptr };
     /// <summary>
@@ -49,10 +32,12 @@ private:
     winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{ nullptr };
 
     std::atomic<bool> m_closed = false;
-    winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::FrameArrived_revoker m_frameArrived;
 private:
     bool is_need_init = false;
-	//ID3D11Texture2D* m_pTexture = nullptr;
 	HWND giHandle = nullptr;
+private:
+    D3D11_TEXTURE2D_DESC desc{
+   0,0,1,1,DXGI_FORMAT_B8G8R8A8_UNORM,{1,0},D3D11_USAGE_STAGING,0,D3D11_CPU_ACCESS_READ,0
+    };
 };
 
