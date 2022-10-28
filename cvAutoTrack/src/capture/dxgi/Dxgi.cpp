@@ -41,10 +41,6 @@ Dxgi::~Dxgi()
         if (m_framePool != nullptr)
             m_framePool.Close();
     }
-    catch (winrt::hresult_error&)
-    {
-		//
-    }
     catch (...)
     {
         //
