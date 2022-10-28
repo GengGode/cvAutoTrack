@@ -37,7 +37,7 @@ AutoTrack::AutoTrack()
 
 AutoTrack::~AutoTrack(void)
 {
-	delete capture;
+	//delete capture;
 }
 
 bool AutoTrack::init()
@@ -1135,7 +1135,12 @@ bool AutoTrack::getGengshinImpactWnd()
 			giWindowName = L"\uC6D0\uC2E0";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
 		}
-
+		if (giHandle == NULL)
+		{
+			giWindowName = L"原神-调试";
+			giHandle = FindWindowW(NULL, giWindowName); /* 匹配名称：原神-调试 */
+		}
+		
 		if (giHandle == NULL)
 		{
 			err = { 10,"无效句柄或指定句柄所指向窗口不存在" };
