@@ -203,12 +203,12 @@ int Run()
 		std::cout << "1. 设置Dx截图\n";
 		std::cout << "2. 设置Bitblt截图\n";
 		std::cout << "3. 获取坐标和角度\n";
-		std::cout << "4. 获取角度\n";
-		std::cout << "5. 获取视角朝向\n";
-		std::cout << "6. 获取当前UID\n";
-		std::cout << "7. 获取当前神瞳Json\n";
-		std::cout << "8. 截图\n";
-		std::cout << "9. 获取坐标\n";
+		std::cout << "4. 获取坐标\n";
+		std::cout << "5. 获取角度\n";
+		std::cout << "6. 获取视角朝向\n";
+		std::cout << "7. 获取当前UID\n";
+		std::cout << "8. 获取当前神瞳Json\n";
+		std::cout << "9. 截图\n";
 		std::cout << "0. 退出\n";
 		std::cout << "请输入选项: ";
 		int option = 0;
@@ -226,25 +226,37 @@ int Run()
 			Run_GetTrans();
 			break;
 		case 4:
-			Run_GetDir();
+			Run_GetPosit();
 			break;
 		case 5:
-			Run_GetRot();
+			Run_GetDir();
 			break;
 		case 6:
-			Run_GetUID();
+			Run_GetRot();
 			break;
 		case 7:
-			Run_GetStars();
+			Run_GetUID();
 			break;
 		case 8:
-			Run_Capture();
+			Run_GetStars();
 			break;
 		case 9:
-			Run_GetPosit();
+			Run_Capture();
 			break;
 		case 0:
 			return 0;
+			break;
+		case -1:
+			while (1) {
+				// 30ms 内检测到ECS键就退出
+				if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+					break;
+				}
+				Sleep(30);
+				//TODO:
+				Run_GetDir();
+			}
+			break;
 		default:
 			break;
 		}
