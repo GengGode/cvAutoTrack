@@ -195,16 +195,16 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;
 	}
-	cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_mTmp;
+	cv::Ptr<cv::DescriptorMatcher> matcher_not_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+	std::vector< std::vector<cv::DMatch> > KNN_not_no_city;
 
-	matcherTmp->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_mTmp, 2);
+	matcher_not_on_city->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_not_no_city, 2);
 	std::vector<double> lisx;
 	std::vector<double> lisy;
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_not_no_city, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
 
 	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
 	if (std::min(lisx.size(), lisy.size()) > 4)
@@ -236,17 +236,17 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 			return pos_not_on_city;
 		}
 
-		cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-		std::vector< std::vector<cv::DMatch> > KNN_mTmp;
+		cv::Ptr<cv::DescriptorMatcher> matcher_mabye_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+		std::vector< std::vector<cv::DMatch> > KNN_mabye_on_city;
 
-		matcherTmp->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_mTmp, 2);
+		matcher_mabye_on_city->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_mabye_on_city, 2);
 
 		std::vector<double> list_x_on_city;
 		std::vector<double> list_y_on_city;
 		double sum_x_on_city = 0;
 		double sum_y_on_city = 0;
 
-		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
+		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mabye_on_city, ratio_thresh, 0.8667, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
 
 		if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= 4)
 		{
