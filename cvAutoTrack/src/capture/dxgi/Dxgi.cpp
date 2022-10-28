@@ -34,19 +34,16 @@ Dxgi::Dxgi()
 
 Dxgi::~Dxgi()
 {
-    try
+    if (m_framePool != nullptr)
     {
-        if (m_session != nullptr)
-            m_session.Close();
-        if (m_framePool != nullptr)
-            m_framePool.Close();
+        m_framePool.Close();
+        m_framePool = nullptr;
     }
-    catch (...)
+    if (m_session != nullptr)
     {
-        //
+        m_session.Close();
+        m_session = nullptr;
     }
-    m_session = nullptr;
-    m_framePool = nullptr;
     m_swapChain = nullptr;
     m_item = nullptr;
 }
