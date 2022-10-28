@@ -1,6 +1,5 @@
 #pragma once
 #include "ErrorCode.h"
-class Mat;
 class Capture
 {
 public:
