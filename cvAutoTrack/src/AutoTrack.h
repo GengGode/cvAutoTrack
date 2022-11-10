@@ -139,7 +139,6 @@ private:
 	Filter* filter = nullptr;
 
 private:
-	HWND giHandle = nullptr;
 	RECT giRect = { 0,0,0,0 };
 	RECT giClientRect = { 0,0,0,0 };
 	cv::Size giClientSize;
