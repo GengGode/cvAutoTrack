@@ -17,7 +17,8 @@
 
 AutoTrack::AutoTrack()
 {
-	giHandle = 0;
+	genshin_handle.handle = 0;
+	
 
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
