@@ -167,7 +167,7 @@ private:
 	bool getGengshinImpactScreen();
 
 	bool getPaimonRefMat();
-	bool getMiniMapRefMat();
+	bool getMiniMapRefMat_Dx();
 	bool getMiniMapRefMat_Bitblt();
 	bool getUIDRefMat();
 	bool getAvatarRefMat();
