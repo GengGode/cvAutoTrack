@@ -113,10 +113,9 @@ bool AutoTrack::SetHandle(long long int handle)
 	else
 	{
 		genshin_handle.config.is_auto_find_genshin = false;
-		giHandle = (HWND)handle;
+		genshin_handle.handle = (HWND)handle;
 	}
-
-	return IsWindow(giHandle);
+	return IsWindow(genshin_handle.handle);
 }
 
 bool AutoTrack::SetWorldCenter(double x, double y)
@@ -325,6 +324,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 1, "没有初始化" };
 		return false;
 	}
+
 	if (capture->mode == Capture::Bitblt)
 	{
 		
@@ -1129,47 +1129,48 @@ bool AutoTrack::getGengshinImpactWnd()
 		LPCWSTR giWindowName = { L"原神" };
 		/* 对原神窗口的操作 */
 		giWindowName = L"原神";
-		giHandle = FindWindowW(L"UnityWndClass", giWindowName);
-		if (giHandle == NULL)
+		auto handle = FindWindowW(L"UnityWndClass", giWindowName);
+		if (handle == NULL)
 		{
 			giWindowName = L"Genshin Impact";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			handle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			giWindowName = L"云·原神";
-			giHandle = FindWindowW(L"Qt5152QWindowIcon", giWindowName); /* 匹配名称：云·原神 */
+			handle = FindWindowW(L"Qt5152QWindowIcon", giWindowName); /* 匹配名称：云·原神 */
 		}
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			giWindowName = L"??";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
+			handle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
 		}
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			giWindowName = L"\u539F\u795E";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
+			handle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：原神 */
 		}
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			giWindowName = L"\uC6D0\uC2E0";
-			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
+			handle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
 		}
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			giWindowName = L"原神-调试";
-			giHandle = FindWindowW(NULL, giWindowName); /* 匹配名称：原神-调试 */
+			handle = FindWindowW(NULL, giWindowName); /* 匹配名称：原神-调试 */
 		}
 		
-		if (giHandle == NULL)
+		if (handle == NULL)
 		{
 			err = { 10,"无效句柄或指定句柄所指向窗口不存在" };
 			return false;
 		}
+		genshin_handle.handle = handle;
 	}
 	else
 	{
-		if (IsWindow(giHandle))
+		if (IsWindow(genshin_handle.handle))
 		{
 			return true;
 		}
@@ -1180,19 +1181,19 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 	}
 
-	capture->setHandle(giHandle);
+	capture->setHandle(genshin_handle.handle);
 
-	return (giHandle != NULL ? true : false);
+	return (genshin_handle.handle != NULL ? true : false);
 }
 
 bool AutoTrack::getGengshinImpactRect()
 {
-	if (!GetWindowRect(giHandle, &giRect))
+	if (!GetWindowRect(genshin_handle.handle, &giRect))
 	{
 		err = { 12,"窗口句柄失效" };
 		return false;
 	}
-	if (!GetClientRect(giHandle, &giClientRect))
+	if (!GetClientRect(genshin_handle.handle, &giClientRect))
 	{
 		err = { 12,"窗口句柄失效" };
 		return false;
@@ -1335,6 +1336,7 @@ bool AutoTrack::getGengshinImpactScale()
 #ifdef _DEBUG
 	//std::cout << "-> getGengshinImpactScale()" << std::endl;
 #endif
+	// TODO: get window handle on window dirver
 	HWND hWnd = GetDesktopWindow();
 	HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
 
