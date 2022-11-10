@@ -1137,6 +1137,11 @@ bool AutoTrack::getGengshinImpactWnd()
 		}
 		if (giHandle == NULL)
 		{
+			giWindowName = L"云·原神";
+			giHandle = FindWindowW(L"Qt5152QWindowIcon", giWindowName); /* 匹配名称：云·原神 */
+		}
+		if (giHandle == NULL)
+		{
 			giWindowName = L"??";
 			giHandle = FindWindowW(L"UnityWndClass", giWindowName); /* 匹配名称：?? */
 		}
