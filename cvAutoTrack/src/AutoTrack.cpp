@@ -344,7 +344,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			return false;
 		}
 
-		getMiniMapRefMat();
+		getMiniMapRefMat_Dx();
 	}
 
 	if (giMiniMapRef.empty())
@@ -509,7 +509,7 @@ bool AutoTrack::GetDirection(double& a)
 	std::vector<std::vector<cv::Point>> contours;
 	std::vector<cv::Vec4i> hierarcy;
 	cv::Point2d center = cv::Point2d(and12.cols / 2.0, and12.rows / 2.0);
-	
+
 	cv::findContours(and12, contours, hierarcy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 
 	std::vector<cv::Rect> boundRect(contours.size());  //定义外接矩形集合
@@ -598,7 +598,7 @@ bool AutoTrack::GetRotation(double& a)
 			return false;
 		}
 
-		getMiniMapRefMat();
+		getMiniMapRefMat_Dx();
 	}
 	
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
@@ -753,7 +753,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 				return false;
 			}
 
-			getMiniMapRefMat();
+			getMiniMapRefMat_Dx();
 		}
 		
 		if (giMiniMapRef.empty())
@@ -869,7 +869,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 			return false;
 		}
 
-		getMiniMapRefMat();
+		getMiniMapRefMat_Dx();
 	}
 	
 	if (giMiniMapRef.empty())
@@ -1497,7 +1497,7 @@ bool AutoTrack::getPaimonRefMat()
 	return true;
 }
 
-bool AutoTrack::getMiniMapRefMat()
+bool AutoTrack::getMiniMapRefMat_Dx()
 {
 	int& x = giFrame.cols, & y = giFrame.rows;
 	double f = 1, fx = 1, fy = 1;
