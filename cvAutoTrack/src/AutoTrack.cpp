@@ -107,12 +107,12 @@ bool AutoTrack::SetHandle(long long int handle)
 {
 	if (handle == 0)
 	{
-		is_Auto_getHandle = true;
+		genshin_handle.config.is_auto_find_genshin = true;
 		return true;
 	}
 	else
 	{
-		is_Auto_getHandle = false;
+		genshin_handle.config.is_auto_find_genshin = false;
 		giHandle = (HWND)handle;
 	}
 
@@ -1124,7 +1124,7 @@ int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
 
 bool AutoTrack::getGengshinImpactWnd()
 {
-	if (is_Auto_getHandle)
+	if (genshin_handle.config.is_auto_find_genshin)
 	{
 		LPCWSTR giWindowName = { L"原神" };
 		/* 对原神窗口的操作 */
@@ -1813,6 +1813,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 
 	const double check_match_paimon_params_dx = 0.60;
 	static double check_match_paimon_param = check_match_paimon_params;
+	
 	if (capture->mode == Capture::DirectX)
 	{
 		cv::cvtColor(giPaimonRef, object, cv::COLOR_RGBA2GRAY);
