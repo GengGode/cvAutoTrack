@@ -445,45 +445,12 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	}
 	return clear_error_logs();
 }
-
-bool AutoTrack::GetDirection(double& a)
+struct GetDirection_cala_io
 {
-	if (wForAfter.run() == false)
-	{
-		return false;
-	}
-	
-	if (capture->mode == Capture::Bitblt)
-	{
-		if (getMiniMapRefMat_Bitblt() == false)
-		{
-			err = { 2001, "Bitblt模式下获取角色朝向时，没有识别到paimon" };
-			return false;
-		}
-	}
-	else
-	{
-		cv::Rect paimon_rect;
-		if (!check_paimon(paimon_rect))
-		{
-			err = { 2002 ,"获取角色朝向时，没有识别到Paimon" };
-			return false;
-		}
-
-		getMiniMapRefMat();
-	}
-
-	if (!getAvatarRefMat())
-	{
-		return false;
-	}
-
-	if (giAvatarRef.empty())
-	{
-		err = { 11,"原神角色小箭头区域为空" };
-		return false;
-	}
-
+	bool error_contours = 0;
+};
+void GetDirection_cala(cv::Mat& giAvatarRef,double &a, GetDirection_cala_io& io)
+{
 	cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
 	std::vector<cv::Mat> lis;
 	cv::split(giAvatarRef, lis);
@@ -568,9 +535,54 @@ bool AutoTrack::GetDirection(double& a)
 	}
 	else
 	{
+		io.error_contours = true;
+	}
+}
+bool AutoTrack::GetDirection(double& a)
+{
+	if (wForAfter.run() == false)
+	{
+		return false;
+	}
+	
+	if (capture->mode == Capture::Bitblt)
+	{
+		if (getMiniMapRefMat_Bitblt() == false)
+		{
+			err = { 2001, "Bitblt模式下获取角色朝向时，没有识别到paimon" };
+			return false;
+		}
+	}
+	else
+	{
+		cv::Rect paimon_rect;
+		if (!check_paimon(paimon_rect))
+		{
+			err = { 2002 ,"获取角色朝向时，没有识别到Paimon" };
+			return false;
+		}
+		getMiniMapRefMat_Dx();
+	}
+
+	if (!getAvatarRefMat())
+	{
+		return false;
+	}
+
+	if (giAvatarRef.empty())
+	{
+		err = { 11,"原神角色小箭头区域为空" };
+		return false;
+	}
+
+	GetDirection_cala_io io;
+	GetDirection_cala(giAvatarRef, a ,io);
+	if (io.error_contours)
+	{
 		err = { 9,"提取小箭头特征误差过大" };
 		return false;
 	}
+	
 	return clear_error_logs();
 }
 
