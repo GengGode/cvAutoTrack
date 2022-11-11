@@ -20,12 +20,11 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	genshin_handle.config.capture->capture(giFrame);
 	
 #endif // TEST_LOCAL
-	
 
-	cv::resize(giFrame, giFrame, genshin_handle.size_frame);
 
 	{
 		if (giFrame.empty())return;
+		cv::resize(giFrame, giFrame, genshin_handle.size_frame);
 
 		out_genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giRectClient.right - giRectClient.left, giRectClient.bottom - giRectClient.top);
 
