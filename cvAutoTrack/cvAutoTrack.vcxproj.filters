@@ -65,6 +65,12 @@
     <Filter Include="pch">
       <UniqueIdentifier>{0e2db87d-ed3a-4eb6-8700-f4adf8f64a35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\algorithms">
+      <UniqueIdentifier>{ebf3dfe8-e90e-42ed-b00e-d1e7a64b4289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin">
+      <UniqueIdentifier>{ba89a0f8-f136-4cfc-9d3c-bbee05dbf89e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\Source.def">
@@ -75,6 +81,15 @@
     </None>
     <None Include="src\version\GetNextBuildVersion.ps1">
       <Filter>src\version</Filter>
+    </None>
+    <None Include="src\algorithms\algorithms.direction.h">
+      <Filter>src\algorithms</Filter>
+    </None>
+    <None Include="src\genshin\genshin.include.h">
+      <Filter>src\genshin</Filter>
+    </None>
+    <None Include="src\genshin\genshin.screen.h">
+      <Filter>src\genshin</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +174,24 @@
     <ClInclude Include="src\framework.h">
       <Filter>pch</Filter>
     </ClInclude>
+    <ClInclude Include="src\algorithms\algorithms.rotation.h">
+      <Filter>src\algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\match\match.include.h">
+      <Filter>src\match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\algorithms\algorithms.include.h">
+      <Filter>src\algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="src\match\match.star.h">
+      <Filter>src\match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\match\match.uid.h">
+      <Filter>src\match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\genshin\genshin.handle.h">
+      <Filter>src\genshin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -224,6 +257,10 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>pch</Filter>
     </ClCompile>
+    <ClCompile Include="src\genshin\genshin.handle.cpp">
+      <Filter>src\genshin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\genshin\genshin.screen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
