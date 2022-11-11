@@ -1,5 +1,5 @@
 -
-    version: '7.2.0.{build}'
+    version: '7.3.0.{build}'
     os: Visual Studio 2022
 
     configuration: Release
