@@ -108,23 +108,8 @@ private:
 #endif
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
-
-	// ???
-	double screen_scale = 1;
-
-
-private:
-	cv::Ptr<cv::xfeatures2d::SURF> _detectorAllMap;
-	cv::Ptr<cv::xfeatures2d::SURF> _detectorSomeMap;
-	std::vector<cv::KeyPoint> _KeyPointAllMap;
-	std::vector<cv::KeyPoint> _KeyPointSomeMap;
-	std::vector<cv::KeyPoint> _KeyPointMiniMap;
-	cv::Mat _DataPointAllMap;
-	cv::Mat _DataPointSomeMap;
-	cv::Mat _DataPointMiniMap;
 private:
 	bool isOnCity = false;
-	cv::Point2d _TransformHistory[3];
 	bool isStarVisible = false;
 
 private:
@@ -174,8 +159,4 @@ private:
 	bool clear_error_logs();
 private:
 	bool check_paimon(cv::Rect& paimon_rect);
-	//bool check_minimap(cv::Rect minimap_rect);	
-	//bool check_uid(cv::Rect uid_rect);
-	//bool check_avatar(cv::Rect avatar_rect);
-	//bool check_star(cv::Rect star_rect);
 };
