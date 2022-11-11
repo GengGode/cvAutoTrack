@@ -506,6 +506,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 	double minVal, maxVal;
 	cv::Point minLoc, maxLoc;
 	double scale = 1.3;
+	bool isOnCity = false;
 
 	if (isNotSee)
 	{
