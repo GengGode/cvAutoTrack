@@ -542,7 +542,8 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 	static bool isNotSee = false;
 	static vector<cv::Point2d> pos;
 	static int seeId = 0;
-
+	static bool isStarVisible = false;
+	
 	int MAXLOOP = 0;
 	bool isLoopMatch = false;
 	cv::Mat tmp;

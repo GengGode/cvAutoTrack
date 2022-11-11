@@ -110,7 +110,7 @@ private:
 	double MapWorldScale = 1.0;
 private:
 	bool isOnCity = false;
-	bool isStarVisible = false;
+
 
 private:
 	double check_match_paimon_params = 0.9;
