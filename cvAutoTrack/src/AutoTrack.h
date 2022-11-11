@@ -107,15 +107,8 @@ private:
 #endif
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
+	
 private:
-	bool isOnCity = false;
-
-
-private:
-	double check_match_paimon_params = 0.9;
-private:
-	// 界面处于手柄模式
-	bool isHandleGameMode = false;
 	
 	Filter* filter = nullptr;
 
