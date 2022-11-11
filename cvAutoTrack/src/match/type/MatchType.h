@@ -1,10 +1,10 @@
 #pragma once
-
+class Capture;
 struct GenshinHandleConfig
 {
 	bool is_auto_find_genshin = true;
 	HWND genshin_handle = nullptr;
-
+	Capture *capture = nullptr;
 };
 struct GenshinHandle
 {
