@@ -843,52 +843,16 @@ bool AutoTrack::getGengshinImpactWnd()
 
 bool AutoTrack::getGengshinImpactScreen()
 {
-	cv::Mat Frame;
-	if (capture->capture(Frame))
-	{
-		giFrame = Frame;
-		cv::resize(giFrame, giFrame, genshin_handle.size_frame);
-		if (capture->mode == Capture::DirectX)
-		{
-			// 此处应对高文字缩放时不能正常获取到全部画面
-			// 此处应为获取去除可能存在的标题栏的区域
-			// 但是有问题暂时去除
-			//int w = giClientRect.right - giClientRect.left;
-			//int h = giClientRect.bottom - giClientRect.top;
-			//int x = 0;
-			//int y = giFrame.rows - h;
-			//giFrame = giFrame(cv::Rect(x, y, w, h));
-		}
-
-		cv::resize(giFrame, genshin_screen.img_screen, genshin_handle.size_frame);
-		
-		giFrame = genshin_screen.img_screen;
-		
-		genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giClientRect.right - giClientRect.left, giClientRect.bottom - giClientRect.top);
-
-		// 获取maybe区域
-		genshin_screen.img_paimon_maybe = giFrame(genshin_handle.rect_paimon_maybe);
-		genshin_screen.img_minimap_cailb_maybe = giFrame(genshin_handle.rect_minimap_cailb_maybe);
-		genshin_screen.img_minimap_maybe = giFrame(genshin_handle.rect_minimap_maybe);
-		genshin_screen.img_uid_maybe = giFrame(genshin_handle.rect_uid_maybe);
-		genshin_screen.img_left_give_items_maybe = giFrame(genshin_handle.rect_left_give_items_maybe);
-		genshin_screen.img_right_pick_items_maybe = giFrame(genshin_handle.rect_right_pick_items_maybe);
-
-		genshin_screen.config.rect_paimon_maybe = genshin_handle.rect_paimon_maybe;
-		genshin_screen.config.rect_minimap_cailb_maybe = genshin_handle.rect_minimap_cailb_maybe;
-		genshin_screen.config.rect_minimap_maybe = genshin_handle.rect_minimap_maybe;
-
-
-		genshin_screen.img_uid = giFrame(genshin_handle.rect_uid);
-		
-		return true;
-	}
-	else
+	TianLi::Genshin::get_genshin_screen(genshin_handle, genshin_screen);
+	
+	if (genshin_screen.img_screen.empty())
 	{
 		err = { 433, "截图失败" };
 		return false;
 	}
+	return true;
 }
+
 bool AutoTrack::getPaimonRefMat()
 {
 	int& x = giFrame.cols, & y = giFrame.rows;
