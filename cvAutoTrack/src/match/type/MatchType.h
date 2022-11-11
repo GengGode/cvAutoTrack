@@ -43,6 +43,8 @@ struct GenshinScreenConfig
 	cv::Rect rect_paimon_maybe;
 	cv::Rect rect_minimap_cailb_maybe;
 	cv::Rect rect_minimap_maybe;
+	
+	bool is_used_alpha = true;
 
 	bool is_handle_mode = false;
 
