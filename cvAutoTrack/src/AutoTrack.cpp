@@ -346,7 +346,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		cv::Rect paimon_rect;
 		if (!check_paimon(paimon_rect))
 		{
-			err = { 1002, "获取坐标时，没有识别到paimon" };
+			err = { 1002, "Dx模式下获取坐标时，没有识别到paimon" };
 			return false;
 		}
 
