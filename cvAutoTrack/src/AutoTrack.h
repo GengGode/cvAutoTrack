@@ -145,8 +145,6 @@ private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactScreen();
 
-	bool getPaimonRefMat();
-	bool getMiniMapRefMat_Dx();
 	bool getMiniMapRefMat_Bitblt();
 	bool getUIDRefMat();
 	bool getAvatarRefMat();
@@ -154,5 +152,8 @@ private:
 private:
 	bool clear_error_logs();
 private:
-	bool check_paimon(cv::Rect& paimon_rect);
+	//bool getPaimonRefMat();
+	//bool getMiniMapRefMat_Dx();
+	//double check_match_paimon_params = 0.9;
+	//bool check_paimon(cv::Rect& paimon_rect);
 };

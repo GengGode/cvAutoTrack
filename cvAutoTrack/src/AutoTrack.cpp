@@ -331,27 +331,11 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 1, "没有初始化" };
 		return false;
 	}
-
-	if (genshin_handle.config.capture->mode == Capture::Bitblt)
-	{
-		
-		if (getMiniMapRefMat_Bitblt()==false)
+	if (getMiniMapRefMat_Bitblt()==false)
 		{
-			err = { 1001, "Bitblt模式下获取坐标时，没有识别到paimon，建议使用DX模式" };
+			err = { 1001, "获取坐标时，没有识别到paimon" };
 			return false;
 		}
-	}
-	else
-	{
-		cv::Rect paimon_rect;
-		if (!check_paimon(paimon_rect))
-		{
-			err = { 1002, "Dx模式下获取坐标时，没有识别到paimon" };
-			return false;
-		}
-
-		getMiniMapRefMat_Dx();
-	}
 
 	if (giMiniMapRef.empty())
 	{
@@ -458,24 +442,10 @@ bool AutoTrack::GetDirection(double& a)
 	{
 		return false;
 	}
-	
-	if (genshin_handle.config.capture->mode == Capture::Bitblt)
+	if (getMiniMapRefMat_Bitblt() == false)
 	{
-		if (getMiniMapRefMat_Bitblt() == false)
-		{
-			err = { 2001, "Bitblt模式下获取角色朝向时，没有识别到paimon" };
-			return false;
-		}
-	}
-	else
-	{
-		cv::Rect paimon_rect;
-		if (!check_paimon(paimon_rect))
-		{
-			err = { 2002 ,"获取角色朝向时，没有识别到Paimon" };
-			return false;
-		}
-		getMiniMapRefMat_Dx();
+		err = { 2001, "获取角色朝向时，没有识别到paimon" };
+		return false;
 	}
 
 	if (!getAvatarRefMat())
@@ -506,25 +476,10 @@ bool AutoTrack::GetRotation(double& a)
 	{
 		return false;
 	}
-
-	if (genshin_handle.config.capture->mode == Capture::Bitblt)
+	if (getMiniMapRefMat_Bitblt() == false)
 	{
-		if (getMiniMapRefMat_Bitblt() == false)
-		{
-			err = { 3001, "Bitblt模式下获取视角朝向时，没有识别到paimon" };
+			err = { 3001, "获取视角朝向时，没有识别到paimon" };
 			return false;
-		}
-	}
-	else
-	{
-		cv::Rect paimon_rect;
-		if (!check_paimon(paimon_rect))
-		{
-			err = { 3002 ,"获取视角朝向时，没有识别到Paimon" };
-			return false;
-		}
-
-		getMiniMapRefMat_Dx();
 	}
 
 	rotation_calculation_config config;
@@ -582,29 +537,13 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		{
 			return false;
 		}
-
-		getPaimonRefMat();
 		
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		if (getMiniMapRefMat_Bitblt() == false)
 		{
-			if (getMiniMapRefMat_Bitblt() == false)
-			{
-				err = { 4001, "Bitblt模式下获取神瞳时，没有识别到paimon" };
-				return false;
-			}
+			err = { 4001, "获取神瞳时，没有识别到paimon" };
+			return false;
 		}
-		else
-		{
-			cv::Rect paimon_rect;
-			if (!check_paimon(paimon_rect))
-			{
-				err = { 4002, "获取神瞳时，没有识别到paimon" };
-				return false;
-			}
 
-			getMiniMapRefMat_Dx();
-		}
-		
 		if (giMiniMapRef.empty())
 		{
 			err = { 5, "原神小地图区域为空" };
@@ -690,26 +629,10 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		return false;
 	}
 
-	getPaimonRefMat();
-	
-	if (genshin_handle.config.capture->mode == Capture::Bitblt)
+	if (getMiniMapRefMat_Bitblt() == false)
 	{
-		if (getMiniMapRefMat_Bitblt() == false)
-		{
-			err = { 4001, "Bitblt模式下获取神瞳时，没有识别到paimon" };
-			return false;
-		}
-	}
-	else
-	{
-		cv::Rect paimon_rect;
-		if (!check_paimon(paimon_rect))
-		{
-			err = { 4002, "获取神瞳时，没有识别到paimon" };
-			return false;
-		}
-
-		getMiniMapRefMat_Dx();
+		err = { 4001, "获取神瞳时，没有识别到paimon" };
+		return false;
 	}
 	
 	if (giMiniMapRef.empty())
@@ -845,7 +768,7 @@ bool AutoTrack::getGengshinImpactWnd()
 bool AutoTrack::getGengshinImpactScreen()
 {
 	TianLi::Genshin::get_genshin_screen(genshin_handle, genshin_screen);
-	
+	//giFrame = genshin_screen.img_screen;
 	if (genshin_screen.img_screen.empty())
 	{
 		err = { 433, "截图失败" };
@@ -854,36 +777,16 @@ bool AutoTrack::getGengshinImpactScreen()
 	return true;
 }
 
-bool AutoTrack::getPaimonRefMat()
-{
-	giPaimonRef = genshin_screen.img_paimon_maybe;
-
-#ifdef _DEBUG
-	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
-	cv::imshow("Paimon", giPaimonRef);
-	cv::waitKey(1);
-#endif
-	return true;
-}
-
-bool AutoTrack::getMiniMapRefMat_Dx()
-{
-	giMiniMapRef = genshin_screen.img_minimap_maybe;
-
-#ifdef _DEBUG
-		cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
-		cv::imshow("MiniMap", giMiniMapRef);
-	cv::waitKey(1);
-#endif
-	return true;
-}
-
 bool AutoTrack::getMiniMapRefMat_Bitblt()
 {
 	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
 	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
 
-
+	if (genshin_handle.config.capture->mode == Capture::DirectX)
+	{
+		genshin_screen.config.is_used_alpha = false;
+	}
+	
 	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
 
 	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
@@ -976,58 +879,3 @@ bool AutoTrack::clear_error_logs()
 	err = { 0,"调用成功"};
 	return true;
 }
-
-bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
-{
-	static cv::Mat paimon_template;
-	static std::vector<cv::Mat> split_paimon_template;
-	static bool is_first = true;
-	if (is_first)
-	{
-		res.PaimonTemplate.copyTo(paimon_template);
-		cv::split(paimon_template, split_paimon_template);
-		is_first = false;
-	}
-
-	getPaimonRefMat();
-
-	std::vector<cv::Mat>  split_paimon;
-	cv::split(giPaimonRef, split_paimon);
-
-	cv::Mat template_result;
-	cv::Mat object = split_paimon[3];
-
-	const double check_match_paimon_params_dx = 0.60;
-	static double check_match_paimon_param = check_match_paimon_params;
-	
-	if (genshin_handle.config.capture->mode == Capture::DirectX)
-	{
-		cv::cvtColor(giPaimonRef, object, cv::COLOR_RGBA2GRAY);
-		check_match_paimon_param = check_match_paimon_params_dx;
-	}
-	else
-	{
-		check_match_paimon_param = check_match_paimon_params;
-	}
-
-	cv::matchTemplate(object, split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
-
-	double paimon_match_minVal, paimon_match_maxVal;
-	cv::Point paimon_match_minLoc, paimon_match_maxLoc;
-	cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
-
-#ifdef _DEBUG
-	cv::namedWindow("paimon match result", cv::WINDOW_FREERATIO);
-	cv::imshow("paimon match result", template_result);
-#endif
-
-	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
-	{
-		err = { 6,"未能匹配到派蒙" };
-		return false;
-	}
-	paimon_rect = cv::Rect(paimon_match_maxLoc, paimon_template.size());
-	
-	return clear_error_logs();
-}
-
