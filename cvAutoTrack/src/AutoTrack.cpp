@@ -931,61 +931,7 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 bool AutoTrack::getUIDRefMat()
 {
-	int& x = giFrame.cols, & y = giFrame.rows;
-	double f = 1, fx = 1, fy = 1;
-
-	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
-	{
-
-		//正常，不做处理
-		if (x != 1920 && y != 1080)
-		{
-			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
-		}
-	}
-	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
-	{
-
-		//高型，以宽为比例
-
-		// x = (y * 16) / 9;
-		f = y / 1080.0;
-		//将giFrame缩放到1920*1080的比例
-		fx = x / f;
-		// 将图片缩放
-		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
-
-	}
-	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
-	{
-
-		//宽型，以高为比例
-
-		// x = (y * 16) / 9;
-		f = x / 1920.0;
-		//将giFrame缩放到1920*1080的比例
-		fy = y / f;
-		// 将图片缩放
-		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
-	}
-	else
-	{
-		//出错
-
-	}
-
-	int UID_Rect_x = cvCeil(giFrame.cols - giFrame.cols * (1.0 - 0.865));
-	int UID_Rect_y = cvCeil(giFrame.rows - 1080.0 * (1.0 - 0.9755));
-	int UID_Rect_w = cvCeil(1920 * 0.11);
-	int UID_Rect_h = cvCeil(1920 * 0.0938 * 0.11);
-
-	Area_UID_mayArea = cv::Rect(
-		UID_Rect_x,
-		UID_Rect_y,
-		UID_Rect_w,
-		UID_Rect_h);
-
-	giUIDRef = giFrame(Area_UID_mayArea);
+	giUIDRef = genshin_screen.img_uid;
 
 #ifdef _DEBUG
 	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
