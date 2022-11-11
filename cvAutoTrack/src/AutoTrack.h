@@ -145,8 +145,6 @@ private:
 	
 private:
 	bool getGengshinImpactWnd();
-	bool getGengshinImpactRect();
-	bool getGengshinImpactScale();
 	bool getGengshinImpactScreen();
 
 	bool getPaimonRefMat();
