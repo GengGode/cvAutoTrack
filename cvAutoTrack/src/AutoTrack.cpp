@@ -31,8 +31,8 @@ AutoTrack::AutoTrack()
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
 
-	capture = new Bitblt();
-	capture->init();
+	genshin_handle.config.capture = new Bitblt();
+	genshin_handle.config.capture->init();
 	
 	filter = new Kalman();
 
@@ -44,7 +44,7 @@ AutoTrack::AutoTrack()
 
 AutoTrack::~AutoTrack(void)
 {
-	delete capture;
+	delete genshin_handle.config.capture;
 }
 
 bool AutoTrack::init()
@@ -75,37 +75,37 @@ bool AutoTrack::uninit()
 
 bool AutoTrack::SetUseBitbltCaptureMode()
 {
-	if (capture == nullptr)
+	if (genshin_handle.config.capture == nullptr)
 	{
-		capture = new Bitblt();
+		genshin_handle.config.capture = new Bitblt();
 		return true;
 	}
-	if (capture->mode == Capture::Bitblt)
+	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		return true;
 	}
 
-	delete capture;
-	capture = new Bitblt();
+	delete genshin_handle.config.capture;
+	genshin_handle.config.capture = new Bitblt();
 
 	return true;
 }
 
 bool AutoTrack::SetUseDx11CaptureMode()
 {
-	if (capture == nullptr)
+	if (genshin_handle.config.capture == nullptr)
 	{
-		capture = new Dxgi();
+		genshin_handle.config.capture = new Dxgi();
 		return true;
 	}
 
-	if (capture->mode == Capture::DirectX)
+	if (genshin_handle.config.capture->mode == Capture::DirectX)
 	{
 		return true;
 	}
 
-	delete capture;
-	capture = new Dxgi();
+	delete genshin_handle.config.capture;
+	genshin_handle.config.capture = new Dxgi();
 
 	return true;
 }
@@ -188,7 +188,7 @@ bool AutoTrack::DebugCapture()
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
-	switch (capture->mode)
+	switch (genshin_handle.config.capture->mode)
 	{
 	case Capture::Bitblt:
 	{
@@ -247,7 +247,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 		return false;
 	}
 	cv::Mat out_info_img = giFrame.clone();
-	switch (capture->mode)
+	switch (genshin_handle.config.capture->mode)
 	{
 	case Capture::Bitblt:
 	{
@@ -332,7 +332,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		return false;
 	}
 
-	if (capture->mode == Capture::Bitblt)
+	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		
 		if (getMiniMapRefMat_Bitblt()==false)
@@ -459,7 +459,7 @@ bool AutoTrack::GetDirection(double& a)
 		return false;
 	}
 	
-	if (capture->mode == Capture::Bitblt)
+	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -507,7 +507,7 @@ bool AutoTrack::GetRotation(double& a)
 		return false;
 	}
 
-	if (capture->mode == Capture::Bitblt)
+	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -585,7 +585,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 		getPaimonRefMat();
 		
-		if (capture->mode == Capture::Bitblt)
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
 			if (getMiniMapRefMat_Bitblt() == false)
 			{
@@ -692,7 +692,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 	getPaimonRefMat();
 	
-	if (capture->mode == Capture::Bitblt)
+	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		if (getMiniMapRefMat_Bitblt() == false)
 		{
@@ -749,7 +749,7 @@ bool AutoTrack::GetUID(int& uid)
 
 	split(giUIDRef, channels);
 
-	if (capture->mode == Capture::DirectX)
+	if (genshin_handle.config.capture->mode == Capture::DirectX)
 	{
 		cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
 	}
@@ -1000,7 +1000,7 @@ bool AutoTrack::check_paimon(cv::Rect& paimon_rect)
 	const double check_match_paimon_params_dx = 0.60;
 	static double check_match_paimon_param = check_match_paimon_params;
 	
-	if (capture->mode == Capture::DirectX)
+	if (genshin_handle.config.capture->mode == Capture::DirectX)
 	{
 		cv::cvtColor(giPaimonRef, object, cv::COLOR_RGBA2GRAY);
 		check_match_paimon_param = check_match_paimon_params_dx;
