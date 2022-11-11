@@ -13,6 +13,8 @@
 
 #include "algorithms/algorithms.direction.h"
 #include "algorithms/algorithms.rotation.h"
+
+#include "match/match.star.h"
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
@@ -680,15 +682,6 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 bool AutoTrack::GetStarJson(char* jsonBuff)
 {
-	int MAXLOOP = 0;
-	bool isLoopMatch = false;
-	cv::Mat tmp;
-	double minVal, maxVal;
-	cv::Point minLoc, maxLoc;
-	vector<cv::Point2d> pos;
-	double scale = 1.3;
-
-
 	if (wForAfter.run() == false)
 	{
 		return false;
@@ -725,75 +718,15 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 	//一个bug 未开游戏而先开应用，开游戏时触发
 	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
-
-
-	matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
-	minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-#ifdef _DEBUG
-	//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
-#endif
-	if (maxVal < 0.66)
+	
+	star_calculation_config config;
+	config.is_on_city = genshin_avatar_position.config.is_on_city;
+	star_calculation(giStarRef, jsonBuff, config);
+	if (config.error)
 	{
-		isStarVisible = false;
+		err = config.err;
+		return false;
 	}
-	else
-	{
-		isLoopMatch = true;
-		isStarVisible = true;
-		pos.push_back(cv::Point2d(maxLoc) -
-			cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-			cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
-	}
-
-	while (isLoopMatch)
-	{
-		giStarRef(cv::Rect(maxLoc.x, maxLoc.y, res.StarTemplate.cols, res.StarTemplate.rows)) = cv::Scalar(0, 0, 0);
-		matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
-		minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
-#ifdef _DEBUG
-		//cout << "Match Star MinVal & MaxVal : " << minVal << " , " << maxVal << endl;
-#endif
-		if (maxVal < 0.66)
-		{
-			isLoopMatch = false;
-		}
-		else
-		{
-			pos.push_back(cv::Point2d(maxLoc) -
-				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
-				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
-		}
-
-		MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
-	}
-
-	if (isOnCity)
-	{
-		scale = 0.8667;
-	}
-
-	if (isStarVisible == true)
-	{
-
-		sprintf_s(jsonBuff, 1024, "{\"n\": %d ,\"list\":[", static_cast<int>(pos.size()));//[123,12],[123,53]]}")
-		for (int i = 0; i < pos.size(); i++)
-		{
-			char buff[99];
-			if (i == 0)
-			{
-				sprintf_s(buff, 99, "[ %lf , %lf ]", pos[i].x * scale, pos[i].y * scale);
-			}
-			else
-			{
-				sprintf_s(buff, 99, ",[ %lf , %lf ]", pos[i].x * scale, pos[i].y * scale);
-			}
-			strncat_s(jsonBuff, 1024, buff, 99);
-		}
-		strncat_s(jsonBuff, 1024, "]}", 3);
-		
-		return clear_error_logs();
-	}
-	sprintf_s(jsonBuff, 99, "{\"n\": 0 ,\"list\":[]}");
 	
 	return clear_error_logs();
 }
