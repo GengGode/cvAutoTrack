@@ -83,7 +83,8 @@ struct GenshinScreen
 };
 struct GenshinPaimonConfig
 {
-	double check_match_paimon_params = 0.85;
+	double check_match_paimon_params = 0.80;
+	double check_match_paimon_params_no_alpha = 0.50;
 };
 
 struct GenshinPaimon
@@ -97,6 +98,7 @@ struct GenshinMinimapCailbConfig
 {
 	bool is_need_find = true;
 	double check_match_minimap_cailb_params = 0.85;
+	double check_match_minimap_cailb_params_no_alpha = 0.50;
 };
 
 struct GenshinMinimapCailb
