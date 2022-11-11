@@ -12,47 +12,68 @@ namespace TianLi::Match
 	bool check_paimon(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
 	{
 		static std::vector<cv::Mat> split_paimon_template;
+		static cv::Mat paimon_template;
 		static cv::Mat paimon_template_handle_mode;
+		static cv::Mat paimon_template_no_alpha;
+		static cv::Mat paimon_template_no_alpha_handle_mode;
 		static bool is_first = true;
 		if (is_first)
 		{
 			cv::Mat paimon;
 			Resources::getInstance().PaimonTemplate.copyTo(paimon);
 			cv::resize(paimon, paimon, cv::Size(68, 77));
+			cv::cvtColor(paimon, paimon_template_no_alpha, cv::COLOR_RGBA2GRAY);
 			cv::split(paimon, split_paimon_template);
+			paimon_template = split_paimon_template[3];
+			paimon_template_no_alpha = split_paimon_template[0];
 			cv::resize(split_paimon_template[3], paimon_template_handle_mode, cv::Size(), 1.0 / 1.20, 1.0 / 1.20);
+			cv::resize(split_paimon_template[3], paimon_template_no_alpha_handle_mode, cv::Size(), 1.0 / 1.20, 1.0 / 1.20);
 			is_first = false;
 		}
-		auto& giPaimonRef = genshin_screen.img_paimon_maybe;
+		auto giPaimonRef = genshin_screen.img_paimon_maybe;
 		auto& rect_origin = genshin_screen.config.rect_paimon_maybe;
-
+		auto& template_not_handle_mode = split_paimon_template[3];
+		auto& template_handle_mode = paimon_template_handle_mode;
+		// 判空退出
 		if (giPaimonRef.empty() || paimon_template_handle_mode.empty()) return false;
 		if (giPaimonRef.cols < split_paimon_template[3].cols || giPaimonRef.rows < split_paimon_template[3].rows) return false;
-
+		
+		// 设置阈值取值 根据是否使用alpha图层
+		double check_match_paimon_param = out_genshin_paimon.config.check_match_paimon_params;
+		if (genshin_screen.config.is_used_alpha == false)
+		{
+			cv::cvtColor(genshin_screen.img_paimon_maybe, giPaimonRef, cv::COLOR_RGBA2GRAY);
+			template_not_handle_mode = paimon_template_no_alpha;
+			template_handle_mode = paimon_template_no_alpha_handle_mode;
+			check_match_paimon_param = out_genshin_paimon.config.check_match_paimon_params_no_alpha;
+		}
+		
+		// 拆分图层
 		std::vector<cv::Mat>  split_paimon;
 		cv::split(giPaimonRef, split_paimon);
-
+		
+		
 		cv::Mat template_result;
 		// TODO HOTCODE
-		cv::matchTemplate(split_paimon[3], split_paimon_template[3], template_result, cv::TM_CCOEFF_NORMED);
+		cv::matchTemplate(split_paimon.back(), template_not_handle_mode, template_result, cv::TM_CCOEFF_NORMED);
 
 		double paimon_match_minVal, paimon_match_maxVal;
 		cv::Point paimon_match_minLoc, paimon_match_maxLoc;
 		cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
-
+	
 		// 如果小于阈值，则尝试判断是否为手柄模式，否则为检测到派蒙
-		if (paimon_match_maxVal < out_genshin_paimon.config.check_match_paimon_params || paimon_match_maxVal == 1)
+		if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
 		{
-			if (paimon_match_maxVal > 0.5)
+			if (paimon_match_maxVal > 0.2)
 			{
 				cv::Mat template_handle_mode_result;
 				// TODO HOTCODE
-				cv::matchTemplate(split_paimon[3], paimon_template_handle_mode, template_handle_mode_result, cv::TM_CCOEFF_NORMED);
+				cv::matchTemplate(split_paimon.back(), template_handle_mode, template_handle_mode_result, cv::TM_CCOEFF_NORMED);
 
 				double paimon_match_handle_mode_minVal, paimon_match_handle_mode_maxVal;
 				cv::Point paimon_match_handle_mode_minLoc, paimon_match_handle_mode_maxLoc;
 				cv::minMaxLoc(template_handle_mode_result, &paimon_match_handle_mode_minVal, &paimon_match_handle_mode_maxVal, &paimon_match_handle_mode_minLoc, &paimon_match_handle_mode_maxLoc);
-				if (paimon_match_handle_mode_maxVal > out_genshin_paimon.config.check_match_paimon_params)
+				if (paimon_match_handle_mode_maxVal > check_match_paimon_param)
 				{
 					out_genshin_paimon.is_handle_mode = true;
 					out_genshin_paimon.is_visial = true;
@@ -72,40 +93,61 @@ namespace TianLi::Match
 		}
 		return true;
 	}
+	
 	bool match_minimap_cailb(const GenshinScreen& genshin_screen, GenshinMinimapCailb& out_genshin_minimap_cailb)
 	{
 		static std::vector<cv::Mat> split_minimap_cailb_template;
+		static cv::Mat minimap_cailb_template;
 		static cv::Mat minimap_cailb_template_handle_mode;
+		static cv::Mat minimap_cailb_template_no_alpha;
+		static cv::Mat minimap_cailb_template_no_alpha_handle_mode;
 		static bool is_first = true;
 		if (is_first)
 		{
 			cv::Mat minimap_cailb;
 			cv::resize(Resources::getInstance().MinimapCailbTemplate, minimap_cailb, cv::Size(), 0.8, 0.8);
 			cv::split(minimap_cailb, split_minimap_cailb_template);
+			minimap_cailb_template = split_minimap_cailb_template[3];
+			minimap_cailb_template_no_alpha = split_minimap_cailb_template[0];
 			cv::resize(split_minimap_cailb_template[3], minimap_cailb_template_handle_mode, cv::Size(), 1 / 1.2, 1 / 1.2, cv::INTER_CUBIC);
+			cv::resize(split_minimap_cailb_template[3], minimap_cailb_template_no_alpha_handle_mode, cv::Size(), 1.0 / 1.2, 1.0 / 1.2);
 			is_first = false;
 		}
 
-		auto& giMinimapCailbRef = genshin_screen.img_minimap_cailb_maybe;
+		auto giMinimapCailbRef = genshin_screen.img_minimap_cailb_maybe;
 		auto& rect_origin = genshin_screen.config.rect_minimap_cailb_maybe;
 		auto& is_handle_mode = genshin_screen.config.is_handle_mode;
 
+		auto& template_not_handle_mode = split_minimap_cailb_template[3];
+		auto& template_handle_mode = minimap_cailb_template_handle_mode;
+		
 		if (giMinimapCailbRef.empty() || minimap_cailb_template_handle_mode.empty()) return false;
 		if (giMinimapCailbRef.cols < split_minimap_cailb_template[3].cols || giMinimapCailbRef.rows < split_minimap_cailb_template[3].rows) return false;
 
+		// 设置阈值取值 根据是否使用alpha图层
+		double check_match_minimap_cailb_param = out_genshin_minimap_cailb.config.check_match_minimap_cailb_params;
+		if (genshin_screen.config.is_used_alpha == false)
+		{
+			cv::cvtColor(genshin_screen.img_minimap_cailb_maybe, giMinimapCailbRef, cv::COLOR_RGBA2GRAY);
+			template_not_handle_mode = minimap_cailb_template_no_alpha;
+			template_handle_mode = minimap_cailb_template_no_alpha_handle_mode;
+			check_match_minimap_cailb_param = out_genshin_minimap_cailb.config.check_match_minimap_cailb_params_no_alpha;
+		}
+
+		
 		std::vector<cv::Mat>  split_minimap_cailb;
 		cv::split(giMinimapCailbRef, split_minimap_cailb);
 
 		cv::Mat template_result;
-		if (!is_handle_mode)
+		if (is_handle_mode)
 		{
 			// TODO HOTCODE
-			cv::matchTemplate(split_minimap_cailb[3], split_minimap_cailb_template[3], template_result, cv::TM_CCOEFF_NORMED);
+			cv::matchTemplate(split_minimap_cailb.back(), template_handle_mode, template_result, cv::TM_CCOEFF_NORMED);
 		}
 		else
 		{
 			// TODO HOTCODE
-			cv::matchTemplate(split_minimap_cailb[3], minimap_cailb_template_handle_mode, template_result, cv::TM_CCOEFF_NORMED);
+			cv::matchTemplate(split_minimap_cailb.back(), template_not_handle_mode, template_result, cv::TM_CCOEFF_NORMED);
 		}
 
 
@@ -113,25 +155,26 @@ namespace TianLi::Match
 		cv::Point minimap_cailb_match_minLoc, minimap_cailb_match_maxLoc;
 		cv::minMaxLoc(template_result, &minimap_cailb_match_minVal, &minimap_cailb_match_maxVal, &minimap_cailb_match_minLoc, &minimap_cailb_match_maxLoc);
 
-		if (minimap_cailb_match_maxVal < out_genshin_minimap_cailb.config.check_match_minimap_cailb_params || minimap_cailb_match_maxVal == 1)
+		if (minimap_cailb_match_maxVal < check_match_minimap_cailb_param || minimap_cailb_match_maxVal == 1)
 		{
 			out_genshin_minimap_cailb.is_visial = false;
 		}
 		else
 		{
 			out_genshin_minimap_cailb.is_visial = true;
-			if (!is_handle_mode)
+			if (is_handle_mode)
 			{
-				out_genshin_minimap_cailb.rect_minimap_cailb = cv::Rect(rect_origin.tl() + minimap_cailb_match_maxLoc, split_minimap_cailb_template[3].size());
+				out_genshin_minimap_cailb.rect_minimap_cailb = cv::Rect(rect_origin.tl() + minimap_cailb_match_maxLoc, template_handle_mode.size());
 			}
 			else
 			{
-				out_genshin_minimap_cailb.rect_minimap_cailb = cv::Rect(rect_origin.tl() + minimap_cailb_match_maxLoc, minimap_cailb_template_handle_mode.size());
+				out_genshin_minimap_cailb.rect_minimap_cailb = cv::Rect(rect_origin.tl() + minimap_cailb_match_maxLoc, template_not_handle_mode.size());
 			}
 		}
 
 		return true;
 	}
+
 	bool splite_minimap(const GenshinScreen& genshin_screen, GenshinMinimap& out_genshin_minimap)
 	{
 		auto& paimon_rect = genshin_screen.config.rect_paimon;
