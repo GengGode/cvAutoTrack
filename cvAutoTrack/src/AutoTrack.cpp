@@ -855,87 +855,12 @@ bool AutoTrack::getGengshinImpactScreen()
 
 bool AutoTrack::getPaimonRefMat()
 {
-	int& x = giFrame.cols, & y = giFrame.rows;
-	double f = 1, fx = 1, fy = 1;
-
-	if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
-	{
-
-		//正常，不做处理
-		if (x != 1920 && y != 1080)
-		{
-			cv::resize(giFrame, giFrame, cv::Size(1920, 1080));
-		}
-	}
-	else if (static_cast<double>(x) / static_cast<double>(y) > 16.0 / 9.0)
-	{
-
-		//高型，以宽为比例
-
-		// x = (y * 16) / 9;
-		f = y / 1080.0;
-		//将giFrame缩放到1920*1080的比例
-		fx = x / f;
-		// 将图片缩放
-		cv::resize(giFrame, giFrame, cv::Size(static_cast<int>(fx), 1080));
-
-	}
-	else if (static_cast<double>(x) / static_cast<double>(y) < 16.0 / 9.0)
-	{
-
-		//宽型，以高为比例
-
-		// x = (y * 16) / 9;
-		f = x / 1920.0;
-		//将giFrame缩放到1920*1080的比例
-		fy = y / f;
-		// 将图片缩放
-		cv::resize(giFrame, giFrame, cv::Size(1920, static_cast<int>(fy)));
-	}
-	else
-	{
-		//出错
-
-	}
-
-	int Paimon_Rect_x = cvCeil(1920 * 0.0135);
-	int Paimon_Rect_y = cvCeil(1920 * 0.006075);
-	int Paimon_Rect_w = cvCeil(1920 * 0.035);
-	int Paimon_Rect_h = cvCeil(1920 * 0.0406);
-
-	if (giFrame.cols == 3440 && giFrame.rows == 1440)
-	{
-		cv::resize(giFrame, giFrame, cv::Size(2560, 1080));
-	}
-
-	if (giFrame.cols == 2560 && giFrame.rows == 1080)
-	{
-		Paimon_Rect_x = cvCeil(1920 * 0.0135 + 72);
-		Paimon_Rect_y = cvCeil(1920 * 0.006075);
-		Paimon_Rect_w = cvCeil(1920 * 0.035);
-		Paimon_Rect_h = cvCeil(1920 * 0.0406);
-	}
-
-	// 派蒙可能性区域计算参数
-	int paimon_mayArea_left = 0;
-	int paimon_mayArea_top = 0;
-	int paimon_mayArea_width = static_cast<int>(x * 0.10);
-	int paimon_mayArea_height = static_cast<int>(y * 0.10);
-	// 派蒙可能性区域
-	Area_Paimon_mayArea = cv::Rect(
-		paimon_mayArea_left,
-		paimon_mayArea_top,
-		paimon_mayArea_width,
-		paimon_mayArea_height);
-
-	//giPaimonRef = giFrame(cv::Rect(Paimon_Rect_x, Paimon_Rect_y, Paimon_Rect_w, Paimon_Rect_h));
-	giPaimonRef = giFrame(Area_Paimon_mayArea);
+	giPaimonRef = genshin_screen.img_paimon_maybe;
 
 #ifdef _DEBUG
 	cv::namedWindow("Paimon", cv::WINDOW_FREERATIO);
 	cv::imshow("Paimon", giPaimonRef);
 	cv::waitKey(1);
-	//std::cout << "Show Paimon" << std::endl;
 #endif
 	return true;
 }
