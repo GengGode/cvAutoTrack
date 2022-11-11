@@ -17,6 +17,9 @@
 #include "match/match.star.h"
 #include "match/match.uid.h"
 
+#include "genshin/genshin.handle.h"
+#include "genshin/genshin.screen.h"
+
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
