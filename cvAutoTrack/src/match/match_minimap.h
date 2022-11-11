@@ -3,12 +3,6 @@
 
 namespace TianLi::Match
 {
-	GenshinHandle func_get_handle(HWND& in);
-
-	void get_genshin_handle(GenshinHandle& genshin_handle);
-
-	void update_genshin_handle(const HWND& old_handle, GenshinHandle& out_genshin_handle);
-
 	void get_genshin_screen(const GenshinHandle& genshin_handle, GenshinScreen& out_genshin_screen);
 
 	bool check_paimon(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon);
