@@ -8,7 +8,6 @@
 #include "FlowWork.h"
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
-#include "capture/Capture.h"
 #include "resources/Resources.h"
 #include "match/match_minimap.h"
 #include "filter/Filter.h"
@@ -117,8 +116,7 @@ private:
 private:
 	// 界面处于手柄模式
 	bool isHandleGameMode = false;
-
-	Capture* capture = nullptr;
+	
 	Filter* filter = nullptr;
 
 private:
