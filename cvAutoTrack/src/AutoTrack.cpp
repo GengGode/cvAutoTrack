@@ -357,8 +357,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 	
 	cv::Point2d pos = genshin_avatar_position.position;
-	isConveying = genshin_avatar_position.config.is_cov;
-	isContinuity = genshin_avatar_position.config.is_con;
+	auto isConveying = genshin_avatar_position.config.is_coveying;
+	auto isContinuity = genshin_avatar_position.config.is_continuity;
 
 	cv::Point2d filt_pos;
 	if (isConveying || !isContinuity)

@@ -124,8 +124,6 @@ private:
 	cv::Mat _DataPointMiniMap;
 private:
 	bool isOnCity = false;
-	bool isContinuity = false;
-	bool isConveying = false;
 	cv::Point2d _TransformHistory[3];
 	bool isStarVisible = false;
 
