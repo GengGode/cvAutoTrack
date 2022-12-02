@@ -23,12 +23,24 @@ namespace TianLi::Genshin
 		if (genshin_handle.config.is_auto_find_genshin)
 		{
 			auto& giHandle = genshin_handle.handle;
-			
+			enum genshin_class
+			{
+				Unity,
+				Obs,
+				Qt,
+				
+			};
+			auto now_class = genshin_class::Unity;
 			/* 对原神窗口的操作 */
 			giHandle = FindWindowA("UnityWndClass", "原神");
 			if (giHandle == NULL)
 			{
 				giHandle = FindWindowW(L"UnityWndClass", L"Genshin Impact"); /* 匹配名称：原神 */
+			}
+			if (giHandle == NULL)
+			{
+				giHandle = FindWindowW(NULL, L"窗口投影（源） - 云·原神"); /* 匹配名称：原神-调试 */
+				now_class = genshin_class::Obs;
 			}
 			if (giHandle == NULL)
 			{
@@ -49,6 +61,15 @@ namespace TianLi::Genshin
 			if (giHandle == NULL)
 			{
 				giHandle = FindWindowW(NULL, L"原神-调试"); /* 匹配名称：原神-调试 */
+			}
+			//窗口投影（源） - 云·原神
+			if (now_class == genshin_class::Obs)
+			{
+				genshin_handle.config.is_force_used_no_alpha = true;
+			}
+			else
+			{
+				genshin_handle.config.is_force_used_no_alpha = false;
 			}
 		}
 		else
