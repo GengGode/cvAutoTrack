@@ -229,8 +229,9 @@ bool AutoTrack::DebugCapture()
 	{
 		err = { 252,"保存画面失败 " };
 		return false;
-	}	
-	return true;
+	}
+
+	return clear_error_logs();
 }
 
 bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
@@ -289,7 +290,8 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 		err = { 252,std::string("保存画面失败，请检查文件路径是否合法")+std::string(path_buff)};
 		return false;
 	}
-	return true;
+
+	return clear_error_logs();
 }
 
 bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
@@ -783,9 +785,14 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
 	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
 
-	if (genshin_handle.config.capture->mode == Capture::DirectX)
+	
+	if (genshin_handle.config.capture->mode == Capture::DirectX || genshin_handle.config.is_force_used_no_alpha)
 	{
 		genshin_screen.config.is_used_alpha = false;
+	}
+	else
+	{
+		genshin_screen.config.is_used_alpha = true;
 	}
 	
 	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
