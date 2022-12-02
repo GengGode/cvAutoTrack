@@ -3,6 +3,7 @@ class Capture;
 struct GenshinHandleConfig
 {
 	bool is_auto_find_genshin = true;
+	bool is_force_used_no_alpha = false;
 	HWND genshin_handle = nullptr;
 	Capture *capture = nullptr;
 };
