@@ -71,6 +71,11 @@ bool Dxgi::init()
     TianLi::DirectX::d3dDevice->GetImmediateContext(m_d3dContext.put());
     m_device = CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
     m_item = CreateCaptureItemForWindow(giHandle);
+    if (m_item == nullptr)
+    {
+        err = { 10013,"未能捕获窗口" };
+        return false;
+    }
     auto size = m_item.Size();
     m_swapChain = CreateDXGISwapChain(TianLi::DirectX::d3dDevice, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), static_cast<DXGI_FORMAT>(DirectXPixelFormat::B8G8R8A8UIntNormalized), 2);
 
