@@ -62,7 +62,7 @@ bool __stdcall GetStar(double &x, double &y, bool &isEnd)
 {
 	return _at.GetStar(x, y, isEnd);
 }
-bool GetStarJson(char * jsonBuff)
+bool __stdcall GetStarJson(char * jsonBuff)
 {
 	return _at.GetStarJson(jsonBuff);
 }
@@ -86,9 +86,17 @@ int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
 {
 	return _at.GetLastErrMsg(msg_buff, buff_size);
 }
-int CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size)
+int __stdcall GetLastErrJson(char* json_buff, int buff_size)
 {
 	return _at.GetLastErrJson(json_buff, buff_size);
+}
+bool __stdcall SetDisableFileLog()
+{
+	return _at.SetDisableFileLog();
+}
+bool __stdcall SetEnableFileLog()
+{
+	return _at.SetEnableFileLog();
 }
 bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 {

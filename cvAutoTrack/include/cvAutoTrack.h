@@ -16,6 +16,7 @@ extern "C" bool CVAUTOTRACK_API uninit();
 extern "C" bool CVAUTOTRACK_API startServe();
 extern "C" bool CVAUTOTRACK_API stopServe();
 
+
 extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
 extern "C" bool CVAUTOTRACK_API SetUseDx11CaptureMode();
 extern "C" bool CVAUTOTRACK_API SetHandle(long long int handle);
@@ -39,6 +40,9 @@ extern "C" bool CVAUTOTRACK_API DebugCapturePath(const char*path_buff, int buff_
 extern "C" int  CVAUTOTRACK_API GetLastErr();
 extern "C" int  CVAUTOTRACK_API GetLastErrMsg(char* msg_buff, int buff_size);
 extern "C" int  CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size);
+
+extern "C" bool CVAUTOTRACK_API SetDisableFileLog();
+extern "C" bool CVAUTOTRACK_API SetEnableFileLog();
 
 extern "C" bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
 extern "C" bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
