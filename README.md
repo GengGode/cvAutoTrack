@@ -34,26 +34,20 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 |  6.5.39 |  √ | × |  1920x1080, 2560x1440, 2560x1080 |
 |  6.5.92 |  - | - |  - |
 |  7.0.1 |  √ | √(DX模式下不支持) |  16:9 系列(但不包括4K及以上), 21:9 系列, 以及1920*1080以下的所有分辨率 |
+|  7.3.0 |  √ | √ |  √(有用户反馈5k 21:9无法使用，待测试） |
 
-## 新版本计划 7.1
 
+## 新版本计划 7.x
+
+- [ ] 添加对秘境中的角度和视野识别
+- [ ] 实现无透明通道下的视野识别
+- [ ] 实现日志可控制不输出
 - [ ] 添加定位的惯性加速度导航算法（见 dev-inrtial-position 分支）
-- [ ] 添加定位的平滑过渡算法
 - [ ] 添加定位的自动校准算法
-- [ ] 完全支持手柄模式
-- [x] 完全支持任意分辨率，4K及以上
 - [ ] 支持任意地图区域
 - [ ] 支持传入地图而非内嵌
 - [ ] 可选的嵌入预计算结果
 - [ ] 更高的匹配精度
-
-### 7.0 接口修改方案
-
-- [x] 重构接口，统一使用double作为浮点参数
-    - `bool GetTransform(float &x, float &y, float &a)` -> `bool GetTransform(double &x, double &y, double &a)`
-- [ ] 重构接口，统一使用int作为接口返回值
-    - `bool GetPosition(double &x, double &y)` -> `int GetPosition(double &x, double &y)`
-	- `bool GetDirection(double &a)` -> `int GetDirection(double &a)`
 
 # 如何使用
 
