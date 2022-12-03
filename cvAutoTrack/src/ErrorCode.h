@@ -6,7 +6,8 @@ using namespace std;
 
 class ErrorCode
 {
-	FILE * fptr ;
+	FILE * fptr = nullptr;
+	bool isUseFile = false;
 private:
 	ErrorCode();
 
@@ -17,9 +18,11 @@ public:
 	static ErrorCode& getInstance();
 	ErrorCode& operator=(const std::pair<int,string>& err_code_msg);
 	operator int();
-
 	friend ostream & operator<<(ostream & os, const ErrorCode & err);
 
+	bool disableWirteFile();
+	bool enableWirteFile();
+	int writeFile(char const* const format, ...);
 public:
 	int getLastError();
 	string getLastErrorMsg();

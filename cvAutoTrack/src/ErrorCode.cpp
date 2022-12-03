@@ -217,27 +217,10 @@ std::string get_sys_name()
 
 ErrorCode::ErrorCode()
 {
-	fopen_s(&fptr, "./autoTrack.log", "w+");
-	// 获取系统信息写入日志 系统名称 系统版本号 显卡 显存 DirectX版本
-	if (fptr == nullptr) return;
-	fprintf_s(fptr, "系统名称:");
-	fprintf_s(fptr, get_sys_name().c_str());
-	fprintf_s(fptr, "系统版本号:");
-	fprintf_s(fptr, get_sys_version().c_str());
-	fprintf_s(fptr, "显卡:");
-	fprintf_s(fptr, get_gpu_name().c_str());
-	fprintf_s(fptr, "显存:");
-	fprintf_s(fptr, get_gpu_memory().c_str());
-	fprintf_s(fptr, "DirectX版本:");
-	fprintf_s(fptr, get_directx_version().c_str());
-	fprintf_s(fptr, "\n");
-	
-	fflush(fptr);
 }
 
 ErrorCode::~ErrorCode()
 {
-	fclose(fptr);
 }
 
 ErrorCode & ErrorCode::getInstance()
@@ -268,6 +251,7 @@ inline std::string time_stamp(const std::string& fmt = "%F %T")
 	char buf[64];
 	return { buf, std::strftime(buf, sizeof(buf), fmt.c_str(), &bt) };
 }
+
 ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 {
 	const int& code = err_code_msg.first;
@@ -281,15 +265,58 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	}
 	else
 	{
-		fprintf_s(fptr, "%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
+		writeFile("%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
 		push(code,msg);
 	}
 	
-	fflush(fptr);
-
 	return *this;
 }
 
+bool ErrorCode::disableWirteFile()
+{
+	isUseFile = false;
+	if (fptr != nullptr)
+	{
+		fclose(fptr);
+		fptr = nullptr;
+	}
+	return true;
+}
+
+bool ErrorCode::enableWirteFile()
+{
+	isUseFile = true;
+	return true;
+}
+
+int ErrorCode::writeFile(char const* const format ,...)
+{
+	if (isUseFile == false) return -1;
+	if (fptr == nullptr)
+	{
+		fopen_s(&fptr, "./autoTrack.log", "w+");
+		// 获取系统信息写入日志 系统名称 系统版本号 显卡 显存 DirectX版本
+		//writeFile("系统名称:");
+		//writeFile(get_sys_name().c_str());
+		//writeFile("系统版本号:");
+		//writeFile(get_sys_version().c_str());
+		//writeFile("显卡:");
+		//writeFile(get_gpu_name().c_str());
+		//writeFile("显存:");
+		//writeFile(get_gpu_memory().c_str());
+		//writeFile("DirectX版本:");
+		//writeFile(get_directx_version().c_str());
+		//writeFile("\n");
+		if (fptr == nullptr) return -2;
+	}
+
+	int _Result;
+	va_list _ArgList;
+	__crt_va_start(_ArgList, format);
+	_Result = fprintf_s(fptr, format, _ArgList);
+	__crt_va_end(_ArgList);
+	return _Result;
+}
 
 ErrorCode::operator int()
 {

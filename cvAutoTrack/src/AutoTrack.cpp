@@ -26,7 +26,8 @@
 
 AutoTrack::AutoTrack()
 {
-
+	err.enableWirteFile();
+	
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
@@ -146,6 +147,18 @@ bool AutoTrack::startServe()
 bool AutoTrack::stopServe()
 {
 	return false;
+}
+
+bool AutoTrack::SetDisableFileLog()
+{
+	err.disableWirteFile();
+	return true;
+}
+
+bool AutoTrack::SetEnableFileLog()
+{
+	err.enableWirteFile();
+	return true;
 }
 
 bool AutoTrack::GetVersion(char* version_buff, int buff_size)
