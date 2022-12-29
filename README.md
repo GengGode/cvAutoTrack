@@ -111,26 +111,36 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `startServe`                    | （未完成）开始服务，开启循环检测线程。                               |
 | `stopServe`                     | （未完成）停止服务，停止循环检测线程。                               |
 | ... | ... |
+| `GetCompileVersion`             | 获取编译版本号信息。                                               | 
+| `GetCompileTime`                | 获取编译时间信息。                                                 | 
+| ... | ... |
 | `SetUseBitbltCaptureMode`       | 设置使用Bitblt截图，默认启用，速度较快，效果好，但某些系统不支持。       |
 | `SetUseDx11CaptureMode`         | 设置使用DirectX截图，效果较差，但支持win11及以上系统。                |
 | `SetHandle`                     | 设置原神客户端的窗口句柄。                                          |
 | `SetWorldCenter`                | 设置映射目标地图坐标系的原点中心所在天理坐标模型中的坐标。              |
 | `SetWorldScale`                 | 设置映射目标地图坐标系缩放系数与所在天理坐标模型缩放系数的的比值。       |
 | ... | ... |
+| `SetDisableFileLog`             | 设置禁用日志文件。                                                 |
+| `SetEnableFileLog`              | 设置启用日志文件。                                                 |
+| ... | ... |
 | `DebugCapture`                  | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
+| `DebugCapturePath`              | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至指定路径中。 |
 | ... | ... |
 | `GetTransformOfMap`             | 获取当前人物所在位置、角度（箭头朝向）及所在地图区域并重映射坐标区域。    |
 | `GetPositionOfMap`              | 获取所在位置的所在地图区域并重映射坐标区域。                          |
 | `GetDirection`                  | 获取当前角度（箭头朝向）。                                          |
 | `GetRotation`                   | 获取当前视角方位（视角朝向）。                                      |
+| `GetStar`                       | 获取小地图上可见的神瞳。                                           |
+| `GetStarJson`                   | 获取小地图上可见的所有神瞳。                                        |
 | `GetUID`                        | 获取在屏幕右下角显示的玩家的UID。                                   |
-| `GetAllInfo`                    | 获取所在位置、地图区域、角度、视角和UID。所有信息的最新的状态。      |
+| `GetAllInfo`                    | 获取所在位置、地图区域、角度、视角和UID。所有信息的最新的状态。          |
 | ... | ... |
 | `GetInfoLoadPicture`            | 获取本地图片中的UID、当前人物所在位置以及角度（箭头朝向）。             |
 | `GetInfoLoadVideo`              | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
 | ... | ... |
 | `GetLastErr`                    | 获取最后设置的错误码。                                             |
 | `GetLastErrMsg`                 | 获取最后设置的错误信息。                                           | 
+| `GetLastErrJson`                | 获取错误码堆栈信息。                                               | 
 
 ## 错误处理
 - ###  [运行时错误](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C.md) 
