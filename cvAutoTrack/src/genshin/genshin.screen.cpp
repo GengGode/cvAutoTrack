@@ -18,7 +18,7 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	giFrame = img;
 #else
 
-	static auto last_time = 0ms;
+	static auto last_time = std::chrono::system_clock::now();
 	auto now_time = std::chrono::system_clock::now();
 	if (now_time - last_time < 20ms)
 	{
