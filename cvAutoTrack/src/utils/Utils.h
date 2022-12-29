@@ -17,6 +17,8 @@ namespace TianLi::Utils
 	cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale);
 	cv::Point2d TransferTianLiAxes_Tr(cv::Point2d pos, cv::Point2d origin, double scale);
 	cv::Point2d TransferUserAxes_Tr(cv::Point2d pos, double x, double y, double scale);
+	
+	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y);
 
 
 	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
