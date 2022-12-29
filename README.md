@@ -41,7 +41,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 - [ ] 添加对秘境中的角度和视野识别
 - [ ] 实现无透明通道下的视野识别
-- [ ] 实现日志可控制不输出
+- [x] 实现日志可控制不输出
 - [ ] 添加定位的惯性加速度导航算法（见 dev-inrtial-position 分支）
 - [ ] 添加定位的自动校准算法
 - [ ] 支持任意地图区域
@@ -81,7 +81,6 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 ## 注意事项
 
 - 目前只编译了 Windows x64 平台上的动态链接库（.dll），对于 Windows x86 或其它平台，如 Linux 平台（.so），需要下载源代码另行编译。
-- Windows 规定 64位 进程/DLL与 32位 进程/DLL之间不能相互调用/加载，因此调用动态链接库前，请务必确保调用进程是 **64位进程** 。
 - 本项目借游戏画面的窗口截图进行图像处理算法以实现所有功能，其不会对游戏内存进行读写，因而不会有封号的风险，但效果也因此具备一定的局限。
 - 项目仅在有限的条件下测试过，如需排查错误，强烈建议按照以下描述进行环境配置。
   - 原神客户端 > 右上角派蒙 > 设置 > 抗锯齿，设置为 `SMAA`
@@ -125,6 +124,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `GetDirection`                  | 获取当前角度（箭头朝向）。                                          |
 | `GetRotation`                   | 获取当前视角方位（视角朝向）。                                      |
 | `GetUID`                        | 获取在屏幕右下角显示的玩家的UID。                                   |
+| `GetAllInfo`                    | 获取所在位置、地图区域、角度、视角和UID。所有信息的最新的状态。      |
 | ... | ... |
 | `GetInfoLoadPicture`            | 获取本地图片中的UID、当前人物所在位置以及角度（箭头朝向）。             |
 | `GetInfoLoadVideo`              | 获取本地视频中的UID、当前人物所在位置以及角度（箭头朝向）并保存至文本中。 |
@@ -164,8 +164,3 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 该部分区域未来会重做坐标映射，暂时只做简单说明，即地图右上角为原点，其他照例。
 
-# 即将更新
-
-> `bool getAllInfo(double &x,double &y,double &a,int &uid);`
-
-获取所有信息，得到最新的状态数据
