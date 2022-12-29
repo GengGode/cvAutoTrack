@@ -138,6 +138,56 @@ namespace TianLi::Utils
 		return cv::Point2d(pos.x / scale - x, pos.y / scale - y);
 	}
 
+	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y)
+	{
+		const cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
+		const cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
+
+		cv::Point2d res;
+		int mapId = 0;
+
+		{
+			double _x = x;
+			double _y = y;
+			// 渊下宫
+			if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
+			{
+				mapId = 1;
+			}
+			// 地下层岩
+			if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
+			{
+				mapId = 2;
+			}
+
+			switch (mapId)
+			{
+			case 0:
+			{
+				res.x = _x;
+				res.y = _y;
+				break;
+			}
+			case 1:
+			{
+				res.x = _x - 0;
+				res.y = _y - 5543;
+				break;
+			}
+			case 2:
+			{
+				res.x = _x - 0;
+				res.y = _y - 0;
+				break;
+			}
+			default:
+				break;
+			}
+		}
+
+		return std::make_pair(res, mapId);
+	}
+
 	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
 	{
 			cv::Mat img_matches, imgmap, imgminmap;
