@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "genshin.screen.h"
 #include "capture/Capture.h"
+#include <chrono>
 
 void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, GenshinScreen& out_genshin_screen)
 {
@@ -17,11 +18,15 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	giFrame = img;
 #else
 
-	static time_t last_time = 0;
-	time_t now_time = time(NULL);
-	if (now_time - last_time < 20)
+	static auto last_time = 0ms;
+	auto now_time = std::chrono::system_clock::now();
+	if (now_time - last_time < 20ms)
 	{
 		return;
+	}
+	else
+	{
+		last_time = now_time;
 	}
 
 	genshin_handle.config.capture->capture(giFrame);
