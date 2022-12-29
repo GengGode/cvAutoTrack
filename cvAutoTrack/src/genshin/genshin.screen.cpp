@@ -12,26 +12,14 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	auto& giRectClient = genshin_handle.rect_client;
 	//auto& giScale = genshin_handle.scale;
 	auto& giFrame = out_genshin_screen.img_screen;
-
-#ifdef TEST_LOCAL
-	static cv::Mat img = cv::imread("C:\\Users\\GengG\\source\\repos\\Cv测试\\OpencvConsole\\img3.png", -1);
-	giFrame = img;
-#else
-
-	static auto last_time = std::chrono::system_clock::now();
-	auto now_time = std::chrono::system_clock::now();
-	if (now_time - last_time < 20ms)
-	{
-		return;
-	}
-	else
-	{
-		last_time = now_time;
-	}
-
-	genshin_handle.config.capture->capture(giFrame);
 	
-#endif // TEST_LOCAL
+
+	auto now_time = std::chrono::system_clock::now();
+	if (now_time - out_genshin_screen.last_time > 20ms || giFrame.empty())
+	{
+		out_genshin_screen.last_time = now_time;
+		genshin_handle.config.capture->capture(giFrame);
+	}
 
 
 	{
