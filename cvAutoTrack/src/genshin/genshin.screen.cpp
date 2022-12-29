@@ -17,6 +17,13 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	giFrame = img;
 #else
 
+	static time_t last_time = 0;
+	time_t now_time = time(NULL);
+	if (now_time - last_time < 20)
+	{
+		return;
+	}
+
 	genshin_handle.config.capture->capture(giFrame);
 	
 #endif // TEST_LOCAL
