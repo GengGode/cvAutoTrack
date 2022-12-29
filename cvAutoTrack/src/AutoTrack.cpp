@@ -235,7 +235,13 @@ bool AutoTrack::DebugCapture()
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 	}
 	}
-	
+
+	auto last_time_stream = std::stringstream();
+	last_time_stream << "上次更新时间：" << genshin_screen.last_time;
+	std::string last_time_str = last_time_stream.str();
+
+	cv::putText(out_info_img, last_time_str, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1, 8, 0);
+
 	bool rel = cv::imwrite("Capture.png", out_info_img);
 
 	if (!rel)
@@ -295,6 +301,12 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
 	}
 	}
+
+	auto last_time_stream = std::stringstream();
+	last_time_stream << "上次更新时间：" << genshin_screen.last_time;
+	std::string last_time_str = last_time_stream.str();
+
+	cv::putText(out_info_img, last_time_str, cv::Point(10, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255), 1, 8, 0);
 
 	bool rel = cv::imwrite(path_buff, out_info_img);
 
