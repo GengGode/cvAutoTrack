@@ -70,6 +70,10 @@ bool __stdcall GetUID(int & uid)
 {
 	return _at.GetUID(uid);
 }
+bool __stdcall GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
+{
+	return _at.GetAllInfo(x, y, mapId, a, r, uid);
+}
 bool __stdcall GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
 {
 	return _at.GetInfoLoadPicture(path, uid, x, y, a);

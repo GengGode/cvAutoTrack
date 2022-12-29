@@ -665,6 +665,113 @@ bool AutoTrack::GetUID(int& uid)
 	return clear_error_logs();
 }
 
+bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
+{
+	if (!genshin_minimap.is_init_finish)
+	{
+		err = { 1, "没有初始化" };
+		return false;
+	}
+	if (getMiniMapRefMat_Bitblt() == false)
+	{
+		err = { 1001, "获取所有信息时，没有识别到paimon" };
+		return false;
+	}
+
+	if (giMiniMapRef.empty())
+	{
+		err = { 5, "原神小地图区域为空" };
+		return false;
+	}
+	// x,y,mapId
+	{
+		genshin_minimap.config.is_find_paimon = true;
+
+		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+
+		cv::Point2d pos = genshin_avatar_position.position;
+		auto isConveying = genshin_avatar_position.config.is_coveying;
+		auto isContinuity = genshin_avatar_position.config.is_continuity;
+
+		cv::Point2d filt_pos;
+		if (isConveying || !isContinuity)
+		{
+			filt_pos = filter->re_init_filterting(pos);
+		}
+		else
+		{
+			filt_pos = filter->filterting(pos);
+		}
+
+		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+		cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+
+		x = user_pos.x;
+		y = user_pos.y;
+	}
+
+	if (!getAvatarRefMat())
+	{
+		return false;
+	}
+
+	if (giAvatarRef.empty())
+	{
+		err = { 11,"原神角色小箭头区域为空" };
+		return false;
+	}
+	// a
+	{
+		direction_calculation_config  config;
+		direction_calculation(giAvatarRef, a, config);
+		if (config.error)
+		{
+			err = config.err;
+			return false;
+		}
+	}
+	// r
+	{
+		rotation_calculation_config config;
+		rotation_calculation(giMiniMapRef, a, config);
+		if (config.error)
+		{
+			err = config.err;
+			return false;
+		}
+	}
+
+	if (getUIDRefMat() == false)
+	{
+		return false;
+	}
+	// uid
+	{
+		std::vector<cv::Mat> channels;
+
+		split(giUIDRef, channels);
+
+		if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+			cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
+		}
+		else
+		{
+			giUIDRef = channels[3];
+		}
+
+		uid_calculation_config config;
+		uid_calculation(giUIDRef, uid, config);
+		if (config.error)
+		{
+			err = config.err;
+			return false;
+		}
+	}
+
+	return clear_error_logs();
+}
+
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
 	UNREFERENCED_PARAMETER(path);

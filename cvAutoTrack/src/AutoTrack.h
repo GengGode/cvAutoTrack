@@ -39,6 +39,7 @@ public:
 	//获取发现的神瞳坐标，以json字符串格式
 	bool GetStarJson(char *jsonBuff);
 	bool GetUID(int &uid);
+	bool GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
 	/*********/
 	bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
 	bool GetInfoLoadVideo(char* path, char* pathOutFile);

@@ -30,6 +30,7 @@ extern "C" bool CVAUTOTRACK_API GetRotation(double& a);
 extern "C" bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
 extern "C" bool CVAUTOTRACK_API GetStarJson(char *jsonBuff);
 extern "C" bool CVAUTOTRACK_API GetUID(int &uid);
+extern "C" bool CVAUTOTRACK_API GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
 
 extern "C" bool CVAUTOTRACK_API GetInfoLoadPicture(char* path, int &uid, double &x, double &y, double &a);
 extern "C" bool CVAUTOTRACK_API GetInfoLoadVideo(char* path, char* pathOutFile);
