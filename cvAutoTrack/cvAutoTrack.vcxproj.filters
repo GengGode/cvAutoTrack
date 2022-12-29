@@ -260,7 +260,9 @@
     <ClCompile Include="src\genshin\genshin.handle.cpp">
       <Filter>src\genshin</Filter>
     </ClCompile>
-    <ClCompile Include="src\genshin\genshin.screen.cpp" />
+    <ClCompile Include="src\genshin\genshin.screen.cpp">
+      <Filter>src\genshin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">

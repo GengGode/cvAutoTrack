@@ -56,6 +56,7 @@ struct GenshinScreenConfig
 struct GenshinScreen
 {
 	cv::Rect rect_client;
+	std::chrono::system_clock::time_point last_time = std::chrono::system_clock::now();
 
 	cv::Mat img_screen;
 	cv::Mat img_paimon_maybe;
