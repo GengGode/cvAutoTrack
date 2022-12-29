@@ -288,3 +288,4 @@ __pycache__/
 /cvAutoTrack/src/version/version.ver
 /cvAutoTrack/src/version/version.branch
 /cvAutoTrack/src/version/appVeyor_version_tag.tag
+/.vscode
