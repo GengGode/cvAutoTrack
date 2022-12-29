@@ -265,7 +265,15 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	}
 	else
 	{
-		writeFile("%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
+		//writeFile("%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
+		if (isUseFile == false) return *this;
+		if (fptr == nullptr)
+		{
+			fopen_s(&fptr, "./autoTrack.log", "w+");
+			if (fptr == nullptr) return *this;
+		}
+		
+		fprintf_s(fptr, "%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
 		push(code,msg);
 	}
 	
