@@ -4,6 +4,45 @@
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 
+bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+{
+	cv::Ptr<cv::xfeatures2d::SURF>  detector = cv::xfeatures2d::SURF::create(1, 1, 1);
+	detector->detectAndCompute(Resources::getInstance().MapTemplate, cv::noArray(), keypoints, descriptors);
+
+	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::WRITE);
+
+	std::string build_time = __DATE__ " " __TIME__;
+	fs << "build_time" << build_time;
+	fs << "keypoints" << keypoints;
+	fs << "descriptors" << descriptors;
+	fs.release();
+	return true;
+}
+bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+{
+	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
+	{
+		return false;
+	}
+	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::READ);
+	fs["keypoints"] >> keypoints;
+	fs["descriptors"] >> descriptors;
+	fs.release();
+	return true;
+}
+
+bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+{
+	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
+	{
+		return save_map_keypoint_cache(keypoints, descriptors);
+	}
+	else
+	{
+		return load_map_keypoint_cache(keypoints, descriptors);
+	}
+}
+
 SurfMatch::SurfMatch()
 {
 	hisP[0] = cv::Point();
@@ -336,17 +375,18 @@ void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPos
 	static bool is_init = false;
 	if (!is_init)
 	{
-		Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		// 从内存中加载xml文件的string
-		std::string xml_str(xml_db_mem.ptr);
-		// 将xml文件的string转换为xml文件
-		cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
-
+		//Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
+		//// 从内存中加载xml文件的string
+		//std::string xml_str(xml_db_mem.ptr);
+		//// 将xml文件的string转换为xml文件
+		//cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
+		//
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		// 从fs加载 keypoints 和 descriptor
-		fs["keypoints"] >> gi_map_keypoints;
-		fs["descriptors"] >> gi_map_descriptors;
+		//// 从fs加载 keypoints 和 descriptor
+		//fs["keypoints"] >> gi_map_keypoints;
+		//fs["descriptors"] >> gi_map_descriptors;
+		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
 
 		surf_match.setMap(Resources::getInstance().MapTemplate);
 

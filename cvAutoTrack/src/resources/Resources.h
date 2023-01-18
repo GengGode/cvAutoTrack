@@ -22,16 +22,19 @@ public:
 	cv::Mat UID;
 	cv::Mat UIDnumber[10];
 	
-	struct XmlPtr
-	{
-		char* ptr = nullptr;
-		int size = 0;
-	};
-	
-	XmlPtr xmlPtr = { nullptr,0 };
+	//struct XmlPtr
+	//{
+	//	char* ptr = nullptr;
+	//	int size = 0;
+	//};
+	//
+	//XmlPtr xmlPtr = { nullptr,0 };
 public:
 	void install();
 	void release();
+public:
+	void get_map_keypoint_cache();
+
 private:
 	bool is_installed = false;
 };

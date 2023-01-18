@@ -90,7 +90,7 @@ IDB_PNG_MINIMAP_CAILB   PNG  				    "resource\\GIMINIMAP_CAILB.png"
 // XML
 //
 
-IDR_XML_GIMAP_COMPUTE   XML                     "resource\\GIMAP_COMPUTE.xml"
+// IDR_XML_GIMAP_COMPUTE   XML                     "resource\\GIMAP_COMPUTE.xml"
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
