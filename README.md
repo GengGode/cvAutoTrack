@@ -7,6 +7,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 # 介绍 
 
+### 不再内嵌预计算结果，首次运行将会在运行目录生成缓存xml
 ### 目前支持任意分辨率，以及手柄模式，但暂不支持小地图设置的【跟随视角】仅支持【锁定方向】
 ### 地图目前支持区域
 
@@ -23,8 +24,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 |  -   |  璃月III(地下层岩)  |   -   |
 |  3.0 |  须弥              | 6.1.51 |
 |  3.1 |  须弥沙漠           | 6.4.17 |
-
-## ~~支持 NVIDA GPU 图形计算加速~~ (远程编译不支持cuda，所以寄了)
+|  3.4 |  千壑沙地           | 7.4.0  |
 
 ### 各版本所支持的功能
 
@@ -35,6 +35,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 |  6.5.92 |  - | - |  - |
 |  7.0.1 |  √ | √(DX模式下不支持) |  16:9 系列(但不包括4K及以上), 21:9 系列, 以及1920*1080以下的所有分辨率 |
 |  7.3.0 |  √ | √ |  √(有用户反馈5k 21:9无法使用，待测试） |
+|  7.3.0 |  √ | √ |  √  |
 
 
 ## 新版本计划 7.x
@@ -46,8 +47,8 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 - [ ] 添加定位的自动校准算法
 - [ ] 支持任意地图区域
 - [ ] 支持传入地图而非内嵌
-- [ ] 可选的嵌入预计算结果
-- [ ] 更高的匹配精度
+- [x] 可选的嵌入预计算结果
+- [x] 更高的匹配精度
 
 # 如何使用
 
