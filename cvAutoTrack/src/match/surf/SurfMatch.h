@@ -3,6 +3,11 @@
 #include <wincodec.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d.hpp>
+
+bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+
 class SurfMatch
 {
 	cv::Mat _mapMat;
@@ -14,7 +19,6 @@ class SurfMatch
 	int someSizeR = 106;
 	double MatchMatScale = 2.0;
 	
-
 	cv::Point2d hisP[3];
 
 	cv::Point2d pos;

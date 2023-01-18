@@ -20,7 +20,7 @@
 #define IDB_PNG_GIMAP                   130
 #define IDB_PNG_MINIMAP_CAILB           131
 
-#define IDR_XML_GIMAP_COMPUTE           140
+// #define IDR_XML_GIMAP_COMPUTE           140
 
 // Next default values for new objects
 // 
