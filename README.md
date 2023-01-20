@@ -7,6 +7,8 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 # 介绍 
 
+#### [空荧酒馆原神地图手动更新替换教程](doc/kyjg.md)
+
 ### 不再内嵌预计算结果，首次运行将会在运行目录生成缓存xml
 ### 目前支持任意分辨率，以及手柄模式，但暂不支持小地图设置的【跟随视角】仅支持【锁定方向】
 ### 地图目前支持区域
