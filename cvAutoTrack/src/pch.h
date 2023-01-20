@@ -29,6 +29,10 @@
 #include <windows.ui.composition.interop.h>
 #include <DispatcherQueue.h>
 
+#include <dwmapi.h>
+#pragma comment(lib,"dwmapi.lib")
+
+
 // STL
 #include <atomic>
 #include <memory>

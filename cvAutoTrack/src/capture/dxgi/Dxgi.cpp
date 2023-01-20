@@ -68,6 +68,7 @@ bool Dxgi::init()
         return false;
     }
 	
+    // TODO: 中断时重开原神，进入这里
     TianLi::DirectX::d3dDevice->GetImmediateContext(m_d3dContext.put());
     m_device = CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
     m_item = CreateCaptureItemForWindow(giHandle);
@@ -138,6 +139,57 @@ bool Dxgi::uninit()
     is_need_init = true;
 	return true;
 }
+bool get_client_box(HWND window, uint32_t width, uint32_t height,
+    D3D11_BOX* client_box)
+{
+    RECT client_rect{}, window_rect{};
+    POINT upper_left{};
+
+    /* check iconic (minimized) twice, ABA is very unlikely */
+    bool client_box_available =
+        !IsIconic(window) && GetClientRect(window, &client_rect) &&
+        !IsIconic(window) && (client_rect.right > 0) &&
+        (client_rect.bottom > 0) &&
+        (DwmGetWindowAttribute(window, DWMWA_EXTENDED_FRAME_BOUNDS,
+            &window_rect,
+            sizeof(window_rect)) == S_OK) &&
+        ClientToScreen(window, &upper_left);
+    if (client_box_available) {
+        const uint32_t left =
+            (upper_left.x > window_rect.left)
+            ? (upper_left.x - window_rect.left)
+            : 0;
+        client_box->left = left;
+
+        const uint32_t top = (upper_left.y > window_rect.top)
+            ? (upper_left.y - window_rect.top)
+            : 0;
+        client_box->top = top;
+
+        uint32_t texture_width = 1;
+        if (width > left) {
+            texture_width =
+                min(width - left, (uint32_t)client_rect.right);
+        }
+
+        uint32_t texture_height = 1;
+        if (height > top) {
+            texture_height =
+                min(height - top, (uint32_t)client_rect.bottom);
+        }
+
+        client_box->right = left + texture_width;
+        client_box->bottom = top + texture_height;
+
+        client_box->front = 0;
+        client_box->back = 1;
+
+        client_box_available = (client_box->right <= width) &&
+            (client_box->bottom <= height);
+    }
+
+    return client_box_available;
+}
 
 bool Dxgi::capture(cv::Mat& frame)
 {
@@ -177,7 +229,20 @@ bool Dxgi::capture(cv::Mat& frame)
 	
     //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
     TianLi::DirectX::d3dDevice->CreateTexture2D(&desc_type, nullptr, &bufferTexture);
-    m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
+    D3D11_BOX client_box;
+    uint32_t texture_width;
+    uint32_t texture_height;
+    
+    if (get_client_box(giHandle, desc_type.Width, desc_type.Height, &client_box)) 
+    {
+        m_d3dContext->CopySubresourceRegion(bufferTexture,
+            0, 0, 0, 0, frameSurface.get(),
+            0, &client_box);
+    }
+    else
+    {
+		m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
+    }
     if (bufferTexture == nullptr)
     {
         err = { 10005,"未能从GPU拷贝画面到CPU" };
@@ -187,6 +252,8 @@ bool Dxgi::capture(cv::Mat& frame)
     D3D11_MAPPED_SUBRESOURCE mappedTex;
     m_d3dContext->Map(bufferTexture, 0, D3D11_MAP_READ, 0, &mappedTex);
 	
+
+
 	auto data = mappedTex.pData;
 	auto pitch = mappedTex.RowPitch;
 	
