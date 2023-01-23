@@ -123,7 +123,6 @@ private:
 	cv::Mat& giFrame = genshin_screen.img_screen;
 	cv::Mat giPaimonRef;
 	cv::Mat giMiniMapRef;
-	cv::Mat giUIDRef;
 	cv::Mat giAvatarRef;
 	cv::Mat giStarRef;
 	cv::Rect& Area_Paimon_mayArea = genshin_paimon.rect_paimon;
@@ -142,8 +141,7 @@ private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactScreen();
 
-	bool getMiniMapRefMat_Bitblt();
-	bool getUIDRefMat();
+	bool getMiniMapRefMat();
 	bool getAvatarRefMat();
 
 private:

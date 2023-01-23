@@ -358,7 +358,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 		err = { 1, "没有初始化" };
 		return false;
 	}
-	if (getMiniMapRefMat_Bitblt()==false)
+	if (getMiniMapRefMat()==false)
 		{
 			err = { 1001, "获取坐标时，没有识别到paimon" };
 			return false;
@@ -468,7 +468,7 @@ bool AutoTrack::GetDirection(double& a)
 	{
 		return false;
 	}
-	if (getMiniMapRefMat_Bitblt() == false)
+	if (getMiniMapRefMat() == false)
 	{
 		err = { 2001, "获取角色朝向时，没有识别到paimon" };
 		return false;
@@ -502,7 +502,7 @@ bool AutoTrack::GetRotation(double& a)
 	{
 		return false;
 	}
-	if (getMiniMapRefMat_Bitblt() == false)
+	if (getMiniMapRefMat() == false)
 	{
 		err = { 3001, "获取视角朝向时，没有识别到paimon" };
 		return false;
@@ -565,7 +565,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			return false;
 		}
 		
-		if (getMiniMapRefMat_Bitblt() == false)
+		if (getMiniMapRefMat() == false)
 		{
 			err = { 4001, "获取神瞳时，没有识别到paimon" };
 			return false;
@@ -656,7 +656,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		return false;
 	}
 
-	if (getMiniMapRefMat_Bitblt() == false)
+	if (getMiniMapRefMat() == false)
 	{
 		err = { 4001, "获取神瞳时，没有识别到paimon" };
 		return false;
@@ -690,10 +690,8 @@ bool AutoTrack::GetUID(int& uid)
 	{
 		return false;
 	}
-	if (getUIDRefMat() == false)
-	{
-		return false;
-	}
+
+	cv::Mat& giUIDRef = genshin_screen.img_uid;
 
 	std::vector<cv::Mat> channels;
 
@@ -726,7 +724,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		err = { 1, "没有初始化" };
 		return false;
 	}
-	if (getMiniMapRefMat_Bitblt() == false)
+	if (getMiniMapRefMat() == false)
 	{
 		err = { 1001, "获取所有信息时，没有识别到paimon" };
 		return false;
@@ -794,11 +792,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 			return false;
 		}
 	}
-
-	if (getUIDRefMat() == false)
-	{
-		return false;
-	}
+	cv::Mat& giUIDRef = genshin_screen.img_uid;
 	// uid
 	{
 		std::vector<cv::Mat> channels;
@@ -911,7 +905,7 @@ bool AutoTrack::getGengshinImpactScreen()
 	return true;
 }
 
-bool AutoTrack::getMiniMapRefMat_Bitblt()
+bool AutoTrack::getMiniMapRefMat()
 {
 	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
 	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
@@ -930,13 +924,31 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
-		err = { 40001,"Bitblt模式下检测派蒙失败" };
-		return false;
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40101,"Bitblt模式下检测派蒙失败" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+
+			err = { 40201,"DirectX模式下检测派蒙失败" };
+			return false;
+		}
 	}
 	if (genshin_paimon.is_visial == false)
 	{
-		err = { 50001,"Bitblt模式下未能检测到派蒙" };
-		return false;
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40102,"Bitblt模式下未能检测到派蒙" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+
+			err = { 40202,"DirectX模式下未能检测到派蒙" };
+			return false;
+		}
 	}
 
 	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
@@ -944,21 +956,48 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 
 	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
 	{
-		err = { 40002,"Bitblt模式下检测小地图标定失败" };
-		return false;
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40103,"Bitblt模式下检测小地图标定失败" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+
+			err = { 40203,"DirectX模式下检测小地图标定失败" };
+			return false;
+		}
 	}
 	if (genshin_minimap_cailb.is_visial == false)
 	{
-		err = { 50002,"Bitblt模式下未能检测到小地图标定" };
-		return false;
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40104,"Bitblt模式下未能检测到小地图标定" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+
+			err = { 40204,"DirectX模式下未能检测到小地图标定" };
+			return false;
+		}
 	}
 
 	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
 
 	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
 	{
-		err = { 40003, "Bitblt模式下计算小地图区域失败" };
-		return false;
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40105,"Bitblt模式下计算小地图区域失败" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+
+			err = { 40205,"DirectX模式下计算小地图区域失败" };
+			return false;
+		}
 	}
 
 	genshin_screen.config.rect_minimap = genshin_minimap.rect_minimap;
@@ -968,19 +1007,6 @@ bool AutoTrack::getMiniMapRefMat_Bitblt()
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
 	cv::waitKey(1);
-#endif
-	return true;
-}
-
-bool AutoTrack::getUIDRefMat()
-{
-	giUIDRef = genshin_screen.img_uid;
-
-#ifdef _DEBUG
-	cv::namedWindow("UID", cv::WINDOW_FREERATIO);
-	cv::imshow("UID", giUIDRef);
-	cv::waitKey(1);
-	//std::cout << "Show UID" << std::endl;
 #endif
 	return true;
 }
