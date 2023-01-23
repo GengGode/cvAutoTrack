@@ -14,9 +14,9 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
 		
-		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
 		surf_match.setMap(Resources::getInstance().MapTemplate);
 		
+		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
 		surf_match.Init(gi_map_keypoints, gi_map_descriptors);
 
 		is_init = true;
@@ -29,13 +29,13 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
 		
-		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
 
 		surf_match.setMap(Resources::getInstance().MapTemplate);
 
 		//surf_match.detector = cv::xfeatures2d::SURF::create(surf_match.minHessian);
 		//surf_match.detectorSomeMap = cv::xfeatures2d::SURF::create(surf_match.minHessian);
 
+		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
 		surf_match.Init(gi_map_keypoints, gi_map_descriptors);
 
 		is_init = true;
