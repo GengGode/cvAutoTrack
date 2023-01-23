@@ -4,42 +4,73 @@
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 
-bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
-	cv::Ptr<cv::xfeatures2d::SURF>  detector = cv::xfeatures2d::SURF::create(1, 1, 1);
+	cv::Ptr<cv::xfeatures2d::SURF>  detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detector->detectAndCompute(Resources::getInstance().MapTemplate, cv::noArray(), keypoints, descriptors);
 
 	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::WRITE);
 
 	std::string build_time = __DATE__ " " __TIME__;
 	fs << "build_time" << build_time;
+	
+	fs << "hessian_threshold" << hessian_threshold;
+	fs << "octaves" << octaves;
+	fs << "octave_layers" << octave_layers;
+	fs << "extended" << extended;
+	fs << "upright" << upright;
+	
 	fs << "keypoints" << keypoints;
 	fs << "descriptors" << descriptors;
 	fs.release();
 	return true;
 }
-bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
 	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
 	{
 		return false;
 	}
 	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::READ);
+	double r_hessian_threshold = 1;
+	int    r_octaves = 1;
+	int    r_octave_layers = 1;
+	bool   r_extended = false;
+	bool   r_upright = false;
+	
+	fs["hessian_threshold"]>> r_hessian_threshold;
+	fs["octaves"]          >> r_octaves;
+	fs["octave_layers"]    >> r_octave_layers;
+	fs["extended"]         >> r_extended;
+	fs["upright"]          >> r_upright;
+	
+	if (r_hessian_threshold != hessian_threshold || r_octaves != octaves || r_octave_layers != octave_layers || r_extended != extended || r_upright != upright)
+	{
+		return false;
+	}
+	
 	fs["keypoints"] >> keypoints;
 	fs["descriptors"] >> descriptors;
 	fs.release();
 	return true;
 }
 
-bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
 	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
 	{
-		return save_map_keypoint_cache(keypoints, descriptors);
+		return save_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright);
 	}
 	else
 	{
-		return load_map_keypoint_cache(keypoints, descriptors);
+		if (load_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright) == false)
+		{
+			return save_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright);
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
 
@@ -67,14 +98,15 @@ void SurfMatch::setMiniMap(cv::Mat minMapMat)
 void SurfMatch::Init()
 {
 	if (isInit)return;
-	detector = cv::xfeatures2d::SURF::create(minHessian);
+	detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detector->detectAndCompute(_mapMat, cv::noArray(), Kp_Map, Dp_Map);
 	isInit = true;
 }
 
 void SurfMatch::Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors)
 {
-	if (isInit)return;
+	if (isInit)return;	
+	detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	Kp_Map = std::move(gi_map_keypoints);
 	Dp_Map = std::move(gi_map_descriptors);
 	isInit = true;
@@ -167,7 +199,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
 	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
 
-	detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
+	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
 
@@ -224,7 +256,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat minMap(img_object);
 
-	detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
+	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
 
@@ -266,7 +298,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
 		//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
 
-		detectorSomeMap = cv::xfeatures2d::SURF::create(minHessian);
+		detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 		detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 		//detectorSomeMap->detectAndCompute(minMap, noArray(), Kp_MinMap, Dp_MinMap);
 		if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() == 0)
@@ -375,23 +407,15 @@ void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPos
 	static bool is_init = false;
 	if (!is_init)
 	{
-		//Resources::XmlPtr xml_db_mem = Resources::getInstance().xmlPtr;
-		//// 从内存中加载xml文件的string
-		//std::string xml_str(xml_db_mem.ptr);
-		//// 将xml文件的string转换为xml文件
-		//cv::FileStorage fs(xml_str, cv::FileStorage::MEMORY | cv::FileStorage::READ);
-		//
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
-		//// 从fs加载 keypoints 和 descriptor
-		//fs["keypoints"] >> gi_map_keypoints;
-		//fs["descriptors"] >> gi_map_descriptors;
-		get_map_keypoint(gi_map_keypoints, gi_map_descriptors);
+		
+		get_map_keypoint(gi_map_keypoints, gi_map_descriptors, surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
 
 		surf_match.setMap(Resources::getInstance().MapTemplate);
 
-		surf_match.detector = cv::xfeatures2d::SURF::create(surf_match.minHessian);
-		surf_match.detectorSomeMap = cv::xfeatures2d::SURF::create(surf_match.minHessian);
+		surf_match.detector = cv::xfeatures2d::SURF::create(surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
+		surf_match.detectorSomeMap = cv::xfeatures2d::SURF::create(surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
 
 		surf_match.Init(gi_map_keypoints, gi_map_descriptors);
 

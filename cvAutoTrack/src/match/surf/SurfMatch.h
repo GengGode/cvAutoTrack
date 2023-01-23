@@ -4,9 +4,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d.hpp>
 
-bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
-bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
-bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
+bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
+bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
 
 class SurfMatch
 {
@@ -27,8 +27,12 @@ public:
 	~SurfMatch();
 
 public:
-	int minHessian = 400;
-
+	double hessian_threshold = 1;
+	int octaves = 4;
+	int octave_layers = 3;
+	bool extended = false;
+	bool upright = false;
+		
 	cv::Ptr<cv::xfeatures2d::SURF> detector, detectorSomeMap;
 	std::vector<cv::KeyPoint> Kp_MinMap, Kp_Map, Kp_SomeMap;
 	cv::Mat Dp_MinMap, Dp_Map, Dp_SomeMap;
