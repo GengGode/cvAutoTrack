@@ -212,8 +212,12 @@ bool Dxgi::capture(cv::Mat& frame)
         m_framePool = nullptr;
         m_swapChain = nullptr;
         m_item = nullptr;
-        err = { 10010,"画面池为空，捕获画面失败" };
-        return false;
+        bool res = init();
+        if (res == false)
+        {
+            err = { 10001,"重新初始化捕获池" };
+            return false;
+        }
     }
     
     // 判断是否可以获取新的的画面
