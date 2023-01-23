@@ -194,9 +194,41 @@ bool get_client_box(HWND window, uint32_t width, uint32_t height,
 bool Dxgi::capture(cv::Mat& frame)
 {
     static ID3D11Texture2D* bufferTexture;
-
+    if (m_framePool == nullptr)
+    {
+        uninit();
+        try
+        {
+            if (m_session != nullptr)
+                m_session.Close();
+            if (m_framePool != nullptr)
+                m_framePool.Close();
+        }
+        catch (...)
+        {
+            //
+        }
+        m_session = nullptr;
+        m_framePool = nullptr;
+        m_swapChain = nullptr;
+        m_item = nullptr;
+        err = { 10010,"画面池为空，捕获画面失败" };
+        return false;
+    }
+    
+    // 判断是否可以获取新的的画面
+    Direct3D11CaptureFrame new_frame { nullptr };
 	// 获取新的画面
-	auto new_frame = m_framePool.TryGetNextFrame();
+    try
+    {
+        new_frame = m_framePool.TryGetNextFrame();
+    }
+	catch (...)
+	{
+		// Ignore any errors
+		err = { 10003,"获取下一帧画面失败" };
+		return false;
+	}
     if (new_frame == nullptr)
     {
         err = { 10004,"未能获取到新一帧画面" };
