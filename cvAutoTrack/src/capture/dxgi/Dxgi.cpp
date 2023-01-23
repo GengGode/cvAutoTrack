@@ -232,8 +232,9 @@ bool Dxgi::capture(cv::Mat& frame)
     D3D11_BOX client_box;
     uint32_t texture_width;
     uint32_t texture_height;
+    bool client_box_available = get_client_box(giHandle, desc_type.Width, desc_type.Height, &client_box);
     
-    if (get_client_box(giHandle, desc_type.Width, desc_type.Height, &client_box)) 
+    if (client_box_available)
     {
         m_d3dContext->CopySubresourceRegion(bufferTexture,
             0, 0, 0, 0, frameSurface.get(),
@@ -259,6 +260,10 @@ bool Dxgi::capture(cv::Mat& frame)
 	
 	// 将画面转换为OpenCV的Mat
 	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
+    if (client_box_available)
+    {
+		frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
+    }
 	// 释放资源
     bufferTexture->Release();
 	return true;
