@@ -386,25 +386,96 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 	pos_continuity_no = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 	return pos_continuity_no;
 }
+cv::Scalar to_color(cv::Mat& img_object)
+{
+	cv::Scalar color;
+	cv::Mat hsv;
+	cv::cvtColor(img_object, hsv, cv::COLOR_BGR2HSV);
+	std::vector<cv::Mat> hsv_split;
+	cv::split(hsv, hsv_split);
+	cv::Mat h = hsv_split[0];
+	cv::Mat s = hsv_split[1];
+	cv::Mat v = hsv_split[2];
+	cv::Scalar mean_h = cv::mean(h);
+	cv::Scalar mean_s = cv::mean(s);
+	cv::Scalar mean_v = cv::mean(v);
+	color[0] = mean_h[0];
+	color[1] = mean_s[0];
+	color[2] = mean_v[0];
+	return color;
+	
+}
 // 初步定位：根据颜色确定角色在大地图的哪个方位
 cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _minMapMat)
 {
-	// 对小地图进行颜色提取
+	static cv::Mat color_map;
+	static bool is_first = true;
+	if (is_first)
+	{
+		cv::resize(_mapMat, color_map, cv::Size(), 0.01, 0.01);
+		is_first = false;
+	}
+	
 	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
-
-	// 
-	return cv::Point(0, 0);
+	// 对小地图进行颜色提取
+	cv::Scalar color = to_color(img_object);
+	cv::Scalar color_min = cv::Scalar(color[0] - 10, color[1] - 10, color[2] - 10);
+	cv::Scalar color_max = cv::Scalar(color[0] + 10, color[1] + 10, color[2] + 10);
+	// 二值化
+	cv::Mat img_object_binary;
+	cv::inRange(color_map, color_min, color_max, img_object_binary);
+	// 开运算
+	cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+	cv::morphologyEx(img_object_binary, img_object_binary, cv::MORPH_OPEN, element);
+	// 轮廓检测
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(img_object_binary, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point());
+	// 计算轮廓中心
+	cv::Point center;
+	for (int i = 0; i < contours.size(); i++)
+	{
+		cv::Rect rect = cv::boundingRect(contours[i]);
+		center.x += rect.x + rect.width / 2;
+		center.y += rect.y + rect.height / 2;
+	}
+	center.x /= contours.size();
+	center.y /= contours.size();
+	return center; 
 }
 // 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
 cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_first_match)
 {
+	// 0 18 22 38
+	const static cv::Rect yellow_rect = cv::Rect(0, 18, 22, 38);
+	if (yellow_rect.contains(pos_first_match))
+	{
+		return cv::Point(-1, 0);
+	}
 
 	return cv::Point(0, 0);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
+cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _minMapMat)
+{
+	cv::Point pos_first_match = match_find_direction_in_all(_mapMat, _minMapMat);
+	cv::Point pos_block_match = match_find_block_in_direction(_mapMat, _minMapMat, pos_first_match);
+	cv::Point2d pos_continuity_no;
+	bool calc_is_faile = false;
+	//cv::Point2d pos = match_find_pos_in_block(_mapMat, _minMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
+	if (calc_is_faile)
+	{
+		return cv::Point2d(-1, -1);
+	}
+	return cv::Point2d(-1, -1);
+}
+// 确定位置：根据所在区块的结果精确匹配角色位置
 cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match)
 {
-	return cv::Point(0, 0);
+	if (pos_second_match.x == -1)
+	{
+		return cv::Point2d(0, 0);
+	}
 }
 cv::Point2d SurfMatch::match_no_continuity_2th(bool& calc_is_faile)
 {
