@@ -1,91 +1,102 @@
 from ctypes import *
-from time import sleep
+import os
 
+'''
+DLL Version: 7.4.11
+'''
+# 将cvAutoTrack.7z置于该文件同级目录下
+DLL_PATH = os.path.dirname(os.path.abspath(__file__))+"\\"
+
+if not os.path.exists(DLL_PATH+'CVAUTOTRACK.dll'):
+    import py7zr
+    with py7zr.SevenZipFile(DLL_PATH+'cvAutoTrack.7z', mode='r') as z:
+        z.extractall(DLL_PATH)
+        print("unzip succ")
 
 class AutoTracker:
-    def __init__(self, dll_path: str):
+    def __init__(self, dll_path:str = DLL_PATH+"CVAUTOTRACK.dll"):
         self.__lib = CDLL(dll_path)
-
-        # bool init();
-        self.__lib.init.restype = c_bool
-
-        # bool uninit();
-        self.__lib.uninit.restype = c_bool
-
-        # bool SetHandle(long long int handle);
-        self.__lib.SetHandle.argtypes = [c_longlong]
-        self.__lib.SetHandle.restype = c_bool
-
-        # bool GetTransform(float &x, float &y, float &a);
-        self.__lib.GetTransform.argtypes = [POINTER(c_float), POINTER(c_float), POINTER(c_float)]
-        self.__lib.GetTransform.restype = c_bool
-
-        # bool GetPosition(double & x, double & y);
-        self.__lib.GetPosition.argtypes = []
-        self.__lib.GetPosition.restype = c_bool
-
-        # bool GetDirection(double &a);
-        self.__lib.GetDirection.argtypes = [POINTER(c_double)]
-        self.__lib.GetDirection.restype = c_bool
-
-        # bool GetUID(int &uid);
-        self.__lib.GetUID.argtypes = [POINTER(c_int)]
+        self.__lib.verison.restype = c_char
+        self.__lib.SetDisableFileLog.restype = c_bool
+        self.__lib.SetEnableFileLog.restype = c_bool
         self.__lib.GetUID.restype = c_bool
+        self.__lib.GetAllInfo.restype = c_bool
+        self.__lib.GetLastErr.restype = c_int
+        self.__lib.init.restype = c_bool
+        self.__lib.uninit.restype = c_bool
+        self.__lib.GetTransformOfMap.restype = c_bool
+        self.__lib.GetPositionOfMap.restype = c_bool
+        self.__lib.GetDirection.restype = c_bool
+        self.__lib.GetRotation.restype = c_bool
 
-    def init(self) -> bool:
+    def init(self):
         return self.__lib.init()
 
-    def uninit(self) -> bool:
+    def verison(self): # ?
+        ret = self.__lib.SetDisableFileLog()
+        return(ret)
+
+    def disable_log(self):
+        return self.__lib.SetDisableFileLog()
+    
+    def enable_log(self):
+        return self.__lib.SetEnableFileLog()
+    
+    def get_uid(self):
+        a = pointer(c_int(0))
+        ret = self.__lib.GetUID(a)
+        return ret, a.contents.value
+        
+    def uninit(self):
         return self.__lib.uninit()
 
-    def get_last_error(self) -> int:
+    def get_last_error(self):
         return self.__lib.GetLastErr()
 
-    def set_handle(self, hwnd: int) -> bool:
-        return self.__lib.SetHandle(hwnd)
+    def get_transform(self):
+        x, y, a, b = pointer(c_double(0)), pointer(c_double(0)), pointer(c_double(0)), pointer(c_int(0))
+        ret = self.__lib.GetTransformOfMap(x, y, a, b)
+        return ret, x.contents.value, y.contents.value, a.contents.value
 
-    def get_transform(self) -> (bool, float, float, float):
-        x, y, a = c_float(0), c_float(0), c_float(0)
-        ret = self.__lib.GetTransform(x, y, a)
-        return ret, x.value, y.value, a.value
+    def get_position(self):
+        x, y, b = pointer(c_double(0)), pointer(c_double(0)), pointer(c_int(0))
+        ret = self.__lib.GetPositionOfMap(x, y, b)
+        return ret, x.contents.value, y.contents.value
 
-    def get_position(self) -> (bool, float, float):
-        x, y = c_float(0), c_float(0)
-        ret = self.__lib.GetPosition(x, y)
-        return ret, x.value, y.value
-
-    def get_direction(self) -> (bool, float):
-        a = c_float(0)
+    def get_direction(self):
+        a = pointer(c_double(0))
         ret = self.__lib.GetDirection(a)
-        return ret, a.value
+        return ret, a.contents.value
 
-    def get_uid(self) -> (bool, int):
-        uid = c_int(0)
-        ret = self.__lib.GetUID(uid)
-        return ret, uid.value
-
-
-# 以下是对被封装的类的简单演示。
-# 使用命令行 `python ./main.py` 直接运行本文件即可。
+    def get_rotation(self):
+        a = pointer(c_double(0))
+        ret = self.__lib.GetRotation(a)
+        return ret, a.contents.value
+    
 if __name__ == '__main__':
-
-    # 等待五秒钟以便切换到原神窗口：
-    sleep(5)
-
-    # 加载同一目录下的DLL：
-    tracker = AutoTracker(r'./CVAUTOTRACK.dll')
-
-    # 初始化并打印错误：
-    tracker.init()
-    print('1) err', tracker.get_last_error(), '\n')
-
-    # 获取当前人物所在位置以及角度（箭头朝向）并打印错误：
-    print(tracker.get_transform())
-    print('2) err', tracker.get_last_error(), '\n')
-
-    # 获取UID并打印错误：
-    print(tracker.get_uid())
-    print('3) err', tracker.get_last_error(), '\n')
-
-    # 卸载相关内存：（这一步不是必须的，但还是建议手动调用）
-    tracker.uninit()
+    auto_tracker = AutoTracker()
+    print("init")
+    print(auto_tracker.init())
+    print("get_last_error")
+    print(auto_tracker.get_last_error())
+    print("get_transform")
+    print(auto_tracker.get_transform())
+    print("get_position")
+    print(auto_tracker.get_position())
+    print("get_direction")
+    print(auto_tracker.get_direction())
+    print("get_rotation")
+    print(auto_tracker.get_rotation())
+    print("get_uid")
+    print(auto_tracker.get_uid())
+    # print("get_all_info")
+    # print(auto_tracker.get_all_info())
+    print("disable_log")
+    print(auto_tracker.disable_log())
+    print("enable_log")
+    print(auto_tracker.enable_log())
+    print("version")
+    print(auto_tracker.verison())
+    print("uninit")
+    print(auto_tracker.uninit())
+    print("test end")
