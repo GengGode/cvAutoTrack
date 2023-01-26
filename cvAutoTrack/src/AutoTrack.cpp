@@ -241,6 +241,8 @@ bool AutoTrack::DebugCapture()
 	std::string last_time_str = last_time_stream.str();
 
 	cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols/2, out_info_img.rows/2), 1,1, cv::Scalar(128,128,128, 255), 1, 16, 0);
+	auto err_msg_str = err.toJson();
+	cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
 	bool rel = cv::imwrite("Capture.png", out_info_img);
 
@@ -307,6 +309,8 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	std::string last_time_str = last_time_stream.str();
 
 	cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols / 2, out_info_img.rows / 2), 1, 1, cv::Scalar(128, 128, 128, 255), 1, 16, 0);
+	auto err_msg_str = err.toJson();
+	cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
 	bool rel = cv::imwrite(path_buff, out_info_img);
 
