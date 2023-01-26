@@ -8,7 +8,7 @@
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
 
-extern "C" bool CVAUTOTRACK_API __declspec(deprecated) verison(char* versionBuff);
+__declspec(deprecated("** this is a deprecated function, your should used GetCompileVersion**")) extern "C" bool CVAUTOTRACK_API verison(char* versionBuff);
 
 extern "C" bool CVAUTOTRACK_API init();
 extern "C" bool CVAUTOTRACK_API uninit();
