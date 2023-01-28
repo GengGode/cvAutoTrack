@@ -314,7 +314,8 @@
         - ps: Out-File -FilePath config.yaml -InputObject "ali_drive:`t`n  drive_id:`t53348742`n  refresh_token:`t7e5bc0b6829c40ac97864d937502447a`n  root_path:`t/TianLiUpdateService`ndebug:`tfalse`nretry:`t3`ntransfers:`t3"
         - dir
         - ps: echo (Get-Content config.yaml)
-        - ps: .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
+       
+        - .\alidrive.exe .\cvAutoTrack-%APPVEYOR_BUILD_VERSION%.zip /cvAutoTrack
         
         - $version = Get-Content version.ver
         - $buildversion = Get-Content build_version.ver
