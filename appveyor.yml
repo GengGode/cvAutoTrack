@@ -297,7 +297,7 @@
         - echo 获取版本号
         - echo %APPVEYOR_BUILD_VERSION% > version.ver
         - echo %APPVEYOR_BUILD_VERSION% > build_version.ver
-        - ps: set version = Get-Content version.ver
+        - ps: $version = Get-Content version.ver
         - ps: echo (Get-Content build_version.ver)
         #- .\GenshinTianLiBattleClient\7z.exe a -tZip GenshinTianLiBattleClient-$version.zip D:\a\GenshinTianLiBattleClient\GenshinTianLiBattleClient/x64\${{env.BUILD_CONFIGURATION}}\GenshinTianLiBattleClient.exe
         - ps: dir
