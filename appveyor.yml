@@ -275,6 +275,8 @@
         - /chore-/
 
     environment:
+        my_secret:
+            secure: HKh20duMUEcO6HEKkDzsUYS2qgSpQKrNmVOkKd7hC5JNHtPdLa+6giA5IwNxBeYG0e9cbaVlIl7r9UjswYF09nRljRGz9fHXN90/4HUyuxSwtH65HJmSSPIOM7QfXqAdxUjBXCZ2iwlnn3JYPD603JQgKUypTtCdlWUNRxtPFObDq2yPXlwvw02a4u4e7ze1n9oiEF9r1RmLHs4D3wrhVw==
         SecureAliConfig: HKh20duMUEcO6HEKkDzsUYS2qgSpQKrNmVOkKd7hC5JNHtPdLa+6giA5IwNxBeYG0e9cbaVlIl7r9UjswYF09nRljRGz9fHXN90/4HUyuxSwtH65HJmSSPIOM7QfXqAdxUjBXCZ2iwlnn3JYPD603JQgKUypTtCdlWUNRxtPFObDq2yPXlwvw02a4u4e7ze1n9oiEF9r1RmLHs4D3wrhVw==
         MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
         OpenCvDir: C:\projects\opencv\
@@ -284,6 +286,9 @@
     skip_tags: true
   
     install:
+    install:
+        - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
+        - cmd: echo (appveyor-tools\secure-file -decrypt path-to\encrypted-filename.ext.enc -secret %my_secret%)
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         #- mkdir %OpenCvDir%
