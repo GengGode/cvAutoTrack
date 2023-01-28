@@ -2,7 +2,7 @@
 git describe --tags | out-file version.ver
 $version = Get-Content version.ver
 echo (Get-Content version.ver)
-7z a -tZip cvAutoTrack-%APPVEYOR_BUILD_VERSION%.zip cvAutoTrack.dll
+7z a -tZip cvAutoTrack-%APPVEYOR_BUILD_VERSION%.zip $env:MyProjectDir\cvAutoTrack\x64\Compile\cvAutoTrack.dll
 (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
 echo (Get-Content md5.hash)
 

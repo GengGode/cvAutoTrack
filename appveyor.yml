@@ -329,4 +329,4 @@
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
                 
-        - ps: ./ci/upload_version.ps1
+        - ps: $env:MyProjectDir\ci\upload_version.ps1
