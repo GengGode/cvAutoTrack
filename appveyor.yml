@@ -310,6 +310,7 @@
         - ps: (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
         - ps: echo (Get-Content md5.hash)
         - echo 测试上传
+        - ps: git clone https://github.com/WeiXiTianLi/TianLiUpdateServiceDoc.git
         - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
         - tar -xf alidrive.zip --strip-components 1
         - dir
