@@ -1,4 +1,4 @@
--
+
     version: '7.4.0.{build}'
     os: Visual Studio 2022
 
@@ -294,6 +294,16 @@
         #- 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
         
     build_script:
+        - echo 获取版本号
+        - echo %APPVEYOR_BUILD_VERSION% | out-file version.ver
+        - echo %APPVEYOR_BUILD_VERSION% | out-file build_version.ver
+        - $version = Get-Content version.ver
+        - echo (Get-Content build_version.ver)
+        #- .\GenshinTianLiBattleClient\7z.exe a -tZip GenshinTianLiBattleClient-$version.zip D:\a\GenshinTianLiBattleClient\GenshinTianLiBattleClient/x64\${{env.BUILD_CONFIGURATION}}\GenshinTianLiBattleClient.exe
+        - dir
+        - (Get-FileHash -Path GenshinTianLiBattleClient-$version.zip -Algorithm MD5).Hash | out-file md5.hash
+        - echo (Get-Content md5.hash)
+        
         - echo 测试上传
         - $version = Get-Content version.ver
         - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
@@ -301,6 +311,16 @@
         - dir
         - del example.config.yaml
         - Out-File -FilePath config.yaml -InputObject "${{secrets.ALICLOUD_CLI_UPADTE_CONFIGYAML}}"
-        - .\alidrive.exe .\GenshinTianLiBattleClient-$version.zip /GenshinTianLiBattleClient
+        - .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
         
+        - $version = Get-Content version.ver
+        - $buildversion = Get-Content build_version.ver
+        - $md5 = Get-Content md5.hash
+        - $commitLog = git log -1 --pretty=%B
         
+        - $token="${{secrets.GENSHINTIANLIBATTLECLIENTUPDATE_ARTIFACT_TOKEN}}"
+        - $url='http://update.api.weixitianli.com/GenshinTianLiBattleClient/Version?token='+$token
+        - $body='{"version": "'+$version+'", "description": "' + $buildVersion + '", "downloadUrl": "http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip", "hash": "' + $md5 + '", "updateLog": "' + $commitLog + '"}'
+        - echo $url
+        - echo $body
+        - Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/json'
