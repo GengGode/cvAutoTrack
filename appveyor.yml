@@ -323,8 +323,8 @@
         - ps: $commitLog = git log -1 --pretty=%B
         
         - ps: $token="fbd97d85-0225-4ee4-91ad-1d23760da3fa"
-        - ps: $url='http://update.api.weixitianli.com/GenshinTianLiBattleClient/Version?token='+$token
-        - ps: $body='{"version":"' + $version+'","description":"' + $buildVersion + '","downloadUrl":"http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip","hash":"' + $md5 + '","updateLog":"' + $commitLog + '"}'
+        - ps: $url='http://update.api.weixitianli.com/cvAutoTrack/Version?token='+$token
+        - ps: $body='{"version":"' + $version+'","description":"' + $buildVersion + '","downloadUrl":"http://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack/cvAutoTrack-' + $version + '.zip","hash":"' + $md5 + '","updateLog":"' + $commitLog + '"}'
         - ps: echo $url
         - ps: echo $body
         - ps: Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/json'
