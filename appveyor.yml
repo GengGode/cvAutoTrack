@@ -299,9 +299,9 @@
         - echo %APPVEYOR_BUILD_VERSION% > build_version.ver
         - ps: $version = Get-Content version.ver
         - ps: echo (Get-Content build_version.ver)
-        #- .\GenshinTianLiBattleClient\7z.exe a -tZip GenshinTianLiBattleClient-$version.zip D:\a\GenshinTianLiBattleClient\GenshinTianLiBattleClient/x64\${{env.BUILD_CONFIGURATION}}\GenshinTianLiBattleClient.exe
+        - 7z x ./cvAutoTrack.sln -y -ocvAutoTrack-%version%.zip
         - ps: dir
-        - ps: (Get-FileHash -Path GenshinTianLiBattleClient-$version.zip -Algorithm MD5).Hash | out-file md5.hash
+        - ps: (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
         - ps: echo (Get-Content md5.hash)
         
         - echo 测试上传
