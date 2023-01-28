@@ -286,7 +286,6 @@
     skip_tags: true
   
     install:
-    install:
         - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
         - cmd: echo (appveyor-tools\secure-file -decrypt path-to\encrypted-filename.ext.enc -secret %my_secret%)
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
