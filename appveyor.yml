@@ -287,7 +287,7 @@
   
     install:
         - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
-        - cmd: echo (appveyor-tools\secure-file -decrypt path-to\encrypted-filename.ext.enc -secret %my_secret%)
+        - cmd: appveyor-tools\secure-file -decrypt config_yaml -secret %my_secret%
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         #- mkdir %OpenCvDir%
@@ -314,7 +314,8 @@
         - tar -xf alidrive.zip --strip-components 1
         - dir
         - del example.config.yaml
-        - ps: Out-File -FilePath config.yaml -InputObject "$SecureAliConfig"
+        - ps: $config_content = Get-Content config_yaml
+        - ps: Out-File -FilePath config.yaml -InputObject "$config_content"
         - dir
         - ps: echo (Get-Content config.yaml)
         - ps: .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
