@@ -287,7 +287,7 @@
   
     install:
         - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
-        - cmd: appveyor-tools\secure-file -decrypt config_yaml -secret %my_secret%
+        - cmd: appveyor-tools\secure-file -decrypt path-to\encrypted-filename.ext.enc -secret %my_secret% -out config_yaml
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         #- mkdir %OpenCvDir%
