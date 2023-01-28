@@ -1,4 +1,4 @@
--
+
     version: '7.4.0.{build}'
     os: Visual Studio 2022
 
@@ -8,8 +8,9 @@
     branches:
       only:
         - master
-
+        
     environment:
+        TokenSecureGit: BbvaBqBiF0qP5ne21acir4wbozoKTL7ssMDQhD/I20qAUrP/uTGrgcJwx5FnHHFNMnepN3lQcZpnkD+RARpBeweMw/Z3SR8TfFWtMsM0Gh4=
         MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
@@ -77,6 +78,8 @@
         - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -c 2-34 >%ProjectName%.md5
         - 7z a cvautotrack.7z %MyProjectDir%x64\build\*
         - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Compile\TEST_cvAutoTrack_Cpp.exe $env:MyProjectDir\x64\build\
+
+        - 
         
         - appveyor PushArtifact version.tag
         - appveyor PushArtifact %ProjectName%.md5
@@ -197,31 +200,6 @@
         - appveyor PushArtifact cvAutoTrack.7z
         - appveyor PushArtifact TEST_cvAutoTrack_Cpp.exe
 
-    deploy:
-        - provider: GitHub
-          description: '$(APPVEYOR_PROJECT_SLUG): DEV cvAutoTrack Dll $(APPVEYOR_BUILD_VERSION).$(APPVEYOR_BUILD_NUMBER)' 
-          auth_token:
-             secure: G/Fzf0bGIhqqt+XvsC5AXrZVNs3atGU7XCzJxqiUZEwOxoZrjxk87ENI/OitnXCo
-          draft: true
-          tag: Dev-$(APPVEYOR_BUILD_VERSION)
-          force_update: true
-          on:  
-            APPVEYOR_REPO_TAG: false
-
-    notifications:
-      - provider: Email
-        to:
-          - ysx20201030@163.com
-          - aymb00@126.com
-        subject: '{{status}}: {{projectName}} {{buildVersion}}'                  # optional
-        message: "<h1>Build</h1>
-                    <h2>{{projectName}} {{status}}</h2>
-                        <p>{{buildVersion}}: {{buildUrl}}</p>
-                   <H1>Commit</h1> 
-                    <h3>#{{commitId}} by {{commitAuthor}} on {{commitDate}}</h3><h2> {{commitMessage}}</h2>"    # optional
-        on_build_success: true
-        on_build_failure: false
-        on_build_status_changed: false
 -
     version: '7.0.0.{build}'
     os: Visual Studio 2022
@@ -285,4 +263,44 @@
         - TEST_cvAutoTrack_Cpp.exe -test
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
+                
+-
+    version: '7.0.0.{build}'
+    os: Visual Studio 2022
+    configuration: Chore
+    platform:
+        - x64
+    branches:
+      only:
+        - /chore-/
+
+    environment:
+        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        OpenCvDir: C:\projects\opencv\
+        OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
+        ProjectName: cvAutoTrack
+        ProJectExeName: cvAutoTrack
+    skip_tags: true
+  
+    install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+
+        #- mkdir %OpenCvDir%
+        #- appveyor DownloadFile %OpenCvUrl%
+        #- 7z x ./*.zip -y -o%OpenCvDir%
+        #- rm -f ./*.zip
+        #
+        #- cd %MyProjectDir%\%ProjectName%\
+        #- 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        
+    build_script:
+        - echo 测试上传
+        - $version = Get-Content version.ver
+        - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
+        - tar -xf alidrive.zip --strip-components 1
+        - dir
+        - del example.config.yaml
+        - Out-File -FilePath config.yaml -InputObject "${{secrets.ALICLOUD_CLI_UPADTE_CONFIGYAML}}"
+        - .\alidrive.exe .\GenshinTianLiBattleClient-$version.zip /GenshinTianLiBattleClient
+        
         
