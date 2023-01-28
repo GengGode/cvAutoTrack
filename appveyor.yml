@@ -312,7 +312,7 @@
         - del example.config.yaml
         - ps: Out-File -FilePath config.yaml -InputObject "$SecureAliConfig"
         - dir
-        - ps: echo (Get-Content build_version.ver)
+        - ps: echo (Get-Content config.yaml)
         - ps: .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
         
         - $version = Get-Content version.ver
