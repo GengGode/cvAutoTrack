@@ -275,6 +275,7 @@
         - /chore-/
 
     environment:
+        SecureAliConfig: HKh20duMUEcO6HEKkDzsUYS2qgSpQKrNmVOkKd7hC5JNHtPdLa+6giA5IwNxBeYG0e9cbaVlIl7r9UjswYF09nRljRGz9fHXN90/4HUyuxSwtH65HJmSSPIOM7QfXqAdxUjBXCZ2iwlnn3JYPD603JQgKUypTtCdlWUNRxtPFObDq2yPXlwvw02a4u4e7ze1n9oiEF9r1RmLHs4D3wrhVw==
         MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
@@ -310,7 +311,7 @@
         - tar -xf alidrive.zip --strip-components 1
         - dir
         - del example.config.yaml
-        - ps: Out-File -FilePath config.yaml -InputObject "${{secrets.ALICLOUD_CLI_UPADTE_CONFIGYAML}}"
+        - ps: Out-File -FilePath config.yaml -InputObject "$SecureAliConfig"
         - .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
         
         - $version = Get-Content version.ver
