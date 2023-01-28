@@ -305,12 +305,12 @@
         - ps: echo (Get-Content md5.hash)
         
         - echo 测试上传
-        - $version = Get-Content version.ver
+        - ps: $version = Get-Content version.ver
         - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
         - tar -xf alidrive.zip --strip-components 1
         - dir
         - del example.config.yaml
-        - Out-File -FilePath config.yaml -InputObject "${{secrets.ALICLOUD_CLI_UPADTE_CONFIGYAML}}"
+        - ps: Out-File -FilePath config.yaml -InputObject "${{secrets.ALICLOUD_CLI_UPADTE_CONFIGYAML}}"
         - .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
         
         - $version = Get-Content version.ver
