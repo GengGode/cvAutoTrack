@@ -295,8 +295,8 @@
         
     build_script:
         - echo 获取版本号
-        - echo %APPVEYOR_BUILD_VERSION% > version.ver
-        - echo %APPVEYOR_BUILD_VERSION% > build_version.ver
+        - echo %APPVEYOR_BUILD_VERSION%>version.ver
+        - echo %APPVEYOR_BUILD_VERSION%>build_version.ver
         - ps: $version = Get-Content version.ver
         - ps: echo (Get-Content build_version.ver)
         - 7z a -tZip cvAutoTrack-%APPVEYOR_BUILD_VERSION%.zip cvAutoTrack.sln
