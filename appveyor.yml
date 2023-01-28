@@ -295,8 +295,8 @@
         
     build_script:
         - echo 获取版本号
-        - echo %APPVEYOR_BUILD_VERSION% | out-file version.ver
-        - echo %APPVEYOR_BUILD_VERSION% | out-file build_version.ver
+        - echo %APPVEYOR_BUILD_VERSION% > version.ver
+        - echo %APPVEYOR_BUILD_VERSION% > build_version.ver
         - $version = Get-Content version.ver
         - echo (Get-Content build_version.ver)
         #- .\GenshinTianLiBattleClient\7z.exe a -tZip GenshinTianLiBattleClient-$version.zip D:\a\GenshinTianLiBattleClient\GenshinTianLiBattleClient/x64\${{env.BUILD_CONFIGURATION}}\GenshinTianLiBattleClient.exe
