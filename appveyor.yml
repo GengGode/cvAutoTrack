@@ -328,7 +328,8 @@
         - TEST_cvAutoTrack_Cpp.exe -test
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
-                
+        
+        - cd %MyProjectDir%
         - ps: echo 获取版本号
         - ps: git describe --tags | out-file version.ver
         - ps: $version = Get-Content version.ver
@@ -341,7 +342,7 @@
         - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
         - tar -xf alidrive.zip --strip-components 1 | del example.config.yaml
         - ps: Out-File -FilePath config.yaml -InputObject "ali_drive:`t`n  drive_id:`t53348742`n  refresh_token:`t7e5bc0b6829c40ac97864d937502447a`n  root_path:`t/TianLiUpdateService`ndebug:`tfalse`nretry:`t3`ntransfers:`t3"
-        - ps: .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
+        - .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
         - ps: echo 推送版本
         - ps: $version = Get-Content version.ver
         - ps: $buildversion = Get-Content build_version.ver
