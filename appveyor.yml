@@ -317,14 +317,14 @@
        
         - .\alidrive.exe .\cvAutoTrack-%APPVEYOR_BUILD_VERSION%.zip /cvAutoTrack
         
-        - $version = Get-Content version.ver
-        - $buildversion = Get-Content build_version.ver
-        - $md5 = Get-Content md5.hash
-        - $commitLog = git log -1 --pretty=%B
+        - ps: $version = Get-Content version.ver
+        - ps: $buildversion = Get-Content build_version.ver
+        - ps: $md5 = Get-Content md5.hash
+        - ps: $commitLog = git log -1 --pretty=%B
         
-        - $token="${{secrets.GENSHINTIANLIBATTLECLIENTUPDATE_ARTIFACT_TOKEN}}"
-        - $url='http://update.api.weixitianli.com/GenshinTianLiBattleClient/Version?token='+$token
-        - $body='{"version":"' + $version+'","description":"' + $buildVersion + '","downloadUrl":"http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip","hash":"' + $md5 + '","updateLog":"' + $commitLog + '"}'
-        - echo $url
-        - echo $body
-        - Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/json'
+        - ps: $token="fbd97d85-0225-4ee4-91ad-1d23760da3fa"
+        - ps: $url='http://update.api.weixitianli.com/GenshinTianLiBattleClient/Version?token='+$token
+        - ps: $body='{"version":"' + $version+'","description":"' + $buildVersion + '","downloadUrl":"http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip","hash":"' + $md5 + '","updateLog":"' + $commitLog + '"}'
+        - ps: echo $url
+        - ps: echo $body
+        - ps: Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/json'
