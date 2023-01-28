@@ -299,7 +299,7 @@
         - echo %APPVEYOR_BUILD_VERSION% > build_version.ver
         - ps: $version = Get-Content version.ver
         - ps: echo (Get-Content build_version.ver)
-        - 7z a -tZip cvAutoTrack-%version%.zip cvAutoTrack.sln
+        - ps: .\7z a -tZip cvAutoTrack-$version.zip cvAutoTrack.sln
         - ps: dir
         - ps: (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
         - ps: echo (Get-Content md5.hash)
