@@ -320,7 +320,7 @@
         
         - $token="${{secrets.GENSHINTIANLIBATTLECLIENTUPDATE_ARTIFACT_TOKEN}}"
         - $url='http://update.api.weixitianli.com/GenshinTianLiBattleClient/Version?token='+$token
-        - $body='{"version": "'+$version+'", "description": "' + $buildVersion + '", "downloadUrl": "http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip", "hash": "' + $md5 + '", "updateLog": "' + $commitLog + '"}'
+        - $body='{"version":"' + $version+'","description":"' + $buildVersion + '","downloadUrl":"http://download.weixitianli.com/d/TianLiUpdateService/GenshinTianLiBattleClient/GenshinTianLiBattleClient-' + $version + '.zip","hash":"' + $md5 + '","updateLog":"' + $commitLog + '"}'
         - echo $url
         - echo $body
         - Invoke-RestMethod -Method Post -Uri $url -Body $body -ContentType 'application/json'
