@@ -306,13 +306,12 @@
         - ps: (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
         - ps: echo (Get-Content md5.hash)
         - echo 测试上传
-        - ps: git clone https://github.com/WeiXiTianLi/TianLiUpdateServiceDoc.git
+        #- ps: git clone https://github.com/WeiXiTianLi/TianLiUpdateServiceDoc.git
         - curl -L "https://github.com/aoaostar/alidrive-uploader/releases/download/v2.2.1/alidrive_uploader_v2.2.1_windows_amd64.zip" -o alidrive.zip 
         - tar -xf alidrive.zip --strip-components 1
         - dir
         - del example.config.yaml
-        - ps: $config_content = Get-Content config_yaml
-        - ps: Out-File -FilePath config.yaml -InputObject "$config_content"
+        - ps: Out-File -FilePath config.yaml -InputObject "ali_drive:`n  drive_id: 53348742`n  refresh_token: 7e5bc0b6829c40ac97864d937502447a`n  root_path: /TianLiUpdateService`ndebug: false`nretry: 3`ntransfers: 3"
         - dir
         - ps: echo (Get-Content config.yaml)
         - ps: .\alidrive.exe .\cvAutoTrack-$version.zip /cvAutoTrack
