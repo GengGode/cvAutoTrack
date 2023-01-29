@@ -65,10 +65,16 @@ namespace TianLi::Match
 			template_mask_handle_mode = paimon_template_handle_mode;
 			check_match_paimon_param = out_genshin_paimon.config.check_match_paimon_params_no_alpha;
 		}
-		
 		// 拆分图层
 		std::vector<cv::Mat>  split_paimon;
-		cv::split(giPaimonRef, split_paimon);
+		try
+		{
+			cv::split(giPaimonRef, split_paimon);
+		}
+		catch (...)
+		{
+			return false;
+		}
 		
 		cv::Mat template_result;
 		// TODO HOTCODE
