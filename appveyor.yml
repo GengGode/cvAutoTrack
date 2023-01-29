@@ -1,3 +1,4 @@
+# master build but not delyor 
 -
     version: '7.4.0.{build}'
     os: Visual Studio 2022
@@ -265,7 +266,7 @@
         - TEST_cvAutoTrack_CSharp.exe -test
                 
 -
-    version: '7.0.0.{build}'
+    version: '7.4.0.{build}'
     os: Visual Studio 2022
     configuration: Chore
     platform:
