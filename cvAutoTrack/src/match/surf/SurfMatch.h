@@ -56,6 +56,7 @@ public:
 	cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
 
 	cv::Point2d match_no_continuity(bool& calc_is_faile);
+	cv::Point2d match_no_continuity_2th(bool& calc_is_faile);
 
 	cv::Point2d SURFMatch(cv::Mat minMapMat);
 	cv::Point2d getLocalPos();
