@@ -18,7 +18,20 @@ const std::vector<std::pair<std::wstring, GenshinWindowClass>> GenshinWindowName
 	{L"Genshin Impact", GenshinWindowClass::Unity},
 	{L"原神-调试", GenshinWindowClass::None}
 };
-
+const cv::Rect MatchPaimonKeyPointRect =
+{
+	25,12,68,77
+}; 
+const cv::Rect MatchPaimonHandleKeyPointRect =
+{
+	89,42,57,64
+};
+const std::vector<std::pair<cv::Point, cv::Scalar>> MatchPaimonKeyPointList =
+{
+};
+const std::vector<std::pair<cv::Point, cv::Scalar>> MatchPaimonHandleKeyPointList =
+{
+};
 struct GenshinHandleConfig
 {
 	bool is_auto_find_genshin = true;
@@ -73,6 +86,8 @@ struct GenshinScreenConfig
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
 	cv::Rect rect_minimap;
+	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
+	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
 struct GenshinScreen
 {
@@ -108,6 +123,9 @@ struct GenshinPaimonConfig
 {
 	double check_match_paimon_params = 0.80;
 	double check_match_paimon_params_no_alpha = 0.50;
+	std::vector<std::pair<cv::Point, cv::Scalar>> paimon_check_vec = MatchPaimonKeyPointList;
+	std::vector<std::pair<cv::Point, cv::Scalar>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
+	double check_match_paimon_keypoint_params = 16;
 };
 
 struct GenshinPaimon
