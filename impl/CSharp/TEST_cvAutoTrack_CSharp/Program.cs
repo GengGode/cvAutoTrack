@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 using cvAutoTrackCSharp;
+using cvAutoTrackCSharpImpl;
 
 namespace TEST_cvAutoTrack_CSharp
 {
@@ -20,29 +21,57 @@ namespace TEST_cvAutoTrack_CSharp
             // 如果输入参数 -test 就执行测试
             if (args.Length > 0 && args[0] == "-test")
             {
-                // 测试版本号
-                byte[] version_buff = new byte[256];
-                if (cvAutoTrack.GetCompileVersion(version_buff,256))
                 {
-                    string version_str = Encoding.UTF8.GetString(version_buff);
-                    Console.WriteLine("版本号       : " + version_str);
-                }
-                else
-                {
-                    Console.WriteLine("错误码       : " + cvAutoTrack.GetLastErr().ToString());
-                }
-                byte[] version_time_buff = new byte[256];
-                if (cvAutoTrack.GetCompileTime(version_time_buff, 256))
-                {
-                    string version_time_str = Encoding.UTF8.GetString(version_time_buff);
-                    Console.WriteLine("编译时间     : " + version_time_str);
-                }
-                else
-                {
-                    Console.WriteLine("错误码       : " + cvAutoTrack.GetLastErr().ToString());
-                }
+                    // 测试版本号
+                    byte[] version_buff = new byte[256];
+                    if (cvAutoTrackCSharp.cvAutoTrack.GetCompileVersion(version_buff, 256))
+                    {
+                        string version_str = Encoding.UTF8.GetString(version_buff);
+                        Console.WriteLine("版本号       : " + version_str);
+                    }
+                    else
+                    {
+                        Console.WriteLine("错误码       : " + cvAutoTrackCSharp.cvAutoTrack.GetLastErr().ToString());
+                    }
+                    byte[] version_time_buff = new byte[256];
+                    if (cvAutoTrackCSharp.cvAutoTrack.GetCompileTime(version_time_buff, 256))
+                    {
+                        string version_time_str = Encoding.UTF8.GetString(version_time_buff);
+                        Console.WriteLine("编译时间     : " + version_time_str);
+                    }
+                    else
+                    {
+                        Console.WriteLine("错误码       : " + cvAutoTrackCSharp.cvAutoTrack.GetLastErr().ToString());
+                    }
 
-                Console.WriteLine("测试完成");
+                    Console.WriteLine("隐式加载 测试完成");
+                }
+                {
+                    // 测试版本号
+                    cvAutoTrackCSharpImpl.cvAutoTrack cvAutoTrack = new cvAutoTrackCSharpImpl.cvAutoTrack(true);
+                    byte[] version_buff = new byte[256];
+                    if (cvAutoTrack.GetCompileVersion(version_buff, 256))
+                    {
+                        string version_str = Encoding.UTF8.GetString(version_buff);
+                        Console.WriteLine("版本号       : " + version_str);
+                    }
+                    else
+                    {
+                        Console.WriteLine("错误码       : " + cvAutoTrack.GetLastErr().ToString());
+                    }
+                    byte[] version_time_buff = new byte[256];
+                    if (cvAutoTrack.GetCompileTime(version_time_buff, 256))
+                    {
+                        string version_time_str = Encoding.UTF8.GetString(version_time_buff);
+                        Console.WriteLine("编译时间     : " + version_time_str);
+                    }
+                    else
+                    {
+                        Console.WriteLine("错误码       : " + cvAutoTrack.GetLastErr().ToString());
+                    }
+
+                    Console.WriteLine("显式加载 测试完成");
+                }
                 return 0;
             }
             else
@@ -51,14 +80,17 @@ namespace TEST_cvAutoTrack_CSharp
                 byte[] versionBuff = new byte[1024];
                 //string version = "       ";
 
-                cvAutoTrackCSharp.cvAutoTrack.verison(versionBuff);
+                cvAutoTrackCSharp.cvAutoTrack.GetCompileVersion(versionBuff,256);
                 string version = Encoding.UTF8.GetString(versionBuff);
-                //cvAutoTrack.cvAutoTrack.verison( version);
-
                 Console.WriteLine("version: " + version);
 
+                cvAutoTrackCSharpImpl.cvAutoTrack cvAutoTrack = new cvAutoTrackCSharpImpl.cvAutoTrack();
+                cvAutoTrack.GetCompileVersion(versionBuff, 256);
+                version = Encoding.UTF8.GetString(versionBuff);
 
-
+                //cvAutoTrack.cvAutoTrack.verison( version);
+                Console.WriteLine("version: " + version);
+                
                 // 申请内存
                 byte[] jsonBuffer = new byte[1024];
 
