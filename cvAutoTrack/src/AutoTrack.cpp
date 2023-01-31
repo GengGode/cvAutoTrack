@@ -19,6 +19,7 @@
 
 #include "genshin/genshin.handle.h"
 #include "genshin/genshin.screen.h"
+#include "genshin/check/paimon/genshin.check.paimon.h"
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
@@ -926,7 +927,7 @@ bool AutoTrack::getMiniMapRefMat()
 	
 	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
 
-	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
+	if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
@@ -935,7 +936,6 @@ bool AutoTrack::getMiniMapRefMat()
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-
 			err = { 40201,"DirectX模式下检测派蒙失败" };
 			return false;
 		}
