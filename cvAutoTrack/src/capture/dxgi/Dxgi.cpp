@@ -222,10 +222,30 @@ bool Dxgi::capture(cv::Mat& frame)
     
     // 判断是否可以获取新的的画面
     Direct3D11CaptureFrame new_frame { nullptr };
-	// 获取新的画面
+	// 获取最新的画面
     try
     {
+        // Debug下每次都获取最新的画面
+#ifdef _DEBUG
+        Direct3D11CaptureFrame new_frame_null{ nullptr };
+        do
+        {
+            new_frame = m_framePool.TryGetNextFrame();
+            if (new_frame == nullptr)
+			{
+				err = { 10002,"获取新的画面失败" };
+				return false;
+			}
+            new_frame_null = m_framePool.TryGetNextFrame();
+            if (new_frame_null!= nullptr)
+            {
+				new_frame.Close();
+				new_frame = new_frame_null;
+            }
+		} while (new_frame_null == nullptr); 
+#else
         new_frame = m_framePool.TryGetNextFrame();
+#endif // _DEBUG
     }
 	catch (...)
 	{
