@@ -21,41 +21,33 @@ const std::vector<std::pair<std::wstring, GenshinWindowClass>> GenshinWindowName
 const cv::Rect MatchPaimonKeyPointRect =
 {
 	25,12,68,77
-}; 
+};
 const cv::Rect MatchPaimonHandleKeyPointRect =
 {
 	89,42,57,64
 };
-const std::vector<std::pair<cv::Point, cv::Scalar>> MatchPaimonKeyPointList =
+const std::vector<std::pair<cv::Point, cv::Vec3b>> MatchPaimonKeyPointList =
 {
-{{31,67},{233,196,143}},
-{{35,42},{255,255,255}},
-{{41,54},{41,72,101}},
-{{53,77},{255,255,255}},
-{{59,57},{255,255,255}},
-{{63,44},{250,238,224}},
-{{70,74},{255,255,255}},
-{{82,49},{70,112,164}},
-{{196,49},{255,255,255}},
-{{197,67},{255,255,255}},
-{{209,49},{255,255,255}},
-{{210,67},{255,255,255}}
+{{42,19},{143,196,233}},
+{{17,23},{255,255,255}},
+{{29,29},{101, 72, 41}},
+{{52,41},{255,255,255}},
+{{32,47},{255,255,255}},
+{{19,51},{224,238,250}},
+{{49,58},{255,255,255}},
+{{24,70},{164,112, 70}},
 };
 
-const std::vector<std::pair<cv::Point, cv::Scalar>> MatchPaimonHandleKeyPointList =
+const std::vector<std::pair<cv::Point, cv::Vec3b>> MatchPaimonHandleKeyPointList =
 {
-{{58,124},{233,196,143}},
-{{61,105},{255,255,255}},
-{{66,113},{42,71,101}},
-{{70,127},{255,255,255}},
-{{81,116},{255,255,255}},
-{{84,105},{250,238,224}},
-{{88,131},{255,255,255}},
-{{99,109},{67,109,159}},
-{{193,109},{255,255,255}},
-{{193,124},{255,255,255}},
-{{208,109},{255,255,255}},
-{{209,124},{255,255,255}}
+{{35,16},{143,196,233}},
+{{16,19},{255,255,255}},
+{{24,24},{101, 71, 42}},
+{{38,28},{255,255,255}},
+{{27,39},{255,255,255}},
+{{16,42},{224,238,250}},
+{{42,46},{255,255,255}},
+{{20,57},{159,109, 67}},
 };
 
 struct GenshinHandleConfig
@@ -149,8 +141,8 @@ struct GenshinPaimonConfig
 {
 	double check_match_paimon_params = 0.80;
 	double check_match_paimon_params_no_alpha = 0.50;
-	std::vector<std::pair<cv::Point, cv::Scalar>> paimon_check_vec = MatchPaimonKeyPointList;
-	std::vector<std::pair<cv::Point, cv::Scalar>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
+	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_check_vec = MatchPaimonKeyPointList;
+	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
 	double check_match_paimon_keypoint_params = 16;
 };
 
