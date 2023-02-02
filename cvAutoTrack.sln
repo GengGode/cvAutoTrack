@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{DF269035-8114-44F0-9AE9-74E826954031}"
 	ProjectSection(SolutionItems) = preProject
+		ci\clone_resource.ps1 = ci\clone_resource.ps1
 		ci\install_opencv.bat = ci\install_opencv.bat
 		ci\install_opencv.ps1 = ci\install_opencv.ps1
 		ci\release_resource.bat = ci\release_resource.bat

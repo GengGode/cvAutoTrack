@@ -22,16 +22,10 @@
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         - echo %APPVEYOR_BUILD_VERSION%>>%MyProjectDir%cvAutoTrack\src\version\appVeyor_version_tag.tag
-        - mkdir %OpenCvDir%
-        - appveyor DownloadFile %OpenCvUrl%
-        - 7z x ./*.zip -y -o%OpenCvDir%
-        - rm -f ./*.zip
-        - ps: ./ci/install_opencv.ps1
-        
         - cd %MyProjectDir%
+        - ps: ./ci/install_opencv.ps1
+        - ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
-        - cd %ProjectName%
-        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
     before_build:
         #- dir  %MyProjectDir%
         #- dir  %OpenCvDir%
