@@ -12,7 +12,7 @@
         
     environment:
         TokenSecureGit: BbvaBqBiF0qP5ne21acir4wbozoKTL7ssMDQhD/I20qAUrP/uTGrgcJwx5FnHHFNMnepN3lQcZpnkD+RARpBeweMw/Z3SR8TfFWtMsM0Gh4=
-        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
@@ -26,8 +26,7 @@
         - appveyor DownloadFile %OpenCvUrl%
         - 7z x ./*.zip -y -o%OpenCvDir%
         - rm -f ./*.zip
-        #- dir %OpenCvDir%
-        #- dir %OpenCvDir%x64\vc15\staticlib
+        — ps: ./ci/install_opencv.ps1
 
         - cd %MyProjectDir%\%ProjectName%\
         - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
