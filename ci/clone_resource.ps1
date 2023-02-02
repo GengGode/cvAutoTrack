@@ -1,2 +1,2 @@
-cd C:\projects\cvautotrack\
+cd $env:MyProjectDir
 git submodule update --init --recursive

@@ -1,3 +1,3 @@
 $ResourcePkg='./cvAutoTrack.Resource/resource.part01.rar'
-$ResourceOutDir='./cvAutoTrack/'
+$ResourceOutDir='./$env:ProjectName/'
 7z x $ResourcePkg -y -o"$ResourceOutDir"
