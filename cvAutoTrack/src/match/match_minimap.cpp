@@ -93,55 +93,81 @@ namespace TianLi::Match
 	bool splite_minimap(const GenshinScreen& genshin_screen, GenshinMinimap& out_genshin_minimap)
 	{
 		auto& paimon_rect = genshin_screen.config.rect_paimon;
-		auto& minimap_cailb_rect = genshin_screen.config.rect_minimap_cailb;
+		// 检测不到派蒙，返回false
+		if (paimon_rect.empty())
+			return false;
 
-		if (paimon_rect.empty() || minimap_cailb_rect.empty()) return false;
+		// 根据屏幕分辨率直接计算边界框
+		float leftMarginRatio, topMarginRatio, scaleRatio;		// 基于屏幕高度的百分比占比
+		int xPos, yPos, scale;		// 实际输出的坐标和尺寸
 
-		// 1. 以paimon为基准，计算出minimap的左边界
-		auto minimap_left = paimon_rect.x + paimon_rect.width / 2;
-		// 2. 以minimap_cailb为基准，计算出minimap的右边界
-		auto minimap_right = minimap_cailb_rect.x + minimap_cailb_rect.width / 2;
-		// 3. 以paimon和minimap_cailb为基准，计算出minimap的上边界
-		auto minimap_top = (paimon_rect.y + minimap_cailb_rect.y) / 2;
-		// 4. 计算出minimap的宽度
-		auto minimap_width = minimap_right - minimap_left;
-		// 5. 计算出minimap的高度
-		auto minimap_height = minimap_width;
-		// 6. 计算出minimap的下边界	
-		auto minimap_bottom = minimap_top + minimap_height;
-		// 7. 计算出minimap的左上角坐标
-		auto minimap_left_top = cv::Point(minimap_left, minimap_top);
-		// 8. 计算出minimap的右下角坐标
-		auto minimap_right_bottom = cv::Point(minimap_right, minimap_bottom);
-		// 9. 计算出minimap的矩形区域
-		auto minimap_rect = cv::Rect(minimap_left_top, minimap_right_bottom);
-		// 10. 以minimap_rect为基准，计算出minimap的中心点
-		auto minimap_center = cv::Point(minimap_rect.x + minimap_rect.width / 2, minimap_rect.y + minimap_rect.height / 2);
+		// 获取比例尺寸
+		auto& isHandleMode = genshin_screen.config.is_handle_mode;
+		if (isHandleMode)
+		{
+			leftMarginRatio = HandleMiniMapRatioPos[0];
+			topMarginRatio = HandleMiniMapRatioPos[1];
+			scaleRatio = HandleMiniMapRatioPos[2];
+		}
+		else
+		{
+			leftMarginRatio = KeyPadMiniMapRatioPos[0];
+			topMarginRatio = KeyPadMiniMapRatioPos[1];
+			scaleRatio = KeyPadMiniMapRatioPos[2];
+		}
 
+		// 根据长宽比适配UGUI
+		auto& img_screen = genshin_screen.img_screen;
+		auto& scrWd = img_screen.cols;
+		auto& scrHt = img_screen.rows;
+		float scrRatio = (float)scrWd / scrHt;
+		
+		float standerScrRatio = 16.0 / 9.0;
+		int standerScrWd, standerScrHt;
+		
+		// 宽型
+		if (scrRatio >= standerScrRatio) {
+			standerScrWd = scrHt * standerScrRatio;
+			standerScrHt = scrHt;
+		}
+		// 高型
+		else
+		{
+			standerScrWd = scrWd;
+			standerScrHt = scrWd / standerScrRatio;
+		}
+		xPos = standerScrHt * leftMarginRatio;
+		yPos = standerScrHt * topMarginRatio;
+		scale = standerScrHt * scaleRatio;
+
+		// 矩形
+		auto minimap_rect = cv::Rect(xPos, yPos, scale, scale);
+		// 中心点
+		auto minimap_center = cv::Point((xPos + scale) / 2, (yPos + scale) / 2);
 		out_genshin_minimap.img_minimap = genshin_screen.img_screen(minimap_rect);
 		out_genshin_minimap.rect_minimap = minimap_rect;
 		out_genshin_minimap.point_minimap_center = minimap_center;
 
-		int Avatar_Rect_x = cvRound(minimap_width * 0.4);
-		int Avatar_Rect_y = cvRound(minimap_height * 0.4);
-		int Avatar_Rect_w = cvRound(minimap_width * 0.2);
-		int Avatar_Rect_h = cvRound(minimap_height * 0.2);
+		int Avatar_Rect_x = cvRound(scale * 0.4);
+		int Avatar_Rect_y = cvRound(scale * 0.4);
+		int Avatar_Rect_w = cvRound(scale * 0.2);
+		int Avatar_Rect_h = cvRound(scale * 0.2);
 
 		out_genshin_minimap.rect_avatar = cv::Rect(Avatar_Rect_x, Avatar_Rect_y, Avatar_Rect_w, Avatar_Rect_h);
 		out_genshin_minimap.img_avatar = out_genshin_minimap.img_minimap(out_genshin_minimap.rect_avatar);
 
-		int Viewer_Rect_x = cvRound(minimap_width * 0.2);
-		int Viewer_Rect_y = cvRound(minimap_height * 0.2);
-		int Viewer_Rect_w = cvRound(minimap_width * 0.6);
-		int Viewer_Rect_h = cvRound(minimap_height * 0.6);
+		int Viewer_Rect_x = cvRound(scale * 0.2);
+		int Viewer_Rect_y = cvRound(scale * 0.2);
+		int Viewer_Rect_w = cvRound(scale * 0.6);
+		int Viewer_Rect_h = cvRound(scale * 0.6);
 
 		out_genshin_minimap.rect_viewer = cv::Rect(Viewer_Rect_x, Viewer_Rect_y, Viewer_Rect_w, Viewer_Rect_h);
 		out_genshin_minimap.img_viewer = out_genshin_minimap.img_minimap(out_genshin_minimap.rect_viewer);
 
-		int Stars_Rect_x = cvRound(minimap_width * 0.165);
-		int Stars_Rect_y = cvRound(minimap_height * 0.165);
-		int Stars_Rect_w = cvRound(minimap_width * 0.67);
-		int Stars_Rect_h = cvRound(minimap_height * 0.67);
+		int Stars_Rect_x = cvRound(scale * 0.165);
+		int Stars_Rect_y = cvRound(scale * 0.165);
+		int Stars_Rect_w = cvRound(scale * 0.67);
+		int Stars_Rect_h = cvRound(scale * 0.67);
 
 		out_genshin_minimap.rect_stars = cv::Rect(Stars_Rect_x, Stars_Rect_y, Stars_Rect_w, Stars_Rect_h);
 		out_genshin_minimap.img_stars = out_genshin_minimap.img_minimap(out_genshin_minimap.rect_stars);
