@@ -109,22 +109,30 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetName>CVAUTOTRACK</TargetName>
+    <TargetName>cvAutoTrack</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)\src;$(ProjectDir)include;$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(opencvstaticlib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <ExternalIncludePath>$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetName>CVAUTOTRACK</TargetName>
+    <TargetName>cvAutoTrack</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(opencvStaticLib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <ExternalIncludePath>$(opencvStaticInc);$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">
+    <TargetName>cvAutoTrack</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">
-    <TargetName>CVAUTOTRACK</TargetName>
-    <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,7 +155,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -161,6 +169,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,7 +178,7 @@
       <AdditionalDependencies>aded.lib;ippicvmt.lib;IlmImfd.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;libwebpd.lib;opencv_img_hash460d.lib;opencv_world460d.lib;quircd.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
       <Version>3.0</Version>
-      <AdditionalLibraryDirectories>D:\opencv\opencv_460\install\build_Static_World_NoCuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\opencv\opencv_460\install\build_Static_World_NoCuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib;$(opecvsstaticlib)</AdditionalLibraryDirectories>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
@@ -344,6 +353,7 @@
     <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h" />
     <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h" />
     <ClInclude Include="src\capture\video\video.h" />
+    <ClInclude Include="src\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\ErrorCode.h" />
     <ClInclude Include="src\filter\Filter.h" />
     <ClInclude Include="src\filter\kalman\Kalman.h" />
@@ -351,6 +361,7 @@
     <ClInclude Include="src\filter\untouched\Untouched.h" />
     <ClInclude Include="src\FlowWork.h" />
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\genshin\genshin.handle.h" />
     <ClInclude Include="src\Kalmanfilter.h" />
     <ClInclude Include="src\match\diff\DiffMatch.h" />
@@ -363,6 +374,7 @@
     <ClInclude Include="src\match\type\MatchType.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\resources\image_binary\Resource.ImageBinary.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\utils\Utils.h" />
   </ItemGroup>
@@ -388,6 +400,7 @@
     <ClCompile Include="src\filter\smooth\Smooth.cpp" />
     <ClCompile Include="src\filter\untouched\Untouched.cpp" />
     <ClCompile Include="src\FlowWork.cpp" />
+    <ClCompile Include="src\genshin\check\paimon\genshin.check.paimon.cpp" />
     <ClCompile Include="src\genshin\genshin.handle.cpp" />
     <ClCompile Include="src\genshin\genshin.screen.cpp" />
     <ClCompile Include="src\Kalmanfilter.cpp" />

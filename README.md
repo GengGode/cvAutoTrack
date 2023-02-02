@@ -35,6 +35,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 ## 新版本计划 7.x
 
+- [x] 优化了派蒙检测算法 [派蒙检测2nd](doc/paimon_check.md)
 - [ ] 添加对秘境中的角度和视野识别
 - [ ] 实现无透明通道下的视野识别
 - [x] 实现日志可控制不输出
