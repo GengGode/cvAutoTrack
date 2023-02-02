@@ -140,7 +140,6 @@ void SurfMatch::match()
 	if (isContinuity)
 	{
 		bool calc_continuity_is_faile = false;
-		// 连续匹配，匹配角色附近小范围区域
 		pos = match_continuity(calc_continuity_is_faile);
 		// 连续匹配失败
 		if (calc_continuity_is_faile)
@@ -151,7 +150,6 @@ void SurfMatch::match()
 	// 直接非连续匹配，匹配整个大地图
 	if (!isContinuity)
 	{
-		// 非连续匹配，匹配整个大地图
 		pos = match_no_continuity(calc_is_faile);
 	}
 	// 没有有效结果，结束
@@ -347,13 +345,21 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	return pos_not_on_city;
 }
+cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
+{
+#ifdef _DEBUG
+	return match_no_continuity_2nd(calc_is_faile);
+#else
+	return match_no_continuity_1st(calc_is_faile);
+#endif // _DEBUG
+}
 /// <summary>
 /// 非连续匹配，从大地图中确定角色位置
-/// TODO: 根据某种算法分类角色的大致位置，然后再根据大致位置进行匹配
+/// 直接通过SURF特征点匹配精确定位角色位置
 /// </summary>
 /// <param name="calc_is_faile">匹配结果是否有效</param>
 /// <returns></returns>
-cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
+cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 {
 	static cv::Mat img_scene(_mapMat);
 	const auto minimap_scale_param = 2.0;
@@ -391,23 +397,38 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 	pos_continuity_no = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 	return pos_continuity_no;
 }
-cv::Scalar to_color(cv::Mat& img_object)
+cv::Mat to_color(cv::Mat& img_object)
 {
-	cv::Scalar color;
-	cv::Mat hsv;
-	cv::cvtColor(img_object, hsv, cv::COLOR_BGR2HSV);
-	std::vector<cv::Mat> hsv_split;
-	cv::split(hsv, hsv_split);
-	cv::Mat h = hsv_split[0];
-	cv::Mat s = hsv_split[1];
-	cv::Mat v = hsv_split[2];
-	cv::Scalar mean_h = cv::mean(h);
-	cv::Scalar mean_s = cv::mean(s);
-	cv::Scalar mean_v = cv::mean(v);
-	color[0] = mean_h[0];
-	color[1] = mean_s[0];
-	color[2] = mean_v[0];
-	return color;
+	cv::Mat color_mat;
+	int s_len = (img_object.cols + img_object.rows) * 0.25 * 0.8;
+	cv::Mat roi_tl = img_object(cv::Rect(0, 0, s_len, s_len));
+	cv::Mat roi_tr = img_object(cv::Rect(img_object.cols - s_len, 0, s_len, s_len));
+	cv::Mat roi_bl = img_object(cv::Rect(0, img_object.rows - s_len, s_len, s_len));
+	cv::Mat roi_br = img_object(cv::Rect(img_object.cols - s_len, img_object.rows - s_len, s_len, s_len));
+	
+	cv::Mat roi_tl_color;
+	cv::Mat roi_tr_color;
+	cv::Mat roi_bl_color;
+	cv::Mat roi_br_color;
+	
+	cv::resize(roi_tl, roi_tl_color, cv::Size(3, 3), cv::INTER_AREA);
+	cv::resize(roi_tr, roi_tr_color, cv::Size(3, 3), cv::INTER_AREA);
+	cv::resize(roi_bl, roi_bl_color, cv::Size(3, 3), cv::INTER_AREA);
+	cv::resize(roi_br, roi_br_color, cv::Size(3, 3), cv::INTER_AREA);
+	
+	cv::Mat roi = cv::Mat::zeros(6, 6, img_object.type());
+	roi_tl_color.copyTo(roi(cv::Rect(0, 0, 3, 3)));
+	roi_tr_color.copyTo(roi(cv::Rect(3, 0, 3, 3)));
+	roi_bl_color.copyTo(roi(cv::Rect(0, 3, 3, 3)));
+	roi_br_color.copyTo(roi(cv::Rect(3, 3, 3, 3)));
+	
+	cv::Mat roi_color;
+	cv::resize(roi, roi_color, cv::Size(1,1), cv::INTER_AREA);
+	
+	roi_color.at<cv::Vec4b>(0,0)[3] = 255;
+	
+	cv::resize(img_object, color_mat, cv::Size(5,5),cv::INTER_AREA);
+	return roi_color;
 	
 }
 // 初步定位：根据颜色确定角色在大地图的哪个方位
@@ -424,30 +445,17 @@ cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 	int crop_border = static_cast<int>((_MiniMapMat.rows + _MiniMapMat.cols) * 0.5 * 0.15);
 	cv::Mat img_object(_MiniMapMat(cv::Rect(crop_border, crop_border, _MiniMapMat.cols - crop_border * 2, _MiniMapMat.rows - crop_border * 2)));
 	// 对小地图进行颜色提取
-	cv::Scalar color = to_color(img_object);
-	cv::Scalar color_min = cv::Scalar(color[0] - 10, color[1] - 10, color[2] - 10);
-	cv::Scalar color_max = cv::Scalar(color[0] + 10, color[1] + 10, color[2] + 10);
-	// 二值化
-	cv::Mat img_object_binary;
-	cv::inRange(color_map, color_min, color_max, img_object_binary);
-	// 开运算
-	cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-	cv::morphologyEx(img_object_binary, img_object_binary, cv::MORPH_OPEN, element);
-	// 轮廓检测
-	std::vector<std::vector<cv::Point>> contours;
-	std::vector<cv::Vec4i> hierarchy;
-	cv::findContours(img_object_binary, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE, cv::Point());
-	// 计算轮廓中心
-	cv::Point center;
-	for (int i = 0; i < contours.size(); i++)
-	{
-		cv::Rect rect = cv::boundingRect(contours[i]);
-		center.x += rect.x + rect.width / 2;
-		center.y += rect.y + rect.height / 2;
-	}
-	center.x /= contours.size();
-	center.y /= contours.size();
-	return center; 
+	cv::Mat color = to_color(img_object);
+	// 模板匹配
+	cv::Mat result;
+	cv::matchTemplate(color_map, color, result, cv::TM_CCOEFF_NORMED);
+	// 找到最大值和最小值的位置
+	double minVal, maxVal;
+	cv::Point minLoc, maxLoc;
+	cv::minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
+	// 计算角色在大地图的位置
+	cv::Point pos = cv::Point(maxLoc.x * 100 + 50, maxLoc.y * 100 + 50);
+	return pos;
 }
 // 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
 cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, cv::Point pos_first_match)
@@ -473,17 +481,27 @@ cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 	{
 		return cv::Point2d(-1, -1);
 	}
-	return cv::Point2d(-1, -1);
+	return cv::Point2d(0,0);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, cv::Point pos_second_match)
+cv::Point2d SurfMatch::match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match, bool& calc_is_faile)
 {
 	if (pos_second_match.x == -1)
 	{
 		return cv::Point2d(0, 0);
 	}
+	else
+	{
+		return match_no_continuity_1st(calc_is_faile);
+	}
 }
-cv::Point2d SurfMatch::match_no_continuity_2th(bool& calc_is_faile)
+/// <summary>
+/// 非连续匹配，从大地图中确定角色位置 v2.0
+/// 根据某小地图整体颜色判断角色的大致位置，然后再根据大致位置进行精确匹配
+/// </summary>
+/// <param name="calc_is_faile">匹配结果是否有效</param>
+/// <returns></returns>
+cv::Point2d SurfMatch::match_no_continuity_2nd(bool& calc_is_faile)
 {
 	cv::Point pos_first_match;
 	cv::Point pos_second_match;
@@ -493,7 +511,7 @@ cv::Point2d SurfMatch::match_no_continuity_2th(bool& calc_is_faile)
 	// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
 	pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
 	// 确定位置：根据所在区块的结果精确匹配角色位置
-	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match);
+	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match, calc_is_faile);
 	// 返回结果
 	return pos_continuity_no;
 }

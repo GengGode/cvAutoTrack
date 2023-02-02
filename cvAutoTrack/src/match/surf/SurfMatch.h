@@ -56,8 +56,11 @@ public:
 	cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
 
 	cv::Point2d match_no_continuity(bool& calc_is_faile);
-	cv::Point2d match_no_continuity_2th(bool& calc_is_faile);
+	cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
+	cv::Point2d match_no_continuity_2nd(bool& calc_is_faile);
 	
+	cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match, bool& calc_is_faile);
+
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
 private:
