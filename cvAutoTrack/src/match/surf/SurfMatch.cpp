@@ -186,14 +186,16 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 {
 	static cv::Mat img_scene(_mapMat);
-	
+	const auto minimap_scale_param = 2.0;
+
 	cv::Point2d pos_on_city;
 	
 	cv::Mat img_object = crop_border(_miniMapMat,0.15);
-	
+	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
+
 	//在城镇中
-		/***********************/
-		//重新从完整中地图取出角色周围部分地图
+	/***********************/
+	//重新从完整中地图取出角色周围部分地图
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat MiniMap(img_object);
 
@@ -218,7 +220,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/ minimap_scale_param, lisx, lisy, sumx, sumy);
 
 	if (std::max(lisx.size(), lisy.size()) <= 4)
 	{
