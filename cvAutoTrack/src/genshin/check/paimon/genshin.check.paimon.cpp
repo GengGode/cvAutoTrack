@@ -33,19 +33,19 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 	auto rect_keypoint = genshin_screen.config.rect_paimon_keypoint;
 	auto rect_keypoint_handle = genshin_screen.config.rect_paimon_keypoint_handle;
 	auto giPaimonRef = genshin_screen.img_paimon_maybe;
-	// ÅĞ¿ÕÍË³ö
+	// åˆ¤ç©ºé€€å‡º
 	if (giPaimonRef.empty()) return false;
 
-	// ÊÇ·ñĞèÒª´Ó4Í¨µÀÈ¡3Í¨µÀ
+	// æ˜¯å¦éœ€è¦ä»4é€šé“å–3é€šé“
 	bool is_need_cvt = false;
 	if (giPaimonRef.channels() == 4)
 	{
 		is_need_cvt = true;
 	}
 
-	// ¼ÆËãÃ¿Ò»¸öµãµÄÑÕÉ«¾àÀë²¢ÀÛ¼ÆÆ½¾ù
+	// è®¡ç®—æ¯ä¸€ä¸ªç‚¹çš„é¢œè‰²è·ç¦»å¹¶ç´¯è®¡å¹³å‡
 	double paimon_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint, paimon_keys, is_need_cvt);
-	// ³¬¹ıãĞÖµ£¬Æ¥ÅäÊÖ±úÄ£Ê½
+	// è¶…è¿‡é˜ˆå€¼ï¼ŒåŒ¹é…æ‰‹æŸ„æ¨¡å¼
 	if (paimon_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
 	{
 		out_genshin_paimon.is_handle_mode = false;
@@ -53,9 +53,9 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint;
 		return true;
 	}
-	// ¼ÆËãÃ¿Ò»¸öµãµÄÑÕÉ«¾àÀë²¢ÀÛ¼ÆÆ½¾ù
+	// è®¡ç®—æ¯ä¸€ä¸ªç‚¹çš„é¢œè‰²è·ç¦»å¹¶ç´¯è®¡å¹³å‡
 	double paimon_handle_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint_handle, paimon_handle_keys, is_need_cvt);
-	// ³¬¹ıãĞÖµ£¬Î´ÄÜÆ¥Åäµ½
+	// è¶…è¿‡é˜ˆå€¼ï¼Œæœªèƒ½åŒ¹é…åˆ°
 	if (paimon_handle_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
 	{
 		out_genshin_paimon.is_handle_mode = true;
