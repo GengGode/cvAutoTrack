@@ -11,8 +11,8 @@ bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors
 class SurfMatch
 {
 	cv::Mat _mapMat;
-	cv::Mat _minMapMat;
-	cv::Mat _minMapLastMat;
+	cv::Mat _miniMapMat;
+	cv::Mat _miniMapLastMat;
 
 	double ratio_thresh = 0.66;
 	double render_map_scale = 1.3;//1.3;
@@ -34,8 +34,8 @@ public:
 	bool upright = false;
 		
 	cv::Ptr<cv::xfeatures2d::SURF> detector, detectorSomeMap;
-	std::vector<cv::KeyPoint> Kp_MinMap, Kp_Map, Kp_SomeMap;
-	cv::Mat Dp_MinMap, Dp_Map, Dp_SomeMap;
+	std::vector<cv::KeyPoint> Kp_MiniMap, Kp_Map, Kp_SomeMap;
+	cv::Mat Dp_MiniMap, Dp_Map, Dp_SomeMap;
 
 	bool isInit = false;
 	bool isContinuity = false;
@@ -44,7 +44,7 @@ public:
 	bool is_success_match = false;
 
 	void setMap(cv::Mat gi_map);
-	void setMiniMap(cv::Mat minMapMat);
+	void setMiniMap(cv::Mat miniMapMat);
 
 	void Init();
 	void Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors);
@@ -57,9 +57,15 @@ public:
 
 	cv::Point2d match_no_continuity(bool& calc_is_faile);
 	cv::Point2d match_no_continuity_2th(bool& calc_is_faile);
-
-	cv::Point2d SURFMatch(cv::Mat minMapMat);
+	
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
+private:
+
+	cv::Mat crop_border(cv::Mat& mat, float border)
+	{
+		int crop_size = static_cast<int>((mat.rows + mat.cols) * 0.5 * border);
+		return mat(cv::Rect(crop_size, crop_size, mat.cols - crop_size * 2, mat.rows - crop_size * 2));
+	}
 };
 

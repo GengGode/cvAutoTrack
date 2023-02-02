@@ -50,6 +50,15 @@ const std::vector<std::pair<cv::Point, cv::Vec3b>> MatchPaimonHandleKeyPointList
 {{20,57},{159,109, 67}},
 };
 
+const cv::Rect MiniMapRect =
+{
+	59,15,218,218
+};
+const cv::Rect MiniMapHandleRect =
+{
+	117,45,182,182
+};
+
 struct GenshinHandleConfig
 {
 	bool is_auto_find_genshin = true;
@@ -103,7 +112,8 @@ struct GenshinScreenConfig
 
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
-	cv::Rect rect_minimap;
+	cv::Rect rect_minimap = MiniMapRect;
+	cv::Rect rect_minimap_handle = MiniMapHandleRect;
 	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
 	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
@@ -170,7 +180,7 @@ struct GenshinMinimapConfig
 {
 	bool is_need_cailb = true;
 	bool is_find_paimon = false;
-
+	
 };
 
 struct GenshinMinimap
