@@ -15,11 +15,8 @@ if exist src\version\version_hash.hash (
 if exist src\version\version_next.number (
 	del src\version\version_next.number
 )
-if exist src\version\version_tag.tag (
-	del src\version\version_tag.tag
-)
 
-git describe --tags>> src\version\version.ver
+copy src\version\version_tag.tag src\version\version.ver
 git rev-parse --abbrev-ref HEAD>>  src\version\version.branch
 git log -n1 --format=format:"%%h">> src\version\version_hash.hash
 powershell src\version\GetNextBuildVersion.ps1>> src\version\version_next.number
@@ -83,6 +80,10 @@ echo    const std::string build_time = "%date% %time%";>>src\version\Version.h
 echo %#endif>>src\version\Version.h
 echo }>>src\version\Version.h
 echo //该文件自动生成，无需更改 >>src\version\Version.h
+
+if exist src\version\version_tag.tag (
+	del src\version\version_tag.tag
+)
 
 echo %v1%.%v2%.%v3%>>src\version\version_tag.tag
 

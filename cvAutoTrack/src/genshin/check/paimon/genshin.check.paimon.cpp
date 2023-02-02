@@ -2,169 +2,72 @@
 #include "genshin.check.paimon.h"
 #include "../../../resources/Resources.h"
 
-namespace TianLi::dev
+auto get_point_vec3b(const cv::Mat& const mat, int x, int y, bool is_need_cvt)
 {
-	
-	bool check_paimon_2nd(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
+	if (is_need_cvt)
 	{
-		auto paimon_keys = out_genshin_paimon.config.paimon_check_vec;
-		auto paimon_handle_keys = out_genshin_paimon.config.paimon_handle_check_vec;
-
-		auto giPaimonRef = genshin_screen.img_paimon_maybe;
-		// ÅĞ¿ÕÍË³ö
-		if (giPaimonRef.empty()) return false;
-
-		// ¼ÆËãÃ¿Ò»¸öµãµÄÑÕÉ«¾àÀë²¢ÀÛ¼ÆÆ½¾ù
-		double paimon_check_diff = 0;
-		for (auto& paimon_key : paimon_keys)
-		{
-			auto& [_point, color] = paimon_key;
-			auto& [x, y] = _point;
-			auto screen_color = giPaimonRef.at<cv::Vec3b>(y, x);
-			auto color_diff = cv::norm(screen_color, color);
-			paimon_check_diff = paimon_check_diff + color_diff / paimon_keys.size();
-		}
-		// ³¬¹ıãĞÖµ£¬Æ¥ÅäÊÖ±úÄ£Ê½
-		if (paimon_check_diff > out_genshin_paimon.config.check_match_paimon_keypoint_params)
-		{
-			// ¼ÆËãÃ¿Ò»¸öµãµÄÑÕÉ«¾àÀë²¢ÀÛ¼ÆÆ½¾ù
-			double paimon_handle_check_diff = 0;
-			for (auto& paimon_key : paimon_handle_keys)
-			{
-				auto& [_point, color] = paimon_key;
-				auto& [x, y] = _point;
-				auto screen_color = giPaimonRef.at<cv::Vec3b>(y, x);
-				auto color_diff = cv::norm(screen_color, color);
-				paimon_check_diff = paimon_check_diff + color_diff / paimon_handle_keys.size();
-			}
-			// ³¬¹ıãĞÖµ£¬Î´ÄÜÆ¥Åäµ½
-			if (paimon_handle_check_diff > out_genshin_paimon.config.check_match_paimon_keypoint_params)
-			{
-				out_genshin_paimon.is_visial = false;
-			}
-			else
-			{
-				out_genshin_paimon.is_handle_mode = true;
-				out_genshin_paimon.is_visial = true;
-				out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint_handle;
-			}
-		}
-		else
-		{
-			out_genshin_paimon.is_handle_mode = false;
-			out_genshin_paimon.is_visial = true;
-			out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint;
-		}
-		return true;
+		auto screen_color_v4 = mat.at<cv::Vec4b>(y, x);
+		return cv::Vec3b(screen_color_v4[0], screen_color_v4[1], screen_color_v4[2]);
 	}
-	
+	return mat.at<cv::Vec3b>(y, x);
+
 }
+double cala_keypoint_diff(const cv::Mat& const mat,const cv::Rect& roi,const std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_keys, bool is_need_cvt)
+{
+	double paimon_check_diff = 0;
+	for (auto& paimon_key : paimon_keys)
+	{
+		auto& [_point, color] = paimon_key;
+		auto [x, y] = roi.tl() + _point;
+		auto screen_color = get_point_vec3b(mat, x, y, is_need_cvt);
+		auto color_diff = cv::norm(screen_color, color);
+		paimon_check_diff = paimon_check_diff + color_diff / paimon_keys.size();
+	}
+	return paimon_check_diff;
+}
+
 bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
 {
-	static std::vector<cv::Mat> split_paimon_template;
-	// ÅÉÃÉÕı±ÈÀı¶şÖµÄ£°å ºÚ°×
-	static cv::Mat paimon_template;
-	// ÅÉÃÉÊÖ±ú±ÈÀı¶şÖµÄ£°å ºÚ°×
-	static cv::Mat paimon_template_handle_mode;
-	// ÅÉÃÉÕı±ÈÀı»Ò¶ÈÄ£°å »Ò¶È
-	static cv::Mat paimon_template_no_alpha;
-	// ÅÉÃÉÊÖ±ú±ÈÀı»Ò¶ÈÄ£°å »Ò¶È
-	static cv::Mat paimon_template_no_alpha_handle_mode;
-	static bool is_first = true;
-	if (is_first)
-	{
-		cv::Mat paimon;
-		Resources::getInstance().PaimonTemplate.copyTo(paimon);
-		cv::resize(paimon, paimon, cv::Size(68, 77));
-		cv::cvtColor(paimon, paimon_template_no_alpha, cv::COLOR_RGBA2GRAY);
-		cv::split(paimon, split_paimon_template);
-
-		paimon_template = split_paimon_template[3];
-		//paimon_template_no_alpha = split_paimon_template[0];
-		//paimon_template_no_alpha.copyTo(paimon_template_no_alpha, paimon_template);
-		cv::resize(paimon_template, paimon_template_handle_mode, cv::Size(), 1.0 / 1.20, 1.0 / 1.20);
-		cv::resize(paimon_template_no_alpha, paimon_template_no_alpha_handle_mode, cv::Size(), 1.0 / 1.20, 1.0 / 1.20);
-		//paimon_template_no_alpha_handle_mode.copyTo(paimon_template_no_alpha_handle_mode, paimon_template_handle_mode);
-		is_first = false;
-	}
+	auto paimon_keys = out_genshin_paimon.config.paimon_check_vec;
+	auto paimon_handle_keys = out_genshin_paimon.config.paimon_handle_check_vec;
+	auto rect_keypoint = genshin_screen.config.rect_paimon_keypoint;
+	auto rect_keypoint_handle = genshin_screen.config.rect_paimon_keypoint_handle;
 	auto giPaimonRef = genshin_screen.img_paimon_maybe;
-	auto& rect_origin = genshin_screen.config.rect_paimon_maybe;
-	// Ê¶±ğÓÃÄ£°å Õı±ÈÀı  °üº¬alphaºÍno_alpha
-	auto template_not_handle_mode = paimon_template;
-	// Ê¶±ğÓÃÄ£°å ÊÖ±ú±ÈÀı  °üº¬alphaºÍno_alpha
-	auto template_handle_mode = paimon_template_handle_mode;
-	// Æ¥ÅäÕÚÕÖ Õı±ÈÀı  alphaÏÂÊÇ¿Õ£¬no_alphaÏÂÊÇ ÅÉÃÉÊÖ±ú±ÈÀı¶şÖµÄ£°å ºÚ°×
-	auto template_mask_not_handle_mode = cv::Mat();
-	// Æ¥ÅäÕÚÕÖ ÊÖ±ú±ÈÀı  alphaÏÂÊÇ¿Õ£¬no_alphaÏÂÊÇ ÅÉÃÉÊÖ±ú±ÈÀı¶şÖµÄ£°å ºÚ°×
-	auto template_mask_handle_mode = cv::Mat();
-	// ÅĞ¿ÕÍË³ö
-	if (giPaimonRef.empty() || paimon_template_handle_mode.empty()) return false;
-	if (giPaimonRef.cols < paimon_template.cols || giPaimonRef.rows < paimon_template.rows) return false;
+	// åˆ¤ç©ºé€€å‡º
+	if (giPaimonRef.empty()) return false;
 
-	// ÉèÖÃãĞÖµÈ¡Öµ ¸ù¾İÊÇ·ñÊ¹ÓÃalphaÍ¼²ã
-	double check_match_paimon_param = out_genshin_paimon.config.check_match_paimon_params;
-	if (genshin_screen.config.is_used_alpha == false)
+	// æ˜¯å¦éœ€è¦ä»4é€šé“å–3é€šé“
+	bool is_need_cvt = false;
+	if (giPaimonRef.channels() == 4)
 	{
-		cv::cvtColor(genshin_screen.img_paimon_maybe, giPaimonRef, cv::COLOR_RGBA2GRAY);
-		// no_alphaÏÂÎª »Ò¶ÈÄ£°å
-		template_not_handle_mode = paimon_template_no_alpha;
-		template_handle_mode = paimon_template_no_alpha_handle_mode;
-		// no_alphaÏÂÎª ÅÉÃÉÊÖ±ú±ÈÀı¶şÖµÄ£°å ºÚ°×
-		template_mask_not_handle_mode = paimon_template;
-		template_mask_handle_mode = paimon_template_handle_mode;
-		check_match_paimon_param = out_genshin_paimon.config.check_match_paimon_params_no_alpha;
+		is_need_cvt = true;
 	}
 
-	// ²ğ·ÖÍ¼²ã
-	std::vector<cv::Mat>  split_paimon;
-	cv::split(giPaimonRef, split_paimon);
-
-	cv::Mat template_result;
-	// TODO HOTCODE
-	cv::matchTemplate(split_paimon.back(), template_not_handle_mode, template_result, cv::TM_CCOEFF_NORMED, template_mask_not_handle_mode);
-
-	double paimon_match_minVal, paimon_match_maxVal;
-	cv::Point paimon_match_minLoc, paimon_match_maxLoc;
-	cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
-
-	// Èç¹ûĞ¡ÓÚãĞÖµ£¬Ôò³¢ÊÔÅĞ¶ÏÊÇ·ñÎªÊÖ±úÄ£Ê½£¬·ñÔòÎª¼ì²âµ½ÅÉÃÉ
-	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
-	{
-		if (paimon_match_maxVal > 0.2)
-		{
-			cv::Mat template_handle_mode_result;
-			// TODO HOTCODE
-			cv::matchTemplate(split_paimon.back(), template_handle_mode, template_handle_mode_result, cv::TM_CCOEFF_NORMED, template_mask_handle_mode);
-
-			double paimon_match_handle_mode_minVal, paimon_match_handle_mode_maxVal;
-			cv::Point paimon_match_handle_mode_minLoc, paimon_match_handle_mode_maxLoc;
-			cv::minMaxLoc(template_handle_mode_result, &paimon_match_handle_mode_minVal, &paimon_match_handle_mode_maxVal, &paimon_match_handle_mode_minLoc, &paimon_match_handle_mode_maxLoc);
-			if (paimon_match_handle_mode_maxVal > check_match_paimon_param)
-			{
-				out_genshin_paimon.is_handle_mode = true;
-				out_genshin_paimon.is_visial = true;
-				out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_handle_mode_maxLoc, paimon_template_handle_mode.size());
-			}
-		}
-		else
-		{
-			out_genshin_paimon.is_visial = false;
-		}
-	}
-	else
+	// è®¡ç®—æ¯ä¸€ä¸ªç‚¹çš„é¢œè‰²è·ç¦»å¹¶ç´¯è®¡å¹³å‡
+	double paimon_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint, paimon_keys, is_need_cvt);
+	// è¶…è¿‡é˜ˆå€¼ï¼ŒåŒ¹é…æ‰‹æŸ„æ¨¡å¼
+	if (paimon_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
 	{
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
-		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_maxLoc, paimon_template.size());
+		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint;
+		return true;
 	}
+	// è®¡ç®—æ¯ä¸€ä¸ªç‚¹çš„é¢œè‰²è·ç¦»å¹¶ç´¯è®¡å¹³å‡
+	double paimon_handle_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint_handle, paimon_handle_keys, is_need_cvt);
+	// è¶…è¿‡é˜ˆå€¼ï¼Œæœªèƒ½åŒ¹é…åˆ°
+	if (paimon_handle_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
+	{
+		out_genshin_paimon.is_handle_mode = true;
+		out_genshin_paimon.is_visial = true;
+		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint_handle;
+		return true;
+	}
+	out_genshin_paimon.is_visial = false;
 	return true;
 }
 
 bool TianLi::Genshin::Check::check_paimon(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
 {
-#ifdef TIANLI_DEV
-		return check_paimon_2nd(genshin_screen, out_genshin_paimon);
-#else
-		return check_paimon_impl(genshin_screen, out_genshin_paimon);
-#endif // TIANLI_DEV
+	return check_paimon_impl(genshin_screen, out_genshin_paimon);
 }
