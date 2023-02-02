@@ -12,7 +12,7 @@
         
     environment:
         TokenSecureGit: BbvaBqBiF0qP5ne21acir4wbozoKTL7ssMDQhD/I20qAUrP/uTGrgcJwx5FnHHFNMnepN3lQcZpnkD+RARpBeweMw/Z3SR8TfFWtMsM0Gh4=
-        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
@@ -26,10 +26,11 @@
         - appveyor DownloadFile %OpenCvUrl%
         - 7z x ./*.zip -y -o%OpenCvDir%
         - rm -f ./*.zip
-        #- dir %OpenCvDir%
-        #- dir %OpenCvDir%x64\vc15\staticlib
-
-        - cd %MyProjectDir%\%ProjectName%\
+        — ps: ./ci/install_opencv.ps1
+        
+        - cd %MyProjectDir%
+        — ps: ./ci/release_resource.ps1
+        - cd %ProjectName%
         - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
     before_build:
         #- dir  %MyProjectDir%
@@ -128,7 +129,7 @@
         - /dev-/
 
     environment:
-        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
@@ -212,7 +213,7 @@
         - /fix-/
 
     environment:
-        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
@@ -277,7 +278,72 @@
 
     environment:
         SecureAliConfig: HKh20duMUEcO6HEKkDzsUYS2qgSpQKrNmVOkKd7hC5JNHtPdLa+6giA5IwNxBeYG0e9cbaVlIl7r9UjswYF09nRljRGz9fHXN90/4HUyuxSwtH65HJmSSPIOM7QfXqAdxUjBXCZ2iwlnn3JYPD603JQgKUypTtCdlWUNRxtPFObDq2yPXlwvw02a4u4e7ze1n9oiEF9r1RmLHs4D3wrhVw==
-        MyProjectDir: C:\projects\genshinimpact-autotrack-dll\
+        MyProjectDir: C:\projects\cvAutoTrack\
+        OpenCvDir: C:\projects\opencv\
+        OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
+        ProjectName: cvAutoTrack
+        ProJectExeName: cvAutoTrack
+    skip_tags: true
+  
+    install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+        
+        - mkdir %OpenCvDir%
+        - appveyor DownloadFile %OpenCvUrl%
+        - 7z x ./*.zip -y -o%OpenCvDir%
+        - rm -f ./*.zip
+
+        - cd %MyProjectDir%\%ProjectName%\
+        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        
+    build_script:
+        - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
+        # 编译测试文件
+        - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
+        - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
+        
+    after_build:
+        - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
+        - mkdir %MyProjectDir%x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\include\*.h $env:MyProjectDir\x64\build\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\cvAutoTrackCSharp.cs $env:MyProjectDir\x64\build\
+    
+        
+    before_test:
+        # 移动测试文件到test目录
+        - mkdir %MyProjectDir%x64\test\
+        - cd %MyProjectDir% 
+        - ls -R
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Compile\*.exe $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.exe $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.dll $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.json $env:MyProjectDir\x64\test\
+        
+    test_script:
+        - cd %MyProjectDir%\x64\test\
+        - dir
+        # 运行 C++ 测试
+        - TEST_cvAutoTrack_Cpp.exe -test
+        # 运行 C# 测试
+        - TEST_cvAutoTrack_CSharp.exe -test
+                
+-
+    version: '7.4.0.{build}'
+    os: Visual Studio 2022
+    configuration: Chore
+    platform:
+        - x64
+    branches:
+      only:
+        - /chore-/
+
+    environment:
+        SecureAliConfig: HKh20duMUEcO6HEKkDzsUYS2qgSpQKrNmVOkKd7hC5JNHtPdLa+6giA5IwNxBeYG0e9cbaVlIl7r9UjswYF09nRljRGz9fHXN90/4HUyuxSwtH65HJmSSPIOM7QfXqAdxUjBXCZ2iwlnn3JYPD603JQgKUypTtCdlWUNRxtPFObDq2yPXlwvw02a4u4e7ze1n9oiEF9r1RmLHs4D3wrhVw==
+        MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack

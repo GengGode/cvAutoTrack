@@ -1,0 +1,3 @@
+[submodule "cvAutoTrack.Resource"]
+	path = cvAutoTrack.Resource
+	url = https://github.com/GengGode/cvAutoTrack.Resource

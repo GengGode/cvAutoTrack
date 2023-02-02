@@ -19,6 +19,7 @@
 
 #include "genshin/genshin.handle.h"
 #include "genshin/genshin.screen.h"
+#include "genshin/check/paimon/genshin.check.paimon.h"
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
@@ -241,6 +242,8 @@ bool AutoTrack::DebugCapture()
 	std::string last_time_str = last_time_stream.str();
 
 	cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols/2, out_info_img.rows/2), 1,1, cv::Scalar(128,128,128, 255), 1, 16, 0);
+	auto err_msg_str = err.toJson();
+	cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
 	bool rel = cv::imwrite("Capture.png", out_info_img);
 
@@ -307,6 +310,8 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	std::string last_time_str = last_time_stream.str();
 
 	cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols / 2, out_info_img.rows / 2), 1, 1, cv::Scalar(128, 128, 128, 255), 1, 16, 0);
+	auto err_msg_str = err.toJson();
+	cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
 	bool rel = cv::imwrite(path_buff, out_info_img);
 
@@ -922,7 +927,7 @@ bool AutoTrack::getMiniMapRefMat()
 	
 	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
 
-	if (TianLi::Match::check_paimon(genshin_screen, genshin_paimon) == false)
+	if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
@@ -931,7 +936,6 @@ bool AutoTrack::getMiniMapRefMat()
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-
 			err = { 40201,"DirectX模式下检测派蒙失败" };
 			return false;
 		}

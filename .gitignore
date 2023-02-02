@@ -259,15 +259,13 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/.vscode
 /cvAutoTrack/resource
+/cvAutoTrack/resource/cvAutoTrack.rc
+/cvAutoTrack/resource/Source.def
+/cvAutoTrack/src/version
+!/cvAutoTrack/src/version/GetNextBuildVersion.ps1
+!/cvAutoTrack/src/version/build_version_before.bat
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt
-/cvAutoTrack/src/version/Version.h
-/cvAutoTrack/src/version/version_tag.tag
-/cvAutoTrack/src/version/version_next.number
-/cvAutoTrack/src/version/version_hash.hash
-/cvAutoTrack/src/version/version.ver
-/cvAutoTrack/src/version/version.branch
-/cvAutoTrack/src/version/appVeyor_version_tag.tag
-/.vscode
 /impl/Cpp/TEST_cvAutoTrack_Cpp/cvAutoTrack_Cache.xml
