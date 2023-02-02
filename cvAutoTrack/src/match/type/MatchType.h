@@ -50,8 +50,14 @@ const std::vector<std::pair<cv::Point, cv::Vec3b>> MatchPaimonHandleKeyPointList
 {{20,57},{159,109, 67}},
 };
 
-const float KeyPadMiniMapRatioPos[3] = { 0.05555,0.01574,0.20000 };
-const float HandleMiniMapRatioPos[3] = { 0.11018,0.04444,0.16666 };
+const cv::Rect MiniMapRect =
+{
+	59,15,218,218
+};
+const cv::Rect MiniMapHandleRect =
+{
+	117,45,182,182
+};
 
 struct GenshinHandleConfig
 {
@@ -106,7 +112,8 @@ struct GenshinScreenConfig
 
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
-	cv::Rect rect_minimap;
+	cv::Rect rect_minimap = MiniMapRect;
+	cv::Rect rect_minimap_handle = MiniMapHandleRect;
 	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
 	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
