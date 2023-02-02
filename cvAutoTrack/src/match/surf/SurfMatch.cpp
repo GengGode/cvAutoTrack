@@ -511,7 +511,7 @@ cv::Point2d SurfMatch::match_no_continuity_2nd(bool& calc_is_faile)
 	// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
 	pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
 	// 确定位置：根据所在区块的结果精确匹配角色位置
-	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match);
+	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match, calc_is_faile);
 	// 返回结果
 	return pos_continuity_no;
 }
