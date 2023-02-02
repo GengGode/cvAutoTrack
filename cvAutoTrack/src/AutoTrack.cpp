@@ -790,7 +790,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	// r
 	{
 		rotation_calculation_config config;
-		rotation_calculation(giMiniMapRef, a, config);
+		rotation_calculation(giMiniMapRef, r, config);
 		if (config.error)
 		{
 			err = config.err;
