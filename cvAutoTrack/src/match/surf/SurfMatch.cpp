@@ -90,9 +90,9 @@ void SurfMatch::setMap(cv::Mat gi_map)
 	_mapMat = gi_map;
 }
 
-void SurfMatch::setMiniMap(cv::Mat minMapMat)
+void SurfMatch::setMiniMap(cv::Mat miniMapMat)
 {
-	_minMapMat = minMapMat;
+	_miniMapMat = miniMapMat;
 }
 
 void SurfMatch::Init()
@@ -185,24 +185,25 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 
 cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 {
+	static cv::Mat img_scene(_mapMat);
+	
 	cv::Point2d pos_on_city;
-
-	cv::Mat img_scene(_mapMat);
-	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
-
+	
+	cv::Mat img_object = crop_border(_miniMapMat,0.15);
+	
 	//在城镇中
 		/***********************/
 		//重新从完整中地图取出角色周围部分地图
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
-	cv::Mat minMap(img_object);
+	cv::Mat MiniMap(img_object);
 
 	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
+	detectorSomeMap->detectAndCompute(MiniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 
-	if (Kp_SomeMap.size() <= 2 || Kp_MinMap.size() <= 2)
+	if (Kp_SomeMap.size() <= 2 || Kp_MiniMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
 		return pos_on_city;
@@ -211,13 +212,13 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 	std::vector< std::vector<cv::DMatch> > KNN_mTmp;
 
-	matcherTmp->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_mTmp, 2);
+	matcherTmp->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mTmp, 2);
 	std::vector<double> lisx;
 	std::vector<double> lisy;
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667, lisx, lisy, sumx, sumy);
 
 	if (std::max(lisx.size(), lisy.size()) <= 4)
 	{
@@ -246,21 +247,23 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
 cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_faile)
 {
+	static cv::Mat img_scene(_mapMat);
+	const auto minimap_scale_param = 2.0;
+
 	cv::Point2d pos_not_on_city;
 
-	cv::Mat img_scene(_mapMat);
-	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
-
+	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
+	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 	//不在城镇中时
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
-	cv::Mat minMap(img_object);
+	cv::Mat miniMap(img_object);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(minMap, cv::noArray(), Kp_MinMap, Dp_MinMap);
+	detectorSomeMap->detectAndCompute(miniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 
 	// 如果搜索范围内可识别特征点数量为0，则认为计算失败
-	if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() <= 2)
+	if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;
@@ -268,13 +271,13 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Ptr<cv::DescriptorMatcher> matcher_not_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 	std::vector< std::vector<cv::DMatch> > KNN_not_no_city;
 
-	matcher_not_on_city->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_not_no_city, 2);
+	matcher_not_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_not_no_city, 2);
 	std::vector<double> lisx;
 	std::vector<double> lisy;
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_not_no_city, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_not_no_city, ratio_thresh, render_map_scale/ minimap_scale_param, lisx, lisy, sumx, sumy);
 
 	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
 	if (std::min(lisx.size(), lisy.size()) > 4)
@@ -292,15 +295,13 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		/***********************/
 		//重新从完整中地图取出角色周围部分地图
 		img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
-		//Mat minMap(img_object);
 
 		resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
-		//resize(minMap, minMap, Size(), MatchMatScale, MatchMatScale, 1);
 
 		detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 		detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-		//detectorSomeMap->detectAndCompute(minMap, noArray(), Kp_MinMap, Dp_MinMap);
-		if (Kp_SomeMap.size() == 0 || Kp_MinMap.size() == 0)
+		
+		if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() == 0)
 		{
 			calc_continuity_is_faile = true;
 			return pos_not_on_city;
@@ -309,14 +310,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		cv::Ptr<cv::DescriptorMatcher> matcher_mabye_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 		std::vector< std::vector<cv::DMatch> > KNN_mabye_on_city;
 
-		matcher_mabye_on_city->knnMatch(Dp_MinMap, Dp_SomeMap, KNN_mabye_on_city, 2);
+		matcher_mabye_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mabye_on_city, 2);
 
 		std::vector<double> list_x_on_city;
 		std::vector<double> list_y_on_city;
 		double sum_x_on_city = 0;
 		double sum_y_on_city = 0;
 
-		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MinMap, KNN_mabye_on_city, ratio_thresh, 0.8667, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
+		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, 0.8667 / minimap_scale_param, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
 
 		if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= 4)
 		{
@@ -352,18 +353,17 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 /// <returns></returns>
 cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 {
+	static cv::Mat img_scene(_mapMat);
+	const auto minimap_scale_param = 2.0;
 	cv::Point2d pos_continuity_no;
 
-	// TODO: 可优化为static
-	cv::Mat img_scene(_mapMat);
-	//cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
-	int cut_bord = static_cast<int>((_minMapMat.rows + _minMapMat.cols) * 0.5 * 0.15);
-	cv::Mat img_object(_minMapMat(cv::Rect(cut_bord, cut_bord, _minMapMat.cols - cut_bord * 2, _minMapMat.rows - cut_bord * 2)));
-	resize(img_object, img_object, cv::Size(200, 200),cv::INTER_CUBIC);
+	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
+	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param,cv::INTER_CUBIC);
+	
 	// 小地图区域计算特征点
-	detector->detectAndCompute(img_object, cv::noArray(), Kp_MinMap, Dp_MinMap);
+	detector->detectAndCompute(img_object, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 	// 没有提取到特征点直接返回，结果无效
-	if (Kp_MinMap.size() == 0)
+	if (Kp_MiniMap.size() == 0)
 	{
 		calc_is_faile = true;
 		return pos_continuity_no;
@@ -371,14 +371,14 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 	// 匹配特征点
 	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 	std::vector< std::vector<cv::DMatch> > KNN_m;
-	matcher->knnMatch(Dp_MinMap, Dp_Map, KNN_m, 2);
+	matcher->knnMatch(Dp_MiniMap, Dp_Map, KNN_m, 2);
 
 	std::vector<double> lisx;
 	std::vector<double> lisy;
 	double sumx = 0;
 	double sumy = 0;
 	// 计算最佳匹配结果
-	TianLi::Utils::calc_good_matches(img_scene, Kp_Map, img_object, Kp_MinMap, KNN_m, ratio_thresh, render_map_scale, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(img_scene, Kp_Map, img_object, Kp_MiniMap, KNN_m, ratio_thresh, render_map_scale / minimap_scale_param, lisx, lisy, sumx, sumy);
 	// 没有最佳匹配结果直接返回，结果无效
 	if (std::min(lisx.size(), lisy.size()) == 0)
 	{
@@ -409,7 +409,7 @@ cv::Scalar to_color(cv::Mat& img_object)
 	
 }
 // 初步定位：根据颜色确定角色在大地图的哪个方位
-cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _minMapMat)
+cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 {
 	static cv::Mat color_map;
 	static bool is_first = true;
@@ -419,7 +419,8 @@ cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _minMapMat)
 		is_first = false;
 	}
 	
-	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
+	int crop_border = static_cast<int>((_MiniMapMat.rows + _MiniMapMat.cols) * 0.5 * 0.15);
+	cv::Mat img_object(_MiniMapMat(cv::Rect(crop_border, crop_border, _MiniMapMat.cols - crop_border * 2, _MiniMapMat.rows - crop_border * 2)));
 	// 对小地图进行颜色提取
 	cv::Scalar color = to_color(img_object);
 	cv::Scalar color_min = cv::Scalar(color[0] - 10, color[1] - 10, color[2] - 10);
@@ -447,7 +448,7 @@ cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _minMapMat)
 	return center; 
 }
 // 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
-cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_first_match)
+cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, cv::Point pos_first_match)
 {
 	// 0 18 22 38
 	const static cv::Rect yellow_rect = cv::Rect(0, 18, 22, 38);
@@ -459,13 +460,13 @@ cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _minMapMat, c
 	return cv::Point(0, 0);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _minMapMat)
+cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 {
-	cv::Point pos_first_match = match_find_direction_in_all(_mapMat, _minMapMat);
-	cv::Point pos_block_match = match_find_block_in_direction(_mapMat, _minMapMat, pos_first_match);
+	cv::Point pos_first_match = match_find_direction_in_all(_mapMat, _MiniMapMat);
+	cv::Point pos_block_match = match_find_block_in_direction(_mapMat, _MiniMapMat, pos_first_match);
 	cv::Point2d pos_continuity_no;
 	bool calc_is_faile = false;
-	//cv::Point2d pos = match_find_pos_in_block(_mapMat, _minMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
+	//cv::Point2d pos = match_find_pos_in_block(_mapMat, _MiniMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
 	if (calc_is_faile)
 	{
 		return cv::Point2d(-1, -1);
@@ -473,7 +474,7 @@ cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _minMapMat)
 	return cv::Point2d(-1, -1);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match)
+cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, cv::Point pos_second_match)
 {
 	if (pos_second_match.x == -1)
 	{
@@ -486,17 +487,13 @@ cv::Point2d SurfMatch::match_no_continuity_2th(bool& calc_is_faile)
 	cv::Point pos_second_match;
 	cv::Point2d pos_continuity_no;
 	// 初步定位：根据颜色确定角色在大地图的哪个方位
-	pos_first_match = match_find_direction_in_all(_mapMat, _minMapMat);
+	pos_first_match = match_find_direction_in_all(_mapMat, _miniMapMat);
 	// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
-	pos_second_match = match_find_block_in_direction(_mapMat, _minMapMat, pos_first_match);
+	pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
 	// 确定位置：根据所在区块的结果精确匹配角色位置
-	pos_continuity_no = match_find_position_in_block(_mapMat, _minMapMat, pos_second_match);
+	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match);
 	// 返回结果
 	return pos_continuity_no;
-}
-cv::Point2d SurfMatch::SURFMatch(cv::Mat minMapMat)
-{
-	return cv::Point2d();
 }
 
 cv::Point2d SurfMatch::getLocalPos()
