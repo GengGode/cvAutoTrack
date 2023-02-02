@@ -50,6 +50,9 @@ const std::vector<std::pair<cv::Point, cv::Vec3b>> MatchPaimonHandleKeyPointList
 {{20,57},{159,109, 67}},
 };
 
+const float KeyPadMiniMapRatioPos[3] = { 0.05555,0.01574,0.20000 };
+const float HandleMiniMapRatioPos[3] = { 0.11018,0.04444,0.16666 };
+
 struct GenshinHandleConfig
 {
 	bool is_auto_find_genshin = true;
@@ -170,7 +173,7 @@ struct GenshinMinimapConfig
 {
 	bool is_need_cailb = true;
 	bool is_find_paimon = false;
-
+	
 };
 
 struct GenshinMinimap

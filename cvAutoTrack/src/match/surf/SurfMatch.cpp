@@ -356,7 +356,10 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 
 	// TODO: 可优化为static
 	cv::Mat img_scene(_mapMat);
-	cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
+	//cv::Mat img_object(_minMapMat(cv::Rect(30, 30, _minMapMat.cols - 60, _minMapMat.rows - 60)));
+	int cut_bord = static_cast<int>((_minMapMat.rows + _minMapMat.cols) * 0.5 * 0.15);
+	cv::Mat img_object(_minMapMat(cv::Rect(cut_bord, cut_bord, _minMapMat.cols - cut_bord * 2, _minMapMat.rows - cut_bord * 2)));
+	resize(img_object, img_object, cv::Size(200, 200),cv::INTER_CUBIC);
 	// 小地图区域计算特征点
 	detector->detectAndCompute(img_object, cv::noArray(), Kp_MinMap, Dp_MinMap);
 	// 没有提取到特征点直接返回，结果无效

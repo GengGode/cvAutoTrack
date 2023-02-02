@@ -925,7 +925,7 @@ bool AutoTrack::getMiniMapRefMat()
 		genshin_screen.config.is_used_alpha = true;
 	}
 	
-	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
+	// 检测派蒙 -> 直接计算小地图坐标
 
 	if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
@@ -957,36 +957,6 @@ bool AutoTrack::getMiniMapRefMat()
 
 	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
 	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
-
-	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
-	{
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
-		{
-			err = { 40103,"Bitblt模式下检测小地图标定失败" };
-			return false;
-		}
-		else if (genshin_handle.config.capture->mode == Capture::DirectX)
-		{
-
-			err = { 40203,"DirectX模式下检测小地图标定失败" };
-			return false;
-		}
-	}
-	if (genshin_minimap_cailb.is_visial == false)
-	{
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
-		{
-			err = { 40104,"Bitblt模式下未能检测到小地图标定" };
-			return false;
-		}
-		else if (genshin_handle.config.capture->mode == Capture::DirectX)
-		{
-
-			err = { 40204,"DirectX模式下未能检测到小地图标定" };
-			return false;
-		}
-	}
-
 	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
 
 	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
