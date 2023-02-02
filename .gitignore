@@ -263,7 +263,8 @@ __pycache__/
 /cvAutoTrack/resource
 /cvAutoTrack/resource/cvAutoTrack.rc
 /cvAutoTrack/resource/Source.def
-/cvAutoTrack/src/version
+/cvAutoTrack/src/version/
+!/cvAutoTrack/src/version/version_tag.tag
 !/cvAutoTrack/src/version/GetNextBuildVersion.ps1
 !/cvAutoTrack/src/version/build_version_before.bat
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
