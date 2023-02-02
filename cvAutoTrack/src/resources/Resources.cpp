@@ -91,30 +91,6 @@ namespace TianLi::Resource::Utils
 
 		CoUninitialize();
 	}
-	//bool LoadXml(Resources::XmlPtr& xml_ptr)
-	//{
-	//	HMODULE H_Module = GetModuleHandleW(L"CVAUTOTRACK.dll");
-	//
-	//	if (H_Module == NULL) throw "Get Dll Instance Fail!";
-	//
-	//	HRSRC H_XML = FindResource(H_Module, MAKEINTRESOURCE(IDR_XML_GIMAP_COMPUTE), L"XML");
-	//	HGLOBAL H_XmlDB_Handle = LoadResource(H_Module, H_XML);
-	//	LPVOID H_XmlDB_Ptr = LockResource(H_XmlDB_Handle);
-	//	DWORD XmlDB_Size = SizeofResource(H_Module, H_XML);
-	//	xml_ptr.ptr = static_cast<char*>(H_XmlDB_Ptr);
-	//	xml_ptr.size = XmlDB_Size;
-	//	return true;
-	//}
-	//
-	//bool ReleaseXml(Resources::XmlPtr& xml_ptr)
-	//{
-	//	// delete xml_ptr.ptr;
-	//	LPVOID H_XmlDB_Ptr = xml_ptr.ptr;
-	//	UnlockResource(H_XmlDB_Ptr);
-	//	xml_ptr.ptr = nullptr;
-	//	xml_ptr.size = 0;
-	//	return true;
-	//}
 }
 using namespace TianLi::Resource::Utils;
 
