@@ -1,2 +1,3 @@
 cd C:\projects\cvautotrack\
-git submodule update --recursive
+dir
+git submodule update --init --recursive
