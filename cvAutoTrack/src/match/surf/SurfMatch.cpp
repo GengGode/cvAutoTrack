@@ -197,7 +197,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat MiniMap(img_object);
 
-	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
+	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
@@ -296,7 +296,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		//重新从完整中地图取出角色周围部分地图
 		img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 
-		resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4));
+		resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
 		detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 		detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
@@ -415,7 +415,7 @@ cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 	static bool is_first = true;
 	if (is_first)
 	{
-		cv::resize(_mapMat, color_map, cv::Size(), 0.01, 0.01);
+		cv::resize(_mapMat, color_map, cv::Size(), 0.01, 0.01, cv::INTER_CUBIC);
 		is_first = false;
 	}
 	
