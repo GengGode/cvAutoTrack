@@ -26,10 +26,10 @@
         - appveyor DownloadFile %OpenCvUrl%
         - 7z x ./*.zip -y -o%OpenCvDir%
         - rm -f ./*.zip
-        — ps: ci/install_opencv.ps1
+        - ps: ./ci/install_opencv.ps1
         
         - cd %MyProjectDir%
-        — ps: ci/release_resource.ps1
+        - ps: ./ci/release_resource.ps1
         - cd %ProjectName%
         - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
     before_build:
