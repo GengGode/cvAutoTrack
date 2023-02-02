@@ -207,12 +207,12 @@ bool AutoTrack::DebugCapture()
 	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
-		Avatar.x += genshin_screen.config.rect_minimap.x;
-		Avatar.y += genshin_screen.config.rect_minimap.y;
+		Avatar.x += genshin_minimap.rect_minimap.x;
+		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
@@ -275,12 +275,12 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_screen.config.rect_paimon, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, genshin_screen.config.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
-		Avatar.x += genshin_screen.config.rect_minimap.x;
-		Avatar.y += genshin_screen.config.rect_minimap.y;
+		Avatar.x += genshin_minimap.rect_minimap.x;
+		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
@@ -790,7 +790,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	// r
 	{
 		rotation_calculation_config config;
-		rotation_calculation(giMiniMapRef, a, config);
+		rotation_calculation(giMiniMapRef, r, config);
 		if (config.error)
 		{
 			err = config.err;
@@ -925,7 +925,7 @@ bool AutoTrack::getMiniMapRefMat()
 		genshin_screen.config.is_used_alpha = true;
 	}
 	
-	// 检测派蒙 -> 检测小地图标定 -> 计算小地图坐标
+	// 检测派蒙 -> 直接计算小地图坐标
 
 	if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
 	{
@@ -940,53 +940,9 @@ bool AutoTrack::getMiniMapRefMat()
 			return false;
 		}
 	}
-	if (genshin_paimon.is_visial == false)
-	{
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
-		{
-			err = { 40102,"Bitblt模式下未能检测到派蒙" };
-			return false;
-		}
-		else if (genshin_handle.config.capture->mode == Capture::DirectX)
-		{
-
-			err = { 40202,"DirectX模式下未能检测到派蒙" };
-			return false;
-		}
-	}
 
 	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
 	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
-
-	if (TianLi::Match::match_minimap_cailb(genshin_screen, genshin_minimap_cailb) == false)
-	{
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
-		{
-			err = { 40103,"Bitblt模式下检测小地图标定失败" };
-			return false;
-		}
-		else if (genshin_handle.config.capture->mode == Capture::DirectX)
-		{
-
-			err = { 40203,"DirectX模式下检测小地图标定失败" };
-			return false;
-		}
-	}
-	if (genshin_minimap_cailb.is_visial == false)
-	{
-		if (genshin_handle.config.capture->mode == Capture::Bitblt)
-		{
-			err = { 40104,"Bitblt模式下未能检测到小地图标定" };
-			return false;
-		}
-		else if (genshin_handle.config.capture->mode == Capture::DirectX)
-		{
-
-			err = { 40204,"DirectX模式下未能检测到小地图标定" };
-			return false;
-		}
-	}
-
 	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
 
 	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
@@ -1003,8 +959,7 @@ bool AutoTrack::getMiniMapRefMat()
 			return false;
 		}
 	}
-
-	genshin_screen.config.rect_minimap = genshin_minimap.rect_minimap;
+	
 	giMiniMapRef = genshin_minimap.img_minimap;
 
 #ifdef _DEBUG
@@ -1031,7 +986,8 @@ bool AutoTrack::getAvatarRefMat()
 		Avatar_Rect_x,
 		Avatar_Rect_y,
 		Avatar_Rect_w,
-		Avatar_Rect_h);
+		Avatar_Rect_h
+	);
 
 	giAvatarRef = giMiniMapRef(Area_Avatar_mayArea);
 

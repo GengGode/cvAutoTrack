@@ -339,6 +339,7 @@
     <None Include="src\genshin\genshin.screen.h" />
     <None Include="src\version\build_version_before.bat" />
     <None Include="src\version\GetNextBuildVersion.ps1" />
+    <None Include="src\version\version_tag.tag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\cvAutoTrack.h" />
