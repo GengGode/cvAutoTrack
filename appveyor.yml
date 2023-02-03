@@ -136,7 +136,6 @@
         # 显示运行名称和版本号
         - ps: echo %APPVEYOR_BUILD_VERSION% 
         - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
-
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         - ps: ./ci/clone_resource.ps1
@@ -224,7 +223,7 @@
         - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /t:restore
         - MSBuild %MyProjectDir%impl\CSharp\TEST_cvAutoTrack_CSharp\TEST_cvAutoTrack_CSharp.csproj /p:configuration="Compile"
-        
+
     after_build:
         - echo %MyProjectDir%cvAutoTrack.sln 编译完成 等待测试
         - mkdir %MyProjectDir%x64\build\
@@ -273,7 +272,8 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        
+
+        - echo Chore
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         - ps: ./ci/clone_resource.ps1
