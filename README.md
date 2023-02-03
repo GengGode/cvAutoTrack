@@ -7,7 +7,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 # 介绍 
 
-#### [空荧酒馆原神地图手动更新替换教程](doc/kyjg.md)
+#### [空荧酒馆原神地图手动更新/测试教程](doc/kyjg.md)
 
 ##### 联系 QQ群[717355752](https://jq.qq.com/?_wv=1027&k=YvH6TsM4)
 
