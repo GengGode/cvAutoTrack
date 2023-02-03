@@ -274,7 +274,7 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        echo Chore
+        - echo Chore
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         - ps: ./ci/clone_resource.ps1
