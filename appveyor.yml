@@ -137,14 +137,10 @@
         # 显示运行名称和版本号
         - ps: echo %APPVEYOR_BUILD_VERSION% 
         - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
-
-        - mkdir %OpenCvDir%
-        - appveyor DownloadFile %OpenCvUrl%
-        - 7z x ./*.zip -y -o%OpenCvDir%
-        - rm -f ./*.zip
-
-        - cd %MyProjectDir%\%ProjectName%\
-        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        - cd %MyProjectDir%
+        - ps: ./ci/install_opencv.ps1
+        - ps: ./ci/clone_resource.ps1
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -217,13 +213,10 @@
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
-        - mkdir %OpenCvDir%
-        - appveyor DownloadFile %OpenCvUrl%
-        - 7z x ./*.zip -y -o%OpenCvDir%
-        - rm -f ./*.zip
-
-        - cd %MyProjectDir%\%ProjectName%\
-        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        - cd %MyProjectDir%
+        - ps: ./ci/install_opencv.ps1
+        - ps: ./ci/clone_resource.ps1
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -281,14 +274,10 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        
-        - mkdir %OpenCvDir%
-        - appveyor DownloadFile %OpenCvUrl%
-        - 7z x ./*.zip -y -o%OpenCvDir%
-        - rm -f ./*.zip
-
-        - cd %MyProjectDir%\%ProjectName%\
-        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        - cd %MyProjectDir%
+        - ps: ./ci/install_opencv.ps1
+        - ps: ./ci/clone_resource.ps1
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -346,14 +335,10 @@
   
     install:
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
-        
-        - mkdir %OpenCvDir%
-        - appveyor DownloadFile %OpenCvUrl%
-        - 7z x ./*.zip -y -o%OpenCvDir%
-        - rm -f ./*.zip
-
-        - cd %MyProjectDir%\%ProjectName%\
-        - 7z x ./resource.rar -y -o%MyProjectDir%\%ProjectName%\
+        - cd %MyProjectDir%
+        - ps: ./ci/install_opencv.ps1
+        - ps: ./ci/clone_resource.ps1
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
