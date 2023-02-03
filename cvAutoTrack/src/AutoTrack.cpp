@@ -940,6 +940,19 @@ bool AutoTrack::getMiniMapRefMat()
 			return false;
 		}
 	}
+	if (genshin_paimon.is_visial == false)
+	{
+		if (genshin_handle.config.capture->mode == Capture::Bitblt)
+		{
+			err = { 40102,"Bitblt模式下没有检测到派蒙" };
+			return false;
+		}
+		else if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+			err = { 40202,"DirectX模式下没有检测到派蒙" };
+			return false;
+		}
+	}
 
 	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
 	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
