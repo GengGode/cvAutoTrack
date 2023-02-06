@@ -252,7 +252,15 @@
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
                        
-        - appveyor PushArtifact cvAutoTrack.7z
+    after_test:
+        - cd %MyProjectDir%x64\build\
+        - echo %APPVEYOR_BUILD_VERSION% >version.tag
+        - md5sum -b %MyProjectDir%x64\build\%ProjectName%.dll | cut -c 2-34 >%ProjectName%.md5
+        - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Compile\TEST_cvAutoTrack_Cpp.exe $env:MyProjectDir\x64\build\
+        
+        - appveyor PushArtifact version.tag
+        - appveyor PushArtifact %ProjectName%.md5
+        - appveyor PushArtifact cvAutoTrack.dll
         - appveyor PushArtifact TEST_cvAutoTrack_Cpp.exe
 -
     version: '7.4.0.{build}'
