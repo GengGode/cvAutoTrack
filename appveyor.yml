@@ -252,7 +252,6 @@
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
                        
-        - appveyor PushArtifact %ProjectName%.md5
         - appveyor PushArtifact cvAutoTrack.7z
         - appveyor PushArtifact TEST_cvAutoTrack_Cpp.exe
 -
