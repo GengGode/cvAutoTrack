@@ -251,7 +251,10 @@
         - TEST_cvAutoTrack_Cpp.exe -test
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
-               
+                       
+        - appveyor PushArtifact %ProjectName%.md5
+        - appveyor PushArtifact cvAutoTrack.7z
+        - appveyor PushArtifact TEST_cvAutoTrack_Cpp.exe
 -
     version: '7.4.0.{build}'
     os: Visual Studio 2022
