@@ -189,7 +189,6 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Point2d pos_on_city;
 	
 	cv::Mat img_object = crop_border(_miniMapMat,0.15);
-	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	//在城镇中
 	/***********************/
@@ -198,6 +197,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat MiniMap(img_object);
 
 	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+	//resize(MiniMap, MiniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
@@ -218,7 +218,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/ minimap_scale_param, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 
 	if (std::max(lisx.size(), lisy.size()) <= 4)
 	{
@@ -253,14 +253,16 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Point2d pos_not_on_city;
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
-	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 	//不在城镇中时
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat miniMap(img_object);
+	cv::Mat miniMap_scale = img_object.clone();
+	
+	resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(miniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+	detectorSomeMap->detectAndCompute(miniMap_scale, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 
 	// 如果搜索范围内可识别特征点数量为0，则认为计算失败
 	if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() <= 2)
@@ -317,7 +319,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		double sum_x_on_city = 0;
 		double sum_y_on_city = 0;
 
-		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, 0.8667 / minimap_scale_param, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
+		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, 0.8667 /*/ minimap_scale_param*/, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
 
 		if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= 4)
 		{
