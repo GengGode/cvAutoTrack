@@ -354,7 +354,6 @@
     <ClInclude Include="src\capture\dxgi\include\d3dHelpers.h" />
     <ClInclude Include="src\capture\dxgi\include\direct3d11.interop.h" />
     <ClInclude Include="src\capture\video\video.h" />
-    <ClInclude Include="src\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\ErrorCode.h" />
     <ClInclude Include="src\filter\Filter.h" />
     <ClInclude Include="src\filter\kalman\Kalman.h" />

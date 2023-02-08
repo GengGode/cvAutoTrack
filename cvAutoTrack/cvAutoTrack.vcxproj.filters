@@ -71,9 +71,6 @@
     <Filter Include="src\genshin">
       <UniqueIdentifier>{ba89a0f8-f136-4cfc-9d3c-bbee05dbf89e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\check">
-      <UniqueIdentifier>{019cc20a-1ec0-455c-92b8-561f6044edb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\genshin\check">
       <UniqueIdentifier>{efb6d952-b0d5-4ae8-bb47-1676baa1343c}</UniqueIdentifier>
     </Filter>
@@ -206,9 +203,6 @@
     </ClInclude>
     <ClInclude Include="src\resources\image_binary\Resource.ImageBinary.h">
       <Filter>src\resources</Filter>
-    </ClInclude>
-    <ClInclude Include="src\check\paimon\genshin.check.paimon.h">
-      <Filter>src\check</Filter>
     </ClInclude>
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h">
       <Filter>src\genshin\check\paimon</Filter>
