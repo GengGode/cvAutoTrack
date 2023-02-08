@@ -279,14 +279,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	double sumx = 0;
 	double sumy = 0;
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_not_no_city, ratio_thresh, render_map_scale/ minimap_scale_param, lisx, lisy, sumx, sumy);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, ratio_thresh, render_map_scale / minimap_scale_param, lisx, lisy, sumx, sumy);
 
 	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
 	if (std::min(lisx.size(), lisy.size()) > 4)
 	{
 		isOnCity = false;
 
-		cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy) * minimap_scale_param;
+		cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
 		pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
 	}
 	else
