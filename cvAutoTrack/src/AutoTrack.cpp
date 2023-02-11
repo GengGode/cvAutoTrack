@@ -24,16 +24,12 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
-std::string current_working_directory()
-{
-    char buff[250];
-    _getcwd(buff, 250);
-    return std::string{ buff };
-}
+#include <DbgHelp.h>
+#pragma comment(lib, "Dbghelp.lib")
 
 LONG WINAPI ExpFilter(struct _EXCEPTION_POINTERS *pExpInfo)
 {
-    std::string sAppDirectory = ::current_working_directory();
+    std::string sAppDirectory = std::filesystem::current_path().string();
     std::string sDumpDirectory;
     SYSTEMTIME tm;
     GetLocalTime(&tm);
