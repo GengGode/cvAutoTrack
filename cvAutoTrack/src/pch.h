@@ -9,7 +9,18 @@
 
 #include "framework.h"
 // Opencv
+// 如果使用了c++14以上版本，关闭以下警告
+#ifdef _HAS_CXX17
+#pragma warning(disable: 4828)
+#pragma warning(once: 26451)
+#pragma warning(once: 26495)
+#pragma warning(disable: 6201)
+#pragma warning(disable: 6294)
+#pragma warning(once: 5054)
+#endif
+
 #include <opencv2/opencv.hpp>
+
 
 #include <Unknwn.h>
 #include <inspectable.h>
