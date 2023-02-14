@@ -24,61 +24,8 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
-std::string current_working_directory()
-{
-    char buff[250];
-    _getcwd(buff, 250);
-    return std::string{ buff };
-}
-
-LONG WINAPI ExpFilter(struct _EXCEPTION_POINTERS *pExpInfo)
-{
-    std::string sAppDirectory = ::current_working_directory();
-    std::string sDumpDirectory;
-    SYSTEMTIME tm;
-    GetLocalTime(&tm);
-
-    char pszText[512] = { 0 };
-    sprintf_s(pszText, "\\%d_%02d_%02d_%02d_%02d_%02d.dmp", tm.wYear,
-              tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond);
-
-    sDumpDirectory = sAppDirectory + "\\crash_dump";
-    CreateDirectory(sDumpDirectory.c_str(), NULL);
-
-    std::string sDumpFile = sDumpDirectory + std::string(pszText);
-    HANDLE hFile = CreateFile(sDumpFile.c_str(),
-                              GENERIC_WRITE,
-                              0,
-                              NULL,
-                              CREATE_ALWAYS,
-                              FILE_ATTRIBUTE_NORMAL,
-                              NULL);
-
-    if (INVALID_HANDLE_VALUE != hFile) {
-        MINIDUMP_EXCEPTION_INFORMATION einfo;
-        einfo.ThreadId = GetCurrentThreadId();
-        einfo.ExceptionPointers = pExpInfo;
-        einfo.ClientPointers = FALSE;
-        MiniDumpWriteDump(
-                GetCurrentProcess(),
-                GetCurrentProcessId(),
-                hFile,
-                MiniDumpNormal,
-                &einfo,
-                NULL,
-                NULL);
-
-        CloseHandle(hFile);
-    }
-
-    MessageBox(NULL, "软件即将停止工作，请将运行目录下Crash文件夹下的dmp文件发送给我们作进一步分析，谢谢。",
-               "崩溃了", MB_OK | MB_ICONERROR);
-
-    return EXCEPTION_EXECUTE_HANDLER;
-}
 AutoTrack::AutoTrack()
 {
-	::SetUnhandledExceptionFilter(ExpFilter);
 	err.enableWirteFile();
 	
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
@@ -248,6 +195,9 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 
 bool AutoTrack::DebugCapture()
 {
+
+	char* a = nullptr; *a = 1;
+
 	if (giFrame.empty())
 	{
 		err = { 251,"画面为空" };
