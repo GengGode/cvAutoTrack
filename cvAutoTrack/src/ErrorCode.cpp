@@ -291,7 +291,7 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 	else
 	{
 		//writeFile("%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
-		if (isUseFile == false) return *this;
+		if (is_use_file == false) return *this;
 		if (log_file.is_open() == false)
 		{
 			log_file.open("./autoTrack.log", std::ios::in | std::ios::out | std::ios::app);
@@ -307,7 +307,7 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 
 bool ErrorCode::disableWirteFile()
 {
-	isUseFile = false;
+	is_use_file = false;
 	if (log_file.is_open())
 	{
 		log_file.close();
@@ -317,13 +317,13 @@ bool ErrorCode::disableWirteFile()
 
 bool ErrorCode::enableWirteFile()
 {
-	isUseFile = true;
+	is_use_file = true;
 	return true;
 }
 
 //int ErrorCode::writeFile(char const* const format ,...)
 //{
-//	if (isUseFile == false) return -1;
+//	if (is_use_file == false) return -1;
 //	if (fptr == nullptr)
 //	{
 //		fopen_s(&fptr, "./autoTrack.log", "w+");

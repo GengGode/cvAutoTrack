@@ -7,7 +7,7 @@ using namespace std;
 class ErrorCode
 {
 	std::fstream log_file;
-	bool isUseFile = false;
+	bool is_use_file = false;
 private:
 	ErrorCode();
 
