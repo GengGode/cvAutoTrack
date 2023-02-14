@@ -63,7 +63,6 @@ for /f %%x in (src\version\version.branch) do (
 for /f %%x in (src\version\version_hash.hash) do (
 	set v6=%%x
 )
-chcp 65001
 echo #pragma once>>src\version\Version.h
 echo namespace TianLi::Version>>src\version\Version.h
 echo {>>src\version\Version.h
@@ -79,7 +78,7 @@ echo #else>>src\version\Version.h
 echo    const std::string build_time = "%date% %time%";>>src\version\Version.h
 echo %#endif>>src\version\Version.h
 echo }>>src\version\Version.h
-echo //璇ユ枃浠惰嚜鍔ㄧ敓鎴愶紝鏃犻渶鏇存敼 >>src\version\Version.h
+echo //该文件自动生成，无需更改 >>src\version\Version.h
 
 if exist src\version\version_tag.tag (
 	del src\version\version_tag.tag
