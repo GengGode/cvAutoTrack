@@ -6,7 +6,7 @@ using namespace std;
 
 class ErrorCode
 {
-	FILE * fptr = nullptr;
+	std::fstream log_file;
 	bool isUseFile = false;
 private:
 	ErrorCode();
@@ -29,7 +29,7 @@ public:
 	string toJson();
 
 private:
-	int errorCode=0;
+	int error_code=0;
 	std::vector<std::pair<int, std::string>> error_code_msg_list;
 private:
 	void push(int code, string msg);

@@ -37,6 +37,8 @@
 #include <atomic>
 #include <memory>
 #include <chrono>
+#include <format>
+#include <fstream>
 #include <filesystem>
 
 // D3D
