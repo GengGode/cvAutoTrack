@@ -9,7 +9,18 @@
 
 #include "framework.h"
 // Opencv
+// 如果使用了c++14以上版本，关闭以下警告
+#ifdef _HAS_CXX17
+#pragma warning(disable: 4828)
+#pragma warning(disable: 5054)
+#pragma warning(disable: 6201)
+#pragma warning(disable: 6294)
+#pragma warning(disable: 26451)
+#pragma warning(disable: 26495)
+#endif
+
 #include <opencv2/opencv.hpp>
+
 
 #include <Unknwn.h>
 #include <inspectable.h>
@@ -37,6 +48,8 @@
 #include <atomic>
 #include <memory>
 #include <chrono>
+#include <format>
+#include <fstream>
 #include <filesystem>
 
 // D3D

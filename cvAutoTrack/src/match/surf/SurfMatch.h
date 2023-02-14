@@ -59,13 +59,13 @@ public:
 	cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
 	cv::Point2d match_no_continuity_2nd(bool& calc_is_faile);
 	
-	cv::Point2d match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match, bool& calc_is_faile);
+	cv::Point2d match_find_position_in_block(cv::Point pos_second_match, bool& calc_is_faile);
 
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
 private:
 
-	cv::Mat crop_border(cv::Mat& mat, float border)
+	cv::Mat crop_border(cv::Mat& mat, double border)
 	{
 		int crop_size = static_cast<int>((mat.rows + mat.cols) * 0.5 * border);
 		return mat(cv::Rect(crop_size, crop_size, mat.cols - crop_size * 2, mat.rows - crop_size * 2));

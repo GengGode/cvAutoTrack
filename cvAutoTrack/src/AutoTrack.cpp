@@ -24,7 +24,6 @@
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
-
 AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
@@ -762,9 +761,53 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 
 		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 		cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
+		
+		cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
+		cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
+		{
+			double _x = user_pos.x;
+			double _y = user_pos.y;
+			// 渊下宫
+			if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
+			{
+				mapId = 1;
+			}
+			// 地下层岩
+			if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
+			{
+				mapId = 2;
+			}
 
-		x = user_pos.x;
-		y = user_pos.y;
+			switch (mapId)
+			{
+			case 0:
+			{
+				break;
+			}
+			case 1:
+			{
+				_x = _x - 0;
+				_y = _y - 5543;
+				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+				x = pos_t.x;
+				y = pos_t.y;
+				break;
+			}
+			case 2:
+			{
+				_x = _x - 0;
+				_y = _y - 0;
+				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+				x = pos_t.x;
+				y = pos_t.y;
+				break;
+			}
+			default:
+				break;
+			}
+		}
 	}
 
 	if (!getAvatarRefMat())
