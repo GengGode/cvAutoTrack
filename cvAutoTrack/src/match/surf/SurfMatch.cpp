@@ -177,6 +177,11 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 	{
 		pos_continuity = match_continuity_on_city(calc_continuity_is_faile);
 	}
+	
+	if (calc_continuity_is_faile)
+	{
+		pos_continuity = match_continuity_not_on_city(calc_continuity_is_faile);
+	}
 
 	return pos_continuity;
 }
