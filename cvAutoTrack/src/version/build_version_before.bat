@@ -63,7 +63,7 @@ for /f %%x in (src\version\version.branch) do (
 for /f %%x in (src\version\version_hash.hash) do (
 	set v6=%%x
 )
-
+chcp 65001
 echo #pragma once>>src\version\Version.h
 echo namespace TianLi::Version>>src\version\Version.h
 echo {>>src\version\Version.h
