@@ -195,9 +195,6 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 
 bool AutoTrack::DebugCapture()
 {
-
-	char* a = nullptr; *a = 1;
-
 	if (giFrame.empty())
 	{
 		err = { 251,"画面为空" };
@@ -791,20 +788,20 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 			{
 				_x = _x - 0;
 				_y = _y - 5543;
-				cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-				pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-				x = pos.x;
-				y = pos.y;
+				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+				x = pos_t.x;
+				y = pos_t.y;
 				break;
 			}
 			case 2:
 			{
 				_x = _x - 0;
 				_y = _y - 0;
-				cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-				pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-				x = pos.x;
-				y = pos.y;
+				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+				x = pos_t.x;
+				y = pos_t.y;
 				break;
 			}
 			default:

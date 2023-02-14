@@ -2,7 +2,7 @@
 #include "genshin.check.paimon.h"
 #include "../../../resources/Resources.h"
 
-auto get_point_vec3b(const cv::Mat& const mat, int x, int y, bool is_need_cvt)
+auto get_point_vec3b(const cv::Mat& mat, int x, int y, bool is_need_cvt)
 {
 	if (is_need_cvt)
 	{
@@ -12,7 +12,7 @@ auto get_point_vec3b(const cv::Mat& const mat, int x, int y, bool is_need_cvt)
 	return mat.at<cv::Vec3b>(y, x);
 
 }
-double cala_keypoint_diff(const cv::Mat& const mat,const cv::Rect& roi,const std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_keys, bool is_need_cvt)
+double cala_keypoint_diff(const cv::Mat& mat,const cv::Rect& roi,const std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_keys, bool is_need_cvt)
 {
 	double paimon_check_diff = 0;
 	for (auto& paimon_key : paimon_keys)

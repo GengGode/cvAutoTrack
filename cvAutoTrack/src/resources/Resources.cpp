@@ -65,7 +65,7 @@ namespace TianLi::Resource::Utils
 			if (SUCCEEDED(hr))
 			{
 				mat.create(height, width, CV_8UC4);
-				hr = pConverter->CopyPixels(NULL, width * 4, mat.total() * mat.elemSize(), mat.data);
+				hr = pConverter->CopyPixels(NULL, width * 4,static_cast<UINT>( mat.total() * mat.elemSize()), mat.data);
 			}
 		}
 	}
@@ -112,30 +112,54 @@ namespace TianLi::Resource::Utils
 
 		if (hModu == NULL) throw "Get Dll Instance Fail!";
 
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
-
-		CoCreateInstance(
-			CLSID_WICImagingFactory,
-			NULL,
-			CLSCTX_INPROC_SERVER,
-			IID_PPV_ARGS(&m_pIWICFactory)
-		);
-		imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
-		imageResDataHandle = LoadResource(hModu, imageResHandle);
-		pImageFile = LockResource(imageResDataHandle);
-		imageFileSize = SizeofResource(hModu, imageResHandle);
-		m_pIWICFactory->CreateStream(&pIWICStream);
-
-		pIWICStream->InitializeFromMemory(
-			reinterpret_cast<BYTE*>(pImageFile),
-			imageFileSize);
-		m_pIWICFactory->CreateDecoderFromStream(
-			pIWICStream,                   // The stream to use to create the decoder
-			NULL,                          // Do not prefer a particular vendor
-			WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
-			&pIDecoder);                   // Pointer to the decoder
-		pIDecoder->GetFrame(0, &pIDecoderFrame);
-
+		auto hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		if (SUCCEEDED(hr))
+		{
+			hr = CoCreateInstance(
+				CLSID_WICImagingFactory,
+				NULL,
+				CLSCTX_INPROC_SERVER,
+				IID_PPV_ARGS(&m_pIWICFactory)
+			);
+		}
+		if (SUCCEEDED(hr))
+		{
+			imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
+			
+		}
+		if (imageResHandle != NULL)
+		{
+			imageResDataHandle = LoadResource(hModu, imageResHandle);
+		}
+		if (imageResDataHandle != NULL)
+		{
+			pImageFile = LockResource(imageResDataHandle);
+		}
+		if (pImageFile != NULL)
+		{
+			imageFileSize = SizeofResource(hModu, imageResHandle);
+		}
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pIWICFactory->CreateStream(&pIWICStream);
+		}
+		if (SUCCEEDED(hr))
+		{
+			hr = pIWICStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize);
+		}
+		if (SUCCEEDED(hr))
+		{
+			m_pIWICFactory->CreateDecoderFromStream(
+				pIWICStream,                   // The stream to use to create the decoder
+				NULL,                          // Do not prefer a particular vendor
+				WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
+				&pIDecoder);                   // Pointer to the decoder
+		}
+		if (SUCCEEDED(hr))
+		{
+			hr = pIDecoder->GetFrame(0, &pIDecoderFrame);
+		}
+		
 		bitmap_source = pIDecoderFrame;
 
 		UINT width = 0, height = 0, depht = 4;

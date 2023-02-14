@@ -189,7 +189,7 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 {
 	static cv::Mat img_scene(_mapMat);
-	const auto minimap_scale_param = 2.0;
+	//const auto minimap_scale_param = 2.0;
 
 	cv::Point2d pos_on_city;
 	
@@ -407,7 +407,7 @@ cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 cv::Mat to_color(cv::Mat& img_object)
 {
 	cv::Mat color_mat;
-	int s_len = (img_object.cols + img_object.rows) * 0.25 * 0.8;
+	int s_len = static_cast<int>((img_object.cols + img_object.rows) * 0.25 * 0.8);
 	cv::Mat roi_tl = img_object(cv::Rect(0, 0, s_len, s_len));
 	cv::Mat roi_tr = img_object(cv::Rect(img_object.cols - s_len, 0, s_len, s_len));
 	cv::Mat roi_bl = img_object(cv::Rect(0, img_object.rows - s_len, s_len, s_len));
@@ -473,7 +473,8 @@ cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, 
 	{
 		return cv::Point(-1, 0);
 	}
-
+	UNREFERENCED_PARAMETER(_mapMat);
+	UNREFERENCED_PARAMETER(_MiniMapMat);
 	return cv::Point(0, 0);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
@@ -491,7 +492,7 @@ cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
 	return cv::Point2d(0,0);
 }
 // 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d SurfMatch::match_find_position_in_block(cv::Mat& _mapMat, cv::Mat& _minMapMat, cv::Point pos_second_match, bool& calc_is_faile)
+cv::Point2d SurfMatch::match_find_position_in_block(cv::Point pos_second_match, bool& calc_is_faile)
 {
 	if (pos_second_match.x == -1)
 	{
@@ -518,7 +519,7 @@ cv::Point2d SurfMatch::match_no_continuity_2nd(bool& calc_is_faile)
 	// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
 	pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
 	// 确定位置：根据所在区块的结果精确匹配角色位置
-	pos_continuity_no = match_find_position_in_block(_mapMat, _miniMapMat, pos_second_match, calc_is_faile);
+	pos_continuity_no = match_find_position_in_block(pos_second_match, calc_is_faile);
 	// 返回结果
 	return pos_continuity_no;
 }

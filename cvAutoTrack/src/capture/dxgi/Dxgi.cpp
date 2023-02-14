@@ -286,8 +286,6 @@ bool Dxgi::capture(cv::Mat& frame)
     //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
     TianLi::DirectX::d3dDevice->CreateTexture2D(&desc_type, nullptr, &bufferTexture);
     D3D11_BOX client_box;
-    uint32_t texture_width;
-    uint32_t texture_height;
     bool client_box_available = get_client_box(giHandle, desc_type.Width, desc_type.Height, &client_box);
     
     if (client_box_available)
