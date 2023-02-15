@@ -575,6 +575,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			err = { 5, "原神小地图区域为空" };
 			return false;
 		}
+		cv::Mat giStarRef;
 
 		cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
 			giStarRef, cv::COLOR_RGBA2GRAY);
@@ -666,7 +667,8 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
-	
+	cv::Mat giStarRef;
+
 	//一个bug 未开游戏而先开应用，开游戏时触发
 	cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);

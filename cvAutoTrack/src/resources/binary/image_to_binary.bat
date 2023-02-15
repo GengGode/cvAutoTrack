@@ -1,3 +1,4 @@
+powershell -ExecutionPolicy Bypass -File .\image_to_binary.ps1 ..\..\..\resource\GIMAP.png Png map .\resources.binary.image.map.h 
 powershell -ExecutionPolicy Bypass -File .\image_to_binary.ps1 ..\..\..\resource\GIMINIMAP_CAILB.png Png cailb .\image\cailb\resources.binary.image.cailb.h 
 powershell -ExecutionPolicy Bypass -File .\image_to_binary.ps1 ..\..\..\resource\GISTARTEMPLATE.bmp Bmp star .\image\star\resources.binary.image.star.h 
 powershell -ExecutionPolicy Bypass -File .\image_to_binary.ps1 ..\..\..\resource\GIPAIMON.bmp Bmp paimon .\image\paimon\resources.binary.image.paimon.h 

@@ -1,15 +1,9 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
-//#include <opencv2/xfeatures2d/nonfree.hpp>
-#include <iostream>
-#include <Windows.h>
-
 #include "FlowWork.h"
 #include "ErrorCode.h"
-#include "Kalmanfilter.h"
-#include "match/type/MatchType.h"
 #include "resources/Resources.h"
+#include "match/type/MatchType.h"
 #include "filter/Filter.h"
 #include "version/Version.h"
 
@@ -67,16 +61,12 @@ private:
 
 
 	FlowWork wForAfter;
-	Kalmanfilter posFilter;
-
 private:
 	//用户定义映射关系参数
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
-
-#define MAP_3_1
-#ifdef MAP_3_1
+	
 	// 绝对世界中心 天理坐标系原点在实际画布的位置
 	// World Center on AbsAllMap Coor
 	double WorldCenter_X = 13544; //Abs 4480   * MapAbsScale = 11455.36
@@ -108,7 +98,7 @@ private:
 	//2022-09-26 构造函数中初始化
 	// MapWorldOffset = MapWorldAbsOffset - WorldCenter
 	cv::Point2d MapWorldOffset = cv::Point2d(2096.083, 3769.3665);
-#endif
+
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
 	
@@ -117,14 +107,6 @@ private:
 	Filter* filter = nullptr;
 
 private:
-	RECT giRect = { 0,0,0,0 };
-	RECT giClientRect = { 0,0,0,0 };
-	//cv::Size giClientSize;
-	cv::Mat& giFrame = genshin_screen.img_screen;
-	cv::Mat giPaimonRef;
-	//cv::Mat giMiniMapRef;
-	cv::Mat giStarRef;
-	
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
 	GenshinPaimon genshin_paimon;
@@ -132,12 +114,12 @@ private:
 	GenshinMinimap genshin_minimap;
 	GenshinAvatarPosition genshin_avatar_position;
 	
+	cv::Mat& giFrame = genshin_screen.img_screen;
 private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactScreen();
 
 	bool getMiniMapRefMat();
-
 private:
 	bool clear_error_logs();
 };
