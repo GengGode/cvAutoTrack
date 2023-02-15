@@ -119,16 +119,11 @@ private:
 private:
 	RECT giRect = { 0,0,0,0 };
 	RECT giClientRect = { 0,0,0,0 };
-	cv::Size giClientSize;
+	//cv::Size giClientSize;
 	cv::Mat& giFrame = genshin_screen.img_screen;
 	cv::Mat giPaimonRef;
-	cv::Mat giMiniMapRef;
-	cv::Mat giAvatarRef;
+	//cv::Mat giMiniMapRef;
 	cv::Mat giStarRef;
-	cv::Rect& Area_Paimon_mayArea = genshin_paimon.rect_paimon;
-	cv::Rect& Area_Minimap_mayArea = genshin_minimap.rect_minimap;
-	cv::Rect& Area_UID_mayArea = genshin_handle.rect_uid;
-	cv::Rect& Area_Avatar_mayArea = genshin_minimap.rect_avatar;
 	
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
@@ -142,7 +137,6 @@ private:
 	bool getGengshinImpactScreen();
 
 	bool getMiniMapRefMat();
-	bool getAvatarRefMat();
 
 private:
 	bool clear_error_logs();

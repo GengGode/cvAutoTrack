@@ -224,7 +224,7 @@ bool AutoTrack::DebugCapture()
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// 绘制miniMap Rect
+		// 绘制miniMap Rect			   
 		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = genshin_minimap.rect_avatar;
 		Avatar.x += genshin_minimap.rect_minimap.x;
@@ -276,7 +276,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// 绘制miniMap Rect
+		// 绘制miniMap Rect		      
 		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = genshin_minimap.rect_avatar;
 		Avatar.x += genshin_minimap.rect_minimap.x;
@@ -292,7 +292,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	{
 		// 绘制paimon Rect
 		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// 绘制miniMap Rect
+		// 绘制miniMap Rect			      
 		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = genshin_minimap.rect_avatar;
 		Avatar.x += genshin_minimap.rect_minimap.x;
@@ -369,7 +369,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 			return false;
 		}
 
-	if (giMiniMapRef.empty())
+	if (genshin_minimap.img_minimap.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
@@ -478,20 +478,14 @@ bool AutoTrack::GetDirection(double& a)
 		err = { 2001, "获取角色朝向时，没有识别到paimon" };
 		return false;
 	}
-
-	if (!getAvatarRefMat())
-	{
-		return false;
-	}
-
-	if (giAvatarRef.empty())
+	if (genshin_minimap.rect_avatar.empty())
 	{
 		err = { 11,"原神角色小箭头区域为空" };
 		return false;
 	}
 	
 	direction_calculation_config  config;
-	direction_calculation(giAvatarRef, a , config);
+	direction_calculation(genshin_minimap.img_avatar, a , config);
 	if (config.error)
 	{
 		err = config.err;
@@ -514,7 +508,7 @@ bool AutoTrack::GetRotation(double& a)
 	}
 
 	rotation_calculation_config config;
-	rotation_calculation(giMiniMapRef, a, config);
+	rotation_calculation(genshin_minimap.img_minimap, a, config);
 	if (config.error)
 	{
 		err = config.err;
@@ -576,13 +570,13 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			return false;
 		}
 
-		if (giMiniMapRef.empty())
+		if (genshin_minimap.img_minimap.empty())
 		{
 			err = { 5, "原神小地图区域为空" };
 			return false;
 		}
 
-		cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
+		cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
 			giStarRef, cv::COLOR_RGBA2GRAY);
 
 
@@ -667,14 +661,14 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 		return false;
 	}
 	
-	if (giMiniMapRef.empty())
+	if (genshin_minimap.img_minimap.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
 	
 	//一个bug 未开游戏而先开应用，开游戏时触发
-	cv::cvtColor(giMiniMapRef(cv::Rect(36, 36, giMiniMapRef.cols - 72, giMiniMapRef.rows - 72)),
+	cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
 		giStarRef, cv::COLOR_RGBA2GRAY);
 	
 	star_calculation_config config;
@@ -735,7 +729,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		return false;
 	}
 
-	if (giMiniMapRef.empty())
+	if (genshin_minimap.img_minimap.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
@@ -811,12 +805,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		}
 	}
 
-	if (!getAvatarRefMat())
-	{
-		return false;
-	}
-
-	if (giAvatarRef.empty())
+	if (genshin_minimap.rect_avatar.empty())
 	{
 		err = { 11,"原神角色小箭头区域为空" };
 		return false;
@@ -824,7 +813,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	// a
 	{
 		direction_calculation_config  config;
-		direction_calculation(giAvatarRef, a, config);
+		direction_calculation(genshin_minimap.img_avatar, a, config);
 		if (config.error)
 		{
 			err = config.err;
@@ -834,7 +823,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	// r
 	{
 		rotation_calculation_config config;
-		rotation_calculation(giMiniMapRef, r, config);
+		rotation_calculation(genshin_minimap.img_minimap, r, config);
 		if (config.error)
 		{
 			err = config.err;
@@ -957,7 +946,6 @@ bool AutoTrack::getGengshinImpactScreen()
 bool AutoTrack::getMiniMapRefMat()
 {
 	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
-	giMiniMapRef = giFrame(genshin_minimap.rect_minimap);
 
 	
 	if (genshin_handle.config.capture->mode == Capture::DirectX || genshin_handle.config.is_force_used_no_alpha)
@@ -1017,40 +1005,9 @@ bool AutoTrack::getMiniMapRefMat()
 		}
 	}
 	
-	giMiniMapRef = genshin_minimap.img_minimap;
-
 #ifdef _DEBUG
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
 	cv::imshow("MiniMap", giMiniMapRef);
-	cv::waitKey(1);
-#endif
-	return true;
-}
-
-bool AutoTrack::getAvatarRefMat()
-{
-	if (giMiniMapRef.empty())
-	{
-		err = { 21,"获取角色区域时，小地图区域为空"};
-		return false;
-	}
-	int Avatar_Rect_x = cvRound(giMiniMapRef.cols * 0.4);
-	int Avatar_Rect_y = cvRound(giMiniMapRef.rows * 0.4);
-	int Avatar_Rect_w = cvRound(giMiniMapRef.cols * 0.2);
-	int Avatar_Rect_h = cvRound(giMiniMapRef.rows * 0.2);
-
-	Area_Avatar_mayArea = cv::Rect(
-		Avatar_Rect_x,
-		Avatar_Rect_y,
-		Avatar_Rect_w,
-		Avatar_Rect_h
-	);
-
-	giAvatarRef = giMiniMapRef(Area_Avatar_mayArea);
-
-#ifdef _DEBUG
-	cv::namedWindow("Avatar", cv::WINDOW_FREERATIO);
-	cv::imshow("Avatar", giAvatarRef);
 	cv::waitKey(1);
 #endif
 	return true;
