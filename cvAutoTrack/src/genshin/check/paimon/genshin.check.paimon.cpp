@@ -110,11 +110,18 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 				out_genshin_paimon.is_handle_mode = true;
 				out_genshin_paimon.is_visial = true;
 				out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_handle_mode_maxLoc, paimon_template_handle_mode.size());
+#ifdef _DEBUG
+				std::cout << "模版匹配手柄成功" << std::endl;
+#endif // DEBUG
 			}
 		}
 		else
 		{
 			out_genshin_paimon.is_visial = false;
+#ifdef _DEBUG
+			std::cout << "模板匹配失败" << std::endl;
+#endif // DEBUG
+
 		}
 	}
 	else
@@ -122,9 +129,13 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_maxLoc, paimon_template.size());
+#ifdef _DEBUG
+		std::cout << "模版匹配键鼠成功" << std::endl;
+#endif // DEBUG
 	}
 	return true;
 }
+
 bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
 {
 	auto paimon_keys = out_genshin_paimon.config.paimon_check_vec;
@@ -142,24 +153,41 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 		is_need_cvt = true;
 	}
 
-	// 计算每一个点的颜色距离并累计平均
+	// 尝试匹配键鼠标模板
+	if (genshin_screen.config.is_hairtail_screen)			//带鱼屏，切片
+	{
+		cv::Rect clipRect(cv::Point(72, 0), cv::Point(giPaimonRef.cols, giPaimonRef.rows));
+		giPaimonRef = giPaimonRef(clipRect);
+#ifdef _DEBUG
+		std::cout << "带鱼屏模式" << std::endl;
+#endif // DEBUG
+	}
 	double paimon_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint, paimon_keys, is_need_cvt);
-	// 超过阈值，匹配手柄模式
 	if (paimon_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
 	{
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint;
+		if (genshin_screen.config.is_hairtail_screen)
+			out_genshin_paimon.rect_paimon += cv::Point(72, 0);
+#ifdef _DEBUG
+		std::cout << "快速模式匹配键鼠成功" << std::endl;
+#endif // DEBUG
+
 		return true;
 	}
-	// 计算每一个点的颜色距离并累计平均
+
+	// 匹配失败，改为匹配手柄模板
+	giPaimonRef = genshin_screen.img_paimon_maybe;
 	double paimon_handle_check_diff = cala_keypoint_diff(giPaimonRef, rect_keypoint_handle, paimon_handle_keys, is_need_cvt);
-	// 超过阈值，未能匹配到
 	if (paimon_handle_check_diff < out_genshin_paimon.config.check_match_paimon_keypoint_params)
 	{
 		out_genshin_paimon.is_handle_mode = true;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint_handle;
+#ifdef _DEBUG
+		std::cout << "快速模式匹配手柄成功" << std::endl;
+#endif // DEBUG
 		return true;
 	}
 

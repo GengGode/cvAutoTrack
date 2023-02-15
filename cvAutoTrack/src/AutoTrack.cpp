@@ -206,9 +206,9 @@ bool AutoTrack::DebugCapture()
 	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
 		cv::Rect Avatar = Area_Avatar_mayArea;
 		Avatar.x += genshin_minimap.rect_minimap.x;
 		Avatar.y += genshin_minimap.rect_minimap.y;
@@ -968,7 +968,7 @@ bool AutoTrack::getMiniMapRefMat()
 		genshin_screen.config.is_used_alpha = true;
 	}
 	
-	// 检测派蒙 -> 直接计算小地图坐标
+	// 检测派蒙 -> 计算小地图坐标
 
 	if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
 	{

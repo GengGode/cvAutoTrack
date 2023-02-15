@@ -12,7 +12,21 @@ namespace TianLi::Match
 		if (paimon_rect.empty()) return false;
 		
 		// 矩形
-		auto minimap_rect = genshin_screen.config.is_handle_mode ? genshin_screen.config.rect_minimap_handle : genshin_screen.config.rect_minimap;
+		cv::Rect minimap_rect;
+		if (!genshin_screen.config.is_handle_mode && genshin_screen.config.is_hairtail_screen)
+		{
+			minimap_rect = genshin_screen.config.rect_minimap + cv::Point(72, 0);
+		}
+		else if (genshin_screen.config.is_handle_mode)
+		{
+			minimap_rect = genshin_screen.config.rect_minimap_handle;
+		}
+		else
+		{
+			minimap_rect = genshin_screen.config.rect_minimap;
+		}
+
+		//auto minimap_rect = genshin_screen.config.is_handle_mode ? genshin_screen.config.rect_minimap_handle : genshin_screen.config.rect_minimap;
 		// 中心点
 		auto minimap_center = cv::Point(minimap_rect.x + (minimap_rect.width) / 2, minimap_rect.y + (minimap_rect.height) / 2);
 		out_genshin_minimap.img_minimap = genshin_screen.img_screen(minimap_rect);

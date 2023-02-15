@@ -25,6 +25,9 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	{
 		if (giFrame.empty())return;
 		cv::resize(giFrame, giFrame, genshin_handle.size_frame);
+		
+		//判断是否是带鱼屏
+		out_genshin_screen.config.is_hairtail_screen = static_cast<double>(genshin_handle.size_frame.width)/ static_cast<double>(genshin_handle.size_frame.height) >= 2.0;
 
 		out_genshin_screen.rect_client = cv::Rect(giRect.left, giRect.top, giRectClient.right - giRectClient.left, giRectClient.bottom - giRectClient.top);
 

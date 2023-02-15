@@ -110,6 +110,8 @@ struct GenshinScreenConfig
 
 	bool is_handle_mode = false;
 
+	bool is_hairtail_screen = false;
+
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
 	cv::Rect rect_minimap = MiniMapRect;
