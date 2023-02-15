@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "AutoTrack.h"
+
 #include "ErrorCode.h"
+#include "resources/Resources.h"
+
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "utils/Utils.h"
+#include "utils/workflow/utils.workflow.h"
 #include "match/Match.h"
 
 #include "algorithms/algorithms.direction.h"
@@ -16,6 +20,9 @@
 
 #include "version/Version.h"
 
+Resources& res = Resources::getInstance();
+ErrorCode& err = ErrorCode::getInstance();
+
 AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
@@ -26,16 +33,17 @@ AutoTrack::AutoTrack()
 
 	genshin_handle.config.capture = new Bitblt();
 	genshin_handle.config.capture->init();
-
-	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "正常退出");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "未能找到原神窗口句柄");
-	wForAfter.append(this, &AutoTrack::getGengshinImpactScreen, 103, "获取原神画面失败");
-
+	
+	workflow_for_begin = new TianLi::Utils::Workflow();
+	workflow_for_begin->append(clear_error_logs, 0, "正常退出");
+	workflow_for_begin->append([this]() {return getGengshinImpactWnd(); }, 101, "未能找到原神窗口句柄");
+	workflow_for_begin->append([this]() {return getGengshinImpactScreen(); }, 103, "获取原神画面失败");
 }
 
 AutoTrack::~AutoTrack(void)
 {
 	delete genshin_handle.config.capture;
+	delete workflow_for_begin;
 }
 
 bool AutoTrack::init()
@@ -343,7 +351,7 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 
 bool AutoTrack::GetPosition(double& x, double& y)
 {
-	if (wForAfter.run() == false)
+	if (workflow_for_begin->run() == false)
 	{
 		return false;
 	}
@@ -446,7 +454,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 
 bool AutoTrack::GetDirection(double& a)
 {
-	if (wForAfter.run() == false)
+	if (workflow_for_begin->run() == false)
 	{
 		return false;
 	}
@@ -474,7 +482,7 @@ bool AutoTrack::GetDirection(double& a)
 
 bool AutoTrack::GetRotation(double& a)
 {
-	if (wForAfter.run() == false)
+	if (workflow_for_begin->run() == false)
 	{
 		return false;
 	}
@@ -536,7 +544,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		pos.clear();
 		seeId = 0;
 
-		if (wForAfter.run() == false)
+		if (workflow_for_begin->run() == false)
 		{
 			return false;
 		}
@@ -628,7 +636,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 bool AutoTrack::GetStarJson(char* jsonBuff)
 {
-	if (wForAfter.run() == false)
+	if (workflow_for_begin->run() == false)
 	{
 		return false;
 	}
@@ -664,7 +672,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 bool AutoTrack::GetUID(int& uid)
 {
-	if (wForAfter.run() == false)
+	if (workflow_for_begin->run() == false)
 	{
 		return false;
 	}
@@ -980,8 +988,3 @@ bool AutoTrack::getMiniMapRefMat()
 	return true;
 }
 
-bool AutoTrack::clear_error_logs()
-{
-	err = { 0,"调用成功"};
-	return true;
-}

@@ -69,6 +69,7 @@ struct GenshinHandleConfig
 
 	std::vector<std::pair<std::wstring, GenshinWindowClass>> genshin_window_name_list = GenshinWindowNameList;
 };
+// 用于匹配原神窗口的句柄相关变量
 struct GenshinHandle
 {
 	bool is_exist = false;
@@ -118,6 +119,7 @@ struct GenshinScreenConfig
 	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
 	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
+// 用于获取原神画面的相关变量
 struct GenshinScreen
 {
 	cv::Rect rect_client;
@@ -156,7 +158,7 @@ struct GenshinPaimonConfig
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
 	double check_match_paimon_keypoint_params = 16;
 };
-
+// 画面中派蒙的相关变量
 struct GenshinPaimon
 {
 	bool is_visial = false;

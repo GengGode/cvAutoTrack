@@ -113,7 +113,7 @@
     <Filter Include="src\resources\binary\image\star">
       <UniqueIdentifier>{7b046303-de42-44b4-9425-39f8ee450b9b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\utils\flow_work">
+    <Filter Include="src\utils\workflow">
       <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -177,12 +177,6 @@
     <ClInclude Include="src\utils\Utils.h">
       <Filter>src\utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kalmanfilter.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FlowWork.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
     <ClInclude Include="src\ErrorCode.h">
       <Filter>src\utils</Filter>
     </ClInclude>
@@ -217,9 +211,6 @@
       <Filter>resource</Filter>
     </ClInclude>
     <ClInclude Include="src\pch.h">
-      <Filter>pch</Filter>
-    </ClInclude>
-    <ClInclude Include="src\framework.h">
       <Filter>pch</Filter>
     </ClInclude>
     <ClInclude Include="src\algorithms\algorithms.rotation.h">
@@ -300,15 +291,15 @@
     <ClInclude Include="src\genshin\genshin.h">
       <Filter>src\genshin</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\workflow\utils.workflow.h">
+      <Filter>src\utils\workflow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\cvAutoTrack.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\capture\Capture.cpp">
@@ -326,13 +317,7 @@
     <ClCompile Include="src\utils\Utils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kalmanfilter.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\ErrorCode.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FlowWork.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
     <ClCompile Include="src\match\surf\SurfMatch.cpp">
@@ -379,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="src\resources\resources.load.cpp">
       <Filter>src\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
+      <Filter>src\utils\workflow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

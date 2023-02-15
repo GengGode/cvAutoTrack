@@ -1,21 +1,17 @@
 #pragma once
-#include <opencv2/opencv.hpp>
-#include "FlowWork.h"
-#include "ErrorCode.h"
-#include "resources/Resources.h"
 #include "match/type/MatchType.h"
-
-
-// 此类是不导出的
+namespace TianLi::Utils
+{
+	class Workflow;
+}
 class AutoTrack {
 public:
 	AutoTrack(void);
 	~AutoTrack(void);
-
-
+#pragma region 外部接口
 	bool init();
 	bool uninit();
-	
+
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
 
@@ -23,15 +19,15 @@ public:
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
 	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
-	bool GetPosition(double &x, double &y);
+	bool GetPosition(double& x, double& y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
 	bool GetDirection(double& a);
 	bool GetRotation(double& a);
 	//获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳
 	bool GetStar(double& x, double& y, bool& isEnd);
 	//获取发现的神瞳坐标，以json字符串格式
-	bool GetStarJson(char *jsonBuff);
-	bool GetUID(int &uid);
+	bool GetStarJson(char* jsonBuff);
+	bool GetUID(int& uid);
 	bool GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
 	/*********/
 	bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
@@ -40,7 +36,7 @@ public:
 	int GetLastError();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
 	int GetLastErrJson(char* json_buff, int buff_size);
-	
+
 	bool startServe();
 	bool stopServe();
 
@@ -49,18 +45,15 @@ public:
 
 	bool GetVersion(char* version_buff, int buff_size);
 	bool GetCompileTime(char* time_buff, int buff_size);
-	
-	
+
 	bool DebugCapture();
 	bool DebugCapturePath(const char* path_buff, int buff_size);
-
+#pragma endregion
 private:
-	Resources& res = Resources::getInstance();
-	ErrorCode& err = ErrorCode::getInstance();
-
-
-	FlowWork wForAfter;
+	TianLi::Utils::Workflow* workflow_for_begin = nullptr;
 private:
+#pragma region 坐标映射相关变量
+
 	//用户定义映射关系参数
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
@@ -101,6 +94,7 @@ private:
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
 
+#pragma endregion
 private:
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
@@ -113,8 +107,5 @@ private:
 private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactScreen();
-
 	bool getMiniMapRefMat();
-private:
-	bool clear_error_logs();
 };

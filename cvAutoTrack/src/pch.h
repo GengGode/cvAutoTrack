@@ -7,7 +7,10 @@
 #ifndef PCH_H
 #define PCH_H
 
-#include "framework.h"
+#define WIN32_LEAN_AND_MEAN             // 从 Windows 头文件中排除极少使用的内容
+// Windows 头文件
+#include <windows.h>
+
 // Opencv
 // 如果使用了c++14以上版本，关闭以下警告
 #ifdef _HAS_CXX17
@@ -20,7 +23,6 @@
 #endif
 
 #include <opencv2/opencv.hpp>
-
 
 #include <Unknwn.h>
 #include <inspectable.h>
@@ -43,13 +45,14 @@
 #include <dwmapi.h>
 #pragma comment(lib,"dwmapi.lib")
 
-
 // STL
 #include <atomic>
 #include <memory>
 #include <chrono>
 #include <format>
+#include <string>
 #include <fstream>
+#include <functional>
 #include <filesystem>
 
 // D3D

@@ -361,13 +361,10 @@
     <ClInclude Include="src\filter\kalman\Kalman.h" />
     <ClInclude Include="src\filter\smooth\Smooth.h" />
     <ClInclude Include="src\filter\untouched\Untouched.h" />
-    <ClInclude Include="src\FlowWork.h" />
-    <ClInclude Include="src\framework.h" />
     <ClInclude Include="src\genshin\cailb\minimap\genshin.cailb.minimap.h" />
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\genshin\genshin.h" />
     <ClInclude Include="src\genshin\genshin.handle.h" />
-    <ClInclude Include="src\Kalmanfilter.h" />
     <ClInclude Include="src\match\diff\DiffMatch.h" />
     <ClInclude Include="src\match\match.include.h" />
     <ClInclude Include="src\match\Match.h" />
@@ -396,6 +393,7 @@
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\utils\Utils.h" />
+    <ClInclude Include="src\utils\workflow\utils.workflow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -412,18 +410,15 @@
     </ClCompile>
     <ClCompile Include="src\capture\video\video.cpp" />
     <ClCompile Include="src\cvAutoTrack.cpp" />
-    <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />
     <ClCompile Include="src\filter\Filter.cpp" />
     <ClCompile Include="src\filter\kalman\Kalman.cpp" />
     <ClCompile Include="src\filter\smooth\Smooth.cpp" />
     <ClCompile Include="src\filter\untouched\Untouched.cpp" />
-    <ClCompile Include="src\FlowWork.cpp" />
     <ClCompile Include="src\genshin\cailb\minimap\genshin.cailb.minimap.cpp" />
     <ClCompile Include="src\genshin\check\paimon\genshin.check.paimon.cpp" />
     <ClCompile Include="src\genshin\genshin.handle.cpp" />
     <ClCompile Include="src\genshin\genshin.screen.cpp" />
-    <ClCompile Include="src\Kalmanfilter.cpp" />
     <ClCompile Include="src\match\diff\DiffMatch.cpp" />
     <ClCompile Include="src\match\Match.cpp" />
     <ClCompile Include="src\match\surf\SurfMatch.cpp" />
@@ -436,6 +431,7 @@
     <ClCompile Include="src\resources\Resources.cpp" />
     <ClCompile Include="src\resources\resources.load.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
+    <ClCompile Include="src\utils\workflow\utils.workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc" />
