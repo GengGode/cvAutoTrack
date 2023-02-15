@@ -117,9 +117,17 @@ namespace TianLi::Resource::Utils
 	}
 }
 using namespace TianLi::Resource::Utils;
-
+//#include "resources.load.h"
 Resources::Resources()
 {
+	//auto mat = TianLi::Resources::Load::load_image("paimon");
+	//mat = TianLi::Resources::Load::load_image("cailb");
+	//mat = TianLi::Resources::Load::load_image("star");
+	//mat = TianLi::Resources::Load::load_image("uid_");
+	//mat = TianLi::Resources::Load::load_image("uid0");
+	//mat = TianLi::Resources::Load::load_image("uid1");
+	//mat = TianLi::Resources::Load::load_image("uid2");
+	//mat = TianLi::Resources::Load::load_image("uid3");
 	LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
 	LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
 

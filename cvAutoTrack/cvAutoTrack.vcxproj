@@ -365,6 +365,7 @@
     <ClInclude Include="src\framework.h" />
     <ClInclude Include="src\genshin\cailb\minimap\genshin.cailb.minimap.h" />
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h" />
+    <ClInclude Include="src\genshin\genshin.h" />
     <ClInclude Include="src\genshin\genshin.handle.h" />
     <ClInclude Include="src\Kalmanfilter.h" />
     <ClInclude Include="src\match\diff\DiffMatch.h" />

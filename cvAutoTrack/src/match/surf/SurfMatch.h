@@ -39,6 +39,7 @@ public:
 
 	bool isInit = false;
 	bool isContinuity = false;
+	bool isCoveying = false;
 	bool isOnCity = false;
 	
 	bool is_success_match = false;

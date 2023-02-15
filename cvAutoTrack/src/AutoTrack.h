@@ -4,8 +4,7 @@
 #include "ErrorCode.h"
 #include "resources/Resources.h"
 #include "match/type/MatchType.h"
-#include "filter/Filter.h"
-#include "version/Version.h"
+
 
 // 此类是不导出的
 class AutoTrack {
@@ -101,10 +100,6 @@ private:
 
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
-	
-private:
-	
-	Filter* filter = nullptr;
 
 private:
 	GenshinHandle genshin_handle;

@@ -3,11 +3,6 @@
 #include "ErrorCode.h"
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
-//#include "capture/gdi/Gdi.h"
-#include "filter/kalman/Kalman.h"
-#include "filter/smooth/Smooth.h"
-//#include "filter/mean/Mean.h"
-//#include "filter/median/Median.h"
 #include "utils/Utils.h"
 #include "match/Match.h"
 
@@ -17,13 +12,9 @@
 #include "match/match.star.h"
 #include "match/match.uid.h"
 
-#include "genshin/genshin.handle.h"
-#include "genshin/genshin.screen.h"
-#include "genshin/check/paimon/genshin.check.paimon.h"
-#include "genshin/cailb/minimap/genshin.cailb.minimap.h"
+#include "genshin/genshin.h"
 
-#include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
+#include "version/Version.h"
 
 AutoTrack::AutoTrack()
 {
@@ -35,8 +26,6 @@ AutoTrack::AutoTrack()
 
 	genshin_handle.config.capture = new Bitblt();
 	genshin_handle.config.capture->init();
-	
-	filter = new Kalman();
 
 	wForAfter.append(this, &AutoTrack::clear_error_logs, 0, "正常退出");
 	wForAfter.append(this, &AutoTrack::getGengshinImpactWnd, 101, "未能找到原神窗口句柄");
@@ -379,20 +368,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 	
 	cv::Point2d pos = genshin_avatar_position.position;
-	auto isConveying = genshin_avatar_position.config.is_coveying;
-	auto isContinuity = genshin_avatar_position.config.is_continuity;
 
-	cv::Point2d filt_pos;
-	if (isConveying || !isContinuity)
-	{
-		filt_pos = filter->re_init_filterting(pos);
-	}
-	else
-	{
-		filt_pos = filter->filterting(pos);
-	}
-
-	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 	cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 
 	x = user_pos.x;
@@ -743,20 +720,8 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 
 		cv::Point2d pos = genshin_avatar_position.position;
-		auto isConveying = genshin_avatar_position.config.is_coveying;
-		auto isContinuity = genshin_avatar_position.config.is_continuity;
 
-		cv::Point2d filt_pos;
-		if (isConveying || !isContinuity)
-		{
-			filt_pos = filter->re_init_filterting(pos);
-		}
-		else
-		{
-			filt_pos = filter->filterting(pos);
-		}
-
-		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(filt_pos * MapAbsScale, MapWorldOffset, MapWorldScale);
+		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
 		cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 		
 		cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);

@@ -113,6 +113,9 @@
     <Filter Include="src\resources\binary\image\star">
       <UniqueIdentifier>{7b046303-de42-44b4-9425-39f8ee450b9b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utils\flow_work">
+      <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\Source.def">
@@ -293,6 +296,9 @@
     </ClInclude>
     <ClInclude Include="src\resources\resources.load.h">
       <Filter>src\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\genshin\genshin.h">
+      <Filter>src\genshin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
