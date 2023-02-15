@@ -120,7 +120,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(opencvStaticLib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <ExternalIncludePath>$(opencvStaticInc);$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">
     <TargetName>cvAutoTrack</TargetName>
@@ -254,7 +254,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>D:/opencv/opencv_460/install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(opencvStaticInc)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -269,8 +269,9 @@
       <AdditionalDependencies>ade.lib;IlmImf.lib;ippicvmt.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;quirc.lib;zlib.lib;opencv_world460.lib;opencv_img_hash460.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <Version>3.1</Version>
-      <AdditionalLibraryDirectories>D:\opencv\opencv_460\install\build_Static_World_NoCuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib</AdditionalLibraryDirectories>
+      <Version>3.4</Version>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -337,6 +338,7 @@
     <None Include="src\algorithms\algorithms.direction.h" />
     <None Include="src\genshin\genshin.include.h" />
     <None Include="src\genshin\genshin.screen.h" />
+    <None Include="src\resources\binary\image_to_binary.bat" />
     <None Include="src\version\build_version_before.bat" />
     <None Include="src\version\GetNextBuildVersion.ps1" />
     <None Include="src\version\version_tag.tag" />
@@ -361,6 +363,7 @@
     <ClInclude Include="src\filter\untouched\Untouched.h" />
     <ClInclude Include="src\FlowWork.h" />
     <ClInclude Include="src\framework.h" />
+    <ClInclude Include="src\genshin\cailb\minimap\genshin.cailb.minimap.h" />
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\genshin\genshin.handle.h" />
     <ClInclude Include="src\Kalmanfilter.h" />
@@ -369,13 +372,28 @@
     <ClInclude Include="src\match\Match.h" />
     <ClInclude Include="src\match\match.star.h" />
     <ClInclude Include="src\match\match.uid.h" />
-    <ClInclude Include="src\match\match_minimap.h" />
     <ClInclude Include="src\match\surf\SurfMatch.h" />
     <ClInclude Include="src\match\type\MatchType.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\resources\image_binary\Resource.ImageBinary.h" />
+    <ClInclude Include="src\resources\binary\image\cailb\resources.binary.image.cailb.h" />
+    <ClInclude Include="src\resources\binary\image\paimon\resources.binary.image.paimon.h" />
+    <ClInclude Include="src\resources\binary\image\resources.binary.image.h" />
+    <ClInclude Include="src\resources\binary\image\star\resources.binary.image.star.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid0.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid1.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid2.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid3.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid4.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid5.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid6.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid7.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid8.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid9.h" />
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid_.h" />
+    <ClInclude Include="src\resources\binary\resources.binary.h" />
     <ClInclude Include="src\resources\Resources.h" />
+    <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\utils\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -400,20 +418,22 @@
     <ClCompile Include="src\filter\smooth\Smooth.cpp" />
     <ClCompile Include="src\filter\untouched\Untouched.cpp" />
     <ClCompile Include="src\FlowWork.cpp" />
+    <ClCompile Include="src\genshin\cailb\minimap\genshin.cailb.minimap.cpp" />
     <ClCompile Include="src\genshin\check\paimon\genshin.check.paimon.cpp" />
     <ClCompile Include="src\genshin\genshin.handle.cpp" />
     <ClCompile Include="src\genshin\genshin.screen.cpp" />
     <ClCompile Include="src\Kalmanfilter.cpp" />
     <ClCompile Include="src\match\diff\DiffMatch.cpp" />
     <ClCompile Include="src\match\Match.cpp" />
-    <ClCompile Include="src\match\match_minimap.cpp" />
     <ClCompile Include="src\match\surf\SurfMatch.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\resources\binary\resources.binary.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />
+    <ClCompile Include="src\resources\resources.load.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
