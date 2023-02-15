@@ -207,33 +207,33 @@ bool AutoTrack::DebugCapture()
 	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
 		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = Area_Avatar_mayArea;
+		cv::Rect Avatar = genshin_minimap.rect_avatar;
 		Avatar.x += genshin_minimap.rect_minimap.x;
 		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 		// 绘制UID Rect
-		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
 	case Capture::DirectX:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = Area_Avatar_mayArea;
-		Avatar.x += Area_Minimap_mayArea.x;
-		Avatar.y += Area_Minimap_mayArea.y;
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = genshin_minimap.rect_avatar;
+		Avatar.x += genshin_minimap.rect_minimap.x;
+		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 		// 绘制UID Rect
-		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
 	}
 	}
 
@@ -275,33 +275,33 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 	case Capture::Bitblt:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
 		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = Area_Avatar_mayArea;
+		cv::Rect Avatar = genshin_minimap.rect_avatar;
 		Avatar.x += genshin_minimap.rect_minimap.x;
 		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 		// 绘制UID Rect
-		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
 		break;
 	}
 	case Capture::DirectX:
 	{
 		// 绘制paimon Rect
-		cv::rectangle(out_info_img, Area_Paimon_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
 		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, Area_Minimap_mayArea, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = Area_Avatar_mayArea;
-		Avatar.x += Area_Minimap_mayArea.x;
-		Avatar.y += Area_Minimap_mayArea.y;
+		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+		cv::Rect Avatar = genshin_minimap.rect_avatar;
+		Avatar.x += genshin_minimap.rect_minimap.x;
+		Avatar.y += genshin_minimap.rect_minimap.y;
 
 		// 绘制avatar Rect
 		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
 		// 绘制UID Rect
-		cv::rectangle(out_info_img, Area_UID_mayArea, cv::Scalar(0, 0, 255), 2);
+		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
 	}
 	}
 
