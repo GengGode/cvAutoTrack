@@ -20,6 +20,7 @@
 #include "genshin/genshin.handle.h"
 #include "genshin/genshin.screen.h"
 #include "genshin/check/paimon/genshin.check.paimon.h"
+#include "genshin/cailb/minimap/genshin.cailb.minimap.h"
 
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
@@ -1001,7 +1002,7 @@ bool AutoTrack::getMiniMapRefMat()
 	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
 	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
 
-	if (TianLi::Match::splite_minimap(genshin_screen, genshin_minimap) == false)
+	if (TianLi::Genshin::Cailb::cailb_minimap(genshin_screen, genshin_minimap) == false)
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
