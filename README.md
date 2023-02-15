@@ -1,4 +1,4 @@
-this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/README_en.md) 
+this Chinese, Click to [English](https://github.com/GengGode/cvAutoTrack/blob/master/doc/README_en.md) 
 # GenshinImpact AutoTrack DLL
 
 通过图像匹配算法，从原神客户端中获取角色在地图上的位置的DLL动态链接库
@@ -51,7 +51,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 # 如何使用
 
 1. 下载编译好的动态链接库。
-   - https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/releases/
+   - https://github.com/GengGode/cvAutoTrack/releases/
 2. 装载动态链接库后，根据[函数手册](#函数手册)对相关函数进行调用或封装。
 3. 部分语言的调用可参见 `impl` 文件夹内的调用示例。
 4. 由于默认接口输出的是[天理坐标模型](天理坐标模型)的坐标，所以使用者需要根据自身地图坐标系与天理坐标模型之间的映射关系，设置世界中心以及缩放系数或者后期手动换算。
@@ -68,7 +68,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
     ``` 7z x ./*.zip -y -o%OpenCvDir% ```
 5. Clone 代码
 
-   ``` Git Clone https://github.com/GengGode/GenshinImpact_AutoTrack_DLL ```
+   ``` Git Clone https://github.com/GengGode/cvAutoTrack ```
 
 6. 进入项目文件夹解压资源文件
 
@@ -88,7 +88,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 # 对于开发者
 
 - 码云上的仓库：[https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll](https://gitee.com/Yu_Sui_Xian/yuanshen-auto-tracking-dll)
-- Git上的仓库： [https://github.com/GengGode/GenshinImpact_AutoTrack_DLL](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL)
+- Git上的仓库： [https://github.com/GengGode/cvAutoTrack](https://github.com/GengGode/cvAutoTrack)
 
 ## 项目结构
 
@@ -100,7 +100,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
     - **Python** Python调用
 
 
-# 函数目录( [详细文档](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E5%87%BD%E6%95%B0%E6%89%8B%E5%86%8C.md) )
+# 函数目录( [详细文档](https://github.com/GengGode/cvAutoTrack/blob/master/doc/%E5%87%BD%E6%95%B0%E6%89%8B%E5%86%8C.md) )
 
 |              接口名称            |                                 接口功能                         |
 | ------------------------------- | --------------------------------------------------------------- |
@@ -142,7 +142,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 | `GetLastErrJson`                | 获取错误码堆栈信息。                                               | 
 
 ## 错误处理
-- ###  [运行时错误](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C.md) 
+- ###  [运行时错误](https://github.com/GengGode/cvAutoTrack/blob/master/doc/%E6%97%A0%E6%B3%95%E8%BF%90%E8%A1%8C.md) 
 - ### [编译、链接、打包过程中的异常及错误]()
 
 ## 天理坐标模型（待重写）
@@ -158,7 +158,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 根据该尺寸将其他贴图一同缩放到相同比例下，最后拼合成为总图，此时的缩放系数即为天理坐标模型的缩放系数。
 
 在该缩放系数下，原神2.1版本中，总图尺寸为
-![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page1.svg)
+![坐标范围](https://github.com/GengGode/cvAutoTrack/blob/master/doc/page1.svg)
 之后选择位于璃月的请仙典仪祭坛中心作为世界原点，即`( 0 , 0 )`。
 
 之后为了便于Opencv的坐标计算，设定为地图从蒙德到璃月，是横坐标正方向。
@@ -167,7 +167,7 @@ this Chinese, Click to [English](https://github.com/GengGode/GenshinImpact_AutoT
 
 即
 
-![坐标范围](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL/blob/master/doc/page2.svg)
+![坐标范围](https://github.com/GengGode/cvAutoTrack/blob/master/doc/page2.svg)
 
 ### 渊下宫及地下层岩
 
