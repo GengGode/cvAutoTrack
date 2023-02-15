@@ -4,12 +4,12 @@
 bool cailb_minimap_impl(const GenshinScreen& genshin_screen, GenshinMinimap& out_genshin_minimap)
 {
 	auto& paimon_rect = genshin_screen.config.rect_paimon;
-	// 检测不到派蒙，返回false
+	// not find paimon 
 	if (paimon_rect.empty()) return false;
 
-	// 矩形
+	// rect
 	auto minimap_rect = genshin_screen.config.is_handle_mode ? genshin_screen.config.rect_minimap_handle : genshin_screen.config.rect_minimap;
-	// 中心点
+	// center point
 	auto minimap_center = cv::Point(minimap_rect.x + (minimap_rect.width) / 2, minimap_rect.y + (minimap_rect.height) / 2);
 	out_genshin_minimap.img_minimap = genshin_screen.img_screen(minimap_rect);
 	out_genshin_minimap.rect_minimap = minimap_rect;

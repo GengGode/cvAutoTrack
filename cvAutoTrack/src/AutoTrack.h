@@ -8,8 +8,8 @@
 #include "FlowWork.h"
 #include "ErrorCode.h"
 #include "Kalmanfilter.h"
+#include "match/type/MatchType.h"
 #include "resources/Resources.h"
-#include "match/match_minimap.h"
 #include "filter/Filter.h"
 #include "version/Version.h"
 
