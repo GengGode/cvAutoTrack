@@ -99,7 +99,7 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_maxLoc, paimon_template.size());
-		
+		// 设置匹配派蒙的rect位置为新搜索到的位置
 		out_genshin_paimon.config.rect_paimon_keypoint = out_genshin_paimon.rect_paimon;
 		return true;
 	}
@@ -120,7 +120,7 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 		out_genshin_paimon.is_handle_mode = true;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_handle_mode_maxLoc, paimon_template_handle_mode.size());
-		
+		// 设置手柄模式下匹配派蒙的rect位置为新搜索到的位置
 		out_genshin_paimon.config.rect_paimon_keypoint_handle = out_genshin_paimon.rect_paimon;
 		return true;
 	}

@@ -155,7 +155,9 @@ struct GenshinPaimonConfig
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_check_vec = MatchPaimonKeyPointList;
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
 	double check_match_paimon_keypoint_params = 16;
+	// 正常模式下匹配派蒙的rect位置
 	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
+	// 手柄模式下匹配派蒙的rect位置
 	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
 // 画面中派蒙的相关变量
