@@ -2,74 +2,8 @@
 #include "Resources.h"
 #include "resource.h"
 #include <wincodec.h>
-#include "resources/image_binary/Resource.ImageBinary.h"
 namespace TianLi::Resource::Utils
 {
-	//TianLi::Resource::ImageBinary::bin_paimon_png
-	
-	/// <summary>
-	/// .png file binary data to cv::Mat
-	/// </summary>
-	/// <param name="image_binary"></param>
-	/// <param name="mat"></param>
-	void binary_to_mat(const unsigned char* image_binary, cv::Mat& mat)
-	{
-		auto image_array = cv::Mat(1, sizeof(image_binary), CV_8UC1, (void*)image_binary);
-		mat = cv::imdecode(image_array, cv::IMREAD_UNCHANGED);
-	}
-	/// <summary>
-	/// .png file binary data to cv::Mat
-	/// </summary>
-	/// <param name="image_binary"></param>
-	/// <param name="mat"></param>
-	void binary_to_mat_com(const unsigned char* image_binary, cv::Mat& mat)
-	{
-		IWICImagingFactory* pFactory = NULL;
-		IWICBitmapDecoder* pDecoder = NULL;
-		IWICBitmapFrameDecode* pFrame = NULL;
-		IWICFormatConverter* pConverter = NULL;
-		IWICStream* pStream = NULL;
-		HRESULT hr = CoInitialize(NULL);
-		if (SUCCEEDED(hr))
-		{
-			hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pFactory));
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pFactory->CreateStream(&pStream);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pStream->InitializeFromMemory((BYTE*)image_binary, sizeof(image_binary));
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pFactory->CreateDecoderFromStream(pStream, NULL, WICDecodeMetadataCacheOnDemand, &pDecoder);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pDecoder->GetFrame(0, &pFrame);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pFactory->CreateFormatConverter(&pConverter);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pConverter->Initialize(pFrame, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeCustom);
-		}
-		if (SUCCEEDED(hr))
-		{
-			UINT width, height;
-			hr = pConverter->GetSize(&width, &height);
-			if (SUCCEEDED(hr))
-			{
-				mat.create(height, width, CV_8UC4);
-				hr = pConverter->CopyPixels(NULL, width * 4,static_cast<UINT>( mat.total() * mat.elemSize()), mat.data);
-			}
-		}
-	}
-	
 	void LoadBitmap_ID2Mat(int IDB, cv::Mat& mat)
 	{
 		auto H_Handle = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
@@ -183,9 +117,17 @@ namespace TianLi::Resource::Utils
 	}
 }
 using namespace TianLi::Resource::Utils;
-
+//#include "resources.load.h"
 Resources::Resources()
 {
+	//auto mat = TianLi::Resources::Load::load_image("paimon");
+	//mat = TianLi::Resources::Load::load_image("cailb");
+	//mat = TianLi::Resources::Load::load_image("star");
+	//mat = TianLi::Resources::Load::load_image("uid_");
+	//mat = TianLi::Resources::Load::load_image("uid0");
+	//mat = TianLi::Resources::Load::load_image("uid1");
+	//mat = TianLi::Resources::Load::load_image("uid2");
+	//mat = TianLi::Resources::Load::load_image("uid3");
 	LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
 	LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
 

@@ -77,6 +77,45 @@
     <Filter Include="src\genshin\check\paimon">
       <UniqueIdentifier>{2b485667-c329-48c1-a20b-f8cfb2217de2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\genshin\cailb">
+      <UniqueIdentifier>{8ef684b6-d2e1-486c-a200-64e6900c6f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\cailb\minimap">
+      <UniqueIdentifier>{428dd79d-f94e-4154-a3d7-b1fde1bb6fbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\match">
+      <UniqueIdentifier>{c63d4b3c-f264-4ad8-b5a9-4be12ccd53e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\match\avatar">
+      <UniqueIdentifier>{01f5fa5f-d4e3-4f4d-b2c3-1083cbe1c079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\match\star">
+      <UniqueIdentifier>{ed4b587f-03a3-4faa-92dc-9183960daa9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\match\uid">
+      <UniqueIdentifier>{772c1ff8-82a2-4e07-92c0-1db3790b000a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary">
+      <UniqueIdentifier>{621c57e8-94c6-447a-85fe-e917ec104364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary\image">
+      <UniqueIdentifier>{0983567b-7c15-4d5e-8345-c2c4fd03bb74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary\image\uid">
+      <UniqueIdentifier>{dffd9bca-0072-4ef3-8ab8-af29126c0f63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary\image\paimon">
+      <UniqueIdentifier>{655ae593-06cf-4820-b0c8-98499541b0aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary\image\cailb">
+      <UniqueIdentifier>{15bf2f90-c41c-4c77-9e65-f87d1cfe2a2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\resources\binary\image\star">
+      <UniqueIdentifier>{7b046303-de42-44b4-9425-39f8ee450b9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils\workflow">
+      <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\Source.def">
@@ -99,6 +138,9 @@
     </None>
     <None Include="src\version\version_tag.tag">
       <Filter>src\version</Filter>
+    </None>
+    <None Include="src\resources\binary\image_to_binary.bat">
+      <Filter>src\resources\binary</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -129,19 +171,10 @@
     <ClInclude Include="src\capture\bitblt\Bitblt.h">
       <Filter>src\capture\bitblt</Filter>
     </ClInclude>
-    <ClInclude Include="src\match\match_minimap.h">
-      <Filter>src\match</Filter>
-    </ClInclude>
     <ClInclude Include="src\resources\Resources.h">
       <Filter>src\resources</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\Utils.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Kalmanfilter.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FlowWork.h">
       <Filter>src\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\ErrorCode.h">
@@ -180,9 +213,6 @@
     <ClInclude Include="src\pch.h">
       <Filter>pch</Filter>
     </ClInclude>
-    <ClInclude Include="src\framework.h">
-      <Filter>pch</Filter>
-    </ClInclude>
     <ClInclude Include="src\algorithms\algorithms.rotation.h">
       <Filter>src\algorithms</Filter>
     </ClInclude>
@@ -201,11 +231,68 @@
     <ClInclude Include="src\genshin\genshin.handle.h">
       <Filter>src\genshin</Filter>
     </ClInclude>
-    <ClInclude Include="src\resources\image_binary\Resource.ImageBinary.h">
-      <Filter>src\resources</Filter>
-    </ClInclude>
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h">
       <Filter>src\genshin\check\paimon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\genshin\cailb\minimap\genshin.cailb.minimap.h">
+      <Filter>src\genshin\cailb\minimap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\resources.binary.h">
+      <Filter>src\resources\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\resources.binary.image.h">
+      <Filter>src\resources\binary\image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\paimon\resources.binary.image.paimon.h">
+      <Filter>src\resources\binary\image\paimon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\cailb\resources.binary.image.cailb.h">
+      <Filter>src\resources\binary\image\cailb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\star\resources.binary.image.star.h">
+      <Filter>src\resources\binary\image\star</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid_.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid0.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid1.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid2.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid3.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid4.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid5.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid6.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid7.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid8.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid9.h">
+      <Filter>src\resources\binary\image\uid</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\resources.load.h">
+      <Filter>src\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\genshin\genshin.h">
+      <Filter>src\genshin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\workflow\utils.workflow.h">
+      <Filter>src\utils\workflow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -213,9 +300,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\cvAutoTrack.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\capture\Capture.cpp">
@@ -233,16 +317,7 @@
     <ClCompile Include="src\utils\Utils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\match\match_minimap.cpp">
-      <Filter>src\match</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kalmanfilter.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\ErrorCode.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FlowWork.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
     <ClCompile Include="src\match\surf\SurfMatch.cpp">
@@ -280,6 +355,18 @@
     </ClCompile>
     <ClCompile Include="src\genshin\check\paimon\genshin.check.paimon.cpp">
       <Filter>src\genshin\check\paimon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resources\binary\resources.binary.cpp">
+      <Filter>src\resources\binary</Filter>
+    </ClCompile>
+    <ClCompile Include="src\genshin\cailb\minimap\genshin.cailb.minimap.cpp">
+      <Filter>src\genshin\cailb\minimap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resources\resources.load.cpp">
+      <Filter>src\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
+      <Filter>src\utils\workflow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

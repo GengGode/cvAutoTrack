@@ -1,28 +1,17 @@
 #pragma once
-#include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
-//#include <opencv2/xfeatures2d/nonfree.hpp>
-#include <iostream>
-#include <Windows.h>
-
-#include "FlowWork.h"
-#include "ErrorCode.h"
-#include "Kalmanfilter.h"
-#include "resources/Resources.h"
-#include "match/match_minimap.h"
-#include "filter/Filter.h"
-#include "version/Version.h"
-
-// 此类是不导出的
+#include "match/type/MatchType.h"
+namespace TianLi::Utils
+{
+	class Workflow;
+}
 class AutoTrack {
 public:
 	AutoTrack(void);
 	~AutoTrack(void);
-
-
+#pragma region 外部接口
 	bool init();
 	bool uninit();
-	
+
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
 
@@ -30,15 +19,15 @@ public:
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
 	bool GetTransformOfMap(double& x, double& y, double& a, int& mapId);
-	bool GetPosition(double &x, double &y);
+	bool GetPosition(double& x, double& y);
 	bool GetPositionOfMap(double& x, double& y, int& mapId);
 	bool GetDirection(double& a);
 	bool GetRotation(double& a);
 	//获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳
 	bool GetStar(double& x, double& y, bool& isEnd);
 	//获取发现的神瞳坐标，以json字符串格式
-	bool GetStarJson(char *jsonBuff);
-	bool GetUID(int &uid);
+	bool GetStarJson(char* jsonBuff);
+	bool GetUID(int& uid);
 	bool GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
 	/*********/
 	bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
@@ -47,7 +36,7 @@ public:
 	int GetLastError();
 	int GetLastErrMsg(char* msg_buff, int buff_size);
 	int GetLastErrJson(char* json_buff, int buff_size);
-	
+
 	bool startServe();
 	bool stopServe();
 
@@ -56,27 +45,20 @@ public:
 
 	bool GetVersion(char* version_buff, int buff_size);
 	bool GetCompileTime(char* time_buff, int buff_size);
-	
-	
+
 	bool DebugCapture();
 	bool DebugCapturePath(const char* path_buff, int buff_size);
-
+#pragma endregion
 private:
-	Resources& res = Resources::getInstance();
-	ErrorCode& err = ErrorCode::getInstance();
-
-
-	FlowWork wForAfter;
-	Kalmanfilter posFilter;
-
+	TianLi::Utils::Workflow* workflow_for_begin = nullptr;
 private:
+#pragma region 坐标映射相关变量
+
 	//用户定义映射关系参数
 	double UserWorldOrigin_X = 0;
 	double UserWorldOrigin_Y = 0;
 	double UserWorldScale = 1.0;
-
-#define MAP_3_1
-#ifdef MAP_3_1
+	
 	// 绝对世界中心 天理坐标系原点在实际画布的位置
 	// World Center on AbsAllMap Coor
 	double WorldCenter_X = 13544; //Abs 4480   * MapAbsScale = 11455.36
@@ -108,42 +90,22 @@ private:
 	//2022-09-26 构造函数中初始化
 	// MapWorldOffset = MapWorldAbsOffset - WorldCenter
 	cv::Point2d MapWorldOffset = cv::Point2d(2096.083, 3769.3665);
-#endif
+
 	//2022-07-13 还是没想起来
 	double MapWorldScale = 1.0;
-	
-private:
-	
-	Filter* filter = nullptr;
 
+#pragma endregion
 private:
-	RECT giRect = { 0,0,0,0 };
-	RECT giClientRect = { 0,0,0,0 };
-	cv::Size giClientSize;
-	cv::Mat& giFrame = genshin_screen.img_screen;
-	cv::Mat giPaimonRef;
-	cv::Mat giMiniMapRef;
-	cv::Mat giAvatarRef;
-	cv::Mat giStarRef;
-	cv::Rect& Area_Paimon_mayArea = genshin_paimon.rect_paimon;
-	cv::Rect& Area_Minimap_mayArea = genshin_minimap.rect_minimap;
-	cv::Rect& Area_UID_mayArea = genshin_handle.rect_uid;
-	cv::Rect& Area_Avatar_mayArea = genshin_minimap.rect_avatar;
-	
 	GenshinHandle genshin_handle;
 	GenshinScreen genshin_screen;
 	GenshinPaimon genshin_paimon;
-	GenshinMinimapCailb genshin_minimap_cailb;
+	//GenshinMinimapCailb genshin_minimap_cailb;
 	GenshinMinimap genshin_minimap;
 	GenshinAvatarPosition genshin_avatar_position;
 	
+	cv::Mat& giFrame = genshin_screen.img_screen;
 private:
 	bool getGengshinImpactWnd();
 	bool getGengshinImpactScreen();
-
 	bool getMiniMapRefMat();
-	bool getAvatarRefMat();
-
-private:
-	bool clear_error_logs();
 };

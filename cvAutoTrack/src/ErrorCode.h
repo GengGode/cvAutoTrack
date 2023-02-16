@@ -34,3 +34,9 @@ private:
 private:
 	void push(int code, string msg);
 };
+
+inline bool clear_error_logs()
+{
+	ErrorCode::getInstance() = { 0,"调用成功" };
+	return true;
+}

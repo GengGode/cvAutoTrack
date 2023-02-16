@@ -5,7 +5,7 @@ class Filter
 {
 public:
 	Filter();
-	~Filter();
+	virtual ~Filter();
 public:
 	virtual cv::Point2d filterting(const cv::Point2d& pos) = 0;
 	virtual cv::Point2d re_init_filterting(const cv::Point2d& pos) = 0;

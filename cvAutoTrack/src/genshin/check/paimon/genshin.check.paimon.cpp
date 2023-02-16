@@ -92,45 +92,49 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 	double paimon_match_minVal, paimon_match_maxVal;
 	cv::Point paimon_match_minLoc, paimon_match_maxLoc;
 	cv::minMaxLoc(template_result, &paimon_match_minVal, &paimon_match_maxVal, &paimon_match_minLoc, &paimon_match_maxLoc);
-
+	
 	// 如果小于阈值，则尝试判断是否为手柄模式，否则为检测到派蒙
-	if (paimon_match_maxVal < check_match_paimon_param || paimon_match_maxVal == 1)
-	{
-		if (paimon_match_maxVal > 0.2)
-		{
-			cv::Mat template_handle_mode_result;
-			// TODO HOTCODE
-			cv::matchTemplate(split_paimon.back(), template_handle_mode, template_handle_mode_result, cv::TM_CCOEFF_NORMED, template_mask_handle_mode);
-
-			double paimon_match_handle_mode_minVal, paimon_match_handle_mode_maxVal;
-			cv::Point paimon_match_handle_mode_minLoc, paimon_match_handle_mode_maxLoc;
-			cv::minMaxLoc(template_handle_mode_result, &paimon_match_handle_mode_minVal, &paimon_match_handle_mode_maxVal, &paimon_match_handle_mode_minLoc, &paimon_match_handle_mode_maxLoc);
-			if (paimon_match_handle_mode_maxVal > check_match_paimon_param)
-			{
-				out_genshin_paimon.is_handle_mode = true;
-				out_genshin_paimon.is_visial = true;
-				out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_handle_mode_maxLoc, paimon_template_handle_mode.size());
-			}
-		}
-		else
-		{
-			out_genshin_paimon.is_visial = false;
-		}
-	}
-	else
+	if (paimon_match_maxVal >= check_match_paimon_param && paimon_match_maxVal != 1)
 	{
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
 		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_maxLoc, paimon_template.size());
+		out_genshin_paimon.is_search_mode = true;
+		// 设置匹配派蒙的rect位置为新搜索到的位置
+		out_genshin_paimon.config.rect_paimon_keypoint = out_genshin_paimon.rect_paimon;
+		return true;
 	}
-	return true;
+	if (paimon_match_maxVal <= 0.2)
+	{
+		out_genshin_paimon.is_visial = false;
+		return false;
+	}
+	
+	cv::Mat template_handle_mode_result;
+	cv::matchTemplate(split_paimon.back(), template_handle_mode, template_handle_mode_result, cv::TM_CCOEFF_NORMED, template_mask_handle_mode);
+
+	double paimon_match_handle_mode_minVal, paimon_match_handle_mode_maxVal;
+	cv::Point paimon_match_handle_mode_minLoc, paimon_match_handle_mode_maxLoc;
+	cv::minMaxLoc(template_handle_mode_result, &paimon_match_handle_mode_minVal, &paimon_match_handle_mode_maxVal, &paimon_match_handle_mode_minLoc, &paimon_match_handle_mode_maxLoc);
+	if (paimon_match_handle_mode_maxVal > check_match_paimon_param)
+	{
+		out_genshin_paimon.is_handle_mode = true;
+		out_genshin_paimon.is_visial = true;
+		out_genshin_paimon.rect_paimon = cv::Rect(rect_origin.tl() + paimon_match_handle_mode_maxLoc, paimon_template_handle_mode.size());
+		out_genshin_paimon.is_search_mode = true;
+		// 设置手柄模式下匹配派蒙的rect位置为新搜索到的位置
+		out_genshin_paimon.config.rect_paimon_keypoint_handle = out_genshin_paimon.rect_paimon;
+		return true;
+	}
+	out_genshin_paimon.is_visial = false;
+	return false;
 }
 bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
 {
 	auto paimon_keys = out_genshin_paimon.config.paimon_check_vec;
 	auto paimon_handle_keys = out_genshin_paimon.config.paimon_handle_check_vec;
-	auto rect_keypoint = genshin_screen.config.rect_paimon_keypoint;
-	auto rect_keypoint_handle = genshin_screen.config.rect_paimon_keypoint_handle;
+	auto rect_keypoint = out_genshin_paimon.config.rect_paimon_keypoint;
+	auto rect_keypoint_handle = out_genshin_paimon.config.rect_paimon_keypoint_handle;
 	auto giPaimonRef = genshin_screen.img_paimon_maybe;
 	// 判空退出
 	if (giPaimonRef.empty()) return false;
@@ -149,7 +153,7 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 	{
 		out_genshin_paimon.is_handle_mode = false;
 		out_genshin_paimon.is_visial = true;
-		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint;
+		out_genshin_paimon.rect_paimon = out_genshin_paimon.config.rect_paimon_keypoint;
 		return true;
 	}
 	// 计算每一个点的颜色距离并累计平均
@@ -159,7 +163,7 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 	{
 		out_genshin_paimon.is_handle_mode = true;
 		out_genshin_paimon.is_visial = true;
-		out_genshin_paimon.rect_paimon = genshin_screen.config.rect_paimon_keypoint_handle;
+		out_genshin_paimon.rect_paimon = out_genshin_paimon.config.rect_paimon_keypoint_handle;
 		return true;
 	}
 

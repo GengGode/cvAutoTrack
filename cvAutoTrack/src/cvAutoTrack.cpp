@@ -8,12 +8,10 @@
 
 static AutoTrack _at;
 
-
 bool __stdcall verison(char* versionBuff)
 {
 	return _at.GetVersion(versionBuff,32);
 }
-
 bool __stdcall init()
 {
 	return _at.init();

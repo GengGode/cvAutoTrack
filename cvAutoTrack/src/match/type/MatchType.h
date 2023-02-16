@@ -1,5 +1,6 @@
 ﻿#pragma once
 class Capture;
+class Filter;
 
 enum GenshinWindowClass
 {
@@ -68,6 +69,7 @@ struct GenshinHandleConfig
 
 	std::vector<std::pair<std::wstring, GenshinWindowClass>> genshin_window_name_list = GenshinWindowNameList;
 };
+// 用于匹配原神窗口的句柄相关变量
 struct GenshinHandle
 {
 	bool is_exist = false;
@@ -109,14 +111,14 @@ struct GenshinScreenConfig
 	bool is_used_alpha = true;
 
 	bool is_handle_mode = false;
+	bool is_search_mode = false;
 
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
 	cv::Rect rect_minimap = MiniMapRect;
 	cv::Rect rect_minimap_handle = MiniMapHandleRect;
-	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
-	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
+// 用于获取原神画面的相关变量
 struct GenshinScreen
 {
 	cv::Rect rect_client;
@@ -154,12 +156,17 @@ struct GenshinPaimonConfig
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_check_vec = MatchPaimonKeyPointList;
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
 	double check_match_paimon_keypoint_params = 16;
+	// 正常模式下匹配派蒙的rect位置
+	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
+	// 手柄模式下匹配派蒙的rect位置
+	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
-
+// 画面中派蒙的相关变量
 struct GenshinPaimon
 {
 	bool is_visial = false;
 	bool is_handle_mode = false;
+	bool is_search_mode = false;
 	cv::Rect rect_paimon;
 	GenshinPaimonConfig config;
 };
@@ -221,6 +228,8 @@ struct GenshinAvatarPositionConfig
 	bool is_on_city = false;
 	bool is_exist_last_match_minimap = false;
 	cv::Mat img_last_match_minimap;
+	bool is_use_filter = true;
+	Filter* pos_filter = nullptr;
 };
 struct GenshinAvatarPosition
 {
