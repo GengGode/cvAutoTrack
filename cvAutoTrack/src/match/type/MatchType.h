@@ -111,6 +111,7 @@ struct GenshinScreenConfig
 	bool is_used_alpha = true;
 
 	bool is_handle_mode = false;
+	bool is_search_mode = false;
 
 	cv::Rect rect_paimon;
 	cv::Rect rect_minimap_cailb;
@@ -165,6 +166,7 @@ struct GenshinPaimon
 {
 	bool is_visial = false;
 	bool is_handle_mode = false;
+	bool is_search_mode = false;
 	cv::Rect rect_paimon;
 	GenshinPaimonConfig config;
 };

@@ -963,7 +963,7 @@ bool AutoTrack::getMiniMapRefMat()
 
 	genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
 	genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
-	genshin_screen.config.rect_minimap_cailb = genshin_minimap_cailb.rect_minimap_cailb;
+	genshin_screen.config.is_search_mode = genshin_paimon.is_search_mode;
 
 	if (TianLi::Genshin::Cailb::cailb_minimap(genshin_screen, genshin_minimap) == false)
 	{
