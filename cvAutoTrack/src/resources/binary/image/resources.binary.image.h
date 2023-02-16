@@ -52,8 +52,8 @@ namespace TianLi::Resources::Binary::Image
 	};
 	const char* image_name[] =
 	{
-		"paimon",
 		"cailb",
+		"paimon",
 		"star",
 		"uid_",
 		"uid0",
