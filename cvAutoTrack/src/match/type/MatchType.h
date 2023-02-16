@@ -116,8 +116,6 @@ struct GenshinScreenConfig
 	cv::Rect rect_minimap_cailb;
 	cv::Rect rect_minimap = MiniMapRect;
 	cv::Rect rect_minimap_handle = MiniMapHandleRect;
-	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
-	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
 // 用于获取原神画面的相关变量
 struct GenshinScreen
@@ -157,6 +155,8 @@ struct GenshinPaimonConfig
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_check_vec = MatchPaimonKeyPointList;
 	std::vector<std::pair<cv::Point, cv::Vec3b>> paimon_handle_check_vec = MatchPaimonHandleKeyPointList;
 	double check_match_paimon_keypoint_params = 16;
+	cv::Rect rect_paimon_keypoint = MatchPaimonKeyPointRect;
+	cv::Rect rect_paimon_keypoint_handle = MatchPaimonHandleKeyPointRect;
 };
 // 画面中派蒙的相关变量
 struct GenshinPaimon
