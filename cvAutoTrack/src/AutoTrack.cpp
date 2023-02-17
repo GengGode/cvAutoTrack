@@ -982,7 +982,7 @@ bool AutoTrack::getMiniMapRefMat()
 	
 #ifdef _DEBUG
 	cv::namedWindow("MiniMap", cv::WINDOW_FREERATIO);
-	cv::imshow("MiniMap", giMiniMapRef);
+	cv::imshow("MiniMap", genshin_minimap.img_minimap);
 	cv::waitKey(1);
 #endif
 	return true;

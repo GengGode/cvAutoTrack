@@ -10,7 +10,7 @@ void TianLi::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, G
 {
 	static SurfMatch surf_match;
 	static bool is_init = false;
-	if (genshin_minimap.is_run_init_start == true)
+	if (genshin_minimap.is_run_init_start == true || is_init==false)
 	{
 		if (is_init)return;
 		Resources::getInstance().install();

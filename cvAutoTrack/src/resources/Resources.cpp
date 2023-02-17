@@ -117,17 +117,34 @@ namespace TianLi::Resource::Utils
 	}
 }
 using namespace TianLi::Resource::Utils;
-//#include "resources.load.h"
+#ifdef new_resources
+#include "resources.load.h"
+#endif // 
 Resources::Resources()
 {
-	//auto mat = TianLi::Resources::Load::load_image("paimon");
-	//mat = TianLi::Resources::Load::load_image("cailb");
-	//mat = TianLi::Resources::Load::load_image("star");
-	//mat = TianLi::Resources::Load::load_image("uid_");
-	//mat = TianLi::Resources::Load::load_image("uid0");
-	//mat = TianLi::Resources::Load::load_image("uid1");
-	//mat = TianLi::Resources::Load::load_image("uid2");
-	//mat = TianLi::Resources::Load::load_image("uid3");
+#ifdef new_resources
+	PaimonTemplate = TianLi::Resources::Load::load_image("paimon");
+	StarTemplate = TianLi::Resources::Load::load_image("star");
+	MinimapCailbTemplate = TianLi::Resources::Load::load_image("cailb");
+	UID = TianLi::Resources::Load::load_image("uid_");
+	UIDnumber[0] = TianLi::Resources::Load::load_image("uid0");
+	UIDnumber[1] = TianLi::Resources::Load::load_image("uid1");
+	UIDnumber[2] = TianLi::Resources::Load::load_image("uid2");
+	UIDnumber[3] = TianLi::Resources::Load::load_image("uid3");
+	UIDnumber[4] = TianLi::Resources::Load::load_image("uid4");
+	UIDnumber[5] = TianLi::Resources::Load::load_image("uid5");
+	UIDnumber[6] = TianLi::Resources::Load::load_image("uid6");
+	UIDnumber[7] = TianLi::Resources::Load::load_image("uid7");
+	UIDnumber[8] = TianLi::Resources::Load::load_image("uid8");
+	UIDnumber[9] = TianLi::Resources::Load::load_image("uid9");
+
+	cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGB2GRAY);
+	cv::cvtColor(UID, UID, cv::COLOR_RGB2GRAY);
+	for (int i = 0; i < 10; i++)
+	{
+		cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGB2GRAY);
+	}
+#endif // 
 	LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
 	LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
 
