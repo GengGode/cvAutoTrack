@@ -8,6 +8,9 @@ namespace TianLi::Utils
 	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 	
+	bool is_valid_keypoints(std::vector<cv::Point2d> dis_list, cv::Point2d dis_sum, double value = 10.0);
+	bool is_valid_keypoints(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy, double value = 10.0);
+
 	int getMaxID(double lis[], int len);
 	int getMinID(double lis[], int len);
 
