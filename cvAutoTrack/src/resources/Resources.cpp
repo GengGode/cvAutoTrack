@@ -46,73 +46,44 @@ namespace TianLi::Resource::Utils
 
 		if (hModu == NULL) throw "Get Dll Instance Fail!";
 
-		auto hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
-		if (SUCCEEDED(hr))
-		{
-			hr = CoCreateInstance(
-				CLSID_WICImagingFactory,
-				NULL,
-				CLSCTX_INPROC_SERVER,
-				IID_PPV_ARGS(&m_pIWICFactory)
-			);
-		}
-		if (SUCCEEDED(hr))
-		{
-			imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
-			
-		}
-		if (imageResHandle != NULL)
-		{
-			imageResDataHandle = LoadResource(hModu, imageResHandle);
-		}
-		if (imageResDataHandle != NULL)
-		{
-			pImageFile = LockResource(imageResDataHandle);
-		}
-		if (pImageFile != NULL)
-		{
-			imageFileSize = SizeofResource(hModu, imageResHandle);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = m_pIWICFactory->CreateStream(&pIWICStream);
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pIWICStream->InitializeFromMemory((BYTE*)pImageFile, imageFileSize);
-		}
-		if (SUCCEEDED(hr))
-		{
-			m_pIWICFactory->CreateDecoderFromStream(
-				pIWICStream,                   // The stream to use to create the decoder
-				NULL,                          // Do not prefer a particular vendor
-				WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
-				&pIDecoder);                   // Pointer to the decoder
-		}
-		if (SUCCEEDED(hr))
-		{
-			hr = pIDecoder->GetFrame(0, &pIDecoderFrame);
-		}
-		
+
+		CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+		CoCreateInstance(
+			CLSID_WICImagingFactory,
+			NULL,
+			CLSCTX_INPROC_SERVER,
+			IID_PPV_ARGS(&m_pIWICFactory)
+		);
+		imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
+		imageResDataHandle = LoadResource(hModu, imageResHandle);
+		pImageFile = LockResource(imageResDataHandle);
+		imageFileSize = SizeofResource(hModu, imageResHandle);
+		m_pIWICFactory->CreateStream(&pIWICStream);
+
+		pIWICStream->InitializeFromMemory(
+			reinterpret_cast<BYTE*>(pImageFile),
+			imageFileSize);
+		m_pIWICFactory->CreateDecoderFromStream(
+			pIWICStream,                   // The stream to use to create the decoder
+			NULL,                          // Do not prefer a particular vendor
+			WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
+			&pIDecoder);                   // Pointer to the decoder
+		pIDecoder->GetFrame(0, &pIDecoderFrame);
+
 		bitmap_source = pIDecoderFrame;
 
 		UINT width = 0, height = 0, depht = 4;
 		bitmap_source->GetSize(&width, &height);
-
 		{
 			std::vector<BYTE> buffer(width * height * depht);
 			bitmap_source->CopyPixels(NULL, width * depht, static_cast<UINT>(buffer.size()), buffer.data());
 			HBITMAP hPngMat = CreateBitmap(width, height, 1, 8 * depht, buffer.data());
-
 			HBitmap2MatAlpha(hPngMat, mat);
-
 			DeleteObject(hPngMat);
 		}
-
 		DeleteObject(bitmap_source);
-
 		CoFreeUnusedLibraries();
-
 		CoUninitialize();
 	}
 }
