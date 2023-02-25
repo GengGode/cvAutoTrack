@@ -368,6 +368,9 @@
     <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
       <Filter>src\utils\workflow</Filter>
     </ClCompile>
+    <ClCompile Include="src\dllmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
