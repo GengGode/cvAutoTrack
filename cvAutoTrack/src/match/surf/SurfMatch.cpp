@@ -201,7 +201,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat MiniMap(img_object);
 
-	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 	//resize(MiniMap, MiniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
@@ -226,6 +226,13 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 
 	if (std::max(lisx.size(), lisy.size()) <= 4)
+	{
+		calc_continuity_is_faile = true;
+		return pos_on_city;
+	}
+
+	// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
+	if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, someSizeR/4.0) == false)
 	{
 		calc_continuity_is_faile = true;
 		return pos_on_city;
@@ -263,7 +270,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
-	resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
+	cv::resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
@@ -354,11 +361,11 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 }
 cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 {
-#ifdef _DEBUG
+#ifdef _2TH_MATCH
 	return match_no_continuity_2nd(calc_is_faile);
 #else
 	return match_no_continuity_1st(calc_is_faile);
-#endif // _DEBUG
+#endif // _2TH_MATCH
 }
 /// <summary>
 /// 非连续匹配，从大地图中确定角色位置
@@ -373,7 +380,7 @@ cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 	cv::Point2d pos_continuity_no;
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
-	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param,cv::INTER_CUBIC);
+	cv::resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param,cv::INTER_CUBIC);
 	
 	// 小地图区域计算特征点
 	detector->detectAndCompute(img_object, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
