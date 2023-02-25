@@ -117,12 +117,12 @@ namespace TianLi::Resource::Utils
 	}
 }
 using namespace TianLi::Resource::Utils;
-#ifdef new_resources
+#ifdef USED_BINARY_IMAGE
 #include "resources.load.h"
 #endif // 
 Resources::Resources()
 {
-#ifdef new_resources
+#ifdef USED_BINARY_IMAGE
 	PaimonTemplate = TianLi::Resources::Load::load_image("paimon");
 	StarTemplate = TianLi::Resources::Load::load_image("star");
 	MinimapCailbTemplate = TianLi::Resources::Load::load_image("cailb");

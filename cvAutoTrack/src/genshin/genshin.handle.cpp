@@ -43,7 +43,7 @@ namespace TianLi::Genshin
 			}
 
 			//窗口投影（源） - 云·原神
-			if (now_class == GenshinWindowClass::Obs)
+			if (now_class == GenshinWindowClass::Obs || now_class == GenshinWindowClass::None)
 			{
 				genshin_handle.config.is_force_used_no_alpha = true;
 			}
