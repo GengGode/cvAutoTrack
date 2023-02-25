@@ -94,7 +94,11 @@ bool cailb_minimap_impl(const GenshinScreen& genshin_screen, GenshinMinimap& out
 	{
 		static GenshinMinimapCailb genshin_minimap_cailb;
 		bool is_find_minimap_cailb = match_minimap_cailb(genshin_screen, genshin_minimap_cailb);
-		if (is_find_minimap_cailb ==false)
+		if (is_find_minimap_cailb == false)
+		{
+			return false;
+		}
+		if (genshin_minimap_cailb.is_visial == false)
 		{
 			return false;
 		}

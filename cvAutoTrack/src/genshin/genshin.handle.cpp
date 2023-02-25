@@ -136,7 +136,7 @@ namespace TianLi::Genshin
 			genshin_handle.rect_paimon_maybe = Area_Paimon_mayArea;
 
 			// 小地图标定可能性区域计算参数
-			int miniMap_Cailb_mayArea_left = static_cast<int>(x * 0.10);
+			int miniMap_Cailb_mayArea_left = static_cast<int>(x * 0.08);
 			int miniMap_Cailb_mayArea_top = 0;
 			int miniMap_Cailb_mayArea_width = static_cast<int>(x * 0.10);
 			int miniMap_Cailb_mayArea_height = static_cast<int>(y * 0.10);
