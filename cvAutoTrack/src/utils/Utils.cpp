@@ -39,24 +39,58 @@ namespace TianLi::Utils
 			return list;
 		}
 
-		std::vector<double> lisx;
-		std::vector<double> lisy;
-		for (auto p : list)
+		std::vector<double> x_list;
+		std::vector<double> y_list;
+		for (auto point : list)
 		{
-			lisx.push_back(p.x);
-			lisy.push_back(p.y);
+			x_list.push_back(point.x);
+			y_list.push_back(point.y);
 		}
-		auto valid_lisx = extract_valid(lisx);
-		auto valid_lisy = extract_valid(lisy);
+
+		std::vector<double> x_valid_list;
+		std::vector<double> y_valid_list;
 		
-		for (int i = 0; i < valid_lisx.size(); i++)
+		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+		double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
+		double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
+		
+		double x_accum = 0.0;
+		std::for_each(x_list.begin(), x_list.end(), [&](const double d) {x_accum += (d - x_mean) * (d - x_mean); });
+		double y_accum = 0.0;
+		std::for_each(y_list.begin(), y_list.end(), [&](const double d) {y_accum += (d - y_mean) * (d - y_mean); });
+		
+		double x_stdev = sqrt(x_accum / (x_list.size() - 1));
+		double y_stdev = sqrt(y_accum / (y_list.size() - 1));
+
+		double param = 1.0;
+		if (list.size() > 100)
 		{
-			valid_list.push_back(cv::Point2d(valid_lisx[i], valid_lisy[i]));
+			param = 0.382;
+		}
+		else if (list.size() > 50)
+		{
+			param = 0.618;
+		}
+
+		int valid_count = 0;
+		for (auto& point : list)
+		{
+			if (abs(point.x - x_mean) < 0.382 * x_stdev && abs(point.y - y_mean) < param * y_stdev)
+			{
+				x_valid_list.push_back(point.x);
+				y_valid_list.push_back(point.y);
+				valid_count = valid_count + 1;
+			}
+		}
+		
+		for (int i = 0; i < valid_count; i++)
+		{
+			valid_list.push_back(cv::Point2d(x_valid_list[i], y_valid_list[i]));
 		}
 		return valid_list;
 	}
 
-	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list, double& x_sum, double& y_sum)
+	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
 	{
 		for (int i = 0; i < keypoints.size(); i++)
 		{
@@ -67,8 +101,6 @@ namespace TianLi::Utils
 
 			x_list.push_back(diff_pos.x);
 			y_list.push_back(diff_pos.y);
-			x_sum += diff_pos.x;
-			y_sum += diff_pos.y;
 		}
 	}
 	
@@ -110,11 +142,12 @@ namespace TianLi::Utils
 		}
 		return is_valid_keypoints(dis_list, dis_sum, value);
 	}
-	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
+	
+	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
 	{
 		cv::Point2d pos;
-		double meanx = sumx / lisx.size(); //均值
-		double meany = sumy / lisy.size(); //均值
+		double meanx = std::accumulate(lisx.begin(), lisx.end(), 0.0) / lisx.size();
+		double meany = std::accumulate(lisy.begin(), lisy.end(), 0.0) / lisy.size();
 		double x = meanx;
 		double y = meany;
 		if (lisx.size() > 3 && lisy.size() > 3)
@@ -130,8 +163,8 @@ namespace TianLi::Utils
 			double stdevx = sqrt(accumx / (lisx.size() - 1)); //标准差
 			double stdevy = sqrt(accumy / (lisy.size() - 1)); //标准差
 
-			sumx = 0;
-			sumy = 0;
+			double sumx = 0;
+			double sumy = 0;
 			double numx = 0;
 			double numy = 0;
 			for (int i = 0; i < (lisx.size() > lisy.size() ? lisy.size() : lisx.size()); i++)

@@ -10,10 +10,12 @@ namespace TianLi::Utils
 		cv::Point2d train;
 	};
 	std::vector<double> extract_valid(std::vector<double> list);
-	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list, double& x_sum, double& y_sum);
+	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
+
+	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list);
 
 	double dis(cv::Point2d p);
-	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
+	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy);
 	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy);
 	
 	bool is_valid_keypoints(std::vector<cv::Point2d> dis_list, cv::Point2d dis_sum, double value = 10.0);
