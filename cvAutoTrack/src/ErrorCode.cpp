@@ -6,23 +6,29 @@ std::string get_sys_version()
 	// 运行一个cmd，获取版本号信息
 	const char* cmd = "cmd /c ver";
 	std::string result = "";
-	FILE* pipe = _popen(cmd, "r");
-	if (!pipe) return "获取系统版本管道打开失败";
-	try {
-		char buffer[128];
-		while (!feof(pipe)) {
-			if (fgets(buffer, 128, pipe) != NULL)
-				result += buffer;
+	try{
+		
+		FILE* pipe = _popen(cmd, "r");
+		if (!pipe) return "获取系统版本管道打开失败";
+		try {
+			char buffer[128];
+			while (!feof(pipe)) {
+				if (fgets(buffer, 128, pipe) != NULL)
+					result += buffer;
+			}
 		}
+		catch (...) {
+			_pclose(pipe);
+			return "读取管道中系统版本出现错误";
+		}
+		_pclose(pipe);
+		// 删除前后换行符
+		result.erase(0, 1);
+		result.erase(result.length() - 1, 1);
 	}
 	catch (...) {
-		_pclose(pipe);
-		return "读取管道中系统版本出现错误";
+		result = "获取系统版本管道打开失败";
 	}
-	_pclose(pipe);
-	// 删除前后换行符
-	result.erase(0, 1);
-	result.erase(result.length() - 1, 1);
 	return result;
 }
 std::string get_gpu_name()
@@ -30,28 +36,33 @@ std::string get_gpu_name()
 	// Get the name of the GPU
 	IDXGIAdapter* pAdapter = nullptr;
 	IDXGIFactory* pFactory = nullptr;
-	HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
-	if (FAILED(hr))
+	try
 	{
-		return "Unknown";
+		HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
+		if (FAILED(hr))
+		{
+			return "Unknown";
+		}
+
+		hr = pFactory->EnumAdapters(0, &pAdapter);
+		if (FAILED(hr))
+		{
+			return "Unknown";
+		}
+
+		DXGI_ADAPTER_DESC desc;
+		hr = pAdapter->GetDesc(&desc);
+		if (FAILED(hr))
+		{
+			return "Unknown";
+		}
+
+		std::wstring ws(desc.Description);
+		std::string str(ws.begin(), ws.end());
 	}
-
-	hr = pFactory->EnumAdapters(0, &pAdapter);
-	if (FAILED(hr))
-	{
-		return "Unknown";
+	catch (...) {
+		return "获取GPU信息失败";
 	}
-
-	DXGI_ADAPTER_DESC desc;
-	hr = pAdapter->GetDesc(&desc);
-	if (FAILED(hr))
-	{
-		return "Unknown";
-	}
-
-	std::wstring ws(desc.Description);
-	std::string str(ws.begin(), ws.end());
-
 	return str;
 }
 
