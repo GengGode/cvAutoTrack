@@ -59,11 +59,11 @@ std::string get_gpu_name()
 
 		std::wstring ws(desc.Description);
 		std::string str(ws.begin(), ws.end());
+		return str;
 	}
 	catch (...) {
 		return "获取GPU信息失败";
 	}
-	return str;
 }
 
 ErrorCode::ErrorCode()
