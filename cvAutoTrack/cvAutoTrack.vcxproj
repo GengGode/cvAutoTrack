@@ -392,6 +392,7 @@
     <ClInclude Include="src\resources\binary\resources.binary.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
+    <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\utils\workflow\utils.workflow.h" />
   </ItemGroup>
@@ -410,7 +411,6 @@
     </ClCompile>
     <ClCompile Include="src\capture\video\video.cpp" />
     <ClCompile Include="src\cvAutoTrack.cpp" />
-    <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />
     <ClCompile Include="src\filter\Filter.cpp" />
     <ClCompile Include="src\filter\kalman\Kalman.cpp" />
@@ -431,6 +431,7 @@
     <ClCompile Include="src\resources\binary\resources.binary.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />
     <ClCompile Include="src\resources\resources.load.cpp" />
+    <ClCompile Include="src\utils\log\utils.log.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
     <ClCompile Include="src\utils\workflow\utils.workflow.cpp" />
   </ItemGroup>

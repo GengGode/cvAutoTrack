@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Utils.h"
+#include <algorithm>
+#include <numeric>
 
 namespace TianLi::Utils
 {
@@ -7,6 +9,69 @@ namespace TianLi::Utils
 	{
 		return sqrt(p.x * p.x + p.y * p.y);
 	}
+	
+	std::vector<double> extract_valid(std::vector<double> list)
+	{
+		std::vector<double> valid_list;
+
+		if (list.size() <= 3)
+		{
+			return list;
+		}
+		
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size(); 
+		
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+		
+		double stdev = sqrt(accum / (list.size() - 1));
+		
+		std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d) { return abs(d - mean) < 0.382 * stdev; });
+		return valid_list;
+	}
+	
+	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list)
+	{
+		std::vector<cv::Point2d> valid_list;
+
+		if (list.size() <= 3)
+		{
+			return list;
+		}
+
+		std::vector<double> lisx;
+		std::vector<double> lisy;
+		for (auto p : list)
+		{
+			lisx.push_back(p.x);
+			lisy.push_back(p.y);
+		}
+		auto valid_lisx = extract_valid(lisx);
+		auto valid_lisy = extract_valid(lisy);
+		
+		for (int i = 0; i < valid_lisx.size(); i++)
+		{
+			valid_list.push_back(cv::Point2d(valid_lisx[i], valid_lisy[i]));
+		}
+		return valid_list;
+	}
+
+	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list, double& x_sum, double& y_sum)
+	{
+		for (int i = 0; i < keypoints.size(); i++)
+		{
+			auto mini_keypoint = keypoints[i].query;
+			auto map_keypoint = keypoints[i].train;
+
+			auto diff_pos = mini_keypoint * scale + map_keypoint;
+
+			x_list.push_back(diff_pos.x);
+			y_list.push_back(diff_pos.y);
+			x_sum += diff_pos.x;
+			y_sum += diff_pos.y;
+		}
+	}
+	
 	bool is_valid_keypoints(std::vector<cv::Point2d> dis_list, cv::Point2d dis_sum, double value)
 	{
 		// 计算方差，如果方差大于数据地图大小的一半就是无效数据
@@ -277,7 +342,35 @@ namespace TianLi::Utils
 				}
 			}
 		}
-
+		
+		void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+		{
+#ifdef _DEBUG
+			std::vector<cv::DMatch> good_matches;
+#else
+			UNREFERENCED_PARAMETER(img_scene);
+#endif
+			for (size_t i = 0; i < KNN_m.size(); i++)
+			{
+				if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
+				{
+#ifdef _DEBUG
+					good_matches.push_back(KNN_m[i][0]);
+#endif
+					if (KNN_m[i][0].queryIdx >= keypoint_object.size())
+					{
+						continue;
+					}
+					good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
+						img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y },
+						{keypoint_scene[KNN_m[i][0].trainIdx].pt.x,keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
+				}
+			}
+#ifdef _DEBUG
+			draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
+#endif
+		}
+		
 	}
 
 	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
@@ -288,5 +381,9 @@ namespace TianLi::Utils
 #endif
 			calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
 	}
-
+	
+	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+	{
+		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
+	}
 }
