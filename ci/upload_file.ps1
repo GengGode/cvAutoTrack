@@ -1,4 +1,4 @@
-$version='7.5.60'
+#$version='7.5.116.383-HEAD-85cb2f8'
 
 $login_username='GitAction'
 $login_password='iOpEv21kPOt5ZrMqViLKvJJXshh6olNR'
@@ -7,7 +7,7 @@ $login_url='http://download.weixitianli.com'+$login_api + '?Username='+$login_us
 $token=(Invoke-RestMethod -Uri $login_url -Method Post).data.token
 echo $token
 
-$upload_api='/api/fs/put'
+$upload_api='/api/fs/form'
 $upload_url='http://download.weixitianli.com'+$upload_api
 $upload_file='cvAutotrack-'+$version+'.zip'
 $upload_file_length=(Get-Item $upload_file).Length
@@ -19,12 +19,9 @@ $upload_headers=@{
     'Content-Length' = $upload_file_length
     'file-path' = $upload_path
 }
-Invoke-RestMethod -Uri $upload_url -Method Post -Headers $upload_headers -InFile $upload_file
-curl POST -H $upload_headers -F file=@$upload_file $upload_url
+Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
 
-# bat curl -X GET http://download.weixitianli.com/api/admin/user/list -H 'Authorization:'
-$token=
-$upload_content_token=@{
-    Authorization = $token
-}
-Invoke-RestMethod -Uri 'http://download.weixitianli.com/api/admin/user/list' -Method Get -Headers $upload_content_token 
+
+
+
+
