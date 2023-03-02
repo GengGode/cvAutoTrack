@@ -116,6 +116,9 @@
     <Filter Include="src\utils\workflow">
       <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utils\log">
+      <UniqueIdentifier>{057367a2-53dc-43de-8d05-1d3790daef72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\Source.def">
@@ -294,6 +297,9 @@
     <ClInclude Include="src\utils\workflow\utils.workflow.h">
       <Filter>src\utils\workflow</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\log\utils.log.h">
+      <Filter>src\utils\log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -368,8 +374,8 @@
     <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
       <Filter>src\utils\workflow</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\utils\log\utils.log.cpp">
+      <Filter>src\utils\log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

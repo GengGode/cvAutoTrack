@@ -9,7 +9,7 @@ echo $token
 
 $upload_api='/api/fs/form'
 $upload_url='http://download.weixitianli.com'+$upload_api
-$upload_file='cvAutotrack-'+$version+'.zip'
+$upload_file='cvAutoTrack-'+$version+'.zip'
 $upload_file_length=(Get-Item $upload_file).Length
 $upload_path='/TianLiUpdateService/cvAutoTrack/'+$upload_file
 $upload_content_type='multipart/form-data'
