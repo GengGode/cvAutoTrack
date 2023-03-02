@@ -193,9 +193,6 @@ int Run()
 	std::ios::sync_with_stdio(false);
 	system("chcp 65001");
 	
-
-	// 准备变量
-	
 	// 调用循环
 	while (1)
 	{
@@ -292,48 +289,6 @@ int main(int argc, char* argv[])
 	{
 		args.push_back(argv[i]);
 	}
-	
-	//if (argc > 1 && args[1] == "-help")
-	//{
-	//	HELP();
-	//}
-	//else if (argc > 1 && args[1] == "-test")
-	//{
-	//	TEST();
-	//}
-	//else if (argc > 1 && args[1] == "-capture")
-	//{
-	//	HELP();
-	//	return 0;
-	//}
-	//else if (argc > 1 && args[1] == "-capture")
-	//{
-	//	bool is_off_capture = false;
-	//	bool is_only_capture = false;
-	//	int frame_rate = 0;
-	//	
-	//	if (argc > 2 && args[2] == "--off")
-	//	{
-	//		is_off_capture = true;
-	//		// 删除已处理的
-	//		
-	//	}
-	//	else if (argc > 2 && args[2] == "--only")
-	//	{
-	//		
-	//	}
-	//	else
-	//	{
-	//		
-	//	}
-	//}
-	//else
-	//{
-	//	HELP();
-	//	return 0;
-	//}
-		
-	
 	
 	// 如果输入参数 -test 就执行测试
 	if (argc > 1 && strcmp(argv[1], "-test") == 0)
