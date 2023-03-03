@@ -2,7 +2,6 @@
 #include "resource.h"
 #include <wincodec.h>
 #include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
 
 bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
 bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
@@ -65,9 +64,9 @@ public:
 
 	cv::Point2d match_no_continuity(bool& calc_is_faile);
 	cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
-	cv::Point2d match_no_continuity_2nd(bool& calc_is_faile);
+	//cv::Point2d match_no_continuity_2nd(bool& calc_is_faile);
 	
-	cv::Point2d match_find_position_in_block(cv::Point pos_second_match, bool& calc_is_faile);
+	//cv::Point2d match_find_position_in_block(cv::Point pos_second_match, bool& calc_is_faile);
 
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();

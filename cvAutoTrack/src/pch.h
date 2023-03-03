@@ -23,6 +23,7 @@
 #endif
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d.hpp>
 
 #include <Unknwn.h>
 #include <inspectable.h>

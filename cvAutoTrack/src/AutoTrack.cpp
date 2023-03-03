@@ -8,7 +8,6 @@
 #include "capture/bitblt/Bitblt.h"
 #include "utils/Utils.h"
 #include "utils/workflow/utils.workflow.h"
-#include "match/Match.h"
 
 #include "algorithms/algorithms.direction.h"
 #include "algorithms/algorithms.rotation.h"
@@ -51,7 +50,7 @@ bool AutoTrack::init()
 	if (!genshin_minimap.is_init_finish)
 	{
 		genshin_minimap.is_run_init_start = true;
-		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 		genshin_minimap.is_run_init_start = false;
 		
 		genshin_minimap.is_init_finish = true;
@@ -64,7 +63,7 @@ bool AutoTrack::uninit()
 	if (genshin_minimap.is_init_finish)
 	{
 		genshin_minimap.is_run_uninit_start = true;
-		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 		genshin_minimap.is_run_uninit_start = false;
 		
 		genshin_minimap.is_init_finish = false;
@@ -373,7 +372,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	genshin_minimap.config.is_find_paimon = true;
 
-	TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+	TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 	
 	cv::Point2d pos = genshin_avatar_position.position;
 
@@ -725,7 +724,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	{
 		genshin_minimap.config.is_find_paimon = true;
 
-		TianLi::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
 
 		cv::Point2d pos = genshin_avatar_position.position;
 
