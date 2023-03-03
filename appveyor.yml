@@ -325,6 +325,8 @@
         # 运行 C# 测试
         - TEST_cvAutoTrack_CSharp.exe -test
         
+        - appveyor PushArtifact cvAutoTrack.dll
+        
         - cd %MyProjectDir%
         - ps: echo 获取版本号
         - ps: git describe --tags | out-file version.ver
@@ -334,6 +336,7 @@
 
         - ps: $buildversion = Get-Content version.ver
         - ps: $commitLog = git log -1 --pretty=%B
+  
         
         - ps: ./ci/upload_file.ps1
         - ps: ./ci/manual_upload_release.ps1
