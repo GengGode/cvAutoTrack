@@ -395,6 +395,7 @@
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\utils\workflow\utils.workflow.h" />
+    <ClInclude Include="src\Ver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">

@@ -303,6 +303,9 @@
     <ClInclude Include="src\genshin\match\position\genshin.match.position.h">
       <Filter>src\genshin\match\position</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ver.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -377,7 +380,9 @@
     <ClCompile Include="src\utils\log\utils.log.cpp">
       <Filter>src\utils\log</Filter>
     </ClCompile>
-    <ClCompile Include="src\genshin\match\position\genshin.match.position.cpp" />
+    <ClCompile Include="src\genshin\match\position\genshin.match.position.cpp">
+      <Filter>src\genshin\match\position</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
