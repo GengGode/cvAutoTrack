@@ -101,6 +101,7 @@ cv::Point2d match_find_position_in_block(cv::Point pos_second_match, bool& calc_
 	}
 	else
 	{
+		UNREFERENCED_PARAMETER(calc_is_faile);
 		//return match_no_continuity_1st(calc_is_faile);
 		return cv::Point2d(0, 0);
 	}
