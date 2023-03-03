@@ -207,12 +207,12 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	}
 	if (vec_distRatio.size() == 0) return true;		//找不到追踪点，大概率在城内
 
-	//重新计算距离比例均值，并判断是否接近城内缩放比例
+	//重新计算距离比例均值，并判断是否接近城外缩放比例
 	e_distRatio = get_average(vec_distRatio);
 
-	if (abs(e_distRatio - 400) < 75)
-		return true;
-	return false;
+	if (abs(e_distRatio - 135) < 75)
+		return false;
+	return true;
 }
 
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
