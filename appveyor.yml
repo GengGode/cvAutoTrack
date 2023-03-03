@@ -331,9 +331,10 @@
         - ps: $version = Get-Content version.ver
         - ps: echo (Get-Content version.ver)
         - ps: 7z a -tZip cvAutoTrack-$version.zip $env:MyProjectDir\cvAutoTrack\x64\Compile\cvAutoTrack.dll
-        - ps: (Get-FileHash -Path cvAutoTrack-$version.zip -Algorithm MD5).Hash | out-file md5.hash
-        - ps: echo (Get-Content md5.hash)
 
+        - ps: $buildversion = Get-Content version.ver
+        - ps: $commitLog = git log -1 --pretty=%B
+        
         - ps: ./ci/upload_file.ps1
         - ps: ./ci/manual_upload_release.ps1
 

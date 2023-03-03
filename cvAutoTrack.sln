@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{DF269035-8114-
 		ci\manual_upload_release.ps1 = ci\manual_upload_release.ps1
 		ci\release_resource.bat = ci\release_resource.bat
 		ci\release_resource.ps1 = ci\release_resource.ps1
+		ci\upload_file.bat = ci\upload_file.bat
+		ci\upload_file.ps1 = ci\upload_file.ps1
 		ci\upload_version.bat = ci\upload_version.bat
 		ci\upload_version.ps1 = ci\upload_version.ps1
 	EndProjectSection

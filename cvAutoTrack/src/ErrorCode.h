@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <string>
 using namespace std;
 
 class ErrorCode
@@ -16,17 +13,17 @@ public:
 	ErrorCode(const ErrorCode&) = delete;
 	ErrorCode& operator=(const ErrorCode&) = delete;
 	static ErrorCode& getInstance();
-	ErrorCode& operator=(const std::pair<int,string>& err_code_msg);
+	ErrorCode& operator=(const std::pair<int,std::string>& err_code_msg);
 	operator int();
-	friend ostream & operator<<(ostream & os, const ErrorCode & err);
+	friend std::ostream & operator<<(std::ostream & os, const ErrorCode & err);
 
 	bool disableWirteFile();
 	bool enableWirteFile();
 	int writeFile(char const* const format, ...);
 public:
 	int getLastError();
-	string getLastErrorMsg();
-	string toJson();
+	std::string getLastErrorMsg();
+	std::string toJson();
 
 private:
 	int error_code=0;

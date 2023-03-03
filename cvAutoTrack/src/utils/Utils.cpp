@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Utils.h"
+#include <algorithm>
+#include <numeric>
 
 namespace TianLi::Utils
 {
@@ -7,11 +9,126 @@ namespace TianLi::Utils
 	{
 		return sqrt(p.x * p.x + p.y * p.y);
 	}
-	cv::Point2d SPC(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
+	
+	std::vector<double> extract_valid(std::vector<double> list)
+	{
+		std::vector<double> valid_list;
+
+		if (list.size() <= 3)
+		{
+			return list;
+		}
+		
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size(); 
+		
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+		
+		double stdev = sqrt(accum / (list.size() - 1));
+		
+		std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d) { return abs(d - mean) < 0.382 * stdev; });
+		return valid_list;
+	}
+	
+	double stdev(std::vector<double> list)
+	{
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+
+		return sqrt(accum / (list.size() - 1));
+	}
+	double stdev_abs(std::vector<double> list)
+	{
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (abs(d - mean)) * (abs(d - mean)); });
+
+		return accum / (list.size() - 1);
+	}
+
+	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list)
+	{
+		std::vector<cv::Point2d> valid_list;
+
+		if (list.size() <= 3)
+		{
+			return list;
+		}
+
+		std::vector<double> x_list;
+		std::vector<double> y_list;
+		for (auto point : list)
+		{
+			x_list.push_back(point.x);
+			y_list.push_back(point.y);
+		}
+
+		std::vector<double> x_valid_list;
+		std::vector<double> y_valid_list;
+		
+		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+		double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
+		double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
+		
+		double x_accum = 0.0;
+		std::for_each(x_list.begin(), x_list.end(), [&](const double d) {x_accum += (d - x_mean) * (d - x_mean); });
+		double y_accum = 0.0;
+		std::for_each(y_list.begin(), y_list.end(), [&](const double d) {y_accum += (d - y_mean) * (d - y_mean); });
+		
+		double x_stdev = sqrt(x_accum / (x_list.size() - 1));
+		double y_stdev = sqrt(y_accum / (y_list.size() - 1));
+
+		double param = 1.0;
+		if (list.size() > 100)
+		{
+			param = 0.382;
+		}
+		else if (list.size() > 50)
+		{
+			param = 0.618;
+		}
+
+		int valid_count = 0;
+		for (auto& point : list)
+		{
+			if (abs(point.x - x_mean) < param * x_stdev && abs(point.y - y_mean) < param * y_stdev)
+			{
+				x_valid_list.push_back(point.x);
+				y_valid_list.push_back(point.y);
+				valid_count = valid_count + 1;
+			}
+		}
+		
+		for (int i = 0; i < valid_count; i++)
+		{
+			valid_list.push_back(cv::Point2d(x_valid_list[i], y_valid_list[i]));
+		}
+		return valid_list;
+	}
+
+	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
+	{
+		for (int i = 0; i < keypoints.size(); i++)
+		{
+			auto mini_keypoint = keypoints[i].query;
+			auto map_keypoint = keypoints[i].train;
+
+			auto diff_pos = mini_keypoint * scale + map_keypoint;
+
+			x_list.push_back(diff_pos.x);
+			y_list.push_back(diff_pos.y);
+		}
+	}
+	
+	
+	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
 	{
 		cv::Point2d pos;
-		double meanx = sumx / lisx.size(); //均值
-		double meany = sumy / lisy.size(); //均值
+		double meanx = std::accumulate(lisx.begin(), lisx.end(), 0.0) / lisx.size();
+		double meany = std::accumulate(lisy.begin(), lisy.end(), 0.0) / lisy.size();
 		double x = meanx;
 		double y = meany;
 		if (lisx.size() > 3 && lisy.size() > 3)
@@ -27,8 +144,8 @@ namespace TianLi::Utils
 			double stdevx = sqrt(accumx / (lisx.size() - 1)); //标准差
 			double stdevy = sqrt(accumy / (lisy.size() - 1)); //标准差
 
-			sumx = 0;
-			sumy = 0;
+			double sumx = 0;
+			double sumy = 0;
 			double numx = 0;
 			double numy = 0;
 			for (int i = 0; i < (lisx.size() > lisy.size() ? lisy.size() : lisx.size()); i++)
@@ -54,21 +171,6 @@ namespace TianLi::Utils
 			pos = cv::Point2d(x, y);
 		}
 		return pos;
-	}
-
-	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
-	{
-		double accumx = 0.0;
-		double accumy = 0.0;
-		for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
-		{
-			accumx = (lisx[i] - sumx) * (lisx[i] - sumx);
-			accumy = (lisy[i] - sumy) * (lisy[i] - sumy);
-		}
-		double stdevx = sqrt(accumx / (lisx.size() - 1));
-		double stdevy = sqrt(accumy / (lisy.size() - 1));
-
-		return sqrt(stdevx * stdevx + stdevy * stdevy);
 	}
 
 	int getMaxID(double lis[], int len)
@@ -239,7 +341,35 @@ namespace TianLi::Utils
 				}
 			}
 		}
-
+		
+		void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+		{
+#ifdef _DEBUG
+			std::vector<cv::DMatch> good_matches;
+#else
+			UNREFERENCED_PARAMETER(img_scene);
+#endif
+			for (size_t i = 0; i < KNN_m.size(); i++)
+			{
+				if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
+				{
+#ifdef _DEBUG
+					good_matches.push_back(KNN_m[i][0]);
+#endif
+					if (KNN_m[i][0].queryIdx >= keypoint_object.size())
+					{
+						continue;
+					}
+					good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
+						img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y },
+						{keypoint_scene[KNN_m[i][0].trainIdx].pt.x,keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
+				}
+			}
+#ifdef _DEBUG
+			draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
+#endif
+		}
+		
 	}
 
 	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
@@ -250,5 +380,9 @@ namespace TianLi::Utils
 #endif
 			calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
 	}
-
+	
+	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+	{
+		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
+	}
 }

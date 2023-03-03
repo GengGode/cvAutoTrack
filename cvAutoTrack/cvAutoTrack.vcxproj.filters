@@ -116,6 +116,12 @@
     <Filter Include="src\utils\workflow">
       <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utils\log">
+      <UniqueIdentifier>{057367a2-53dc-43de-8d05-1d3790daef72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\genshin\match\position">
+      <UniqueIdentifier>{0638de7f-89ef-45cd-b3e8-6d8cfac31b22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\Source.def">
@@ -185,9 +191,6 @@
     </ClInclude>
     <ClInclude Include="src\match\type\MatchType.h">
       <Filter>src\match\type</Filter>
-    </ClInclude>
-    <ClInclude Include="src\match\Match.h">
-      <Filter>src\match</Filter>
     </ClInclude>
     <ClInclude Include="src\match\diff\DiffMatch.h">
       <Filter>src\match\diff</Filter>
@@ -294,6 +297,15 @@
     <ClInclude Include="src\utils\workflow\utils.workflow.h">
       <Filter>src\utils\workflow</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\log\utils.log.h">
+      <Filter>src\utils\log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\genshin\match\position\genshin.match.position.h">
+      <Filter>src\genshin\match\position</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ver.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -322,9 +334,6 @@
     </ClCompile>
     <ClCompile Include="src\match\surf\SurfMatch.cpp">
       <Filter>src\match\surf</Filter>
-    </ClCompile>
-    <ClCompile Include="src\match\Match.cpp">
-      <Filter>src\match</Filter>
     </ClCompile>
     <ClCompile Include="src\match\diff\DiffMatch.cpp">
       <Filter>src\match\diff</Filter>
@@ -368,8 +377,11 @@
     <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
       <Filter>src\utils\workflow</Filter>
     </ClCompile>
-    <ClCompile Include="src\dllmain.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\utils\log\utils.log.cpp">
+      <Filter>src\utils\log</Filter>
+    </ClCompile>
+    <ClCompile Include="src\genshin\match\position\genshin.match.position.cpp">
+      <Filter>src\genshin\match\position</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

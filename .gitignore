@@ -267,6 +267,7 @@ __pycache__/
 !/cvAutoTrack/src/version/version_tag.tag
 !/cvAutoTrack/src/version/GetNextBuildVersion.ps1
 !/cvAutoTrack/src/version/build_version_before.bat
+!/cvAutoTrack/src/utils/log/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt
 /impl/Cpp/TEST_cvAutoTrack_Cpp/cvAutoTrack_Cache.xml
