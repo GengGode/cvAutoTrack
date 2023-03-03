@@ -30,6 +30,25 @@ namespace TianLi::Utils
 		return valid_list;
 	}
 	
+	double stdev(std::vector<double> list)
+	{
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+
+		return sqrt(accum / (list.size() - 1));
+	}
+	double stdev_abs(std::vector<double> list)
+	{
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+
+		double accum = 0.0;
+		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (abs(d - mean)) * (abs(d - mean)); });
+
+		return accum / (list.size() - 1);
+	}
+
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list)
 	{
 		std::vector<cv::Point2d> valid_list;
