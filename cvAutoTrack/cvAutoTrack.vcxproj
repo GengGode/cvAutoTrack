@@ -110,14 +110,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>cvAutoTrack</TargetName>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\src;$(ProjectDir)include;$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>$(opencvstaticlib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <ExternalIncludePath>$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>cvAutoTrack</TargetName>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(opencvStaticLib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
@@ -365,9 +365,9 @@
     <ClInclude Include="src\genshin\check\paimon\genshin.check.paimon.h" />
     <ClInclude Include="src\genshin\genshin.h" />
     <ClInclude Include="src\genshin\genshin.handle.h" />
+    <ClInclude Include="src\genshin\match\position\genshin.match.position.h" />
     <ClInclude Include="src\match\diff\DiffMatch.h" />
     <ClInclude Include="src\match\match.include.h" />
-    <ClInclude Include="src\match\Match.h" />
     <ClInclude Include="src\match\match.star.h" />
     <ClInclude Include="src\match\match.uid.h" />
     <ClInclude Include="src\match\surf\SurfMatch.h" />
@@ -395,6 +395,7 @@
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\utils\workflow\utils.workflow.h" />
+    <ClInclude Include="src\Ver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -420,8 +421,8 @@
     <ClCompile Include="src\genshin\check\paimon\genshin.check.paimon.cpp" />
     <ClCompile Include="src\genshin\genshin.handle.cpp" />
     <ClCompile Include="src\genshin\genshin.screen.cpp" />
+    <ClCompile Include="src\genshin\match\position\genshin.match.position.cpp" />
     <ClCompile Include="src\match\diff\DiffMatch.cpp" />
-    <ClCompile Include="src\match\Match.cpp" />
     <ClCompile Include="src\match\surf\SurfMatch.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

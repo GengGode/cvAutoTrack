@@ -27,7 +27,7 @@ namespace TianLi::Utils
 		std::string toJson();
 		
 	private:
-		std::fstream Log_file;
+		std::fstream log_file;
 		bool is_use_file = false;
 		
 		int error_code = 0;

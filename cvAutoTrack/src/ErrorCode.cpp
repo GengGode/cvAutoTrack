@@ -1,6 +1,21 @@
 #include "pch.h"
 #include "ErrorCode.h"
 
+inline std::string wstring2string(std::wstring wstr)
+{
+	std::string result;
+	//获取缓冲区大小，并申请空间，缓冲区大小事按字节计算的  
+	int len = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), (int)wstr.size(), NULL, 0, NULL, NULL);
+	char* buffer = new char[len + 1];
+	//宽字节编码转换成多字节编码  
+	WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), (int)wstr.size(), buffer, len, NULL, NULL);
+	buffer[len] = '\0';
+	//删除缓冲区并返回值  
+	result.append(buffer);
+	delete[] buffer;
+	return result;
+}
+
 std::string get_sys_version()
 {
 	// 运行一个cmd，获取版本号信息
@@ -58,8 +73,7 @@ std::string get_gpu_name()
 		}
 
 		std::wstring ws(desc.Description);
-		std::string str(ws.begin(), ws.end());
-		return str;
+		return wstring2string(ws);
 	}
 	catch (...) {
 		return "获取GPU信息失败";

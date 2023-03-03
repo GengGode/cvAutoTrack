@@ -32,15 +32,15 @@ namespace TianLi::Utils
 		{
 			//writeFile("%s | 错误代码：%-6d，错误信息：%s\n", time_stamp().c_str(), code, msg.c_str());
 			if (is_use_file == false) return *this;
-			if (Log_file.is_open() == false)
+			if (log_file.is_open() == false)
 			{
-				Log_file.open("./autoTrack.Log", std::ios::in | std::ios::out | std::ios::app);
-				if (Log_file.is_open() == false) return *this;
-				//Log_file << "系统版本号：" << get_sys_version() << "\n";
-				//Log_file << "显卡：" << get_gpu_name() << "\n";
+				log_file.open("./autoTrack.Log", std::ios::in | std::ios::out | std::ios::app);
+				if (log_file.is_open() == false) return *this;
+				//log_file << "系统版本号：" << get_sys_version() << "\n";
+				//log_file << "显卡：" << get_gpu_name() << "\n";
 			}
-			//write_Log(Log_file, time_stamp(), code, msg);
-			Log_file.flush();
+			//write_Log(log_file, time_stamp(), code, msg);
+			log_file.flush();
 			push(code, msg);
 		}
 
@@ -75,9 +75,9 @@ namespace TianLi::Utils
 	bool Log::disableWirteFile()
 	{
 		is_use_file = false;
-		if (Log_file.is_open())
+		if (log_file.is_open())
 		{
-			Log_file.close();
+			log_file.close();
 		}
 		return true;
 	}

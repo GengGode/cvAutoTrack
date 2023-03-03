@@ -199,14 +199,15 @@ int Run()
 		// 显示菜单
 		std::cout << "1. 设置Dx截图\n";
 		std::cout << "2. 设置Bitblt截图\n";
-		std::cout << "3. 获取坐标和角度\n";
+		std::cout << "3. 获取坐标和角度　\n";
 		std::cout << "4. 获取坐标\n";
 		std::cout << "5. 获取角度\n";
 		std::cout << "6. 获取视角朝向\n";
 		std::cout << "7. 获取当前UID\n";
 		std::cout << "8. 获取当前神瞳Json\n";
 		std::cout << "9. 截图\n";
-		std::cout << "0. 退出\n";
+		std::cout << "0. 退出　\n";
+		std::cout << "13.loop GetPositionOfMap\n";
 		std::cout << "请输入选项: ";
 		int option = 0;
 		std::cin >> option;
@@ -239,6 +240,17 @@ int Run()
 			break;
 		case 9:
 			Run_Capture();
+			break;
+		case 13:
+			while (1)
+			{
+				// 30ms 内检测到ECS键就退出
+				if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+					break;
+				}
+				Sleep(100);
+				Run_GetPosit();
+			}
 			break;
 		case 0:
 			return 0;

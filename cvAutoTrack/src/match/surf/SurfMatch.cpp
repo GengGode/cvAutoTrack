@@ -136,6 +136,10 @@ void SurfMatch::match()
 	{
 		isContinuity = true;
 	}
+	else
+	{
+		isOnCity = true;
+	}
 	// 尝试连续匹配，匹配角色附近小范围区域
 	if (isContinuity)
 	{
@@ -185,7 +189,11 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 
 	return pos_continuity;
 }
-
+/// <summary>
+/// 匹配 在城镇内
+/// </summary>
+/// <param name="calc_continuity_is_faile"></param>
+/// <returns></returns>
 cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 {
 	static cv::Mat img_scene(_mapMat);
@@ -201,7 +209,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat MiniMap(img_object);
 
-	resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 	//resize(MiniMap, MiniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
@@ -218,20 +226,46 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	std::vector< std::vector<cv::DMatch> > KNN_mTmp;
 
 	matcherTmp->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mTmp, 2);
+
+	//TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
+	
+	std::vector<TianLi::Utils::KeyPoint> keypoint_on_city_list;
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, keypoint_on_city_list);
+
 	std::vector<double> lisx;
 	std::vector<double> lisy;
-	double sumx = 0;
-	double sumy = 0;
+	TianLi::Utils::remove_invalid(keypoint_on_city_list, 0.8667 , lisx, lisy);
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 
-	if (std::max(lisx.size(), lisy.size()) <= 4)
+	std::vector<cv::Point2d> list_on_city;
+	for (int i = 0; i < keypoint_on_city_list.size(); i++)
+	{
+		list_on_city.push_back(cv::Point2d(lisx[i], lisy[i]));
+	}
+	list_on_city = TianLi::Utils::extract_valid(list_on_city);
+
+	lisx.clear();
+	lisy.clear();
+	for (int i = 0; i < list_on_city.size(); i++)
+	{
+		lisx.push_back(list_on_city[i].x);
+		lisy.push_back(list_on_city[i].y);
+	}
+	
+	if (std::max(lisx.size(), lisy.size()) <= NOT_ON_CITY__ON_CITY_MIN_GOODMATCHS)
 	{
 		calc_continuity_is_faile = true;
 		return pos_on_city;
 	}
+	
+	//// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
+	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, someSizeR/4.0) == false)
+	//{
+	//	calc_continuity_is_faile = true;
+	//	return pos_on_city;
+	//}
 
-	if (std::min(lisx.size(), lisy.size()) >= 10)
+	if (std::min(lisx.size(), lisy.size()) >= ON_CITY__MIN_GOODMATCHS)
 	{
 		isOnCity = true;
 	}
@@ -240,7 +274,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 		isOnCity = false;
 	}
 
-	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
+	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, lisy);
 
 	pos_continuity_on_city.x = (pos_continuity_on_city.x - someMap.cols / 2.0) / 2.0;
 	pos_continuity_on_city.y = (pos_continuity_on_city.y - someMap.rows / 2.0) / 2.0;
@@ -249,7 +283,11 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
 	return pos_on_city;
 }
-
+/// <summary>
+/// 匹配 在野外
+/// </summary>
+/// <param name="calc_continuity_is_faile"></param>
+/// <returns></returns>
 cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_faile)
 {
 	static cv::Mat img_scene(_mapMat);
@@ -263,14 +301,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
-	resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
+	cv::resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 	detectorSomeMap->detectAndCompute(miniMap_scale, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 
 	// 如果搜索范围内可识别特征点数量为0，则认为计算失败
-	if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() <= 2)
+	if (Kp_SomeMap.size() <= 2 || Kp_MiniMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;
@@ -279,87 +317,128 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	std::vector< std::vector<cv::DMatch> > KNN_not_no_city;
 
 	matcher_not_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_not_no_city, 2);
+
+	std::vector<TianLi::Utils::KeyPoint> keypoint_not_on_city_list;
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, ratio_thresh, keypoint_not_on_city_list);
+
 	std::vector<double> lisx;
 	std::vector<double> lisy;
-	double sumx = 0;
-	double sumy = 0;
+	TianLi::Utils::remove_invalid(keypoint_not_on_city_list, render_map_scale / minimap_scale_param, lisx, lisy);
+	
+	std::vector<cv::Point2d> list_not_on_city;
+	for (int i = 0; i < keypoint_not_on_city_list.size(); i++)
+	{
+		list_not_on_city.push_back(cv::Point2d(lisx[i], lisy[i]));
+	}
+	list_not_on_city = TianLi::Utils::extract_valid(list_not_on_city);
 
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, ratio_thresh, render_map_scale / minimap_scale_param, lisx, lisy, sumx, sumy);
-
+	lisx.clear();
+	lisy.clear();
+	for (int i = 0; i < list_not_on_city.size(); i++)
+	{
+		lisx.push_back(list_not_on_city[i].x);
+		lisy.push_back(list_not_on_city[i].y);
+	}
+	
 	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
-	if (std::min(lisx.size(), lisy.size()) > 4)
+	if (std::min(lisx.size(), lisy.size()) > NOT_ON_CITY__MIN_GOODMATCHS)
 	{
 		isOnCity = false;
-
-		cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
+		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
 		pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
+		return pos_not_on_city;
+	}
+	
+	//// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
+	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, someSizeR / 4.0) == true)
+	//{
+	//	isOnCity = false;
+	//	cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
+	//	pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
+	//	return pos_not_on_city;
+	//}
+	
+	cv::Point2d pos_on_city;
+	
+	img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
+
+	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+
+	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
+	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
+	detectorSomeMap->detectAndCompute(miniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+
+	if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() == 0)
+	{
+		calc_continuity_is_faile = true;
+		return pos_not_on_city;
+}
+
+	cv::Ptr<cv::DescriptorMatcher> matcher_mabye_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+	std::vector< std::vector<cv::DMatch> > KNN_mabye_on_city;
+
+	matcher_mabye_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mabye_on_city, 2);
+	
+	std::vector<TianLi::Utils::KeyPoint> keypoint_on_city_list;
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, keypoint_on_city_list);
+
+	std::vector<double> list_x_on_city;
+	std::vector<double> list_y_on_city;
+	TianLi::Utils::remove_invalid(keypoint_on_city_list, 0.8667, list_x_on_city, list_y_on_city);
+
+	std::vector<cv::Point2d> list_on_city;
+	for (int i = 0; i < keypoint_on_city_list.size(); i++)
+	{
+		list_on_city.push_back(cv::Point2d(list_x_on_city[i], list_y_on_city[i]));
+	}
+	list_on_city = TianLi::Utils::extract_valid(list_on_city);
+	
+	list_x_on_city.clear();
+	list_y_on_city.clear();
+	for (int i = 0; i < list_on_city.size(); i++)
+	{
+		list_x_on_city.push_back(list_on_city[i].x);
+		list_y_on_city.push_back(list_on_city[i].y);
+	}
+
+	if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= NOT_ON_CITY__ON_CITY_MIN_GOODMATCHS)
+	{
+		calc_continuity_is_faile = true;
+		return pos_not_on_city;
+	}
+
+	if (std::min(list_x_on_city.size(), list_y_on_city.size()) >= ON_CITY__MIN_GOODMATCHS)
+	{
+		isOnCity = true;
 	}
 	else
 	{
-
-		//有可能处于城镇中
-
-		/***********************/
-		//重新从完整中地图取出角色周围部分地图
-		img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
-
-		resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
-
-		detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-		detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-		
-		if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() == 0)
-		{
-			calc_continuity_is_faile = true;
-			return pos_not_on_city;
-		}
-
-		cv::Ptr<cv::DescriptorMatcher> matcher_mabye_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-		std::vector< std::vector<cv::DMatch> > KNN_mabye_on_city;
-
-		matcher_mabye_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mabye_on_city, 2);
-
-		std::vector<double> list_x_on_city;
-		std::vector<double> list_y_on_city;
-		double sum_x_on_city = 0;
-		double sum_y_on_city = 0;
-
-		TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, 0.8667 /*/ minimap_scale_param*/, list_x_on_city, list_y_on_city, sum_x_on_city, sum_y_on_city);
-
-		if (std::min(list_x_on_city.size(), list_y_on_city.size()) <= 4)
-		{
-			calc_continuity_is_faile = true;
-			return pos_not_on_city;
-		}
-
-		if (std::min(list_x_on_city.size(), list_y_on_city.size()) >= 10)
-		{
-			isOnCity = true;
-		}
-		else
-		{
-			isOnCity = false;
-		}
-
-		cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, sum_x_on_city, list_y_on_city, sum_y_on_city);
-
-		double x = (p.x - someMap.cols / 2.0) / 2.0;
-		double y = (p.y - someMap.rows / 2.0) / 2.0;
-
-		pos_not_on_city = cv::Point2d(x + hisP[2].x, y + hisP[2].y);
-
+		isOnCity = false;
 	}
 
-	return pos_not_on_city;
+	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
+
+	double x = (p.x - someMap.cols / 2.0) / 2.0;
+	double y = (p.y - someMap.rows / 2.0) / 2.0;
+
+	pos_on_city = cv::Point2d(x + hisP[2].x, y + hisP[2].y);
+	return pos_on_city;
 }
+/// <summary>
+/// 匹配 不连续 全局匹配
+/// </summary>
+/// <param name="calc_is_faile"></param>
+/// <returns></returns>
 cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 {
-#ifdef _DEBUG
+#ifdef _2TH_MATCH
 	return match_no_continuity_2nd(calc_is_faile);
 #else
 	return match_no_continuity_1st(calc_is_faile);
-#endif // _DEBUG
+#endif // _2TH_MATCH
 }
+
+
 /// <summary>
 /// 非连续匹配，从大地图中确定角色位置
 /// 直接通过SURF特征点匹配精确定位角色位置
@@ -368,160 +447,90 @@ cv::Point2d SurfMatch::match_no_continuity(bool& calc_is_faile)
 /// <returns></returns>
 cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 {
-	static cv::Mat img_scene(_mapMat);
-	const auto minimap_scale_param = 2.0;
-	cv::Point2d pos_continuity_no;
+	double on_city_stdev = 0.0;
+	double not_on_city_stdev = 0.0;
+
+	if (isOnCity)
+	{
+		bool on_city_calc_is_faile = false;
+		auto on_city_pos = match_all_map(on_city_calc_is_faile, on_city_stdev, 0.5);
+		if (on_city_calc_is_faile != true && on_city_stdev < ALL_MAP__ON_CITY__STDEV_THRESH)
+		{
+			calc_is_faile = on_city_calc_is_faile;
+			isOnCity = true;
+			return on_city_pos;
+		}
+	}
+	bool not_on_city_calc_is_faile = false;
+	auto not_on_city_pos= match_all_map(not_on_city_calc_is_faile, not_on_city_stdev, 2.0);
+	if (not_on_city_calc_is_faile != true && not_on_city_stdev < ALL_MAP__NOT_ON_CITY__STDEV_THRESH)
+	{
+		calc_is_faile = not_on_city_calc_is_faile;
+		isOnCity = false;
+		return not_on_city_pos;
+	}
+	double try_match_stdev=0.0;
+	return match_all_map(calc_is_faile, try_match_stdev, 1.0);
+}
+
+
+cv::Point2d SurfMatch::match_all_map(bool& calc_is_faile, double& stdev, double minimap_scale_param)
+{
+	static cv::Mat all_map(_mapMat);
+	cv::Point2d all_map_pos;
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
-	resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param,cv::INTER_CUBIC);
-	
+	cv::resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
+
 	// 小地图区域计算特征点
 	detector->detectAndCompute(img_object, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 	// 没有提取到特征点直接返回，结果无效
 	if (Kp_MiniMap.size() == 0)
 	{
 		calc_is_faile = true;
-		return pos_continuity_no;
+		return all_map_pos;
 	}
 	// 匹配特征点
 	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 	std::vector< std::vector<cv::DMatch> > KNN_m;
 	matcher->knnMatch(Dp_MiniMap, Dp_Map, KNN_m, 2);
 
+	std::vector<TianLi::Utils::KeyPoint> keypoint_list;
+	TianLi::Utils::calc_good_matches(all_map, Kp_Map, img_object, Kp_MiniMap, KNN_m, ratio_thresh, keypoint_list);
+
 	std::vector<double> lisx;
 	std::vector<double> lisy;
-	double sumx = 0;
-	double sumy = 0;
-	// 计算最佳匹配结果
-	TianLi::Utils::calc_good_matches(img_scene, Kp_Map, img_object, Kp_MiniMap, KNN_m, ratio_thresh, render_map_scale / minimap_scale_param, lisx, lisy, sumx, sumy);
+	TianLi::Utils::remove_invalid(keypoint_list, render_map_scale / minimap_scale_param, lisx, lisy);
+
+	std::vector<cv::Point2d> list_not_on_city;
+	for (int i = 0; i < keypoint_list.size(); i++)
+	{
+		list_not_on_city.push_back(cv::Point2d(lisx[i], lisy[i]));
+	}
+	list_not_on_city = TianLi::Utils::extract_valid(list_not_on_city);
+
+	lisx.clear();
+	lisy.clear();
+	for (int i = 0; i < list_not_on_city.size(); i++)
+	{
+		lisx.push_back(list_not_on_city[i].x);
+		lisy.push_back(list_not_on_city[i].y);
+	}
+	
+	double x_stdev = TianLi::Utils::stdev_abs(lisx);
+	double y_stdev = TianLi::Utils::stdev_abs(lisy);
+	
+	stdev = sqrt(x_stdev + y_stdev);
+	
 	// 没有最佳匹配结果直接返回，结果无效
 	if (std::min(lisx.size(), lisy.size()) == 0)
 	{
 		calc_is_faile = true;
-		return pos_continuity_no;
+		return all_map_pos;
 	}
 	// 从最佳匹配结果中剔除异常点计算角色位置返回
-	pos_continuity_no = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-	return pos_continuity_no;
-}
-cv::Mat to_color(cv::Mat& img_object)
-{
-	cv::Mat color_mat;
-	int s_len = static_cast<int>((img_object.cols + img_object.rows) * 0.25 * 0.8);
-	cv::Mat roi_tl = img_object(cv::Rect(0, 0, s_len, s_len));
-	cv::Mat roi_tr = img_object(cv::Rect(img_object.cols - s_len, 0, s_len, s_len));
-	cv::Mat roi_bl = img_object(cv::Rect(0, img_object.rows - s_len, s_len, s_len));
-	cv::Mat roi_br = img_object(cv::Rect(img_object.cols - s_len, img_object.rows - s_len, s_len, s_len));
-	
-	cv::Mat roi_tl_color;
-	cv::Mat roi_tr_color;
-	cv::Mat roi_bl_color;
-	cv::Mat roi_br_color;
-	
-	cv::resize(roi_tl, roi_tl_color, cv::Size(3, 3), cv::INTER_AREA);
-	cv::resize(roi_tr, roi_tr_color, cv::Size(3, 3), cv::INTER_AREA);
-	cv::resize(roi_bl, roi_bl_color, cv::Size(3, 3), cv::INTER_AREA);
-	cv::resize(roi_br, roi_br_color, cv::Size(3, 3), cv::INTER_AREA);
-	
-	cv::Mat roi = cv::Mat::zeros(6, 6, img_object.type());
-	roi_tl_color.copyTo(roi(cv::Rect(0, 0, 3, 3)));
-	roi_tr_color.copyTo(roi(cv::Rect(3, 0, 3, 3)));
-	roi_bl_color.copyTo(roi(cv::Rect(0, 3, 3, 3)));
-	roi_br_color.copyTo(roi(cv::Rect(3, 3, 3, 3)));
-	
-	cv::Mat roi_color;
-	cv::resize(roi, roi_color, cv::Size(1,1), cv::INTER_AREA);
-	
-	roi_color.at<cv::Vec4b>(0,0)[3] = 255;
-	
-	cv::resize(img_object, color_mat, cv::Size(5,5),cv::INTER_AREA);
-	return roi_color;
-	
-}
-// 初步定位：根据颜色确定角色在大地图的哪个方位
-cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
-{
-	static cv::Mat color_map;
-	static bool is_first = true;
-	if (is_first)
-	{
-		cv::resize(_mapMat, color_map, cv::Size(), 0.01, 0.01, cv::INTER_CUBIC);
-		is_first = false;
-	}
-	
-	int crop_border = static_cast<int>((_MiniMapMat.rows + _MiniMapMat.cols) * 0.5 * 0.15);
-	cv::Mat img_object(_MiniMapMat(cv::Rect(crop_border, crop_border, _MiniMapMat.cols - crop_border * 2, _MiniMapMat.rows - crop_border * 2)));
-	// 对小地图进行颜色提取
-	cv::Mat color = to_color(img_object);
-	// 模板匹配
-	cv::Mat result;
-	cv::matchTemplate(color_map, color, result, cv::TM_CCOEFF_NORMED);
-	// 找到最大值和最小值的位置
-	double minVal, maxVal;
-	cv::Point minLoc, maxLoc;
-	cv::minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc);
-	// 计算角色在大地图的位置
-	cv::Point pos = cv::Point(maxLoc.x * 100 + 50, maxLoc.y * 100 + 50);
-	return pos;
-}
-// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
-cv::Point match_find_block_in_direction(cv::Mat& _mapMat, cv::Mat& _MiniMapMat, cv::Point pos_first_match)
-{
-	// 0 18 22 38
-	const static cv::Rect yellow_rect = cv::Rect(0, 18, 22, 38);
-	if (yellow_rect.contains(pos_first_match))
-	{
-		return cv::Point(-1, 0);
-	}
-	UNREFERENCED_PARAMETER(_mapMat);
-	UNREFERENCED_PARAMETER(_MiniMapMat);
-	return cv::Point(0, 0);
-}
-// 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
-{
-	cv::Point pos_first_match = match_find_direction_in_all(_mapMat, _MiniMapMat);
-	cv::Point pos_block_match = match_find_block_in_direction(_mapMat, _MiniMapMat, pos_first_match);
-	cv::Point2d pos_continuity_no;
-	bool calc_is_faile = false;
-	//cv::Point2d pos = match_find_pos_in_block(_mapMat, _MiniMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
-	if (calc_is_faile)
-	{
-		return cv::Point2d(-1, -1);
-	}
-	return cv::Point2d(0,0);
-}
-// 确定位置：根据所在区块的结果精确匹配角色位置
-cv::Point2d SurfMatch::match_find_position_in_block(cv::Point pos_second_match, bool& calc_is_faile)
-{
-	if (pos_second_match.x == -1)
-	{
-		return cv::Point2d(0, 0);
-	}
-	else
-	{
-		return match_no_continuity_1st(calc_is_faile);
-	}
-}
-/// <summary>
-/// 非连续匹配，从大地图中确定角色位置 v2.0
-/// 根据某小地图整体颜色判断角色的大致位置，然后再根据大致位置进行精确匹配
-/// </summary>
-/// <param name="calc_is_faile">匹配结果是否有效</param>
-/// <returns></returns>
-cv::Point2d SurfMatch::match_no_continuity_2nd(bool& calc_is_faile)
-{
-	cv::Point pos_first_match;
-	cv::Point pos_second_match;
-	cv::Point2d pos_continuity_no;
-	// 初步定位：根据颜色确定角色在大地图的哪个方位
-	pos_first_match = match_find_direction_in_all(_mapMat, _miniMapMat);
-	// 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
-	pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
-	// 确定位置：根据所在区块的结果精确匹配角色位置
-	pos_continuity_no = match_find_position_in_block(pos_second_match, calc_is_faile);
-	// 返回结果
-	return pos_continuity_no;
+	all_map_pos = TianLi::Utils::SPC(lisx, lisy);
+	return all_map_pos;
 }
 
 cv::Point2d SurfMatch::getLocalPos()
@@ -532,43 +541,4 @@ cv::Point2d SurfMatch::getLocalPos()
 bool SurfMatch::getIsContinuity()
 {
 	return isContinuity;
-}
-
-void get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPosition& out_genshin_position)
-{
-	static SurfMatch surf_match;
-	static bool is_init = false;
-	if (!is_init)
-	{
-		std::vector<cv::KeyPoint> gi_map_keypoints;
-		cv::Mat gi_map_descriptors;
-		
-		get_map_keypoint(gi_map_keypoints, gi_map_descriptors, surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
-
-		surf_match.setMap(Resources::getInstance().MapTemplate);
-
-		surf_match.detector = cv::xfeatures2d::SURF::create(surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
-		surf_match.detectorSomeMap = cv::xfeatures2d::SURF::create(surf_match.hessian_threshold, surf_match.octaves, surf_match.octave_layers, surf_match.extended, surf_match.upright);
-
-		surf_match.Init(gi_map_keypoints, gi_map_descriptors);
-
-		is_init = true;
-	}
-
-
-	if (genshin_minimap.config.is_find_paimon == false)
-	{
-		return;
-	}
-
-	if (genshin_minimap.img_minimap.empty())
-	{
-		return;
-	}
-
-	surf_match.setMiniMap(genshin_minimap.img_minimap);
-
-	surf_match.match();
-
-	out_genshin_position.position = surf_match.getLocalPos();
 }
