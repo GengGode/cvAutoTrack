@@ -75,7 +75,7 @@ namespace TianLi::Utils
 		int valid_count = 0;
 		for (auto& point : list)
 		{
-			if (abs(point.x - x_mean) < 0.382 * x_stdev && abs(point.y - y_mean) < param * y_stdev)
+			if (abs(point.x - x_mean) < param * x_stdev && abs(point.y - y_mean) < param * y_stdev)
 			{
 				x_valid_list.push_back(point.x);
 				y_valid_list.push_back(point.y);
