@@ -104,44 +104,6 @@ namespace TianLi::Utils
 		}
 	}
 	
-	bool is_valid_keypoints(std::vector<cv::Point2d> dis_list, cv::Point2d dis_sum, double value)
-	{
-		// 计算方差，如果方差大于数据地图大小的一半就是无效数据
-		double dis_mean_x = dis_sum.x / dis_list.size();
-		double dis_mean_y = dis_sum.y / dis_list.size();
-		if (dis_list.size() <= 3)
-		{
-			// 点少的时候，默认有效
-			// TODO: 此处的策略为尽可能获取位置，不管位置是否正确。如果需要尽可能正确的位置，可以考虑将此处改为false
-			return false;
-		}
-		double accum_x = 0.0;
-		double accum_y = 0.0;
-		for (int i = 0; i < dis_list.size(); i++)
-		{
-			accum_x += (dis_list[i].x - dis_mean_x) * (dis_list[i].x - dis_mean_x);
-			accum_y += (dis_list[i].y - dis_mean_y) * (dis_list[i].y - dis_mean_y);
-		}
-		double stdev_x = sqrt(accum_x / (dis_list.size() - 1));
-		double stdev_y = sqrt(accum_y / (dis_list.size() - 1));
-
-		if (stdev_x > value || stdev_y > value)
-		{
-			// 方差大于阈值，认为是无效数据
-			return false;
-		}	
-		return true;
-	}
-	bool is_valid_keypoints(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy, double value)
-	{
-		auto dis_list = std::vector<cv::Point2d>();
-		auto dis_sum = cv::Point2d(sumx, sumy);
-		for (int i = 0; i < lisx.size(); i++)
-		{
-			dis_list.push_back(cv::Point2d(lisx[i], lisy[i]));
-		}
-		return is_valid_keypoints(dis_list, dis_sum, value);
-	}
 	
 	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
 	{
@@ -190,21 +152,6 @@ namespace TianLi::Utils
 			pos = cv::Point2d(x, y);
 		}
 		return pos;
-	}
-
-	double var(std::vector<double> lisx, double sumx, std::vector<double> lisy, double sumy)
-	{
-		double accumx = 0.0;
-		double accumy = 0.0;
-		for (int i = 0; i < std::min(lisx.size(), lisy.size()); i++)
-		{
-			accumx = (lisx[i] - sumx) * (lisx[i] - sumx);
-			accumy = (lisy[i] - sumy) * (lisy[i] - sumy);
-		}
-		double stdevx = sqrt(accumx / (lisx.size() - 1));
-		double stdevy = sqrt(accumy / (lisy.size() - 1));
-
-		return sqrt(stdevx * stdevx + stdevy * stdevy);
 	}
 
 	int getMaxID(double lis[], int len)
