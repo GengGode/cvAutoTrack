@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "Utils.h"
-#include <algorithm>
-#include <numeric>
 
 namespace TianLi::Utils
 {
@@ -9,7 +7,7 @@ namespace TianLi::Utils
 	{
 		return sqrt(p.x * p.x + p.y * p.y);
 	}
-	
+
 	std::vector<double> extract_valid(std::vector<double> list)
 	{
 		std::vector<double> valid_list;
@@ -18,18 +16,18 @@ namespace TianLi::Utils
 		{
 			return list;
 		}
-		
-		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size(); 
-		
+
+		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+
 		double accum = 0.0;
 		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
-		
+
 		double stdev = sqrt(accum / (list.size() - 1));
-		
+
 		std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d) { return abs(d - mean) < 0.382 * stdev; });
 		return valid_list;
 	}
-	
+
 	double stdev(std::vector<double> list)
 	{
 		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
@@ -68,16 +66,16 @@ namespace TianLi::Utils
 
 		std::vector<double> x_valid_list;
 		std::vector<double> y_valid_list;
-		
+
 		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
 		double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
 		double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
-		
+
 		double x_accum = 0.0;
 		std::for_each(x_list.begin(), x_list.end(), [&](const double d) {x_accum += (d - x_mean) * (d - x_mean); });
 		double y_accum = 0.0;
 		std::for_each(y_list.begin(), y_list.end(), [&](const double d) {y_accum += (d - y_mean) * (d - y_mean); });
-		
+
 		double x_stdev = sqrt(x_accum / (x_list.size() - 1));
 		double y_stdev = sqrt(y_accum / (y_list.size() - 1));
 
@@ -101,7 +99,7 @@ namespace TianLi::Utils
 				valid_count = valid_count + 1;
 			}
 		}
-		
+
 		for (int i = 0; i < valid_count; i++)
 		{
 			valid_list.push_back(cv::Point2d(x_valid_list[i], y_valid_list[i]));
@@ -109,7 +107,7 @@ namespace TianLi::Utils
 		return valid_list;
 	}
 
-	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
+	void remove_invalid(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
 	{
 		for (int i = 0; i < keypoints.size(); i++)
 		{
@@ -122,8 +120,8 @@ namespace TianLi::Utils
 			y_list.push_back(diff_pos.y);
 		}
 	}
-	
-	
+
+
 	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
 	{
 		cv::Point2d pos;
@@ -292,57 +290,15 @@ namespace TianLi::Utils
 
 	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
 	{
-			cv::Mat img_matches, imgmap, imgminmap;
-			drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-			drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-			drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+		cv::Mat img_matches, imgmap, imgminmap;
+		drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+		drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+		drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 	}
-	
+
 	namespace CalcMatch
 	{
-		namespace Debug
-		{
-			void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
-			{
-				std::vector<cv::DMatch> good_matches;
-				for (size_t i = 0; i < KNN_m.size(); i++)
-				{
-					if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-					{
-						good_matches.push_back(KNN_m[i][0]);
-						if (KNN_m[i][0].queryIdx >= keypoint_object.size())
-						{
-							continue;
-						}
-						lisx.push_back(((img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.x));
-						lisy.push_back(((img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.y));
-						sumx += lisx.back();
-						sumy += lisy.back();
-					}
-				}
-				draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
-			}
-		}
-
-		void calc_good_matches_show(cv::Mat& , std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
-		{
-			for (size_t i = 0; i < KNN_m.size(); i++)
-			{
-				if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-				{
-					if (KNN_m[i][0].queryIdx >= keypoint_object.size())
-					{
-						continue;
-					}
-					lisx.push_back(((img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.x));
-					lisy.push_back(((img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y) * mapScale + keypoint_scene[KNN_m[i][0].trainIdx].pt.y));
-					sumx += lisx.back();
-					sumy += lisy.back();
-				}
-			}
-		}
-		
-		void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+		void calc_good_matches_show(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints)
 		{
 #ifdef _DEBUG
 			std::vector<cv::DMatch> good_matches;
@@ -369,19 +325,9 @@ namespace TianLi::Utils
 			draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
 #endif
 		}
-		
 	}
 
-	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy)
-	{
-		CalcMatch::
-#ifdef _DEBUG
-			Debug::
-#endif
-			calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, mapScale, lisx, lisy, sumx, sumy);
-	}
-	
-	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints)
+	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints)
 	{
 		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
 	}
