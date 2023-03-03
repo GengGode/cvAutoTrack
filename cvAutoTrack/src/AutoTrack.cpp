@@ -578,7 +578,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		{
 			isLoopMatch = true;
 			isStarVisible = true;
-			pos.push_back(cv::Point2d(maxLoc) -
+			pos.emplace_back(cv::Point2d(maxLoc) -
 				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 		}
@@ -598,7 +598,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			}
 			else
 			{
-				pos.push_back(cv::Point2d(maxLoc) -
+				pos.emplace_back(cv::Point2d(maxLoc) -
 					cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 					cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 			}

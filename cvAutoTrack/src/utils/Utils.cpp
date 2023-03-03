@@ -206,7 +206,7 @@ namespace TianLi::Utils
 		for (int i = 0; i < pLis.size(); i++)
 		{
 			length = sqrt(pLis[i].x * pLis[i].x + pLis[i].y * pLis[i].y);
-			res.push_back(cv::Point2f((float)(pLis[i].x / length), (float)(pLis[i].y / length)));
+			res.emplace_back(cv::Point2f((float)(pLis[i].x / length), (float)(pLis[i].y / length)));
 		}
 		return res;
 	}

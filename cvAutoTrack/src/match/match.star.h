@@ -30,7 +30,7 @@ void star_calculation(cv::Mat& giStarRef,char* jsonBuff, star_calculation_config
 	if (maxVal > 0.66)
 	{
 		isLoopMatch = true;
-		pos.push_back(cv::Point2d(maxLoc) -
+		pos.emplace_back(cv::Point2d(maxLoc) -
 			cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 			cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 	}
@@ -49,7 +49,7 @@ void star_calculation(cv::Mat& giStarRef,char* jsonBuff, star_calculation_config
 		}
 		else
 		{
-			pos.push_back(cv::Point2d(maxLoc) -
+			pos.emplace_back(cv::Point2d(maxLoc) -
 				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 		}
