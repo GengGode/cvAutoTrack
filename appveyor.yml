@@ -335,7 +335,7 @@
         - ps: $buildversion = Get-Content version.ver
         - ps: $commitLog = git log -1 --pretty=%B
   
-        - appveyor PushArtifact cvAutoTrack-$version.zip
+        - appveyor PushArtifact cvAutoTrack-*.zip
         
         - ps: ./ci/upload_file.ps1
         - ps: ./ci/manual_upload_release.ps1
