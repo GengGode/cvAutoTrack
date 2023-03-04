@@ -125,12 +125,6 @@ void SurfMatch::match()
 	is_success_match = false;
 	isContinuity = true;
 
-	//局部匹配裁剪框
-	rect_continuity_map = TianLi::Utils::clamp_small_rect_in_large_rect(
-		cv::Rect(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)),
-		cv::Rect(cv::Rect(0, 0, _mapMat.cols, _mapMat.rows))
-	);
-
 	// 尝试连续匹配，匹配角色附近小范围区域
 	if (isContinuity)
 	{
@@ -197,7 +191,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//在城镇中
 	/***********************/
 	//重新从完整中地图取出角色周围部分地图
-	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
 	cv::Mat MiniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
@@ -286,7 +280,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	//不在城镇中时
-	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
@@ -339,7 +333,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	}
 	
 	cv::Point2d pos_on_city;
-	someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
+	someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);

@@ -17,8 +17,6 @@ namespace TianLi::Utils
 	double stdev(std::vector<double> list);
 	double stdev_abs(std::vector<double> list);
 
-	cv::Rect clamp_small_rect_in_large_rect(cv::Rect small_rect, cv::Rect big_rect);
-
 	std::vector<double> extract_valid(std::vector<double> list);
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
 
