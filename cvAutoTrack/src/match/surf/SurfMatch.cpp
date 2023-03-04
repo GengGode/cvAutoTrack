@@ -385,7 +385,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	{
 		isOnCity = false;
 		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
-		pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
+		pos_not_on_city = cv::Point2d(p.x + pos.x - someSizeR, p.y + pos.y - someSizeR);
 		return pos_not_on_city;
 	}
 	
