@@ -937,12 +937,12 @@ bool AutoTrack::getMiniMapRefMat()
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
-			err = { 40101,"Bitblt模式下检测派蒙失败" };
+			//err = { 40101,"Bitblt模式下检测派蒙失败" };
 			return false;
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-			err = { 40201,"DirectX模式下检测派蒙失败" };
+			//err = { 40201,"DirectX模式下检测派蒙失败" };
 			return false;
 		}
 	}
@@ -950,12 +950,12 @@ bool AutoTrack::getMiniMapRefMat()
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
-			err = { 40102,"Bitblt模式下没有检测到派蒙" };
+			//err = { 40102,"Bitblt模式下没有检测到派蒙" };
 			return false;
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-			err = { 40202,"DirectX模式下没有检测到派蒙" };
+			//err = { 40202,"DirectX模式下没有检测到派蒙" };
 			return false;
 		}
 	}
