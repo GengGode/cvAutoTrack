@@ -55,9 +55,9 @@ namespace TianLi::Utils
 			throw "small_rect bigger than big_rect!";
 		
 		//钳制左上坐标
-		small_rect += cv::Point(std::max(-small_rect.x, 0), std::max(-small_rect.x, 0));
+		small_rect += cv::Point(std::max(-small_rect.x, 0), std::max(-small_rect.y, 0));
 		//钳制右下坐标
-		small_rect -= cv::Point(std::max((small_rect.x + small_rect.width) - big_rect.width, 0), std::max((small_rect.x + small_rect.width) - big_rect.width, 0));
+		small_rect -= cv::Point(std::max((small_rect.x + small_rect.width) - big_rect.width, 0), std::max((small_rect.y + small_rect.height) - big_rect.height, 0));
 		return small_rect;
 	}
 

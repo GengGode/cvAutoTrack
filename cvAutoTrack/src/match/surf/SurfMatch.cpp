@@ -125,6 +125,12 @@ void SurfMatch::match()
 	is_success_match = false;
 	isContinuity = true;
 
+	//局部匹配裁剪框
+	rect_continuity_map = TianLi::Utils::clamp_small_rect_in_large_rect(
+		cv::Rect(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)),
+		cv::Rect(cv::Rect(0, 0, _mapMat.cols, _mapMat.rows))
+	);
+
 	// 尝试连续匹配，匹配角色附近小范围区域
 	if (isContinuity)
 	{
@@ -151,11 +157,6 @@ void SurfMatch::match()
 		return;
 	}
 
-	
-	rect_continuity_map = TianLi::Utils::clamp_small_rect_in_large_rect(
-		cv::Rect(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)),
-		cv::Rect(cv::Rect(0,0, _mapMat.cols, _mapMat.rows))
-	);
 	is_success_match = true;
 }
 
