@@ -30,6 +30,7 @@ class SurfMatch
 	double MatchMatScale = 2.0;
 
 	cv::Point2d pos;
+	cv::Rect rect_continuity_map;
 public:
 	SurfMatch();
 	~SurfMatch();

@@ -148,8 +148,12 @@ void SurfMatch::match()
 		return;
 	}
 
+	
+	rect_continuity_map = TianLi::Utils::clamp_small_rect_in_large_rect(
+		cv::Rect(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)),
+		cv::Rect(cv::Rect(0,0, _mapMat.cols, _mapMat.rows))
+	);
 	is_success_match = true;
-
 }
 
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
@@ -189,7 +193,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//在城镇中
 	/***********************/
 	//重新从完整中地图取出角色周围部分地图
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap(img_scene(rect_continuity_map));
 	cv::Mat MiniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
@@ -280,7 +284,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	//不在城镇中时
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap(img_scene(rect_continuity_map));
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
@@ -343,7 +347,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	
 	cv::Point2d pos_on_city;
 	
-	img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
+	img_scene(rect_continuity_map).copyTo(someMap);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 

@@ -49,6 +49,18 @@ namespace TianLi::Utils
 		return accum / (list.size() - 1);
 	}
 
+	cv::Rect clamp_small_rect_in_large_rect(cv::Rect small_rect, cv::Rect big_rect)
+	{
+		if (small_rect.width > big_rect.width || small_rect.height > big_rect.height)
+			throw "small_rect bigger than big_rect!";
+		
+		//钳制左上坐标
+		small_rect += cv::Point(std::max(-small_rect.x, 0), std::max(-small_rect.x, 0));
+		//钳制右下坐标
+		small_rect -= cv::Point(std::max((small_rect.x + small_rect.width) - big_rect.width, 0), std::max((small_rect.x + small_rect.width) - big_rect.width, 0));
+		return small_rect;
+	}
+
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list)
 	{
 		std::vector<cv::Point2d> valid_list;
