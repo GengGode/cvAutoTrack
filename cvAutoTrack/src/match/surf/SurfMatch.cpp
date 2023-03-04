@@ -295,15 +295,6 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//	calc_continuity_is_faile = true;
 	//	return pos_on_city;
 	//}
-
-	if (std::min(lisx.size(), lisy.size()) >= ON_CITY__MIN_GOODMATCHS)
-	{
-		isOnCity = true;
-	}
-	else
-	{
-		isOnCity = false;
-	}
 	
 	isOnCity = judgesIsOnCity(keypoint_on_city_list);
 
@@ -373,14 +364,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		lisy.push_back(list_not_on_city[i].y);
 	}
 	
-	// 如果范围内最佳匹配特征点对数量大于4，则认为不可能处于城镇之中，位于城镇之外
-	if (std::min(lisx.size(), lisy.size()) > NOT_ON_CITY__MIN_GOODMATCHS)
-	{
-		isOnCity = false;
-		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
-		pos_not_on_city = cv::Point2d(p.x + pos.x - someSizeR, p.y + pos.y - someSizeR);
-		return pos_not_on_city;
-	}
+
 	if (!judgesIsOnCity(keypoint_not_on_city_list))
 	{
 		isOnCity = false;
@@ -436,14 +420,6 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		return pos_not_on_city;
 	}
 
-	if (std::min(list_x_on_city.size(), list_y_on_city.size()) >= ON_CITY__MIN_GOODMATCHS)
-	{
-		isOnCity = true;
-	}
-	else
-	{
-		isOnCity = false;
-	}
 	isOnCity = judgesIsOnCity(keypoint_on_city_list);
 
 	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
