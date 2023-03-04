@@ -52,6 +52,8 @@
 #include <chrono>
 #include <format>
 #include <string>
+#include <algorithm>
+#include <numeric>
 #include <fstream>
 #include <functional>
 #include <filesystem>

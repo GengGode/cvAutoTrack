@@ -1,10 +1,8 @@
 #pragma once
-#include <vector>
-#include <opencv2/opencv.hpp>
 
 namespace TianLi::Utils
 {
-	struct KeyPoint
+	struct MatchKeyPoint
 	{
 		cv::Point2d query;
 		cv::Point2d train;
@@ -20,7 +18,7 @@ namespace TianLi::Utils
 	std::vector<double> extract_valid(std::vector<double> list);
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
 
-	void remove_invalid(std::vector<KeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list);
+	void remove_invalid(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list);
 
 
 	
@@ -38,8 +36,7 @@ namespace TianLi::Utils
 
 
 	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
-
-	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, double mapScale, std::vector<double>& lisx, std::vector<double>& lisy, double& sumx, double& sumy);
 	
-	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<KeyPoint>& good_keypoints);
+	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
+	
 }

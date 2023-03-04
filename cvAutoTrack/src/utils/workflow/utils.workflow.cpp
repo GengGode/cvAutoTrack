@@ -14,7 +14,7 @@ namespace TianLi::Utils
 
 	void Workflow::append(std::function<bool(void)> fun_ptr, int err_code, std::string err_msg)
 	{
-		fun_ptr_list.push_back(WorkflowItem{ fun_ptr,{ err_code, err_msg } });
+		fun_ptr_list.emplace_back(WorkflowItem{ fun_ptr,{ err_code, err_msg } });
 	}
 
 	bool Workflow::run()
