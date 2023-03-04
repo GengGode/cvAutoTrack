@@ -143,14 +143,18 @@ void SurfMatch::match()
 	// 尝试连续匹配，匹配角色附近小范围区域
 	if (isContinuity)
 	{
-		bool calc_continuity_is_faile = false;
-		pos = match_continuity(calc_continuity_is_faile);
-		// 连续匹配失败
-		if (calc_continuity_is_faile)
+		for (int retry_times = 1; retry_times <= max_continuity_retry; retry_times++)
 		{
-			isContinuity = false;
+			bool calc_continuity_is_faile = false;
+			pos = match_continuity(calc_continuity_is_faile);
+
+			if (!calc_continuity_is_faile)
+				break;				//匹配成功，结束，否则重试
+			else if (retry_times == max_continuity_retry)
+				isContinuity = false;
 		}
 	}
+
 	// 直接非连续匹配，匹配整个大地图
 	if (!isContinuity)
 	{

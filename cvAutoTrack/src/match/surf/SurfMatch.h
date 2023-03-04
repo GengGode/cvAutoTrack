@@ -51,6 +51,8 @@ public:
 	bool isContinuity = false;
 	bool isCoveying = false;
 	bool isOnCity = false;
+
+	int max_continuity_retry = 3;
 	
 	bool is_success_match = false;
 
