@@ -74,6 +74,9 @@ bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors
 	}
 }
 
+SurfMatch::SurfMatch()
+{
+}
 
 SurfMatch::~SurfMatch()
 {
