@@ -28,8 +28,6 @@ class SurfMatch
 	double render_map_scale = 1.3;//1.3;
 	int someSizeR = 106;
 	double MatchMatScale = 2.0;
-	
-	cv::Point2d hisP[3];
 
 	cv::Point2d pos;
 public:

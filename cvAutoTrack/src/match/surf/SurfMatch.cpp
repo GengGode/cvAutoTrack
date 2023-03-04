@@ -74,12 +74,6 @@ bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors
 	}
 }
 
-SurfMatch::SurfMatch()
-{
-	hisP[0] = cv::Point();
-	hisP[1] = cv::Point();
-	hisP[2] = cv::Point();
-}
 
 SurfMatch::~SurfMatch()
 {
@@ -124,22 +118,10 @@ void SurfMatch::UnInit()
 
 void SurfMatch::match()
 {
-	cv::Point2d dp1 = hisP[1] - hisP[0];
-	cv::Point2d dp2 = hisP[2] - hisP[1];
-
 	bool calc_is_faile = false;
 	is_success_match = false;
-	isContinuity = false;
+	isContinuity = true;
 
-	// 角色移动连续性判断
-	if (((TianLi::Utils::dis(dp1) + TianLi::Utils::dis(dp2)) < 2000) && (hisP[2].x > someSizeR && hisP[2].x < _mapMat.cols - someSizeR && hisP[2].y>someSizeR && hisP[2].y < _mapMat.rows - someSizeR))
-	{
-		isContinuity = true;
-	}
-	else
-	{
-		isOnCity = true;
-	}
 	// 尝试连续匹配，匹配角色附近小范围区域
 	if (isContinuity)
 	{
@@ -166,9 +148,6 @@ void SurfMatch::match()
 		return;
 	}
 
-	hisP[0] = hisP[1];
-	hisP[1] = hisP[2];
-	hisP[2] = pos;
 	is_success_match = true;
 
 }
@@ -210,7 +189,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//在城镇中
 	/***********************/
 	//重新从完整中地图取出角色周围部分地图
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat MiniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
@@ -283,7 +262,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	pos_continuity_on_city.x = (pos_continuity_on_city.x - someMap.cols / 2.0) / 2.0;
 	pos_continuity_on_city.y = (pos_continuity_on_city.y - someMap.rows / 2.0) / 2.0;
 
-	pos_on_city = cv::Point2d(pos_continuity_on_city.x + hisP[2].x, pos_continuity_on_city.y + hisP[2].y);
+	pos_on_city = cv::Point2d(pos_continuity_on_city.x + pos.x, pos_continuity_on_city.y + pos.y);
 
 	return pos_on_city;
 }
@@ -301,7 +280,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	//不在城镇中时
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)));
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
@@ -349,7 +328,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	{
 		isOnCity = false;
 		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
-		pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
+		pos_not_on_city = cv::Point2d(p.x + pos.x - someSizeR, p.y + pos.y - someSizeR);
 		return pos_not_on_city;
 	}
 	
@@ -364,7 +343,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	
 	cv::Point2d pos_on_city;
 	
-	img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
+	img_scene(cv::Rect(static_cast<int>(pos.x - someSizeR), static_cast<int>(pos.y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
@@ -425,7 +404,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	double x = (p.x - someMap.cols / 2.0) / 2.0;
 	double y = (p.y - someMap.rows / 2.0) / 2.0;
 
-	pos_on_city = cv::Point2d(x + hisP[2].x, y + hisP[2].y);
+	pos_on_city = cv::Point2d(x + pos.x, y + pos.y);
 	return pos_on_city;
 }
 /// <summary>
