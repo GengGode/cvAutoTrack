@@ -210,7 +210,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//在城镇中
 	/***********************/
 	//重新从完整中地图取出角色周围部分地图
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
 	cv::Mat MiniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
@@ -230,8 +230,6 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	std::vector< std::vector<cv::DMatch> > KNN_mTmp;
 
 	matcherTmp->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mTmp, 2);
-
-	//TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 	
 	std::vector<TianLi::Utils::KeyPoint> keypoint_on_city_list;
 	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, keypoint_on_city_list);
@@ -301,7 +299,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	//不在城镇中时
-	cv::Mat someMap(img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)));
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
@@ -353,19 +351,8 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		return pos_not_on_city;
 	}
 	
-	//// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
-	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, someSizeR / 4.0) == true)
-	//{
-	//	isOnCity = false;
-	//	cv::Point2d p = TianLi::Utils::SPC(lisx, sumx, lisy, sumy);
-	//	pos_not_on_city = cv::Point2d(p.x + hisP[2].x - someSizeR, p.y + hisP[2].y - someSizeR);
-	//	return pos_not_on_city;
-	//}
-	
 	cv::Point2d pos_on_city;
-	
-	img_scene(cv::Rect(static_cast<int>(hisP[2].x - someSizeR), static_cast<int>(hisP[2].y - someSizeR), someSizeR * 2, someSizeR * 2)).copyTo(someMap);
-
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);

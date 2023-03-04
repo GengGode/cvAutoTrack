@@ -10,6 +10,8 @@ namespace TianLi::Utils
 		cv::Point2d train;
 	};
 
+	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size);
+
 	double dis(cv::Point2d p);
 	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy);
 	double stdev(std::vector<double> list);

@@ -5,6 +5,29 @@
 
 namespace TianLi::Utils
 {
+	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size)
+	{
+		cv::Rect rect(pos.x - size / 2, pos.y - size / 2, size, size);
+		if (rect.x < 0)
+		{
+			rect.width += rect.x;
+			rect.x = 0;
+		}
+		if (rect.y < 0)
+		{
+			rect.height += rect.y;
+			rect.y = 0;
+		}
+		if (rect.x + rect.width > map.cols)
+		{
+			rect.width = map.cols - rect.x;
+		}
+		if (rect.y + rect.height > map.rows)
+		{
+			rect.height = map.rows - rect.y;
+		}
+		return map(rect);
+	}
 	double dis(cv::Point2d p)
 	{
 		return sqrt(p.x * p.x + p.y * p.y);
