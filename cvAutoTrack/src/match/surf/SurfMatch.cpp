@@ -352,7 +352,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	}
 	
 	cv::Point2d pos_on_city;
-	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
+	someMap = TianLi::Utils::get_some_map(img_scene, hisP[2], someSizeR);
 	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
