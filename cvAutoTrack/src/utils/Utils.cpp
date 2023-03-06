@@ -3,9 +3,9 @@
 
 namespace TianLi::Utils
 {
-	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size)
+	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size_r)
 	{
-		cv::Rect rect(pos.x - size / 2, pos.y - size / 2, size, size);
+		cv::Rect rect(pos.x - size_r, pos.y - size_r, size_r*2, size_r*2);
 		if (rect.x < 0)
 		{
 			rect.width += rect.x;
