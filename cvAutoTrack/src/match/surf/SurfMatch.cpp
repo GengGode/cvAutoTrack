@@ -234,9 +234,6 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 
 	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
-	/***********************/
-	//重新从完整中地图取出角色周围部分地图
-	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
 	cv::Mat MiniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(), 2.0, 2.0, cv::INTER_CUBIC);
