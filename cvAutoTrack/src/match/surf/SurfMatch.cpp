@@ -156,9 +156,6 @@ void SurfMatch::match()
 
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 {
-	auto cvPoint2dDistance = [](cv::Point2d a, cv::Point2d b){
-		return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
-	};
 	auto get_average = [](const std::vector<float>& v) {
 		return std::accumulate(v.begin(), v.end(), 0.0) / (float)v.size();
 	};
@@ -179,8 +176,8 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	{
 		rand_idx1 = rand_engine() % goodMatchesSize;
 		rand_idx2 = rand_engine() % goodMatchesSize;
-		distScene = cvPoint2dDistance(goodMatches[rand_idx1].query, goodMatches[rand_idx2].query);
-		distObject = cvPoint2dDistance(goodMatches[rand_idx1].train, goodMatches[rand_idx2].train);
+		distScene = (float)TianLi::Utils::dis(goodMatches[rand_idx1].query - goodMatches[rand_idx2].query);
+		distObject = (float)TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
 		if (isfinite(distScene / distObject))
 			vec_distRatio.emplace_back(distScene / distObject);
 	}
