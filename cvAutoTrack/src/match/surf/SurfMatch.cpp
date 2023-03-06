@@ -160,22 +160,29 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 		return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 	};
 	auto get_average = [](const std::vector<float>& v) {
-		float sumOfAll = std::accumulate(v.begin(), v.end(), 0.0);
-		float average =  sumOfAll/ (v.size());
-		return average;
+		return std::accumulate(v.begin(), v.end(), 0.0) / (float)v.size();
 	};
 	auto get_sigma = [](const std::vector<float>& v,const float average) {
-		float sigma = sqrt(std::accumulate(v.begin(), v.end(), 0.0, [&](const float acc, const float x) {return acc + pow(x - average, 2); }) / (float)v.size());
-		return sigma;
+		return sqrt(std::accumulate(v.begin(), v.end(), 0.0, [&](const float acc, const float x) {return acc + pow(x - average, 2); }) / (float)v.size());
 	};
 
 	std::vector<float> vec_distRatio;
 	float distScene, distObject;
-	for (int i = 0; i+1 < goodMatches.size(); i++)
+	int goodMatchesSize = goodMatches.size();
+
+	if (goodMatchesSize < 5)
+		return true;			//识别的点数少于5，可以认为在城里
+
+	std::default_random_engine rand_engine;
+	int rand_idx1, rand_idx2;
+	for (int i = 0; i < 100; i++)
 	{
-		distScene = cvPoint2dDistance(goodMatches[i].query, goodMatches[i + 1].query);
-		distObject = cvPoint2dDistance(goodMatches[i].train, goodMatches[i + 1].train);
-		vec_distRatio.emplace_back(distScene/distObject);
+		rand_idx1 = rand_engine() % goodMatchesSize;
+		rand_idx2 = rand_engine() % goodMatchesSize;
+		distScene = cvPoint2dDistance(goodMatches[rand_idx1].query, goodMatches[rand_idx2].query);
+		distObject = cvPoint2dDistance(goodMatches[rand_idx1].train, goodMatches[rand_idx2].train);
+		if (isfinite(distScene / distObject))
+			vec_distRatio.emplace_back(distScene / distObject);
 	}
 	//计算距离比例的均值和标准差
 	float e_distRatio, s_distRatio;
@@ -195,9 +202,9 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	//重新计算距离比例均值，并判断是否接近城外缩放比例
 	e_distRatio = get_average(vec_distRatio);
 
-	if (abs(e_distRatio - 135) < 75)
-		return false;
-	return true;
+	if (e_distRatio < 1)
+		return true;
+	return false;
 }
 
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
