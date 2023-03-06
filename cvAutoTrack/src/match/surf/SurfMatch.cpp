@@ -219,11 +219,6 @@ cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 	{
 		pos_continuity = match_continuity_on_city(calc_continuity_is_faile);
 	}
-	
-	if (calc_continuity_is_faile)
-	{
-		pos_continuity = match_continuity_not_on_city(calc_continuity_is_faile);
-	}
 
 	return pos_continuity;
 }
@@ -338,7 +333,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
 	detectorSomeMap->detectAndCompute(miniMap_scale, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
 
-	// 如果搜索范围内可识别特征点数量为0，则认为计算失败
+	// 如果搜索范围内可识别特征点数量少于2，则认为计算失败
 	if (Kp_SomeMap.size() <= 2 || Kp_MiniMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
