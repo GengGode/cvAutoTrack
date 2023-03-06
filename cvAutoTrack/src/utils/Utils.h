@@ -15,6 +15,7 @@ namespace TianLi::Utils
 	double stdev(std::vector<double> list);
 	double stdev_abs(std::vector<double> list);
 
+	
 	std::vector<double> extract_valid(std::vector<double> list);
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
 

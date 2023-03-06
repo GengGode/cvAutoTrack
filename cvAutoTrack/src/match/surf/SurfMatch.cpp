@@ -234,15 +234,15 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
 	cv::Point2d pos_on_city;
 	
-	cv::Mat img_object = crop_border(_miniMapMat,0.15);
+	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 
-	//在城镇中
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
 	/***********************/
 	//重新从完整中地图取出角色周围部分地图
 	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
 	cv::Mat MiniMap(img_object);
 
-	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+	cv::resize(someMap, someMap, cv::Size(), 2.0, 2.0, cv::INTER_CUBIC);
 	//resize(MiniMap, MiniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
@@ -260,10 +260,10 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
 	matcherTmp->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mTmp, 2);
 
-	//TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
+	//TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, SURF_MATCH_RATIO_THRESH, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 	
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, ratio_thresh, keypoint_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
 
 	std::vector<double> lisx;
 	std::vector<double> lisy;
@@ -292,7 +292,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	}
 	
 	//// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
-	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, someSizeR/4.0) == false)
+	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, DEFAULT_SOME_MAP_SIZE_R/4.0) == false)
 	//{
 	//	calc_continuity_is_faile = true;
 	//	return pos_on_city;
@@ -318,12 +318,13 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 {
 	static cv::Mat img_scene(_mapMat);
 	const auto minimap_scale_param = 2.0;
+	int real_some_map_size_r = DEFAULT_SOME_MAP_SIZE_R;
 
 	cv::Point2d pos_not_on_city;
 
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	//不在城镇中时
-	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
+	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
 	cv::Mat miniMap(img_object);
 	cv::Mat miniMap_scale = img_object.clone();
 	
@@ -345,11 +346,11 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	matcher_not_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_not_no_city, 2);
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_not_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, ratio_thresh, keypoint_not_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, SURF_MATCH_RATIO_THRESH, keypoint_not_on_city_list);
 
 	std::vector<double> lisx;
 	std::vector<double> lisy;
-	TianLi::Utils::remove_invalid(keypoint_not_on_city_list, render_map_scale / minimap_scale_param, lisx, lisy);
+	TianLi::Utils::remove_invalid(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
 	
 	std::vector<cv::Point2d> list_not_on_city;
 	for (int i = 0; i < keypoint_not_on_city_list.size(); i++)
@@ -371,13 +372,13 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	{
 		isOnCity = false;
 		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
-		pos_not_on_city = cv::Point2d(p.x + pos.x - someSizeR, p.y + pos.y - someSizeR);
+		pos_not_on_city = cv::Point2d(p.x + pos.x - real_some_map_size_r, p.y + pos.y - real_some_map_size_r);
 		return pos_not_on_city;
 	}
 	
 	cv::Point2d pos_on_city;
-	someMap = TianLi::Utils::get_some_map(img_scene, pos, someSizeR);
-	cv::resize(someMap, someMap, cv::Size(someSizeR * 4, someSizeR * 4), cv::INTER_CUBIC);
+	someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
+	cv::resize(someMap, someMap, cv::Size(), 2.0, 2.0, cv::INTER_CUBIC);
 
 	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
@@ -395,7 +396,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	matcher_mabye_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mabye_on_city, 2);
 	
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, ratio_thresh, keypoint_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
 
 	std::vector<double> list_x_on_city;
 	std::vector<double> list_y_on_city;
@@ -504,11 +505,11 @@ cv::Point2d SurfMatch::match_all_map(bool& calc_is_faile, double& stdev, double 
 	matcher->knnMatch(Dp_MiniMap, Dp_Map, KNN_m, 2);
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
-	TianLi::Utils::calc_good_matches(all_map, Kp_Map, img_object, Kp_MiniMap, KNN_m, ratio_thresh, keypoint_list);
+	TianLi::Utils::calc_good_matches(all_map, Kp_Map, img_object, Kp_MiniMap, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);
 
 	std::vector<double> lisx;
 	std::vector<double> lisy;
-	TianLi::Utils::remove_invalid(keypoint_list, render_map_scale / minimap_scale_param, lisx, lisy);
+	TianLi::Utils::remove_invalid(keypoint_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
 
 	std::vector<cv::Point2d> list_not_on_city;
 	for (int i = 0; i < keypoint_list.size(); i++)
