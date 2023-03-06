@@ -156,16 +156,16 @@ void SurfMatch::match()
 
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 {
-	auto get_average = [](const std::vector<float>& v) {
-		return std::accumulate(v.begin(), v.end(), 0.0) / (float)v.size();
+	auto get_average = [](const std::vector<double>& v) {
+		return std::accumulate(v.begin(), v.end(), 0.0) / (double)v.size();
 	};
-	auto get_sigma = [](const std::vector<float>& v,const float average) {
-		return sqrt(std::accumulate(v.begin(), v.end(), 0.0, [&](const float acc, const float x) {return acc + pow(x - average, 2); }) / (float)v.size());
+	auto get_sigma = [](const std::vector<double>& v,const double average) {
+		return sqrt(std::accumulate(v.begin(), v.end(), 0.0, [&](const double acc, const double x) {return acc + pow(x - average, 2); }) / (double)v.size());
 	};
 
-	std::vector<float> vec_distRatio;
-	float distScene, distObject;
-	int goodMatchesSize = goodMatches.size();
+	std::vector<double> vec_distRatio;
+	double distScene, distObject;
+	size_t goodMatchesSize = goodMatches.size();
 
 	if (goodMatchesSize < 5)
 		return true;			//识别的点数少于5，可以认为在城里
@@ -176,13 +176,13 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	{
 		rand_idx1 = rand_engine() % goodMatchesSize;
 		rand_idx2 = rand_engine() % goodMatchesSize;
-		distScene = (float)TianLi::Utils::dis(goodMatches[rand_idx1].query - goodMatches[rand_idx2].query);
-		distObject = (float)TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
+		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].query - goodMatches[rand_idx2].query);
+		distObject = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
 		if (isfinite(distScene / distObject))
 			vec_distRatio.emplace_back(distScene / distObject);
 	}
 	//计算距离比例的均值和标准差
-	float e_distRatio, s_distRatio;
+	double e_distRatio, s_distRatio;
 	e_distRatio = get_average(vec_distRatio);
 	s_distRatio = get_sigma(vec_distRatio, e_distRatio);
 	//剔除误差过大的距离，1倍sigma
@@ -232,7 +232,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Point2d pos_on_city;
 	
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
-
+	
 	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
 	cv::Mat MiniMap(img_object);
 
