@@ -1,7 +1,4 @@
 #pragma once
-#include "resource.h"
-#include <wincodec.h>
-#include <opencv2/opencv.hpp>
 
 bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
 bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
@@ -32,9 +29,11 @@ public:
 	{
 		std::vector<cv::KeyPoint> keypoints;
 		cv::Mat descriptors;
+		bool empty() { return keypoints.size() == 0; }
+		auto size() { return keypoints.size(); }
 	};
 public:
-	Match();
+	Match(double hessian_threshold = 1, int octaves = 4, int octave_layers = 3, bool extended = false, bool upright = false);
 	~Match() = default;
 public:
 	cv::Ptr<cv::xfeatures2d::SURF> detector;
@@ -43,7 +42,9 @@ public:
 	KeyMatPoint train;
 public:
 	std::vector<std::vector<cv::DMatch>> match(cv::Mat& query_descriptors, cv::Mat& train_descriptors);
+	std::vector<std::vector<cv::DMatch>> match(KeyMatPoint& query_key_mat_point, KeyMatPoint& train_key_mat_point);
 	bool detect_and_compute(cv::Mat img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+	bool detect_and_compute(cv::Mat img, KeyMatPoint& key_mat_point);
 };
 
 
@@ -57,21 +58,13 @@ class SurfMatch
 	cv::Point2d pos;
 	cv::Rect rect_continuity_map;
 public:
-	SurfMatch();
-	~SurfMatch();
+	SurfMatch() = default;
+	~SurfMatch() = default;
 
 public:
-	double hessian_threshold = 1;
-	int octaves = 4;
-	int octave_layers = 3;
-	bool extended = false;
-	bool upright = false;
-		
 	Match matcher;
 	
-	//cv::Ptr<cv::xfeatures2d::SURF> detector, detectorSomeMap;
-	std::vector<cv::KeyPoint> Kp_MiniMap, Kp_Map, Kp_SomeMap;
-	cv::Mat Dp_MiniMap, Dp_Map, Dp_SomeMap;
+	Match::KeyMatPoint map, some_map, mini_map;
 
 	bool isInit = false;
 	bool isContinuity = false;
