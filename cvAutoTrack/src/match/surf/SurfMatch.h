@@ -7,6 +7,8 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
 bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
 
+bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches);
+
 // 城镇外确认最小匹配点数量，大于该值即为城镇外
 constexpr int NOT_ON_CITY__MIN_GOODMATCHS = 20;
 // 城镇外尝试使用城镇内缩放计算的最小匹配点数量，小于该值即匹配失败
