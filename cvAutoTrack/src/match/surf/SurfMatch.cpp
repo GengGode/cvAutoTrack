@@ -153,7 +153,7 @@ void SurfMatch::match()
 	is_success_match = true;
 }
 
-bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
+bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, float minimap_scale)
 {
 	auto get_average = [](const std::vector<double>& v) {
 		return std::accumulate(v.begin(), v.end(), 0.0) / (double)v.size();
@@ -166,17 +166,22 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	double distScene, distObject;
 	size_t goodMatchesSize = goodMatches.size();
 
-	if (goodMatchesSize < 5)
+	if (goodMatchesSize < 0.5)
 		return true;			//识别的点数少于5，可以认为在城里
 
 	std::default_random_engine rand_engine;
+	cv::Point2d minimap_scaled_pt1, minimap_scaled_pt2;		//缩放修正后的小地图点
 	int rand_idx1, rand_idx2;
 	for (int i = 0; i < 100; i++)
 	{
 		rand_idx1 = rand_engine() % goodMatchesSize;
 		rand_idx2 = rand_engine() % goodMatchesSize;
-		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].query - goodMatches[rand_idx2].query);
-		distObject = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
+
+		minimap_scaled_pt1 = goodMatches[rand_idx1].query / minimap_scale;
+		minimap_scaled_pt2 = goodMatches[rand_idx2].query / minimap_scale;
+
+		distObject = TianLi::Utils::dis(minimap_scaled_pt1 - minimap_scaled_pt2);
+		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
 		if (isfinite(distScene / distObject))
 			vec_distRatio.emplace_back(distScene / distObject);
 	}
@@ -198,7 +203,7 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 	//重新计算距离比例均值，并判断是否接近城外缩放比例
 	e_distRatio = get_average(vec_distRatio);
 
-	if (e_distRatio < 1)
+	if (e_distRatio > 2)
 		return true;
 	return false;
 }
@@ -291,7 +296,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	//	return pos_on_city;
 	//}
 	
-	isOnCity = judgesIsOnCity(keypoint_on_city_list);
+	isOnCity = judgesIsOnCity(keypoint_on_city_list,0.5);		//大地图放大了2倍，所以小地图坐标也要这样处理
 
 	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, lisy);
 
@@ -361,7 +366,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	}
 	
 
-	if (!judgesIsOnCity(keypoint_not_on_city_list))
+	if (!judgesIsOnCity(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE))
 	{
 		isOnCity = false;
 		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
@@ -416,7 +421,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		return pos_not_on_city;
 	}
 
-	isOnCity = judgesIsOnCity(keypoint_on_city_list);
+	isOnCity = judgesIsOnCity(keypoint_on_city_list, 0.5);
 
 	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
 
