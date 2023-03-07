@@ -1,11 +1,8 @@
 #pragma once
 #include "utils/Utils.h"
 
-bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
-bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
-bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = false);
-
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale);
+std::pair<std::vector<cv::Point2d>,double> judges_scale(std::vector<TianLi::Utils::MatchKeyPoint> match_points, double scale_a, double scale_b);
 
 // 城镇外确认最小匹配点数量，大于该值即为城镇外
 constexpr int NOT_ON_CITY__MIN_GOODMATCHS = 20;
@@ -44,10 +41,10 @@ public:
 	KeyMatPoint query;
 	KeyMatPoint train;
 public:
-	std::vector<std::vector<cv::DMatch>> match(cv::Mat& query_descriptors, cv::Mat& train_descriptors);
+	std::vector<std::vector<cv::DMatch>> match(const cv::Mat& query_descriptors, const cv::Mat& train_descriptors);
 	std::vector<std::vector<cv::DMatch>> match(KeyMatPoint& query_key_mat_point, KeyMatPoint& train_key_mat_point);
-	bool detect_and_compute(cv::Mat img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
-	bool detect_and_compute(cv::Mat img, KeyMatPoint& key_mat_point);
+	bool detect_and_compute(const cv::Mat& img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+	bool detect_and_compute(const cv::Mat& img, KeyMatPoint& key_mat_point);
 };
 
 
@@ -94,16 +91,9 @@ public:
 	cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
 
 	//全图匹配
-	cv::Point2d match_all_map(bool& calc_is_faile,double& stdev, double minimap_scale_param = 1.0);
+	//cv::Point2d match_all_map(bool& calc_is_faile,double& stdev, double minimap_scale_param = 1.0);
 
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
-private:
-
-	cv::Mat crop_border(cv::Mat& mat, double border)
-	{
-		int crop_size = static_cast<int>((mat.rows + mat.cols) * 0.5 * border);
-		return mat(cv::Rect(crop_size, crop_size, mat.cols - crop_size * 2, mat.rows - crop_size * 2));
-	}
 };
 

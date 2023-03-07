@@ -12,10 +12,13 @@ namespace TianLi::Utils
 
 	double dis(cv::Point2d p);
 	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy);
+	
 	double stdev(std::vector<double> list);
+	double stdev(std::vector<cv::Point2d> list);
 	double stdev_abs(std::vector<double> list);
 
-	
+	cv::Mat crop_border(const cv::Mat& mat, double border);
+
 	std::vector<double> extract_valid(std::vector<double> list);
 	std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
 
@@ -36,8 +39,8 @@ namespace TianLi::Utils
 	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y);
 
 
-	void draw_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
+	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
 	
-	void calc_good_matches(cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
+	void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
 	
 }
