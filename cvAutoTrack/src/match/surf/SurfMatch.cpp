@@ -182,28 +182,30 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, float
 
 		distObject = TianLi::Utils::dis(minimap_scaled_pt1 - minimap_scaled_pt2);
 		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
-		if (isfinite(distScene / distObject))
+		if (isfinite(distScene / distObject) && distScene / distObject != 0)
 			vec_distRatio.emplace_back(distScene / distObject);
 	}
-	//计算距离比例的均值和标准差
-	double e_distRatio, s_distRatio;
-	e_distRatio = get_average(vec_distRatio);
-	s_distRatio = get_sigma(vec_distRatio, e_distRatio);
-	//剔除误差过大的距离，1倍sigma
-	for (int i = 0; i < vec_distRatio.size(); i++)
+	//不断剔除异常数据，直到标准差足够小
+	double e_distRatio,s_distRatio;
+	do
 	{
-		if (abs(vec_distRatio[i]-e_distRatio) > 1 * s_distRatio)
+		e_distRatio = get_average(vec_distRatio);
+		s_distRatio = get_sigma(vec_distRatio, e_distRatio);
+		//剔除误差过大的距离，1倍sigma
+		for (int i = 0; i < vec_distRatio.size(); i++)
 		{
-			vec_distRatio.erase(vec_distRatio.begin() + i);
-			i--;
+			if (abs(vec_distRatio[i] - e_distRatio) > 1 * s_distRatio)
+			{
+				vec_distRatio.erase(vec_distRatio.begin() + i);
+				i--;
+			}
 		}
-	}
-	if (vec_distRatio.size() == 0) return true;		//找不到追踪点，大概率在城内
+	} while (s_distRatio > 0.25);
 
 	//重新计算距离比例均值，并判断是否接近城外缩放比例
 	e_distRatio = get_average(vec_distRatio);
 
-	if (e_distRatio > 2)
+	if (e_distRatio < 0.6)
 		return true;
 	return false;
 }
