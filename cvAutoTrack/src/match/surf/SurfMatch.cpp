@@ -166,7 +166,7 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, float
 	double distScene, distObject;
 	size_t goodMatchesSize = goodMatches.size();
 
-	if (goodMatchesSize < 0.5)
+	if (goodMatchesSize < 5)
 		return true;			//识别的点数少于5，可以认为在城里
 
 	std::default_random_engine rand_engine;
