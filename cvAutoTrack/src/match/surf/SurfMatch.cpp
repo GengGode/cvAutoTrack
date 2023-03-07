@@ -95,15 +95,13 @@ void SurfMatch::setMiniMap(cv::Mat miniMapMat)
 void SurfMatch::Init()
 {
 	if (isInit)return;
-	detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-	detector->detectAndCompute(_mapMat, cv::noArray(), Kp_Map, Dp_Map);
+	matcher.detect_and_compute(_mapMat, Kp_Map, Dp_Map);
 	isInit = true;
 }
 
 void SurfMatch::Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors)
 {
 	if (isInit)return;	
-	detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
 	Kp_Map = std::move(gi_map_keypoints);
 	Dp_Map = std::move(gi_map_descriptors);
 	isInit = true;
@@ -207,16 +205,17 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
 {
 	cv::Point2d pos_continuity;
-
+	bool is_faile = false;
 	if (isOnCity == false)
 	{
-		pos_continuity = match_continuity_not_on_city(calc_continuity_is_faile);
+		pos_continuity = match_continuity_not_on_city(is_faile);
+		if (is_faile == false)
+		{
+			calc_continuity_is_faile = is_faile;
+			return pos_continuity;
+		}
 	}
-	else
-	{
-		pos_continuity = match_continuity_on_city(calc_continuity_is_faile);
-	}
-
+	pos_continuity = match_continuity_on_city(calc_continuity_is_faile);
 	return pos_continuity;
 }
 /// <summary>
@@ -234,25 +233,21 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	cv::Mat img_object = crop_border(_miniMapMat, 0.15);
 	
 	cv::Mat someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
-	cv::Mat MiniMap(img_object);
+	cv::Mat miniMap(img_object);
 
 	cv::resize(someMap, someMap, cv::Size(), 2.0, 2.0, cv::INTER_CUBIC);
-	//resize(MiniMap, MiniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
+	//resize(miniMap, miniMap, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
-	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(MiniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+	matcher.detect_and_compute(someMap, Kp_SomeMap, Dp_SomeMap);
+	matcher.detect_and_compute(miniMap, Kp_MiniMap, Dp_MiniMap);
 
 	if (Kp_SomeMap.size() <= 2 || Kp_MiniMap.size() <= 2)
 	{
 		calc_continuity_is_faile = true;
 		return pos_on_city;
 	}
-
-	cv::Ptr<cv::DescriptorMatcher> matcherTmp = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_mTmp;
-
-	matcherTmp->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mTmp, 2);
+	
+	std::vector<std::vector<cv::DMatch>> KNN_mTmp = matcher.match(Dp_MiniMap, Dp_SomeMap);
 
 	//TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, img_object, Kp_MiniMap, KNN_mTmp, SURF_MATCH_RATIO_THRESH, 0.8667/*/ minimap_scale_param*/, lisx, lisy, sumx, sumy);
 	
@@ -323,10 +318,9 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Mat miniMap_scale = img_object.clone();
 	
 	cv::resize(miniMap_scale, miniMap_scale, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
-
-	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(miniMap_scale, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+	
+	matcher.detect_and_compute(someMap, Kp_SomeMap, Dp_SomeMap);
+	matcher.detect_and_compute(miniMap_scale, Kp_MiniMap, Dp_MiniMap);
 
 	// 如果搜索范围内可识别特征点数量少于2，则认为计算失败
 	if (Kp_SomeMap.size() <= 2 || Kp_MiniMap.size() <= 2)
@@ -334,10 +328,8 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;
 	}
-	cv::Ptr<cv::DescriptorMatcher> matcher_not_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_not_no_city;
+	std::vector<std::vector<cv::DMatch>> KNN_not_no_city = matcher.match(Dp_MiniMap, Dp_SomeMap);
 	
-	matcher_not_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_not_no_city, 2);
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_not_on_city_list;
 	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap_scale, Kp_MiniMap, KNN_not_no_city, SURF_MATCH_RATIO_THRESH, keypoint_not_on_city_list);
@@ -373,22 +365,18 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	cv::Point2d pos_on_city;
 	someMap = TianLi::Utils::get_some_map(img_scene, pos, DEFAULT_SOME_MAP_SIZE_R);
 	cv::resize(someMap, someMap, cv::Size(), 2.0, 2.0, cv::INTER_CUBIC);
-
-	detectorSomeMap = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-	detectorSomeMap->detectAndCompute(someMap, cv::noArray(), Kp_SomeMap, Dp_SomeMap);
-	detectorSomeMap->detectAndCompute(miniMap, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+	
+	matcher.detect_and_compute(someMap, Kp_SomeMap, Dp_SomeMap);
+	matcher.detect_and_compute(miniMap, Kp_MiniMap, Dp_MiniMap);
 
 	if (Kp_SomeMap.size() == 0 || Kp_MiniMap.size() == 0)
 	{
 		calc_continuity_is_faile = true;
 		return pos_not_on_city;
-}
-
-	cv::Ptr<cv::DescriptorMatcher> matcher_mabye_on_city = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_mabye_on_city;
-
-	matcher_mabye_on_city->knnMatch(Dp_MiniMap, Dp_SomeMap, KNN_mabye_on_city, 2);
+	}
 	
+	std::vector<std::vector<cv::DMatch>> KNN_mabye_on_city=matcher.match(Dp_MiniMap, Dp_SomeMap);
+
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_on_city_list;
 	TianLi::Utils::calc_good_matches(someMap, Kp_SomeMap, miniMap, Kp_MiniMap, KNN_mabye_on_city, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
 
@@ -486,7 +474,7 @@ cv::Point2d SurfMatch::match_all_map(bool& calc_is_faile, double& stdev, double 
 	cv::resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
 	// 小地图区域计算特征点
-	detector->detectAndCompute(img_object, cv::noArray(), Kp_MiniMap, Dp_MiniMap);
+	matcher.detect_and_compute(img_object, Kp_MiniMap, Dp_MiniMap);
 	// 没有提取到特征点直接返回，结果无效
 	if (Kp_MiniMap.size() == 0)
 	{
@@ -494,9 +482,7 @@ cv::Point2d SurfMatch::match_all_map(bool& calc_is_faile, double& stdev, double 
 		return all_map_pos;
 	}
 	// 匹配特征点
-	cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
-	std::vector< std::vector<cv::DMatch> > KNN_m;
-	matcher->knnMatch(Dp_MiniMap, Dp_Map, KNN_m, 2);
+	std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(Dp_MiniMap, Dp_Map);
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
 	TianLi::Utils::calc_good_matches(all_map, Kp_Map, img_object, Kp_MiniMap, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);
@@ -544,4 +530,30 @@ cv::Point2d SurfMatch::getLocalPos()
 bool SurfMatch::getIsContinuity()
 {
 	return isContinuity;
+}
+
+Match::Match()
+{
+	double hessian_threshold = 1;
+	int octaves = 4;
+	int octave_layers = 3;
+	bool extended = false;
+	bool upright = false;
+	detector= cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
+	matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+}
+
+std::vector<std::vector<cv::DMatch>> Match::match(cv::Mat& query_descriptors, cv::Mat& train_descriptors)
+{
+	std::vector<std::vector<cv::DMatch>> match_group;
+	matcher->knnMatch(query_descriptors, train_descriptors, match_group, 2);
+	return match_group;
+}
+
+bool Match::detect_and_compute(cv::Mat img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
+{
+	if (img.empty()) return  false;
+	detector->detectAndCompute(img, cv::noArray(), keypoints, descriptors);
+	if (keypoints.size() == 0) return false;
+	return true;
 }

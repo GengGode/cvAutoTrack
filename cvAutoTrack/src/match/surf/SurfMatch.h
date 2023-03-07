@@ -25,6 +25,28 @@ constexpr double MAP_BOTH_SCALE_RATE = 1.3;
 // 地图中取小部分区域的半径，目前为小地图标准半径
 constexpr int DEFAULT_SOME_MAP_SIZE_R = 106;
 
+class Match
+{
+public:
+	struct KeyMatPoint
+	{
+		std::vector<cv::KeyPoint> keypoints;
+		cv::Mat descriptors;
+	};
+public:
+	Match();
+	~Match() = default;
+public:
+	cv::Ptr<cv::xfeatures2d::SURF> detector;
+	cv::Ptr<cv::DescriptorMatcher> matcher;
+	KeyMatPoint query;
+	KeyMatPoint train;
+public:
+	std::vector<std::vector<cv::DMatch>> match(cv::Mat& query_descriptors, cv::Mat& train_descriptors);
+	bool detect_and_compute(cv::Mat img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+};
+
+
 class SurfMatch
 {
 	cv::Mat _mapMat;
@@ -45,7 +67,9 @@ public:
 	bool extended = false;
 	bool upright = false;
 		
-	cv::Ptr<cv::xfeatures2d::SURF> detector, detectorSomeMap;
+	Match matcher;
+	
+	//cv::Ptr<cv::xfeatures2d::SURF> detector, detectorSomeMap;
 	std::vector<cv::KeyPoint> Kp_MiniMap, Kp_Map, Kp_SomeMap;
 	cv::Mat Dp_MiniMap, Dp_Map, Dp_SomeMap;
 
