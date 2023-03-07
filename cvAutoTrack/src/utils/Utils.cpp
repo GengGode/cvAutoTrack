@@ -5,7 +5,7 @@ namespace TianLi::Utils
 {
 	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size_r)
 	{
-		cv::Rect rect(pos.x - size_r, pos.y - size_r, size_r*2, size_r*2);
+		cv::Rect rect(pos.x - size_r, pos.y - size_r, size_r + size_r, size_r + size_r);
 		if (rect.x < 0)
 		{
 			rect.width += rect.x;
@@ -90,7 +90,7 @@ namespace TianLi::Utils
 		std::vector<double> x_valid_list;
 		std::vector<double> y_valid_list;
 
-		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
+		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size_r();
 		double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
 		double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
 
