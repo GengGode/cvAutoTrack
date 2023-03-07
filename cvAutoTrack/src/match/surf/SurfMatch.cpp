@@ -2,7 +2,6 @@
 #include "SurfMatch.h"
 #include "match/type/MatchType.h"
 #include "resources/Resources.h"
-#include "utils/Utils.h"
 
 bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {

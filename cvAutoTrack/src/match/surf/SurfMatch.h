@@ -1,5 +1,6 @@
 #pragma once
 #include "resource.h"
+#include "utils/Utils.h"
 #include <wincodec.h>
 #include <opencv2/opencv.hpp>
 
