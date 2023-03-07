@@ -143,7 +143,7 @@ void SurfMatch::match()
 	is_success_match = true;
 }
 
-bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
+bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale)
 {
 	auto get_average = [](const std::vector<double>& v) {
 		return std::accumulate(v.begin(), v.end(), 0.0) / (double)v.size();
@@ -160,35 +160,42 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches)
 		return true;			//识别的点数少于5，可以认为在城里
 
 	std::default_random_engine rand_engine;
+	cv::Point2d minimap_scaled_pt1, minimap_scaled_pt2;		//缩放修正后的小地图点
 	int rand_idx1, rand_idx2;
 	for (int i = 0; i < 100; i++)
 	{
 		rand_idx1 = rand_engine() % goodMatchesSize;
 		rand_idx2 = rand_engine() % goodMatchesSize;
-		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].query - goodMatches[rand_idx2].query);
-		distObject = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
-		if (isfinite(distScene / distObject))
+
+		minimap_scaled_pt1 = goodMatches[rand_idx1].query / minimap_scale;
+		minimap_scaled_pt2 = goodMatches[rand_idx2].query / minimap_scale;
+
+		distObject = TianLi::Utils::dis(minimap_scaled_pt1 - minimap_scaled_pt2);
+		distScene = TianLi::Utils::dis(goodMatches[rand_idx1].train - goodMatches[rand_idx2].train);
+		if (isfinite(distScene / distObject) && distScene / distObject != 0)
 			vec_distRatio.emplace_back(distScene / distObject);
 	}
-	//计算距离比例的均值和标准差
-	double e_distRatio, s_distRatio;
-	e_distRatio = get_average(vec_distRatio);
-	s_distRatio = get_sigma(vec_distRatio, e_distRatio);
-	//剔除误差过大的距离，1倍sigma
-	for (int i = 0; i < vec_distRatio.size(); i++)
+	//不断剔除异常数据，直到标准差足够小
+	double e_distRatio,s_distRatio;
+	do
 	{
-		if (abs(vec_distRatio[i]-e_distRatio) > 1 * s_distRatio)
+		e_distRatio = get_average(vec_distRatio);
+		s_distRatio = get_sigma(vec_distRatio, e_distRatio);
+		//剔除误差过大的距离，1倍sigma
+		for (int i = 0; i < vec_distRatio.size(); i++)
 		{
-			vec_distRatio.erase(vec_distRatio.begin() + i);
-			i--;
+			if (abs(vec_distRatio[i] - e_distRatio) > 1 * s_distRatio)
+			{
+				vec_distRatio.erase(vec_distRatio.begin() + i);
+				i--;
+			}
 		}
-	}
-	if (vec_distRatio.size() == 0) return true;		//找不到追踪点，大概率在城内
+	} while (s_distRatio > 0.25);
 
 	//重新计算距离比例均值，并判断是否接近城外缩放比例
 	e_distRatio = get_average(vec_distRatio);
 
-	if (e_distRatio < 1)
+	if (e_distRatio < 0.6)
 		return true;
 	return false;
 }
@@ -270,7 +277,14 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 		return pos_on_city;
 	}
 	
-	isOnCity = judgesIsOnCity(keypoint_on_city_list);
+	//// 根据匹配点的方差判断点集是否合理，偏差过大即为无效数据
+	//if (TianLi::Utils::is_valid_keypoints(lisx, sumx, lisy, sumy, DEFAULT_SOME_MAP_SIZE_R/4.0) == false)
+	//{
+	//	calc_continuity_is_faile = true;
+	//	return pos_on_city;
+	//}
+	
+	isOnCity = judgesIsOnCity(keypoint_on_city_list,0.5);		//大地图放大了2倍，所以小地图坐标也要这样处理
 
 	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, lisy);
 
@@ -338,7 +352,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	}
 	
 
-	if (!judgesIsOnCity(keypoint_not_on_city_list))
+	if (!judgesIsOnCity(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE))
 	{
 		isOnCity = false;
 		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
@@ -390,7 +404,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 		return pos_not_on_city;
 	}
 
-	isOnCity = judgesIsOnCity(keypoint_on_city_list);
+	isOnCity = judgesIsOnCity(keypoint_on_city_list, 0.5);
 
 	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
 
