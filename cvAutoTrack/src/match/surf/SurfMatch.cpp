@@ -311,7 +311,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	std::vector<std::vector<cv::DMatch>> KNN_mTmp = matcher.match(mini_map, some_map);
 	
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, mini_map.keypoints, img_object, mini_map.keypoints, KNN_mTmp, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, some_map.keypoints, img_object, mini_map.keypoints, KNN_mTmp, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
 	
 	std::vector<double> lisx;
 	std::vector<double> lisy;
@@ -392,7 +392,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_not_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, mini_map.keypoints, miniMap_scale, mini_map.keypoints, KNN_not_no_city, SURF_MATCH_RATIO_THRESH, keypoint_not_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, some_map.keypoints, miniMap_scale, mini_map.keypoints, KNN_not_no_city, SURF_MATCH_RATIO_THRESH, keypoint_not_on_city_list);
 
 	// auto t = judges_scale(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, 0.8667);
 
@@ -441,7 +441,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	std::vector<std::vector<cv::DMatch>> KNN_mabye_on_city=matcher.match(mini_map, some_map);
 
 	std::vector<TianLi::Utils::MatchKeyPoint> keypoint_on_city_list;
-	TianLi::Utils::calc_good_matches(someMap, mini_map.keypoints, miniMap, mini_map.keypoints, KNN_mabye_on_city, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
+	TianLi::Utils::calc_good_matches(someMap, some_map.keypoints, miniMap, mini_map.keypoints, KNN_mabye_on_city, SURF_MATCH_RATIO_THRESH, keypoint_on_city_list);
 
 	std::vector<double> list_x_on_city;
 	std::vector<double> list_y_on_city;
@@ -494,12 +494,13 @@ bool SurfMatch::getIsContinuity()
 Match::Match(double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
 	detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-	matcher  = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+	//matcher  = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 }
 
 std::vector<std::vector<cv::DMatch>> Match::match(const cv::Mat& query_descriptors, const cv::Mat& train_descriptors)
 {
 	std::vector<std::vector<cv::DMatch>> match_group;
+	matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 	matcher->knnMatch(query_descriptors, train_descriptors, match_group, 2);
 	return match_group;
 }
