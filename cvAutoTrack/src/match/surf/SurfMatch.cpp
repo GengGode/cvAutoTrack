@@ -138,7 +138,10 @@ void SurfMatch::match()
 			pos = match_continuity(calc_continuity_is_faile);
 
 			if (std::isnan(pos.x) || std::isnan(pos.y))
+			{
 				calc_continuity_is_faile = true;	//如果pos是nan，则算匹配失败
+				pos = cv::Point2d();
+			}
 			if (!calc_continuity_is_faile)
 				break;				//匹配成功，结束，否则重试
 			else if (retry_times == max_continuity_retry)
@@ -151,7 +154,10 @@ void SurfMatch::match()
 	{
 		pos = match_no_continuity(calc_is_faile);
 		if (std::isnan(pos.x) || std::isnan(pos.y))
+		{
 			calc_is_faile = true;	//如果pos是nan，则算匹配失败
+			pos = cv::Point2d();
+		}
 	}
 	// 没有有效结果，结束
 	if (calc_is_faile)
