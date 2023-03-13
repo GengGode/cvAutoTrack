@@ -8,21 +8,19 @@ namespace TianLi::Utils
 		cv::Rect rect(pos.x - size_r, pos.y - size_r, size_r + size_r, size_r + size_r);
 		if (rect.x < 0)
 		{
-			rect.width += rect.x;
 			rect.x = 0;
 		}
 		if (rect.y < 0)
 		{
-			rect.height += rect.y;
 			rect.y = 0;
 		}
 		if (rect.x + rect.width > map.cols)
 		{
-			rect.width = map.cols - rect.x;
+			rect.x = map.cols -  rect.width - 1;
 		}
 		if (rect.y + rect.height > map.rows)
 		{
-			rect.height = map.rows - rect.y;
+			rect.y = map.rows - rect.height - 1;
 		}
 		return map(rect);
 	}
