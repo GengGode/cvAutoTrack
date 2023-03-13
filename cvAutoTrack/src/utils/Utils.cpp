@@ -16,11 +16,11 @@ namespace TianLi::Utils
 		}
 		if (rect.x + rect.width > map.cols)
 		{
-			rect.x = map.cols -  rect.width - 1;
+			rect.x = map.cols -  rect.width;
 		}
 		if (rect.y + rect.height > map.rows)
 		{
-			rect.y = map.rows - rect.height - 1;
+			rect.y = map.rows - rect.height;
 		}
 		return map(rect);
 	}
