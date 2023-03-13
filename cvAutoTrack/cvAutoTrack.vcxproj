@@ -390,6 +390,7 @@
     <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid9.h" />
     <ClInclude Include="src\resources\binary\image\uid\resources.binary.image.uid_.h" />
     <ClInclude Include="src\resources\binary\resources.binary.h" />
+    <ClInclude Include="src\resources\import\resources.import.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
@@ -430,6 +431,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\resources\binary\resources.binary.cpp" />
+    <ClCompile Include="src\resources\import\resources.import.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />
     <ClCompile Include="src\resources\resources.load.cpp" />
     <ClCompile Include="src\utils\log\utils.log.cpp" />

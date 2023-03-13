@@ -108,6 +108,34 @@ bool AutoTrack::SetUseDx11CaptureMode()
 	return true;
 }
 
+bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
+{
+	if (image_data_size != image_width * image_height * 4)
+	{
+		err = { 9001,"传入图片通道不对应" };
+		return false;
+	}
+	auto map_block = cv::Mat(image_height, image_width, CV_8UC4, (void*)image_data, cv::Mat::AUTO_STEP);
+	if (map_block.empty())
+	{
+		err = { 9002,"传入图片为空 " };
+		return false;
+	}
+	//res.set_map_block(id_x, id_y, map_block);
+	
+	return false;
+}
+
+bool AutoTrack::ImportMapBlockCenter(int x, int y)
+{
+	return false;
+}
+
+bool AutoTrack::ImportMapBlockCenterScale(int x, int y, double scale)
+{
+	return false;
+}
+
 bool AutoTrack::SetHandle(long long int handle)
 {
 	if (handle == 0)
@@ -188,6 +216,11 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 	}
 	strcpy_s(time_buff, buff_size, TianLi::Version::build_time.c_str());	
 	return true;
+}
+
+bool AutoTrack::GetMapIsEmbedded()
+{
+	return res.map_is_embedded();
 }
 
 bool AutoTrack::DebugCapture()

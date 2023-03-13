@@ -1,7 +1,11 @@
 #include "pch.h"
 #include "Resources.h"
 #include "resource.h"
+#include "resources/import/resources.import.h"
 #include <wincodec.h>
+
+#include <iostream>
+#include <fstream>
 namespace TianLi::Resource::Utils
 {
 	void LoadBitmap_ID2Mat(int IDB, cv::Mat& mat)
@@ -59,6 +63,20 @@ namespace TianLi::Resource::Utils
 		imageResDataHandle = LoadResource(hModu, imageResHandle);
 		pImageFile = LockResource(imageResDataHandle);
 		imageFileSize = SizeofResource(hModu, imageResHandle);
+		/**
+		{
+			// 2nd
+			unsigned char * ptr_data = (unsigned char*)malloc(imageFileSize);
+			memcpy(ptr_data, pImageFile, imageFileSize);
+			// to bin file
+			
+			auto mat_array = cv::Mat(1, imageFileSize, CV_8UC1, ptr_data);
+			// 疑似PNG解码器未编译，待调试
+			cv::Mat v_mat = cv::imdecode(mat_array, cv::IMREAD_ANYCOLOR);
+			mat = v_mat;
+			free(ptr_data);
+		}
+		*/
 		m_pIWICFactory->CreateStream(&pIWICStream);
 
 		pIWICStream->InitializeFromMemory(
@@ -173,7 +191,6 @@ void Resources::install()
 {
 	if (is_installed == false)
 	{
-		//LoadXml(xmlPtr);
 		LoadPng_ID2Mat(IDB_PNG_GIMAP, MapTemplate);
 		is_installed = true;
 	}
@@ -185,9 +202,13 @@ void Resources::release()
 	{
 		MapTemplate.release();
 		MapTemplate = cv::Mat();
-		//ReleaseXml(xmlPtr);
 		is_installed = false;
 	}
+}
+
+bool Resources::map_is_embedded()
+{
+	return true;
 }
 
 bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
@@ -240,6 +261,7 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 	fs.release();
 	return true;
 }
+
 bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
 	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
