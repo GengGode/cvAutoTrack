@@ -50,7 +50,7 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 		for (int i = 0; i < 3; i++)
 		{
 			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-			AvatarKeyPoint.push_back(cv::Point2d(boundRect[i].x + boundRect[i].width / 2.0, boundRect[i].y + boundRect[i].height / 2.0));
+			AvatarKeyPoint.emplace_back(cv::Point2d(boundRect[i].x + boundRect[i].width / 2.0, boundRect[i].y + boundRect[i].height / 2.0));
 		}
 
 		AvatarKeyPointLine[0] = TianLi::Utils::dis(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
@@ -59,18 +59,18 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 
 		if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[2] && AvatarKeyPointLine[1] >= AvatarKeyPointLine[2])
 		{
-			AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
-			AvatarKeyLine.push_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[2] - AvatarKeyPoint[1]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[2] - AvatarKeyPoint[0]);
 		}
 		if (AvatarKeyPointLine[0] >= AvatarKeyPointLine[1] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[1])
 		{
-			AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
-			AvatarKeyLine.push_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[1] - AvatarKeyPoint[0]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[1] - AvatarKeyPoint[2]);
 		}
 		if (AvatarKeyPointLine[1] >= AvatarKeyPointLine[0] && AvatarKeyPointLine[2] >= AvatarKeyPointLine[0])
 		{
-			AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
-			AvatarKeyLine.push_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[0] - AvatarKeyPoint[1]);
+			AvatarKeyLine.emplace_back(AvatarKeyPoint[0] - AvatarKeyPoint[2]);
 		}
 
 		AvatarKeyLine = TianLi::Utils::Vector2UnitVector(AvatarKeyLine);
@@ -83,10 +83,10 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 		for (int i = 0; i < 2; i++)
 		{
 			boundRect[i] = cv::boundingRect(cv::Mat(contours[i]));
-			AvatarKeyPoint.push_back(cv::Point2d(boundRect[i].x + boundRect[i].width / 2.0, boundRect[i].y + boundRect[i].height / 2.0));
+			AvatarKeyPoint.emplace_back(cv::Point2d(boundRect[i].x + boundRect[i].width / 2.0, boundRect[i].y + boundRect[i].height / 2.0));
 		}
 		// 两点取中点
-		AvatarKeyPoint.push_back((AvatarKeyPoint[0] + AvatarKeyPoint[1]) / 2.0);
+		AvatarKeyPoint.emplace_back((AvatarKeyPoint[0] + AvatarKeyPoint[1]) / 2.0);
 		// 中点基于图片中心对称位置
 		cv::Point2d line = center - AvatarKeyPoint[2];
 		a = TianLi::Utils::Line2Angle(line);

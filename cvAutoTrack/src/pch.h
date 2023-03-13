@@ -51,7 +51,10 @@
 #include <memory>
 #include <chrono>
 #include <format>
+#include <random>
 #include <string>
+#include <algorithm>
+#include <numeric>
 #include <fstream>
 #include <functional>
 #include <filesystem>

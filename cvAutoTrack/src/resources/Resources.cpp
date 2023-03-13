@@ -190,7 +190,71 @@ void Resources::release()
 	}
 }
 
-void Resources::get_map_keypoint_cache()
+bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
+	cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
+	detector->detectAndCompute(Resources::getInstance().MapTemplate, cv::noArray(), keypoints, descriptors);
 
+	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::WRITE);
+
+	std::string build_time = __DATE__ " " __TIME__;
+	fs << "build_time" << build_time;
+
+	fs << "hessian_threshold" << hessian_threshold;
+	fs << "octaves" << octaves;
+	fs << "octave_layers" << octave_layers;
+	fs << "extended" << extended;
+	fs << "upright" << upright;
+
+	fs << "keypoints" << keypoints;
+	fs << "descriptors" << descriptors;
+	fs.release();
+	return true;
+}
+bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
+{
+	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
+	{
+		return false;
+	}
+	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::READ);
+	double r_hessian_threshold = 1;
+	int    r_octaves = 1;
+	int    r_octave_layers = 1;
+	bool   r_extended = false;
+	bool   r_upright = false;
+
+	fs["hessian_threshold"] >> r_hessian_threshold;
+	fs["octaves"] >> r_octaves;
+	fs["octave_layers"] >> r_octave_layers;
+	fs["extended"] >> r_extended;
+	fs["upright"] >> r_upright;
+
+	if (r_hessian_threshold != hessian_threshold || r_octaves != octaves || r_octave_layers != octave_layers || r_extended != extended || r_upright != upright)
+	{
+		return false;
+	}
+
+	fs["keypoints"] >> keypoints;
+	fs["descriptors"] >> descriptors;
+	fs.release();
+	return true;
+}
+bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
+{
+	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
+	{
+		return save_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright);
+	}
+	else
+	{
+		if (load_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright) == false)
+		{
+			return save_map_keypoint_cache(keypoints, descriptors, hessian_threshold, octaves, octave_layers, extended, upright);
+		}
+		else
+		{
+			return true;
+		}
+	}
 }

@@ -578,7 +578,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		{
 			isLoopMatch = true;
 			isStarVisible = true;
-			pos.push_back(cv::Point2d(maxLoc) -
+			pos.emplace_back(cv::Point2d(maxLoc) -
 				cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 				cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 		}
@@ -598,7 +598,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 			}
 			else
 			{
-				pos.push_back(cv::Point2d(maxLoc) -
+				pos.emplace_back(cv::Point2d(maxLoc) -
 					cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
 					cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
 			}
@@ -937,12 +937,12 @@ bool AutoTrack::getMiniMapRefMat()
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
-			err = { 40101,"Bitblt模式下检测派蒙失败" };
+			//err = { 40101,"Bitblt模式下检测派蒙失败" };
 			return false;
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-			err = { 40201,"DirectX模式下检测派蒙失败" };
+			//err = { 40201,"DirectX模式下检测派蒙失败" };
 			return false;
 		}
 	}
@@ -950,12 +950,12 @@ bool AutoTrack::getMiniMapRefMat()
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
-			err = { 40102,"Bitblt模式下没有检测到派蒙" };
+			//err = { 40102,"Bitblt模式下没有检测到派蒙" };
 			return false;
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
-			err = { 40202,"DirectX模式下没有检测到派蒙" };
+			//err = { 40202,"DirectX模式下没有检测到派蒙" };
 			return false;
 		}
 	}
