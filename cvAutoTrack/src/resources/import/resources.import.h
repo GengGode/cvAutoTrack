@@ -8,6 +8,8 @@ namespace TianLi::Resources::Import
 		int block_size = MAP_BLOCK_SIZE;
 		cv::Mat origin;
 		cv::Mat map;
+		MapBlock() {}
+		~MapBlock() {}
 		MapBlock(cv::Mat origin) : origin(origin) {
 			cv::resize(origin, map, cv::Size(block_size, block_size), cv::INTER_CUBIC);
 		}
