@@ -394,7 +394,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (getMiniMapRefMat()==false)
 		{
-			err = { 1001, "获取坐标时，没有识别到paimon" };
+			//err = { 1001, "获取坐标时，没有识别到paimon" };
 			return false;
 		}
 
@@ -492,7 +492,7 @@ bool AutoTrack::GetDirection(double& a)
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 2001, "获取角色朝向时，没有识别到paimon" };
+		//err = { 2001, "获取角色朝向时，没有识别到paimon" };
 		return false;
 	}
 	if (genshin_minimap.rect_avatar.empty())
@@ -520,7 +520,7 @@ bool AutoTrack::GetRotation(double& a)
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 3001, "获取视角朝向时，没有识别到paimon" };
+		//err = { 3001, "获取视角朝向时，没有识别到paimon" };
 		return false;
 	}
 
@@ -583,7 +583,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		
 		if (getMiniMapRefMat() == false)
 		{
-			err = { 4001, "获取神瞳时，没有识别到paimon" };
+			//err = { 4001, "获取神瞳时，没有识别到paimon" };
 			return false;
 		}
 
@@ -675,7 +675,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 4001, "获取神瞳时，没有识别到paimon" };
+		//err = { 4001, "获取神瞳时，没有识别到paimon" };
 		return false;
 	}
 	
@@ -744,7 +744,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 1001, "获取所有信息时，没有识别到paimon" };
+		//err = { 1001, "获取所有信息时，没有识别到paimon" };
 		return false;
 	}
 
