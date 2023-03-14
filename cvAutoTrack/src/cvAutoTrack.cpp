@@ -40,6 +40,18 @@ bool __stdcall SetWorldScale(double scale)
 {
 	return _at.SetWorldScale(scale);
 }
+bool __stdcall ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
+{
+	return _at.ImportMapBlock(id_x, id_y, image_data, image_data_size, image_width, image_height);
+}
+bool __stdcall ImportMapBlockCenter(int x, int y)
+{
+	return _at.ImportMapBlockCenter(x, y);
+}
+bool __stdcall ImportMapBlockCenterScale(int x, int y, double scale)
+{
+	return _at.ImportMapBlockCenterScale(x, y, scale);
+}
 bool __stdcall GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
 	return _at.GetTransformOfMap(x, y, a, mapId);
@@ -107,6 +119,10 @@ bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 bool __stdcall GetCompileTime(char* time_buff, int buff_size)
 {
 	return _at.GetCompileTime(time_buff, buff_size);
+}
+bool __stdcall GetMapIsEmbedded()
+{
+	return _at.GetMapIsEmbedded();
 }
 bool __stdcall DebugCapture()
 {

@@ -22,10 +22,11 @@ extern "C" bool CVAUTOTRACK_API SetHandle(long long int handle);
 extern "C" bool CVAUTOTRACK_API SetWorldCenter(double x, double y);
 extern "C" bool CVAUTOTRACK_API SetWorldScale(double scale);
 
-/*
+
 extern "C" bool CVAUTOTRACK_API ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height);
 extern "C" bool CVAUTOTRACK_API ImportMapBlockCenter(int x, int y);
-*/
+extern "C" bool CVAUTOTRACK_API ImportMapBlockCenterScale(int x, int y, double scale);
+
 
 extern "C" bool CVAUTOTRACK_API GetTransformOfMap(double& x, double& y, double& a, int& mapId);
 extern "C" bool CVAUTOTRACK_API GetPositionOfMap(double& x,double& y,int& mapId);
@@ -51,3 +52,10 @@ extern "C" bool CVAUTOTRACK_API SetEnableFileLog();
 
 extern "C" bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
 extern "C" bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
+/// <summary>
+/// whether map image resources are embedded in dll
+/// </summary>
+/// <returns>true or false</returns>
+extern "C" bool CVAUTOTRACK_API GetMapIsEmbedded();
+
+
