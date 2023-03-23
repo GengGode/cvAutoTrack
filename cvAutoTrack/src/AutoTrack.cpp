@@ -437,50 +437,23 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	//cv::Size size_YuanXiaGong_Un(800, 450);
 	cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
 	cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
-	{
-		double _x = pos_tr.x;
-		double _y = pos_tr.y;
-		// 渊下宫
-		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
-		{
-			mapId = 1;
-		}
-		// 地下层岩
-		if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
-		{
-			mapId = 2;
-		}
+	
+	double _x = pos_tr.x;
+	double _y = pos_tr.y;
+		
+	auto res = TianLi::Utils::TransferTianLiAxes(_x, _y);
+	_x = res.first.x;
+	_y = res.first.y;
+	mapId = res.second;
 
-		switch (mapId)
-		{
-		case 0:
-		{
-			break;
-		}
-		case 1:
-		{
-			_x = _x - 0;
-			_y = _y - 5543;
-			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-			x = pos.x;
-			y = pos.y;
-			break;
-		}
-		case 2:
-		{
-			_x = _x - 0;
-			_y = _y - 0;
-			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-			x = pos.x;
-			y = pos.y;
-			break;
-		}
-		default:
-			break;
-		}
+	if (mapId != 0)
+	{
+		cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
+		pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+		x = pos.x;
+		y = pos.y;
 	}
+
 	return clear_error_logs();
 }
 
