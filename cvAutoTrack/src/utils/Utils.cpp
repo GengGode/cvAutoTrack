@@ -277,7 +277,7 @@ namespace TianLi::Utils
 
 	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y)
 	{
-		const cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
+		const cv::Rect rect_DiXiaCengYan(0, 0, 1700, 1700);
 		const cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
 
 		cv::Point2d res;
@@ -292,7 +292,7 @@ namespace TianLi::Utils
 				mapId = 1;
 			}
 			// 地下层岩
-			if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
+			if (_x > 0 && _x <= 0 + 1700 && _y > 0 && _y <= 0 + 1700)
 			{
 				mapId = 2;
 			}
