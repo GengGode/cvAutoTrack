@@ -277,52 +277,19 @@ namespace TianLi::Utils
 
 	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y)
 	{
+		// 地下层岩
 		const cv::Rect rect_DiXiaCengYan(0, 0, 1700, 1700);
+		// 渊下宫
 		const cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
-
-		cv::Point2d res;
-		int mapId = 0;
-
+		const std::array<cv::Rect, 2> rectList = { rect_DiXiaCengYan, rect_YuanXiaGong };
+		for (int i = 0; i < rectList.size(); i++)
 		{
-			double _x = x;
-			double _y = y;
-			// 渊下宫
-			if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
+			if (rectList[i].contains(cv::Point2d(x, y)))
 			{
-				mapId = 1;
-			}
-			// 地下层岩
-			if (_x > 0 && _x <= 0 + 1700 && _y > 0 && _y <= 0 + 1700)
-			{
-				mapId = 2;
-			}
-
-			switch (mapId)
-			{
-			case 0:
-			{
-				res.x = _x;
-				res.y = _y;
-				break;
-			}
-			case 1:
-			{
-				res.x = _x - 0;
-				res.y = _y - 5543;
-				break;
-			}
-			case 2:
-			{
-				res.x = _x - 0;
-				res.y = _y - 0;
-				break;
-			}
-			default:
-				break;
+				return std::make_pair(cv::Point2d(x - rectList[i] .x,y-rectList[i] .y), i+1);
 			}
 		}
-
-		return std::make_pair(res, mapId);
+		return std::make_pair(cv::Point2d(0, 0), 0);
 	}
 
 	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
