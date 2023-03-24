@@ -122,17 +122,24 @@ bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int i
 		return false;
 	}
 	//res.set_map_block(id_x, id_y, map_block);
-	
+	UNREFERENCED_PARAMETER(id_x);
+	UNREFERENCED_PARAMETER(id_y);
+
 	return false;
 }
 
 bool AutoTrack::ImportMapBlockCenter(int x, int y)
 {
+	UNREFERENCED_PARAMETER(x);
+	UNREFERENCED_PARAMETER(y);
 	return false;
 }
 
 bool AutoTrack::ImportMapBlockCenterScale(int x, int y, double scale)
 {
+	UNREFERENCED_PARAMETER(x);
+	UNREFERENCED_PARAMETER(y);
+	UNREFERENCED_PARAMETER(scale);
 	return false;
 }
 
@@ -432,12 +439,12 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	pos_tr = TianLi::Utils::TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
 		
-	auto res = TianLi::Utils::TransferTianLiAxes(pos_tr.x, pos_tr.y);
-	cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(res.first.x, res.first.y), cv::Point2d(0, 0), MapWorldScale);
+	auto tr_res = TianLi::Utils::TransferTianLiAxes(pos_tr.x, pos_tr.y);
+	cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
 	pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
 	x = pos.x;
 	y = pos.y;
-	mapId = res.second;
+	mapId = tr_res.second;
 
 	return clear_error_logs();
 }
