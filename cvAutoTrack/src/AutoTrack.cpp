@@ -723,17 +723,14 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		genshin_minimap.config.is_find_paimon = true;
 
 		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
-
-		cv::Point2d pos = genshin_avatar_position.position;
-
-		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
-		cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
-		auto res = TianLi::Utils::TransferTianLiAxes(user_pos.x, user_pos.y);
-		cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(res.first.x, res.first.y), cv::Point2d(0, 0), MapWorldScale);
+		
+		cv::Point2d user_pos = genshin_avatar_position.position;
+		auto tr_res = TianLi::Utils::TransferTianLiAxes(user_pos.x, user_pos.y);
+		cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
 		pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
 		x = pos.x;
 		y = pos.y;
-		mapId = res.second;
+		mapId = tr_res.second;
 	}
 
 	if (genshin_minimap.rect_avatar.empty())
