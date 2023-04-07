@@ -15,6 +15,11 @@ public:
 	bool SetUseBitbltCaptureMode();
 	bool SetUseDx11CaptureMode();
 
+	bool ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height);
+	bool ImportMapBlockCenter(int x, int y);
+	bool ImportMapBlockCenterScale(int x, int y, double scale);
+
+	
 	bool SetHandle(long long int handle = 0);
 	bool SetWorldCenter(double x, double y);
 	bool SetWorldScale(double scale);
@@ -45,7 +50,8 @@ public:
 
 	bool GetVersion(char* version_buff, int buff_size);
 	bool GetCompileTime(char* time_buff, int buff_size);
-
+	bool GetMapIsEmbedded();
+	
 	bool DebugCapture();
 	bool DebugCapturePath(const char* path_buff, int buff_size);
 #pragma endregion

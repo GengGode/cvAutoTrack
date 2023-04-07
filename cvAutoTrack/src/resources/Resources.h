@@ -1,6 +1,4 @@
 #pragma once
-#include <opencv2/opencv.hpp>
-#include <vector>
 
 //图片资源 加载类
 class Resources
@@ -15,6 +13,9 @@ public:
 	static Resources& getInstance();
 
 public:
+	std::map<std::pair<int, int>, cv::Mat> MapBlockCache;
+	
+public:
 	cv::Mat PaimonTemplate;
 	cv::Mat MinimapCailbTemplate;
 	cv::Mat StarTemplate;
@@ -26,7 +27,7 @@ public:
 	void release();
 public:
 	void get_map_keypoint_cache();
-
+	bool map_is_embedded();
 private:
 	bool is_installed = false;
 };

@@ -108,6 +108,41 @@ bool AutoTrack::SetUseDx11CaptureMode()
 	return true;
 }
 
+bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
+{
+	if (image_data_size != image_width * image_height * 4)
+	{
+		err = { 9001,"传入图片通道不对应" };
+		return false;
+	}
+	auto map_block = cv::Mat(image_height, image_width, CV_8UC4, (void*)image_data, cv::Mat::AUTO_STEP);
+	if (map_block.empty())
+	{
+		err = { 9002,"传入图片为空 " };
+		return false;
+	}
+	//res.set_map_block(id_x, id_y, map_block);
+	UNREFERENCED_PARAMETER(id_x);
+	UNREFERENCED_PARAMETER(id_y);
+
+	return false;
+}
+
+bool AutoTrack::ImportMapBlockCenter(int x, int y)
+{
+	UNREFERENCED_PARAMETER(x);
+	UNREFERENCED_PARAMETER(y);
+	return false;
+}
+
+bool AutoTrack::ImportMapBlockCenterScale(int x, int y, double scale)
+{
+	UNREFERENCED_PARAMETER(x);
+	UNREFERENCED_PARAMETER(y);
+	UNREFERENCED_PARAMETER(scale);
+	return false;
+}
+
 bool AutoTrack::SetHandle(long long int handle)
 {
 	if (handle == 0)
@@ -188,6 +223,11 @@ bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
 	}
 	strcpy_s(time_buff, buff_size, TianLi::Version::build_time.c_str());	
 	return true;
+}
+
+bool AutoTrack::GetMapIsEmbedded()
+{
+	return res.map_is_embedded();
 }
 
 bool AutoTrack::DebugCapture()
@@ -361,7 +401,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (getMiniMapRefMat()==false)
 		{
-			err = { 1001, "获取坐标时，没有识别到paimon" };
+			//err = { 1001, "获取坐标时，没有识别到paimon" };
 			return false;
 		}
 
@@ -398,56 +438,14 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	pos_tr = TianLi::Utils::TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 	pos_tr = TianLi::Utils::TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
 	pos_tr = pos_tr / MapAbsScale;
+		
+	auto tr_res = TianLi::Utils::TransferTianLiAxes(pos_tr.x, pos_tr.y);
+	cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
+	pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+	x = pos.x;
+	y = pos.y;
+	mapId = tr_res.second;
 
-	//cv::Size size_DiXiaCengYan(1250, 1016);
-	//cv::Size size_YuanXiaGong(2400, 2401); 5544 
-	//cv::Size size_YuanXiaGong_Un(800, 450);
-	cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
-	cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
-	{
-		double _x = pos_tr.x;
-		double _y = pos_tr.y;
-		// 渊下宫
-		if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
-		{
-			mapId = 1;
-		}
-		// 地下层岩
-		if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
-		{
-			mapId = 2;
-		}
-
-		switch (mapId)
-		{
-		case 0:
-		{
-			break;
-		}
-		case 1:
-		{
-			_x = _x - 0;
-			_y = _y - 5543;
-			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-			x = pos.x;
-			y = pos.y;
-			break;
-		}
-		case 2:
-		{
-			_x = _x - 0;
-			_y = _y - 0;
-			cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-			pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-			x = pos.x;
-			y = pos.y;
-			break;
-		}
-		default:
-			break;
-		}
-	}
 	return clear_error_logs();
 }
 
@@ -459,7 +457,7 @@ bool AutoTrack::GetDirection(double& a)
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 2001, "获取角色朝向时，没有识别到paimon" };
+		//err = { 2001, "获取角色朝向时，没有识别到paimon" };
 		return false;
 	}
 	if (genshin_minimap.rect_avatar.empty())
@@ -487,7 +485,7 @@ bool AutoTrack::GetRotation(double& a)
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 3001, "获取视角朝向时，没有识别到paimon" };
+		//err = { 3001, "获取视角朝向时，没有识别到paimon" };
 		return false;
 	}
 
@@ -550,7 +548,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		
 		if (getMiniMapRefMat() == false)
 		{
-			err = { 4001, "获取神瞳时，没有识别到paimon" };
+			//err = { 4001, "获取神瞳时，没有识别到paimon" };
 			return false;
 		}
 
@@ -642,7 +640,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 4001, "获取神瞳时，没有识别到paimon" };
+		//err = { 4001, "获取神瞳时，没有识别到paimon" };
 		return false;
 	}
 	
@@ -711,7 +709,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	}
 	if (getMiniMapRefMat() == false)
 	{
-		err = { 1001, "获取所有信息时，没有识别到paimon" };
+		//err = { 1001, "获取所有信息时，没有识别到paimon" };
 		return false;
 	}
 
@@ -725,58 +723,14 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		genshin_minimap.config.is_find_paimon = true;
 
 		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
-
-		cv::Point2d pos = genshin_avatar_position.position;
-
-		cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
-		cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
 		
-		cv::Rect rect_DiXiaCengYan(0, 0, 1250, 1016);
-		cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
-		{
-			double _x = user_pos.x;
-			double _y = user_pos.y;
-			// 渊下宫
-			if (_x > 0 && _x <= 0 + 2400 && _y > 5543 && _y <= 5543 + 2401)
-			{
-				mapId = 1;
-			}
-			// 地下层岩
-			if (_x > 0 && _x <= 0 + 1250 && _y > 0 && _y <= 0 + 1016)
-			{
-				mapId = 2;
-			}
-
-			switch (mapId)
-			{
-			case 0:
-			{
-				break;
-			}
-			case 1:
-			{
-				_x = _x - 0;
-				_y = _y - 5543;
-				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-				x = pos_t.x;
-				y = pos_t.y;
-				break;
-			}
-			case 2:
-			{
-				_x = _x - 0;
-				_y = _y - 0;
-				cv::Point2d pos_t = TianLi::Utils::TransferTianLiAxes(cv::Point2d(_x, _y), cv::Point2d(0, 0), MapWorldScale);
-				pos_t = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-				x = pos_t.x;
-				y = pos_t.y;
-				break;
-			}
-			default:
-				break;
-			}
-		}
+		cv::Point2d user_pos = genshin_avatar_position.position;
+		auto tr_res = TianLi::Utils::TransferTianLiAxes(user_pos.x, user_pos.y);
+		cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
+		pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
+		x = pos.x;
+		y = pos.y;
+		mapId = tr_res.second;
 	}
 
 	if (genshin_minimap.rect_avatar.empty())
