@@ -174,8 +174,6 @@ void Run_GetPosit()
 	double y2 = 0;
 	if (GetPositionOfMap(x2, y2, mapid))
 	{
-		int mapid = 0;
-		GetPositionOfMap(x2, y2, mapid);
 		std::cout << "坐标         : " << " " << x2 << " " << y2 << " " << mapid << "\n";
 	}
 	else
