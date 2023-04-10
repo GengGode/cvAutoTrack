@@ -281,7 +281,7 @@ namespace TianLi::Utils
 		const cv::Rect rect_DiXiaCengYan(0, 0, 1700, 1700);
 		// 渊下宫
 		const cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
-		const std::array<cv::Rect, 2> rectList = { rect_DiXiaCengYan, rect_YuanXiaGong };
+		const std::array<cv::Rect, 2> rectList = {rect_YuanXiaGong,rect_DiXiaCengYan };
 		for (int i = 0; i < rectList.size(); i++)
 		{
 			if (rectList[i].contains(cv::Point2d(x, y)))
@@ -289,7 +289,7 @@ namespace TianLi::Utils
 				return std::make_pair(cv::Point2d(x - rectList[i] .x,y-rectList[i] .y), i+1);
 			}
 		}
-		return std::make_pair(cv::Point2d(0, 0), 0);
+		return std::make_pair(cv::Point2d(x, y), 0);
 	}
 
 	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
