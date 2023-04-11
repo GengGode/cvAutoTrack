@@ -130,6 +130,7 @@ inline void write_log(std::fstream& log_file,const std::string& time_stamp, cons
 		// 清空文件
 		log_file.close();
 		log_file.open("./autoTrack.log", std::ios::in | std::ios::out | std::ios::trunc);
+		log_file << "\xef\xbd\xbf";
 		log_file << "系统版本号：" << get_sys_version() << "\n";
 		log_file << "显卡：" << get_gpu_name() << "\n";
 		
@@ -163,10 +164,15 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 		{
 			log_file.open("./autoTrack.log", std::ios::in | std::ios::out | std::ios::app);
 			if (log_file.is_open() == false) return *this;
+			log_file << "\xef\xbd\xbf";
 			log_file << "系统版本号：" << get_sys_version() << "\n";
 			log_file << "显卡："<<get_gpu_name() << "\n";
 		}
-		write_log(log_file, time_stamp(), code, msg);
+
+		if(this->error_code_last != this->error_code)		//不往日志中输出重复的错误
+			write_log(log_file, time_stamp(), code, msg);
+		this->error_code_last = this->error_code;
+
 		log_file.flush();
 		push(code,msg);
 	}
