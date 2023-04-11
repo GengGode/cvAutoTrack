@@ -442,10 +442,13 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	auto tr_res = TianLi::Utils::TransferTianLiAxes(pos_tr.x, pos_tr.y);
 	cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
 	pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-	x = pos.x;
-	y = pos.y;
-	mapId = tr_res.second;
 
+	mapId = tr_res.second;
+	if (mapId != 0)
+	{
+		x = pos.x;
+		y = pos.y;
+	}
 	return clear_error_logs();
 }
 
