@@ -278,9 +278,10 @@ namespace TianLi::Utils
 	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y)
 	{
 		// 地下层岩
-		const cv::Rect rect_DiXiaCengYan(0, 0, 1700, 1700);
+	  cv::Rect2d rect_DiXiaCengYan(0, 0, 1700, 1700);
+		rect_DiXiaCengYan -= cv::Point2d(340, 565);
 		// 渊下宫
-		const cv::Rect rect_YuanXiaGong(0, 5543, 2400, 2401);
+		const cv::Rect2d rect_YuanXiaGong(0, 5543, 2400, 2401);
 		const std::array<cv::Rect, 2> rectList = {rect_YuanXiaGong,rect_DiXiaCengYan };
 		for (int i = 0; i < rectList.size(); i++)
 		{
@@ -334,5 +335,71 @@ namespace TianLi::Utils
 	void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints)
 	{
 		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
+	}
+	
+
+	//注册表读取
+	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string& ret, size_t maxLength)
+	{
+		HKEY hKey;
+		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
+		if (lRes != ERROR_SUCCESS)
+		{
+			RegCloseKey(hKey);
+			return false;
+		}
+		wchar_t* lpData = new wchar_t[maxLength];
+		DWORD dwType = REG_SZ;
+		DWORD dwSize = maxLength;
+
+		lRes = RegGetValue(hKey, NULL, Key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
+		if (lRes != ERROR_SUCCESS)
+		{
+			RegCloseKey(hKey);
+			delete[] lpData;
+			return false;
+		}
+
+		char* lpDataA = new char[maxLength];
+		size_t  lpDataALen;
+		DWORD isSuccess;
+		isSuccess = wcstombs_s(&lpDataALen,lpDataA,maxLength, lpData, maxLength-1);
+		if (isSuccess == ERROR_SUCCESS)
+			ret = lpDataA;
+		else
+		{
+			delete[] lpData;
+			delete[] lpDataA;
+			return false;
+		}
+		RegCloseKey(hKey);
+		delete[] lpData;
+		delete[] lpDataA;
+		return true;
+	}
+
+	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int& ret)
+	{
+		HKEY hKey;
+		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
+		if (lRes != ERROR_SUCCESS)
+		{
+			RegCloseKey(hKey);
+			return false;
+		}
+		DWORD lpData;
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+
+		lRes = RegGetValue(hKey, NULL, Key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
+		if (lRes != ERROR_SUCCESS)
+		{
+			RegCloseKey(hKey);
+			return false;
+		}
+
+		ret = lpData;
+		RegCloseKey(hKey);
+		return true;
 	}
 }
