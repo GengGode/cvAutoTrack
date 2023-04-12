@@ -925,13 +925,13 @@ bool AutoTrack::getMiniMapRefMat()
 	{
 		if (genshin_handle.config.capture->mode == Capture::Bitblt)
 		{
-			err = { 40105,"Bitblt模式下计算小地图区域失败" };
+			//err = { 40105,"Bitblt模式下计算小地图区域失败" };
 			return false;
 		}
 		else if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
 
-			err = { 40205,"DirectX模式下计算小地图区域失败" };
+			//err = { 40205,"DirectX模式下计算小地图区域失败" };
 			return false;
 		}
 	}
