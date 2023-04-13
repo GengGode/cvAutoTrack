@@ -6,6 +6,9 @@
 
 #include <iostream>
 #include <fstream>
+
+#include "version/Version.h"
+
 namespace TianLi::Resource::Utils
 {
 	void LoadBitmap_ID2Mat(int IDB, cv::Mat& mat)
@@ -243,6 +246,7 @@ using namespace TianLi::Resource::Utils;
 #ifdef USED_BINARY_IMAGE
 #include "resources.load.h"
 #endif // 
+
 Resources::Resources()
 {
 #ifdef USED_BINARY_IMAGE
@@ -354,7 +358,7 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 
 	std::string build_time = __DATE__ " " __TIME__;
 	fs << "build_time" << build_time;
-
+	fs << "build_version" << TianLi::Version::build_version;
 	fs << "hessian_threshold" << hessian_threshold;
 	fs << "octaves" << octaves;
 	fs << "octave_layers" << octave_layers;
@@ -368,11 +372,29 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 }
 bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors, double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
+	cv::FileStorage fs;
 	if (std::filesystem::exists("cvAutoTrack_Cache.xml") == false)
 	{
 		return false;
 	}
-	cv::FileStorage fs("cvAutoTrack_Cache.xml", cv::FileStorage::READ);
+	try {
+		fs = cv::FileStorage("cvAutoTrack_Cache.xml", cv::FileStorage::READ);
+	}
+	catch (std::exception)		//缓存损坏
+	{
+		return false;
+	};
+	//获取xml版本，如果不符，则重建
+	std::string r_build_version = "";
+	fs["build_version"] >> r_build_version;
+
+	//版本不匹配
+	if (r_build_version != TianLi::Version::build_version)
+	{
+		return false;
+	}
+	
+
 	double r_hessian_threshold = 1;
 	int    r_octaves = 1;
 	int    r_octave_layers = 1;
