@@ -26,8 +26,8 @@ AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
 	
-	worldOrigin = tianliAxisOrigin;
-	worldScale = tianliScale;
+	user_world_center = map_relative_center;
+	user_world_scale = map_relative_scale;
 
 	genshin_handle.config.capture = new Bitblt();
 	genshin_handle.config.capture->init();
@@ -159,14 +159,14 @@ bool AutoTrack::SetHandle(long long int handle)
 
 bool AutoTrack::SetWorldCenter(double x, double y)
 {
-	worldOrigin.x = x;
-	worldOrigin.y = y;
+	user_world_center.x = x;
+	user_world_center.y = y;
 	return true;
 }
 
 bool AutoTrack::SetWorldScale(double scale)
 {
-	worldScale = scale;
+	user_world_scale = scale;
 	return true;
 }
 
@@ -434,7 +434,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	mapId = raw_pos.second;
 	if (mapId == 0)
 	{
-		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, worldOrigin, worldScale);
+		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, user_world_center, user_world_scale);
 		x = user_Pos.x;
 		y = user_Pos.y;
 	}

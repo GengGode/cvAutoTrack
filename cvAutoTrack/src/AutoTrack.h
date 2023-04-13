@@ -61,11 +61,16 @@ private:
 #pragma region 坐标映射相关变量
 
 	//用户定义映射关系参数
-	cv::Point2f worldOrigin = { 0,0 };		// 坐标中点
-	double worldScale = 1.0;				//坐标缩放
+	// 用户坐标中心，相较于天理坐标系原点的偏移量	
+	cv::Point2d user_world_center = { 0,0 };		// 坐标中点
+	// 用户坐标缩放，为用户坐标系与天理坐标系的比例
+	double user_world_scale = 1.0;				//坐标缩放
 
-	const cv::Point2f  tianliAxisOrigin = { 5292,3015 };	// 天理坐标中点
-	const double tianliScale = 2.557; //天理坐标缩放
+	// 天理坐标映射关系参数 地图中心
+	// 地图中天理坐标中心的像素坐标
+	const cv::Point2d  map_relative_center = { 5292,3015 };	// 天理坐标中点
+	// 地图中图片像素与天理坐标系的比例
+	const double map_relative_scale = 2.557; //天理坐标缩放
 
 #pragma endregion
 private:
