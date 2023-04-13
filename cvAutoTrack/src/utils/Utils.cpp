@@ -3,7 +3,7 @@
 
 namespace TianLi::Utils
 {
-	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size_r)
+	cv::Mat get_some_map(const cv::Mat &map, const cv::Point &pos, int size_r)
 	{
 		cv::Rect rect(pos.x - size_r, pos.y - size_r, size_r + size_r, size_r + size_r);
 		if (rect.x < 0)
@@ -16,7 +16,7 @@ namespace TianLi::Utils
 		}
 		if (rect.x + rect.width > map.cols)
 		{
-			rect.x = map.cols -  rect.width;
+			rect.x = map.cols - rect.width;
 		}
 		if (rect.y + rect.height > map.rows)
 		{
@@ -41,11 +41,13 @@ namespace TianLi::Utils
 		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
 
 		double accum = 0.0;
-		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+		std::for_each(list.begin(), list.end(), [&](const double d)
+					  { accum += (d - mean) * (d - mean); });
 
 		double stdev = sqrt(accum / (list.size() - 1));
 
-		std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d) { return abs(d - mean) < 0.382 * stdev; });
+		std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d)
+							 { return abs(d - mean) < 0.382 * stdev; });
 		return valid_list;
 	}
 
@@ -54,11 +56,12 @@ namespace TianLi::Utils
 		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
 
 		double accum = 0.0;
-		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (d - mean) * (d - mean); });
+		std::for_each(list.begin(), list.end(), [&](const double d)
+					  { accum += (d - mean) * (d - mean); });
 
 		return sqrt(accum / (list.size() - 1));
 	}
-	cv::Mat crop_border(const cv::Mat& mat, double border)
+	cv::Mat crop_border(const cv::Mat &mat, double border)
 	{
 		int crop_size = static_cast<int>((mat.rows + mat.cols) * 0.5 * border);
 		return mat(cv::Rect(crop_size, crop_size, mat.cols - crop_size * 2, mat.rows - crop_size * 2));
@@ -79,7 +82,8 @@ namespace TianLi::Utils
 		double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size();
 
 		double accum = 0.0;
-		std::for_each(list.begin(), list.end(), [&](const double d) { accum += (abs(d - mean)) * (abs(d - mean)); });
+		std::for_each(list.begin(), list.end(), [&](const double d)
+					  { accum += (abs(d - mean)) * (abs(d - mean)); });
 
 		return accum / (list.size() - 1);
 	}
@@ -104,14 +108,16 @@ namespace TianLi::Utils
 		std::vector<double> x_valid_list;
 		std::vector<double> y_valid_list;
 
-		//double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size_r();
+		// double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size_r();
 		double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
 		double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
 
 		double x_accum = 0.0;
-		std::for_each(x_list.begin(), x_list.end(), [&](const double d) {x_accum += (d - x_mean) * (d - x_mean); });
+		std::for_each(x_list.begin(), x_list.end(), [&](const double d)
+					  { x_accum += (d - x_mean) * (d - x_mean); });
 		double y_accum = 0.0;
-		std::for_each(y_list.begin(), y_list.end(), [&](const double d) {y_accum += (d - y_mean) * (d - y_mean); });
+		std::for_each(y_list.begin(), y_list.end(), [&](const double d)
+					  { y_accum += (d - y_mean) * (d - y_mean); });
 
 		double x_stdev = sqrt(x_accum / (x_list.size() - 1));
 		double y_stdev = sqrt(y_accum / (y_list.size() - 1));
@@ -127,7 +133,7 @@ namespace TianLi::Utils
 		}
 
 		int valid_count = 0;
-		for (auto& point : list)
+		for (auto &point : list)
 		{
 			if (abs(point.x - x_mean) < param * x_stdev && abs(point.y - y_mean) < param * y_stdev)
 			{
@@ -144,7 +150,7 @@ namespace TianLi::Utils
 		return valid_list;
 	}
 
-	void remove_invalid(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
+	void remove_invalid(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double> &x_list, std::vector<double> &y_list)
 	{
 		for (int i = 0; i < keypoints.size(); i++)
 		{
@@ -157,7 +163,6 @@ namespace TianLi::Utils
 			y_list.push_back(diff_pos.y);
 		}
 	}
-
 
 	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
 	{
@@ -176,8 +181,8 @@ namespace TianLi::Utils
 				accumy += (lisy[i] - meany) * (lisy[i] - meany);
 			}
 
-			double stdevx = sqrt(accumx / (lisx.size() - 1)); //标准差
-			double stdevy = sqrt(accumy / (lisy.size() - 1)); //标准差
+			double stdevx = sqrt(accumx / (lisx.size() - 1)); // 标准差
+			double stdevy = sqrt(accumy / (lisy.size() - 1)); // 标准差
 
 			double sumx = 0;
 			double sumy = 0;
@@ -250,8 +255,9 @@ namespace TianLi::Utils
 	{
 		const double rad2degScale = 180 / CV_PI;
 		double res = atan2(-p.y, p.x) * rad2degScale;
-		res = res - 90; //从屏幕空间左侧水平线为0度转到竖直向上为0度
-		if (res < -180.0)res = res + 360;
+		res = res - 90; // 从屏幕空间左侧水平线为0度转到竖直向上为0度
+		if (res < -180.0)
+			res = res + 360;
 		return res;
 	}
 
@@ -278,7 +284,7 @@ namespace TianLi::Utils
 		return std::make_pair(cv::Point2d(x, y), 0);
 	}
 
-	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
+	void draw_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch> &good_matches)
 	{
 		cv::Mat img_matches, imgmap, imgminmap;
 		drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
@@ -288,7 +294,7 @@ namespace TianLi::Utils
 
 	namespace CalcMatch
 	{
-		void calc_good_matches_show(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints)
+		void calc_good_matches_show(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>> &KNN_m, double ratio_thresh, std::vector<MatchKeyPoint> &good_keypoints)
 		{
 #ifdef _DEBUG
 			std::vector<cv::DMatch> good_matches;
@@ -306,9 +312,9 @@ namespace TianLi::Utils
 					{
 						continue;
 					}
-					good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-						img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y },
-						{keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
+					good_keypoints.push_back({{img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
+											   img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
+											  {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}});
 				}
 			}
 #ifdef _DEBUG
@@ -317,14 +323,13 @@ namespace TianLi::Utils
 		}
 	}
 
-	void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints)
+	void calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>> &KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint> &good_keypoints)
 	{
 		CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
 	}
-	
 
-	//注册表读取
-	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string& ret, size_t maxLength)
+	// 注册表读取
+	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string &ret, size_t maxLength)
 	{
 		HKEY hKey;
 		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
@@ -333,7 +338,7 @@ namespace TianLi::Utils
 			RegCloseKey(hKey);
 			return false;
 		}
-		wchar_t* lpData = new wchar_t[maxLength];
+		wchar_t *lpData = new wchar_t[maxLength];
 		DWORD dwType = REG_SZ;
 		DWORD dwSize = maxLength;
 
@@ -345,10 +350,10 @@ namespace TianLi::Utils
 			return false;
 		}
 
-		char* lpDataA = new char[maxLength];
-		size_t  lpDataALen;
+		char *lpDataA = new char[maxLength];
+		size_t lpDataALen;
 		DWORD isSuccess;
-		isSuccess = wcstombs_s(&lpDataALen,lpDataA,maxLength, lpData, maxLength-1);
+		isSuccess = wcstombs_s(&lpDataALen, lpDataA, maxLength, lpData, maxLength - 1);
 		if (isSuccess == ERROR_SUCCESS)
 			ret = lpDataA;
 		else
@@ -363,7 +368,7 @@ namespace TianLi::Utils
 		return true;
 	}
 
-	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int& ret)
+	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int &ret)
 	{
 		HKEY hKey;
 		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
