@@ -31,16 +31,16 @@ namespace TianLi::Utils
 
 	std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
 	double Line2Angle(cv::Point2f p);
-	cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale);
-	cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale);
-	cv::Point2d TransferTianLiAxes_Tr(cv::Point2d pos, cv::Point2d origin, double scale);
-	cv::Point2d TransferUserAxes_Tr(cv::Point2d pos, double x, double y, double scale);
-	
-	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y);
+	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale);
+	std::pair<cv::Point2d, int> getSpecialMapPosition(double x, double y);
 
 
 	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
 	
 	void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
+
+	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string& ret, size_t maxLength);
+
+	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int& ret);
 	
 }

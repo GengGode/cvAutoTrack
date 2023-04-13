@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ErrorCode.h"
+#include "utils/Utils.h"
 
 inline std::string wstring2string(std::wstring wstr)
 {
@@ -16,34 +17,24 @@ inline std::string wstring2string(std::wstring wstr)
 	return result;
 }
 
+
+
 std::string get_sys_version()
 {
-	// 运行一个cmd，获取版本号信息
-	const char* cmd = "cmd /c ver";
 	std::string result = "";
-	try{
-		
-		FILE* pipe = _popen(cmd, "r");
-		if (!pipe) return "获取系统版本管道打开失败";
-		try {
-			char buffer[128];
-			while (!feof(pipe)) {
-				if (fgets(buffer, 128, pipe) != NULL)
-					result += buffer;
-			}
-		}
-		catch (...) {
-			_pclose(pipe);
-			return "读取管道中系统版本出现错误";
-		}
-		_pclose(pipe);
-		// 删除前后换行符
-		result.erase(0, 1);
-		result.erase(result.length() - 1, 1);
-	}
-	catch (...) {
-		result = "获取系统版本管道打开失败";
-	}
+	std::string ProductName;
+	std::string DisplayVersion;
+	std::string CurrentBuildNumber;
+	int UBR;
+	if (!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(ProductName)", ProductName, 64))
+		ProductName = "null";
+	if(!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(DisplayVersion)", DisplayVersion, 64))
+		DisplayVersion = "null";
+	if (!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(CurrentBuildNumber)", CurrentBuildNumber, 64))
+		CurrentBuildNumber = "null";
+	if (!TianLi::Utils::getRegValue_DWORD(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(UBR)", UBR))
+		UBR = 0;
+	result = std::format("{0}-{1}-{2}.{3}", ProductName,DisplayVersion,CurrentBuildNumber,UBR);
 	return result;
 }
 std::string get_gpu_name()
@@ -130,6 +121,7 @@ inline void write_log(std::fstream& log_file,const std::string& time_stamp, cons
 		// 清空文件
 		log_file.close();
 		log_file.open("./autoTrack.log", std::ios::in | std::ios::out | std::ios::trunc);
+		log_file << "\xef\xbd\xbf";
 		log_file << "系统版本号：" << get_sys_version() << "\n";
 		log_file << "显卡：" << get_gpu_name() << "\n";
 		
@@ -163,10 +155,15 @@ ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)
 		{
 			log_file.open("./autoTrack.log", std::ios::in | std::ios::out | std::ios::app);
 			if (log_file.is_open() == false) return *this;
+			log_file << "\xef\xbd\xbf";
 			log_file << "系统版本号：" << get_sys_version() << "\n";
 			log_file << "显卡："<<get_gpu_name() << "\n";
 		}
-		write_log(log_file, time_stamp(), code, msg);
+
+		if(this->error_code_last != this->error_code)		//不往日志中输出重复的错误
+			write_log(log_file, time_stamp(), code, msg);
+		this->error_code_last = this->error_code;
+
 		log_file.flush();
 		push(code,msg);
 	}

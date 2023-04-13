@@ -27,6 +27,7 @@ public:
 
 private:
 	int error_code=0;
+	int error_code_last = 0;
 	std::vector<std::pair<int, std::string>> error_code_msg_list;
 private:
 	void push(int code, string msg);

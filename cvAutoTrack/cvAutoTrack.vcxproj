@@ -184,8 +184,10 @@
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if not exist "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug" (
+  mkdir "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug"
+)
+copy /B /Y "$(TargetPath)" "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug\$(targetFileName)"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>src\version\build_version_before.bat</Command>
