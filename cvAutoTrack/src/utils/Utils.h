@@ -39,8 +39,8 @@ namespace TianLi::Utils
 	
 	void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
 
-	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string& ret, size_t maxLength);
+	bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
-	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int& ret);
+	bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int& ret);
 	
 }

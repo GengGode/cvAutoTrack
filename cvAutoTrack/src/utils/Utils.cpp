@@ -331,20 +331,20 @@ namespace TianLi::Utils
 	}
 
 	// 注册表读取
-	bool getRegValue_REG_SZ(HKEY root, std::wstring Item, std::wstring Key, std::string &ret, size_t maxLength)
+	bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string &ret, int max_length)
 	{
 		HKEY hKey;
-		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
+		long lRes = RegOpenKeyEx(root, item.c_str(), 0, KEY_READ, &hKey);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
 			return false;
 		}
-		wchar_t *lpData = new wchar_t[maxLength];
+		wchar_t *lpData = new wchar_t[max_length];
 		DWORD dwType = REG_SZ;
-		DWORD dwSize = maxLength;
+		DWORD dwSize = max_length;
 
-		lRes = RegGetValue(hKey, NULL, Key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
+		lRes = RegGetValue(hKey, NULL, key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
@@ -352,10 +352,10 @@ namespace TianLi::Utils
 			return false;
 		}
 
-		char *lpDataA = new char[maxLength];
+		char *lpDataA = new char[max_length];
 		size_t lpDataALen;
 		DWORD isSuccess;
-		isSuccess = wcstombs_s(&lpDataALen, lpDataA, maxLength, lpData, maxLength - 1);
+		isSuccess = wcstombs_s(&lpDataALen, lpDataA, max_length, lpData, max_length - 1);
 		if (isSuccess == ERROR_SUCCESS)
 			ret = lpDataA;
 		else
@@ -370,10 +370,10 @@ namespace TianLi::Utils
 		return true;
 	}
 
-	bool getRegValue_DWORD(HKEY root, std::wstring Item, std::wstring Key, int &ret)
+	bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int &ret)
 	{
 		HKEY hKey;
-		long lRes = RegOpenKeyEx(root, Item.c_str(), 0, KEY_READ, &hKey);
+		long lRes = RegOpenKeyEx(root, item.c_str(), 0, KEY_READ, &hKey);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
@@ -383,7 +383,7 @@ namespace TianLi::Utils
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 
-		lRes = RegGetValue(hKey, NULL, Key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
+		lRes = RegGetValue(hKey, NULL, key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);

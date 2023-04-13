@@ -719,16 +719,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	{
 		genshin_minimap.config.is_find_paimon = true;
 
-		double x, y;
-		int mapId;
-
 		GetPositionOfMap(x, y, mapId);
-		
-		cv::Point2d user_pos = genshin_avatar_position.position;
-		auto res = TianLi::Utils::ConvertSpecialMapsPosition(user_pos.x, user_pos.y);
-		x = res.first.x;
-		y = res.first.y;
-		mapId = res.second;
 	}
 
 	if (genshin_minimap.rect_avatar.empty())
@@ -761,7 +752,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	{
 		std::vector<cv::Mat> channels;
 
-		split(giUIDRef, channels);
+		cv::split(giUIDRef, channels);
 
 		if (genshin_handle.config.capture->mode == Capture::DirectX)
 		{
