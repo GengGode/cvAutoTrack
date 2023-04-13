@@ -272,7 +272,7 @@ namespace TianLi::Utils
 		const cv::Rect2d rect_DiXiaCengYan(-340, -565, 1700, 1700);
 		// 渊下宫
 		const cv::Rect2d rect_YuanXiaGong(0, 5543, 2400, 2401);
-		const std::array<std::pair<const cv::Rect2d, int>, 2> rects = {
+		const std::vector<std::pair<cv::Rect2d, int>> rects = {
 			{rect_YuanXiaGong, 1}, 
 			{rect_DiXiaCengYan, 2}
 		};
