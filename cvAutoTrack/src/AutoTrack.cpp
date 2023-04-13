@@ -423,16 +423,15 @@ bool AutoTrack::GetPosition(double& x, double& y)
 bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 {
 	mapId = 0;
-	cv::Point2d pos_tr;
 	bool isSuccess = GetPosition(x, y);
 	if (isSuccess != true)
 	{
 		return false;
 	}
 		
-	auto raw_pos = TianLi::Utils::getSpecialMapPosition(pos_tr.x, pos_tr.y);
+	auto raw_pos = TianLi::Utils::getSpecialMapPosition(x, y);
 	mapId = raw_pos.second;
-	if (mapId != 0)
+	if (mapId == 0)
 	{
 		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, worldOrigin, worldScale);
 		x = user_Pos.x;
