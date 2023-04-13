@@ -257,7 +257,7 @@ namespace TianLi::Utils
 
 	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale)
 	{
-		return cv::Point2d((pos + origin) * scale);
+		return cv::Point2d((pos - origin) * scale);
 	}
 
 	std::pair<cv::Point2d, int> getSpecialMapPosition(double x, double y)
