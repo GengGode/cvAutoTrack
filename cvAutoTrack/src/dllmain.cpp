@@ -8,7 +8,7 @@
 
 int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 {
-	// ¶¨Òåº¯ÊıÖ¸Õë
+	// å®šä¹‰å‡½æ•°æŒ‡é’ˆ
 	typedef BOOL(WINAPI* MiniDumpWriteDumpT)(
 		HANDLE,
 		DWORD,
@@ -18,7 +18,7 @@ int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 		PMINIDUMP_USER_STREAM_INFORMATION,
 		PMINIDUMP_CALLBACK_INFORMATION
 		);
-	// ´Ó "DbgHelp.dll" ¿âÖĞ»ñÈ¡ "MiniDumpWriteDump" º¯Êı
+	// ä» "DbgHelp.dll" åº“ä¸­è·å– "MiniDumpWriteDump" å‡½æ•°
 	MiniDumpWriteDumpT pfnMiniDumpWriteDump = NULL;
 	HMODULE hDbgHelp = LoadLibrary(_T("DbgHelp.dll"));
 	if (NULL == hDbgHelp)
@@ -32,7 +32,7 @@ int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 		FreeLibrary(hDbgHelp);
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
-	// ´´½¨ dmp ÎÄ¼ş¼ş
+	// åˆ›å»º dmp æ–‡ä»¶ä»¶
 	TCHAR szFileName[MAX_PATH] = { 0 };
 	TCHAR szVersion[] = TEXT("cvAutoTrack");
 	SYSTEMTIME stLocalTime;
@@ -47,14 +47,14 @@ int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 		FreeLibrary(hDbgHelp);
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
-	// Ğ´Èë dmp ÎÄ¼ş
+	// å†™å…¥ dmp æ–‡ä»¶
 	MINIDUMP_EXCEPTION_INFORMATION expParam;
 	expParam.ThreadId = GetCurrentThreadId();
 	expParam.ExceptionPointers = pExceptionPointers;
 	expParam.ClientPointers = FALSE;
 	pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
 		hDumpFile, MiniDumpWithDataSegs, (pExceptionPointers ? &expParam : NULL), NULL, NULL);
-	// ÊÍ·ÅÎÄ¼ş
+	// é‡Šæ”¾æ–‡ä»¶
 	CloseHandle(hDumpFile);
 	FreeLibrary(hDbgHelp);
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -62,7 +62,7 @@ int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 
 LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
 {
-	// ÕâÀï×öÒ»Ğ©Òì³£µÄ¹ıÂË»òÌáÊ¾
+	// è¿™é‡Œåšä¸€äº›å¼‚å¸¸çš„è¿‡æ»¤æˆ–æç¤º
 	if (IsDebuggerPresent())
 	{
 		return EXCEPTION_CONTINUE_SEARCH;
@@ -76,7 +76,7 @@ BOOL APIENTRY DllMain(HMODULE /*hModule*/,
 )
 {
 	SetUnhandledExceptionFilter(ExceptionFilter);
-	switch (ul_reason_for_call)1
+	switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
     case DLL_THREAD_ATTACH:
