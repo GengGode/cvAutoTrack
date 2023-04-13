@@ -231,12 +231,12 @@ bool AutoTrack::GetMapIsEmbedded()
 
 bool AutoTrack::DebugCapture()
 {
-	if (giFrame.empty())
+	if (genshin_screen.img_screen.empty())
 	{
 		err = { 251,"画面为空" };
 		return false;
 	}
-	cv::Mat out_info_img = giFrame.clone();
+	cv::Mat out_info_img = genshin_screen.img_screen.clone();
 	switch (genshin_handle.config.capture->mode)
 	{
 	case Capture::Bitblt:
@@ -299,12 +299,12 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
 		return false;
 	}
 
-	if (giFrame.empty())
+	if (genshin_screen.img_screen.empty())
 	{
 		err = { 252,"画面为空" };
 		return false;
 	}
-	cv::Mat out_info_img = giFrame.clone();
+	cv::Mat out_info_img = genshin_screen.img_screen.clone();
 	switch (genshin_handle.config.capture->mode)
 	{
 	case Capture::Bitblt:
@@ -860,7 +860,6 @@ bool AutoTrack::getGengshinImpactWnd()
 bool AutoTrack::getGengshinImpactScreen()
 {
 	TianLi::Genshin::get_genshin_screen(genshin_handle, genshin_screen);
-	//giFrame = genshin_screen.img_screen;
 	if (genshin_screen.img_screen.empty())
 	{
 		err = { 433, "截图失败" };
@@ -871,7 +870,7 @@ bool AutoTrack::getGengshinImpactScreen()
 
 bool AutoTrack::getMiniMapRefMat()
 {
-	genshin_minimap.img_minimap = giFrame(genshin_minimap.rect_minimap);
+	genshin_minimap.img_minimap = genshin_screen.img_screen(genshin_minimap.rect_minimap);
 
 	
 	if (genshin_handle.config.capture->mode == Capture::DirectX || genshin_handle.config.is_force_used_no_alpha)
