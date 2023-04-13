@@ -266,19 +266,21 @@ namespace TianLi::Utils
 		return cv::Point2d((pos - origin) * scale);
 	}
 
-	std::pair<cv::Point2d, int> getSpecialMapPosition(double x, double y)
+	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)
 	{
 		// 地下层岩
-	  cv::Rect2d rect_DiXiaCengYan(0, 0, 1700, 1700);
-		rect_DiXiaCengYan -= cv::Point2d(340, 565);
+		const cv::Rect2d rect_DiXiaCengYan(-340, -565, 1700, 1700);
 		// 渊下宫
 		const cv::Rect2d rect_YuanXiaGong(0, 5543, 2400, 2401);
-		const std::array<cv::Rect, 2> rectList = {rect_YuanXiaGong,rect_DiXiaCengYan };
-		for (int i = 0; i < rectList.size(); i++)
+		const std::array<std::pair<cv::Rect, int>, 2> rects = {
+			{rect_YuanXiaGong, 1}, 
+			{rect_DiXiaCengYan, 2}
+		};
+		for(auto&[rect,id]:rects)
 		{
-			if (rectList[i].contains(cv::Point2d(x, y)))
+			if (rect.contains(cv::Point2d(x, y)))
 			{
-				return std::make_pair(cv::Point2d(x - rectList[i] .x,y-rectList[i] .y), i+1);
+				return std::make_pair(cv::Point2d(x - rect.x, y - rect.y), id);
 			}
 		}
 		return std::make_pair(cv::Point2d(x, y), 0);

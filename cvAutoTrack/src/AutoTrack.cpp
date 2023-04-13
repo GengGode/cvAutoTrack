@@ -430,7 +430,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 		return false;
 	}
 		
-	auto raw_pos = TianLi::Utils::getSpecialMapPosition(x, y);
+	auto raw_pos = TianLi::Utils::ConvertSpecialMapsPosition(x, y);
 	mapId = raw_pos.second;
 	if (mapId == 0)
 	{
@@ -725,7 +725,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		GetPositionOfMap(x, y, mapId);
 		
 		cv::Point2d user_pos = genshin_avatar_position.position;
-		auto res = TianLi::Utils::getSpecialMapPosition(user_pos.x, user_pos.y);
+		auto res = TianLi::Utils::ConvertSpecialMapsPosition(user_pos.x, user_pos.y);
 		x = res.first.x;
 		y = res.first.y;
 		mapId = res.second;

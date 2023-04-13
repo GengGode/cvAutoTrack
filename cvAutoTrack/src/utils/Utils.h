@@ -32,7 +32,7 @@ namespace TianLi::Utils
 	std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
 	double Line2Angle(cv::Point2f p);
 	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale);
-	std::pair<cv::Point2d, int> getSpecialMapPosition(double x, double y);
+	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y);
 
 
 	void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
