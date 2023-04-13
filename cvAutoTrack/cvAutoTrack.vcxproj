@@ -413,6 +413,7 @@
     </ClCompile>
     <ClCompile Include="src\capture\video\video.cpp" />
     <ClCompile Include="src\cvAutoTrack.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\ErrorCode.cpp" />
     <ClCompile Include="src\filter\Filter.cpp" />
     <ClCompile Include="src\filter\kalman\Kalman.cpp" />

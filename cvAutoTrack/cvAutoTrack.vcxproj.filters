@@ -387,6 +387,9 @@
       <Filter>src\genshin\match\position</Filter>
     </ClCompile>
     <ClCompile Include="src\resources\import\resources.import.cpp" />
+    <ClCompile Include="src\dllmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">

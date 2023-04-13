@@ -25,7 +25,6 @@ ErrorCode& err = ErrorCode::getInstance();
 AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
-	
 	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
 	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
 	MapWorldScale = WorldScale;
