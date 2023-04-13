@@ -255,27 +255,12 @@ namespace TianLi::Utils
 		return res;
 	}
 
-	cv::Point2d TransferTianLiAxes(cv::Point2d pos, cv::Point2d origin, double scale)
+	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale)
 	{
 		return cv::Point2d((pos + origin) * scale);
 	}
 
-	cv::Point2d TransferUserAxes(cv::Point2d pos, double x, double y, double scale)
-	{
-		return cv::Point2d((pos.x + x) * scale, (pos.y + y) * scale);
-	}
-
-	cv::Point2d TransferTianLiAxes_Tr(cv::Point2d pos, cv::Point2d origin, double scale)
-	{
-		return cv::Point2d(pos / scale - origin);
-	}
-
-	cv::Point2d TransferUserAxes_Tr(cv::Point2d pos, double x, double y, double scale)
-	{
-		return cv::Point2d(pos.x / scale - x, pos.y / scale - y);
-	}
-
-	std::pair<cv::Point2d, int> TransferTianLiAxes(double x, double y)
+	std::pair<cv::Point2d, int> getSpecialMapPosition(double x, double y)
 	{
 		// 地下层岩
 	  cv::Rect2d rect_DiXiaCengYan(0, 0, 1700, 1700);

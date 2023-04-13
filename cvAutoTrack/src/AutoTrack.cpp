@@ -25,10 +25,8 @@ ErrorCode& err = ErrorCode::getInstance();
 AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
-	
-	MapWorldOffset.x = MapWorldAbsOffset_X - WorldCenter_X;
-	MapWorldOffset.y = MapWorldAbsOffset_Y - WorldCenter_Y;
-	MapWorldScale = WorldScale;
+	worldOrigin = tianliAxisOrigin;
+	worldScale = tianliScale;
 
 	genshin_handle.config.capture = new Bitblt();
 	genshin_handle.config.capture->init();
@@ -160,14 +158,14 @@ bool AutoTrack::SetHandle(long long int handle)
 
 bool AutoTrack::SetWorldCenter(double x, double y)
 {
-	UserWorldOrigin_X = x;
-	UserWorldOrigin_Y = y;
+	worldOrigin.x = x;
+	worldOrigin.y = y;
 	return true;
 }
 
 bool AutoTrack::SetWorldScale(double scale)
 {
-	UserWorldScale = scale;
+	worldScale = scale;
 	return true;
 }
 
@@ -416,11 +414,8 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	
 	cv::Point2d pos = genshin_avatar_position.position;
 
-	cv::Point2d abs_pos = TianLi::Utils::TransferTianLiAxes(pos * MapAbsScale, MapWorldOffset, MapWorldScale);
-	cv::Point2d user_pos = TianLi::Utils::TransferUserAxes(abs_pos, UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
-
-	x = user_pos.x;
-	y = user_pos.y;
+	x = pos.x;
+	y = pos.y;
 
 	return clear_error_logs();
 }
@@ -429,25 +424,24 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 {
 	mapId = 0;
 	cv::Point2d pos_tr;
-	bool res_pos = GetPosition(x, y);
-	if (res_pos != true)
+	bool isSuccess = GetPosition(x, y);
+	if (isSuccess != true)
 	{
 		return false;
 	}
-
-	pos_tr = TianLi::Utils::TransferUserAxes_Tr(cv::Point2d(x, y), UserWorldOrigin_X, UserWorldOrigin_Y, UserWorldScale);
-	pos_tr = TianLi::Utils::TransferTianLiAxes_Tr(pos_tr, MapWorldOffset, MapWorldScale);
-	pos_tr = pos_tr / MapAbsScale;
 		
-	auto tr_res = TianLi::Utils::TransferTianLiAxes(pos_tr.x, pos_tr.y);
-	cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
-	pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-
-	mapId = tr_res.second;
+	auto raw_pos = TianLi::Utils::getSpecialMapPosition(pos_tr.x, pos_tr.y);
+	mapId = raw_pos.second;
 	if (mapId != 0)
 	{
-		x = pos.x;
-		y = pos.y;
+		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, worldOrigin, worldScale);
+		x = user_Pos.x;
+		y = user_Pos.y;
+	}
+	else
+	{
+		x = raw_pos.first.x;
+		y = raw_pos.first.y;
 	}
 	return clear_error_logs();
 }
@@ -725,15 +719,16 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 	{
 		genshin_minimap.config.is_find_paimon = true;
 
-		TianLi::Genshin::Match::get_avatar_position(genshin_minimap, genshin_avatar_position);
+		double x, y;
+		int mapId;
+
+		GetPositionOfMap(x, y, mapId);
 		
 		cv::Point2d user_pos = genshin_avatar_position.position;
-		auto tr_res = TianLi::Utils::TransferTianLiAxes(user_pos.x, user_pos.y);
-		cv::Point2d pos = TianLi::Utils::TransferTianLiAxes(cv::Point2d(tr_res.first.x, tr_res.first.y), cv::Point2d(0, 0), MapWorldScale);
-		pos = TianLi::Utils::TransferUserAxes(pos, 0, 0, 1);
-		x = pos.x;
-		y = pos.y;
-		mapId = tr_res.second;
+		auto res = TianLi::Utils::getSpecialMapPosition(user_pos.x, user_pos.y);
+		x = res.first.x;
+		y = res.first.y;
+		mapId = res.second;
 	}
 
 	if (genshin_minimap.rect_avatar.empty())
