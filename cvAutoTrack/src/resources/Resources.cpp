@@ -367,6 +367,8 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 
 	fs << "keypoints" << keypoints;
 	fs << "descriptors" << descriptors;
+
+	fs << "build_version_end" << TianLi::Version::build_version;		//防止缓存写入一半导致过期
 	fs.release();
 	return true;
 }
@@ -386,10 +388,12 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 	};
 	//获取xml版本，如果不符，则重建
 	std::string r_build_version = "";
+	std::string r_build_version_end = "";
 	fs["build_version"] >> r_build_version;
+	fs["build_version_end"] >> r_build_version_end;
 
 	//版本不匹配
-	if (r_build_version != TianLi::Version::build_version)
+	if (r_build_version != TianLi::Version::build_version || r_build_version_end != TianLi::Version::build_version)
 	{
 		return false;
 	}
