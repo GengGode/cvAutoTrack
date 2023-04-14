@@ -269,7 +269,7 @@ namespace TianLi::Utils
 	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)
 	{
 		// 地下层岩
-		const cv::Rect2d rect_DiXiaCengYan(-340, -565, 1700, 1700);
+		const cv::Rect2d rect_DiXiaCengYan(-340, -565, 1360, 1135);
 		// 渊下宫
 		const cv::Rect2d rect_YuanXiaGong(0, 5543, 2400, 2401);
 		const std::vector<std::pair<cv::Rect2d, int>> rects = {
