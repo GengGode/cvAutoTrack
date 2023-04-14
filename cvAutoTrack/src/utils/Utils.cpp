@@ -360,6 +360,7 @@ namespace TianLi::Utils
 			ret = lpDataA;
 		else
 		{
+			RegCloseKey(hKey);
 			delete[] lpData;
 			delete[] lpDataA;
 			return false;
