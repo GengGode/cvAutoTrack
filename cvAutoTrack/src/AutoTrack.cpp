@@ -369,17 +369,15 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 	}
 
 	/*
-	分别判断是否成功获取，避免前一个error_code被后一个error_code覆盖
-	而导致本函数返回false（表示失败）但error_code为0（表示成功）。
+	获取坐标的优先级远高于获取方向
+	所以只要能获取到坐标，就可以尝试输出，不至于因为识别不到方向导致追踪失效
 	*/
 	if (!GetPositionOfMap(x2, y2, mapId2))
 	{
 		return false;
 	}
-	if (!GetDirection(a2))
-	{
-		return false;
-	}
+
+	GetDirection(a2);
 	x = x2;
 	y = y2;
 	a = a2;
