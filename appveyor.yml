@@ -9,8 +9,6 @@
     branches:
       only:
         - master
-    skip_branch_with_pr: true
-    shallow_clone: true
     
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -124,9 +122,7 @@
     branches:
       only:
         - /dev-/
-    skip_branch_with_pr: true
-    shallow_clone: true
-    
+        
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
@@ -209,8 +205,6 @@
     branches:
       only:
         - /fix-/
-    skip_branch_with_pr: true
-    shallow_clone: true
 
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -221,7 +215,6 @@
     skip_tags: true
   
     install:
-        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         - cd %MyProjectDir%
@@ -285,8 +278,6 @@
     branches:
       only:
         - /chore-/
-    skip_branch_with_pr: true
-    shallow_clone: true
 
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -297,7 +288,6 @@
     skip_tags: true
   
     install:
-        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         - echo Chore
