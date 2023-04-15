@@ -78,7 +78,6 @@ namespace TEST_cvAutoTrack_CSharp
             {
                 // 获取版本号
                 byte[] versionBuff = new byte[1024];
-                //string version = "       ";
 
                 cvAutoTrackCSharp.cvAutoTrack.GetCompileVersion(versionBuff,256);
                 string version = Encoding.UTF8.GetString(versionBuff);
@@ -87,8 +86,7 @@ namespace TEST_cvAutoTrack_CSharp
                 cvAutoTrackCSharpImpl.cvAutoTrack cvAutoTrack = new cvAutoTrackCSharpImpl.cvAutoTrack();
                 cvAutoTrack.GetCompileVersion(versionBuff, 256);
                 version = Encoding.UTF8.GetString(versionBuff);
-
-                //cvAutoTrack.cvAutoTrack.verison( version);
+                
                 Console.WriteLine("version: " + version);
                 
                 // 申请内存
