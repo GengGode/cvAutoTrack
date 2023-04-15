@@ -1,6 +1,4 @@
 # master build but not delyor 
-skip_branch_with_pr: true
-shallow_clone: true
 -
     version: '7.7.0.{build}'
     os: Visual Studio 2022
