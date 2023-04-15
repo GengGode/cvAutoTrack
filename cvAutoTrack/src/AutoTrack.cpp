@@ -231,64 +231,7 @@ bool AutoTrack::GetMapIsEmbedded()
 
 bool AutoTrack::DebugCapture()
 {
-	if (genshin_screen.img_screen.empty())
-	{
-		err = { 251,"画面为空" };
-		return false;
-	}
-	cv::Mat out_info_img = genshin_screen.img_screen.clone();
-	switch (genshin_handle.config.capture->mode)
-	{
-	case Capture::Bitblt:
-	{
-		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// 绘制miniMap Rect
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = genshin_minimap.rect_avatar;
-		Avatar.x += genshin_minimap.rect_minimap.x;
-		Avatar.y += genshin_minimap.rect_minimap.y;
-
-		// 绘制avatar Rect
-		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// 绘制UID Rect
-		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
-		break;
-	}
-	case Capture::DirectX:
-	{
-		// 绘制paimon Rect
-		cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-		// 绘制miniMap Rect			   
-		cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-		cv::Rect Avatar = genshin_minimap.rect_avatar;
-		Avatar.x += genshin_minimap.rect_minimap.x;
-		Avatar.y += genshin_minimap.rect_minimap.y;
-
-		// 绘制avatar Rect
-		cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-		// 绘制UID Rect
-		cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
-	}
-	}
-
-	auto last_time_stream = std::stringstream();
-	last_time_stream << genshin_screen.last_time;
-	std::string last_time_str = last_time_stream.str();
-
-	cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols/2, out_info_img.rows/2), 1,1, cv::Scalar(128,128,128, 255), 1, 16, 0);
-	auto err_msg_str = err.toJson();
-	cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
-
-	bool rel = cv::imwrite("Capture.png", out_info_img);
-
-	if (!rel)
-	{
-		err = { 252,"保存画面失败 " };
-		return false;
-	}
-
-	return clear_error_logs();
+	return DebugCapturePath("Capture.png", 12);
 }
 
 bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
