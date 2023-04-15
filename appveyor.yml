@@ -19,6 +19,7 @@
     skip_tags: true
   
     install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         - echo %APPVEYOR_BUILD_VERSION%>>%MyProjectDir%cvAutoTrack\src\version\appVeyor_version_tag.tag
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
@@ -131,6 +132,7 @@
     skip_tags: true
   
     install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
         - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
         # 显示运行名称和版本号
@@ -213,6 +215,8 @@
     skip_tags: true
   
     install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
+
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
@@ -283,15 +287,16 @@
         ProJectExeName: cvAutoTrack
     skip_tags: true
   
-    install:
+    install:
+        - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         - echo Chore
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
-        - ps: ./ci/release_resource.ps1
     before_build:
         - git submodule update --init --recursive
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
