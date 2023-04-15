@@ -1,4 +1,6 @@
 # master build but not delyor 
+skip_branch_with_pr: true
+shallow_clone: true
 -
     version: '7.7.0.{build}'
     os: Visual Studio 2022
@@ -10,6 +12,8 @@
       only:
         - master
     skip_branch_with_pr: true
+    shallow_clone: true
+    
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
@@ -19,11 +23,12 @@
     skip_tags: true
   
     install:
+        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         - echo %APPVEYOR_BUILD_VERSION%>>%MyProjectDir%cvAutoTrack\src\version\appVeyor_version_tag.tag
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
-        - ps: ./ci/clone_resource.ps1
+        #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
     before_build:
         #- dir  %MyProjectDir%
@@ -121,7 +126,8 @@
       only:
         - /dev-/
     skip_branch_with_pr: true
-
+    shallow_clone: true
+    
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
         OpenCvDir: C:\projects\opencv\
@@ -131,6 +137,7 @@
     skip_tags: true
   
     install:
+        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
         - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
@@ -139,7 +146,7 @@
         - ps: echo %APPVEYOR_BUILD_WORKER_IMAGE%
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
-        - ps: ./ci/clone_resource.ps1
+        #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
         
     build_script:
@@ -203,6 +210,7 @@
       only:
         - /fix-/
     skip_branch_with_pr: true
+    shallow_clone: true
 
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -213,11 +221,12 @@
     skip_tags: true
   
     install:
+        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
-        - ps: ./ci/clone_resource.ps1
+        #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
         
     build_script:
@@ -275,6 +284,7 @@
       only:
         - /chore-/
     skip_branch_with_pr: true
+    shallow_clone: true
 
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -285,12 +295,13 @@
     skip_tags: true
   
     install:
+        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
 
         - echo Chore
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
-        - ps: ./ci/clone_resource.ps1
+        #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
         
     build_script:
