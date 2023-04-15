@@ -24,9 +24,9 @@
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
-        - ps: ./ci/release_resource.ps1
     before_build:
         - git submodule update --init --recursive
+        - ps: ./ci/release_resource.ps1
     
         #- dir  %MyProjectDir%
         #- dir  %OpenCvDir%
@@ -141,9 +141,9 @@
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
-        - ps: ./ci/release_resource.ps1
     before_build:
         - git submodule update --init --recursive
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -220,9 +220,9 @@
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
-        - ps: ./ci/release_resource.ps1
     before_build:
         - git submodule update --init --recursive
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -294,9 +294,9 @@
         - cd %MyProjectDir%
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
-        - ps: ./ci/release_resource.ps1
     before_build:
         - git submodule update --init --recursive
+        - ps: ./ci/release_resource.ps1
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
