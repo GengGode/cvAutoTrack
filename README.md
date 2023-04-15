@@ -22,6 +22,7 @@ this Chinese, Click to [English](https://github.com/GengGode/cvAutoTrack/blob/ma
 |  3.0 |  须弥              | 6.1.51 |
 |  3.1 |  须弥沙漠           | 6.4.17 |
 |  3.4 |  千壑沙地           | 7.4.0  |
+|  3.6 |  苍漠罗囿           | 7.7.2  |
 
 ### 各版本所支持的功能
 
@@ -47,6 +48,7 @@ this Chinese, Click to [English](https://github.com/GengGode/cvAutoTrack/blob/ma
 - [ ] 支持传入地图而非内嵌
 - [x] 可选的嵌入预计算结果
 - [x] 更高的匹配精度
+- [ ] 使用二进制文件而不是xml序列化追踪特征点
 
 # 如何使用
 
