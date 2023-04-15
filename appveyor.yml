@@ -1,6 +1,6 @@
 # master build but not delyor 
 -
-    version: '7.4.0.{build}'
+    version: '7.7.0.{build}'
     os: Visual Studio 2022
 
     configuration: Release
@@ -264,7 +264,7 @@
         - appveyor PushArtifact cvAutoTrack.dll
         - appveyor PushArtifact TEST_cvAutoTrack_Cpp.exe
 -
-    version: '7.4.0.{build}'
+    version: '7.7.0.{build}'
     os: Visual Studio 2022
     configuration: Chore
     platform:
@@ -312,6 +312,8 @@
         - cd %MyProjectDir% 
         - ls -R
         - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.dll $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.lib $env:MyProjectDir\x64\test\
+        - ps: cp -r $env:MyProjectDir\cvAutoTrack\x64\Compile\*.pdb $env:MyProjectDir\x64\test\
         - ps: cp -r $env:MyProjectDir\impl\Cpp\TEST_cvAutoTrack_Cpp\x64\Compile\*.exe $env:MyProjectDir\x64\test\
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.exe $env:MyProjectDir\x64\test\
         - ps: cp -r $env:MyProjectDir\impl\CSharp\TEST_cvAutoTrack_CSharp\bin\x64\Compile\net6.0\*.dll $env:MyProjectDir\x64\test\
@@ -326,6 +328,8 @@
         - TEST_cvAutoTrack_CSharp.exe -test
         
         - appveyor PushArtifact cvAutoTrack.dll
+        - appveyor PushArtifact cvAutoTrack.lib
+        - appveyor PushArtifact cvAutoTrack.pdb
         
         - cd %MyProjectDir%
         - ps: echo 获取版本号
