@@ -27,9 +27,6 @@
     before_build:
         - git submodule update --init --recursive
         - ps: ./ci/release_resource.ps1
-    
-        #- dir  %MyProjectDir%
-        #- dir  %OpenCvDir%
 
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
