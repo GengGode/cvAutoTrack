@@ -21,7 +21,6 @@
     skip_tags: true
   
     install:
-        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         - echo %APPVEYOR_BUILD_VERSION%>>%MyProjectDir%cvAutoTrack\src\version\appVeyor_version_tag.tag
         - cd %MyProjectDir%
@@ -29,6 +28,8 @@
         #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
     before_build:
+        - git submodule update --init --recursive
+    
         #- dir  %MyProjectDir%
         #- dir  %OpenCvDir%
 
@@ -135,7 +136,6 @@
     skip_tags: true
   
     install:
-        - git submodule update --init --recursive
         - ps: $env:TIME_STRING=(get-date -UFormat "%Y%m%d%a").ToString()
         # 发布版本号为 APPVEYOR_BUILD_VERSION 去除 {build}
         - ps: $env:APPVEYOR_BUILD_VERSION=$env:APPVEYOR_BUILD_VERSION.split('.')[0..2] -join '.'
@@ -146,6 +146,8 @@
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
+    before_build:
+        - git submodule update --init --recursive
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -226,6 +228,8 @@
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
+    before_build:
+        - git submodule update --init --recursive
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
@@ -301,6 +305,8 @@
         - ps: ./ci/install_opencv.ps1
         #- ps: ./ci/clone_resource.ps1
         - ps: ./ci/release_resource.ps1
+    before_build:
+        - git submodule update --init --recursive
         
     build_script:
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
