@@ -182,6 +182,14 @@ void Run_GetPosit()
 	}
 }
 
+void Run_GetVersion()
+{
+	char* ver = new char[100];
+	verison(ver);
+	std::cout << ver <<std::endl;
+	delete[] ver;
+}
+
 int RUN(bool is_off_capture=false, bool is_only_capture=false, int frame_rate=0)
 {
 	return 0;
@@ -205,6 +213,7 @@ int Run()
 		std::cout << "8. 获取当前神瞳Json\n";
 		std::cout << "9. 截图\n";
 		std::cout << "0. 退出　\n";
+		std::cout << "11.获取版本号 \n";
 		std::cout << "13.loop GetPositionOfMap\n";
 		std::cout << "请输入选项: ";
 		int option = 0;
@@ -214,30 +223,43 @@ int Run()
 		{
 		case 1:
 			Run_SetDx();
+			system("pause");
 			break;
 		case 2:
 			Run_SetBit();
+			system("pause");
 			break;
 		case 3:
 			Run_GetTrans();
+			system("pause");
 			break;
 		case 4:
 			Run_GetPosit();
+			system("pause");
 			break;
 		case 5:
 			Run_GetDir();
+			system("pause");
 			break;
 		case 6:
 			Run_GetRot();
+			system("pause");
 			break;
 		case 7:
 			Run_GetUID();
+			system("pause");
 			break;
 		case 8:
 			Run_GetStars();
+			system("pause");
 			break;
 		case 9:
 			Run_Capture();
+			system("pause");
+			break;
+		case 11:
+			Run_GetVersion();
+			system("pause");
 			break;
 		case 13:
 			while (1)
