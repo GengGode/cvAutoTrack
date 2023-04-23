@@ -311,6 +311,11 @@ bool Dxgi::capture(cv::Mat& frame)
 
 	auto data = mappedTex.pData;
 	auto pitch = mappedTex.RowPitch;
+  if (data == nullptr)
+  {
+    err = { 10006,"指针指向为空" };
+    return false;
+  }
 	
 	// 将画面转换为OpenCV的Mat
 	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
