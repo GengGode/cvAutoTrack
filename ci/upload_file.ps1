@@ -12,7 +12,7 @@ $upload_api='/api/fs/put'
 $upload_url='http://download.weixitianli.com'+$upload_api
 $upload_file='cvAutoTrack-'+$version+'.zip'
 $upload_file_length=(Get-Item $upload_file).Length
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali4/cvAutoTrack/'+$upload_file
+$upload_path='/TianLiUpdateService/cvAutoTrack/'+$upload_file
 $upload_content_type='multipart/form-data'
 $upload_headers=@{
     Authorization = $token
@@ -21,57 +21,6 @@ $upload_headers=@{
     'file-path' = $upload_path
 }
 Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali3/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali2/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali1/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali0/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
-$upload_path='/%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86/ali/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
 
 
 
