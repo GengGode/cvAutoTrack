@@ -6,7 +6,7 @@ $login_password='iOpEv21kPOt5ZrMqViLKvJJXshh6olNR'
 $login_api='/api/auth/login'
 $login_url='http://download.weixitianli.com'+$login_api + '?Username='+$login_username+'&Password='+$login_password
 $token=(Invoke-RestMethod -Uri $login_url -Method Post).data.token
-echo $token
+Write-Host $token
 
 $upload_api='/api/fs/put'
 $upload_url='http://download.weixitianli.com'+$upload_api
@@ -20,7 +20,13 @@ $upload_headers=@{
     'Content-Length' = $upload_file_length
     'file-path' = $upload_path
 }
-Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
-
+try{
+    Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
+    return 0
+}
+catch{
+	Write-Host "Upload Error, Program Stop."
+    return 504
+}
 
 

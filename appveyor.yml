@@ -345,8 +345,7 @@
 
         - ps: $buildversion = Get-Content version.ver
         - ps: $commitLog = git log -1 --pretty=%B
-  
-        
-        - ps: ./ci/upload_file.ps1
-        - ps: ./ci/manual_upload_release.ps1
+
+        - ps: $errCode = ./ci/upload_file.ps1
+        - ps: if($errCode -eq 0){./ci/manual_upload_release.ps1}
 
