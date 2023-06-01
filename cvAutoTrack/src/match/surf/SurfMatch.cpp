@@ -140,26 +140,31 @@ void SurfMatch::match()
 			is_success_match = false;
 			return;
 		}
+		continuity_retry = max_continuity_retry - 1;		//全局检测后只局部检测一次
 	}
 
 	// 尝试连续匹配，匹配角色附近小范围区域
-	for (int retry_times = 1; retry_times <= max_continuity_retry; retry_times++)
-	{
-		bool calc_continuity_is_faile = false;
-		pos = match_continuity(calc_continuity_is_faile);
+	bool calc_continuity_is_faile = false;
+	pos = match_continuity(calc_continuity_is_faile);
 
-		if (!calc_continuity_is_faile)
+	if (!calc_continuity_is_faile)
+	{
+		isContinuity = true;
+		continuity_retry = 0;
+	}
+	else 
+	{
+		pos = last_pos;
+		is_success_match = false;
+		continuity_retry++;
+
+		if (continuity_retry >= max_continuity_retry)
 		{
-			isContinuity = true;
-			break;				//匹配成功，结束，否则重试
-		}
-		else if (retry_times == max_continuity_retry)
-		{
-			pos = last_pos;
 			isContinuity = false;
-			is_success_match = false;
-			return;
+			continuity_retry = 0;
 		}
+
+		return;
 	}
 	last_pos = pos;
 	is_success_match = true;
