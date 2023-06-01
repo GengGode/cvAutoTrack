@@ -127,42 +127,46 @@ void SurfMatch::match()
 {
 	bool calc_is_faile = false;
 	is_success_match = false;
-	isContinuity = true;
 
-	// 尝试连续匹配，匹配角色附近小范围区域
-	if (isContinuity)
-	{
-		for (int retry_times = 1; retry_times <= max_continuity_retry; retry_times++)
-		{
-			bool calc_continuity_is_faile = false;
-			pos = match_continuity(calc_continuity_is_faile);
-
-			if (std::isnan(pos.x) || std::isnan(pos.y))
-			{
-				calc_continuity_is_faile = true;	//如果pos是nan，则算匹配失败
-				pos = cv::Point2d();
-			}
-			if (!calc_continuity_is_faile)
-				break;				//匹配成功，结束，否则重试
-			else if (retry_times == max_continuity_retry)
-				isContinuity = false;
-		}
-	}
-
-	// 直接非连续匹配，匹配整个大地图
+	// 非连续匹配，匹配整个大地图
 	if (!isContinuity)
 	{
 		pos = match_no_continuity(calc_is_faile);
 		if (std::isnan(pos.x) || std::isnan(pos.y))
 		{
 			calc_is_faile = true;	//如果pos是nan，则算匹配失败
-			pos = cv::Point2d();
+		}
+		// 没有有效结果，结束
+		if (calc_is_faile)
+		{
+			pos = last_pos;
+			is_success_match = false;
+			return;
 		}
 	}
-	// 没有有效结果，结束
-	if (calc_is_faile)
+
+	// 尝试连续匹配，匹配角色附近小范围区域
+	for (int retry_times = 1; retry_times <= max_continuity_retry; retry_times++)
 	{
-		return;
+		bool calc_continuity_is_faile = false;
+		pos = match_continuity(calc_continuity_is_faile);
+
+		if (std::isnan(pos.x) || std::isnan(pos.y))
+		{
+			calc_continuity_is_faile = true;	//如果pos是nan，则算匹配失败
+		}
+		if (!calc_continuity_is_faile)
+		{
+			isContinuity = true;
+			break;				//匹配成功，结束，否则重试
+		}
+		else if (retry_times == max_continuity_retry)
+		{
+			pos = last_pos;
+			isContinuity = false;
+			is_success_match = false;
+			return;
+		}
 	}
 
 	is_success_match = true;

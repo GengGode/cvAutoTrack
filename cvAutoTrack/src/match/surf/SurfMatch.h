@@ -56,6 +56,7 @@ class SurfMatch
 
 
 	cv::Point2d pos;
+	cv::Point2d last_pos;		// 上一次匹配的地点，如果匹配失败，则返回上一次的结果，防止瞬移
 	cv::Rect rect_continuity_map;
 public:
 	SurfMatch() = default;
