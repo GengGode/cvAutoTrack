@@ -395,6 +395,7 @@ copy /B /Y "$(TargetPath)" "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug\$(
     <ClInclude Include="src\resources\import\resources.import.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
+    <ClInclude Include="src\resources\serialize.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\utils\workflow\utils.workflow.h" />

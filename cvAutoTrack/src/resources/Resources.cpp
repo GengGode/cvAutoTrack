@@ -4,9 +4,7 @@
 #include "resources/import/resources.import.h"
 #include <wincodec.h>
 
-#include <iostream>
-#include <fstream>
-
+#include "serialize.h"
 #include "version/Version.h"
 
 namespace TianLi::Resource::Utils
