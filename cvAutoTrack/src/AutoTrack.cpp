@@ -713,6 +713,9 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		}
 	}
 
+#ifdef _DEBUG
+	showMatchResult(x, y, mapId, a, r);
+#endif // _DEBUG
 	return clear_error_logs();
 }
 
@@ -869,4 +872,23 @@ bool AutoTrack::getMiniMapRefMat()
 #endif
 	return true;
 }
+
+#ifdef _DEBUG
+cv::Mat gi_map = Resources::getInstance().MapTemplate;
+inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle, float rotate)
+{
+	cv::Point2d pos(x, y);
+	//转换到绝对坐标
+	if (mapId == 0)
+		pos = TianLi::Utils::TransferAxes_inv(pos, user_world_center, user_world_scale);
+	//获取附近的地图
+	cv::Mat subMap = TianLi::Utils::get_some_map(gi_map, pos, 100);
+	//绘制箭头
+
+	//绘制扇形
+
+	//在图中显示坐标信息
+	cv::imshow("Visual Debug", subMap);
+}
+#endif
 

@@ -266,6 +266,11 @@ namespace TianLi::Utils
 		return cv::Point2d((pos - origin) * scale);
 	}
 
+	cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale)
+	{
+		return cv::Point2d(pos / scale + origin);
+	}
+
 	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)
 	{
 		// 地下层岩

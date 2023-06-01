@@ -32,6 +32,7 @@ namespace TianLi::Utils
 	std::vector<cv::Point2f> Vector2UnitVector(std::vector<cv::Point2f> pLis);
 	double Line2Angle(cv::Point2f p);
 	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale);
+	cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale);
 	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y);
 
 
@@ -42,5 +43,5 @@ namespace TianLi::Utils
 	bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
 	bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int& ret);
-	
+
 }
