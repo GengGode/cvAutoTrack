@@ -11,7 +11,7 @@ namespace TianLi::Utils
 	cv::Mat get_some_map(const cv::Mat& map, const cv::Point& pos, int size_r);
 
 	double dis(cv::Point2d p);
-	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy);
+	bool SPC(std::vector<double> lisx, std::vector<double> lisy,cv::Point2d& out);
 	
 	double stdev(std::vector<double> list);
 	double stdev(std::vector<cv::Point2d> list);

@@ -132,10 +132,7 @@ void SurfMatch::match()
 	if (!isContinuity)
 	{
 		pos = match_no_continuity(calc_is_faile);
-		if (std::isnan(pos.x) || std::isnan(pos.y))
-		{
-			calc_is_faile = true;	//如果pos是nan，则算匹配失败
-		}
+
 		// 没有有效结果，结束
 		if (calc_is_faile)
 		{
@@ -151,10 +148,6 @@ void SurfMatch::match()
 		bool calc_continuity_is_faile = false;
 		pos = match_continuity(calc_continuity_is_faile);
 
-		if (std::isnan(pos.x) || std::isnan(pos.y))
-		{
-			calc_continuity_is_faile = true;	//如果pos是nan，则算匹配失败
-		}
 		if (!calc_continuity_is_faile)
 		{
 			isContinuity = true;
@@ -168,7 +161,7 @@ void SurfMatch::match()
 			return;
 		}
 	}
-
+	last_pos = pos;
 	is_success_match = true;
 }
 
@@ -287,7 +280,11 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 		return all_map_pos;
 	}
 	// 从最佳匹配结果中剔除异常点计算角色位置返回
-	all_map_pos = TianLi::Utils::SPC(lisx, lisy);
+	if (!TianLi::Utils::SPC(lisx, lisy, all_map_pos))
+	{
+		calc_is_faile = true;
+		return all_map_pos;
+	}
 	return all_map_pos;
 }
 
@@ -362,7 +359,13 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	
 	isOnCity = judgesIsOnCity(keypoint_on_city_list,0.5);		//大地图放大了2倍，所以小地图坐标也要这样处理
 
-	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, lisy);
+	cv::Point2d pos_continuity_on_city;
+	
+	if (! TianLi::Utils::SPC(lisx, lisy, pos_continuity_on_city))
+	{
+		calc_continuity_is_faile = true;
+		return pos_continuity_on_city;
+	}
 
 	pos_continuity_on_city.x = (pos_continuity_on_city.x - someMap.cols / 2.0) / 2.0;
 	pos_continuity_on_city.y = (pos_continuity_on_city.y - someMap.rows / 2.0) / 2.0;
@@ -433,9 +436,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	if (!judgesIsOnCity(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE))
 	{
 		isOnCity = false;
-		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
+		cv::Point2d p;
+		if (!TianLi::Utils::SPC(lisx, lisy, p))
+		{
+			calc_continuity_is_faile = true;
+			return pos_not_on_city;
+		}
 		pos_not_on_city = cv::Point2d(p.x + pos.x - real_some_map_size_r, p.y + pos.y - real_some_map_size_r);
-		return pos_not_on_city;
+	return pos_not_on_city;
 	}
 	
 	cv::Point2d pos_on_city;
@@ -484,7 +492,12 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	isOnCity = judgesIsOnCity(keypoint_on_city_list, 0.5);
 
-	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
+	cv::Point2d p;
+	if (!TianLi::Utils::SPC(list_x_on_city, list_y_on_city, p))
+	{
+		calc_continuity_is_faile = true;
+		return pos_on_city;
+	}
 
 	double x = (p.x - someMap.cols / 2.0) / 2.0;
 	double y = (p.y - someMap.rows / 2.0) / 2.0;
