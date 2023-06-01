@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "pch.h"
 
 namespace Tianli::Resources::Utils
@@ -8,7 +8,7 @@ namespace Tianli::Resources::Utils
 	private:
 		std::ostream& fileOut;
 	public:
-		//½«Á÷¶ÔÆëµ½size£¨2µÄÃİ´Î£©µÄÕûÊı±¶
+		//å°†æµå¯¹é½åˆ°sizeï¼ˆ2çš„å¹‚æ¬¡ï¼‰çš„æ•´æ•°å€
 		void align(int size = 4) {
 			int p = 0;
 			for (p = 0; size != 1; p++)
@@ -74,7 +74,7 @@ namespace Tianli::Resources::Utils
 	public:
 		deSerializeStream(std::istream& fileIn) :fileIn(fileIn) {}
 
-		void align(int size = 4)		//½«Á÷¶ÔÆëµ½size£¨2µÄÃİ´Î£©µÄÕûÊı±¶
+		void align(int size = 4)		//å°†æµå¯¹é½åˆ°sizeï¼ˆ2çš„å¹‚æ¬¡ï¼‰çš„æ•´æ•°å€
 		{
 			int p = 0;
 			for (p = 0; size != 1; p++)
@@ -92,12 +92,12 @@ namespace Tianli::Resources::Utils
 		{
 			align(sizeof(DWORD));
 			DWORD size;
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read((char*)&size, sizeof(DWORD));
-			if (size > MAXSHORT) throw std::exception("½âÎöµ½µÄ×Ö·û´®¹ı³¤");
+			if (size > MAXSHORT) throw std::exception("è§£æåˆ°çš„å­—ç¬¦ä¸²è¿‡é•¿");
 
 			char* bytes = new char[size];
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read(bytes, size);
 
 			s = std::string(bytes);
@@ -110,7 +110,7 @@ namespace Tianli::Resources::Utils
 		void operator >>(Digital & d)
 		{
 			align(sizeof(Digital));
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read((char*)&d, sizeof(d));
 		}
 
@@ -118,11 +118,11 @@ namespace Tianli::Resources::Utils
 		{
 			align(sizeof(DWORD));
 			DWORD size;
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read((char*)&size, sizeof(DWORD));
 
 			char* bytes = new char[size];
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read(bytes, size);
 
 			cv::KeyPoint* keyPointPtr = (cv::KeyPoint*)bytes;
@@ -135,11 +135,11 @@ namespace Tianli::Resources::Utils
 		{
 			align(sizeof(DWORD));
 			DWORD size;
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read((char*)&size, sizeof(DWORD));
 
 			char* bytes = new char[size];
-			if (fileIn.eof()) throw std::exception("³¢ÊÔ¶ÁÈ¡ÒÑ¾­Îª¿ÕµÄÁ÷");
+			if (fileIn.eof()) throw std::exception("å°è¯•è¯»å–å·²ç»ä¸ºç©ºçš„æµ");
 			fileIn.read(bytes, size);
 
 			std::vector<uchar> inputArray(bytes, bytes + size);
