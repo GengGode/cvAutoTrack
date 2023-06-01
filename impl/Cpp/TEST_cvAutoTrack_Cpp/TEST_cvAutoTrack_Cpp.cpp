@@ -5,6 +5,7 @@
 #include <Windows.h>
 
 #include <vector>
+#include <format>
 
 int TEST()
 {
@@ -129,6 +130,34 @@ void Run_GetRot()
 		std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
 	}
 }
+
+void Run_GetAll()
+{
+	double x, y, a, r;
+	int mapId,uid;
+	std::string mapType;
+	if (GetAllInfo(x, y, mapId, a, r, uid))
+	{
+		switch (mapId) {
+		case 0:mapType = "提瓦特大陆"; break;
+		case 1:mapType = "渊下宫"; break;
+		case 2:mapType = "地下矿区"; break;
+		}
+		std::cout << std::format(R"(
+全部信息：
+地区:{}
+坐标:x = {:6.2f}; y = {:6.2f}
+朝向:角色 = {:4.2f}; 相机 = {:4.2f}
+UID:{:d}
+----------------
+)",mapType,x,y,a,r,uid);
+	}
+	else
+	{
+		std::cout << "错误码       : " << " \n" << GetLastErr() << " " << "\n";
+	}
+}
+
 void Run_GetUID()
 {
 	int uid = 0;
@@ -203,19 +232,23 @@ int Run()
 	while (1)
 	{
 		// 显示菜单
-		std::cout << "1. 设置Dx截图\n";
-		std::cout << "2. 设置Bitblt截图\n";
-		std::cout << "3. 获取坐标和角度　\n";
-		std::cout << "4. 获取坐标\n";
-		std::cout << "5. 获取角度\n";
-		std::cout << "6. 获取视角朝向\n";
-		std::cout << "7. 获取当前UID\n";
-		std::cout << "8. 获取当前神瞳Json\n";
-		std::cout << "9. 截图\n";
-		std::cout << "0. 退出　\n";
-		std::cout << "11.获取版本号 \n";
-		std::cout << "13.loop GetPositionOfMap\n";
-		std::cout << "请输入选项: ";
+		std::cout << 
+R"(
+1. 设置Dx截图
+2. 设置Bitblt截图
+3. 获取坐标和角度
+4. 获取坐标
+5. 获取角度
+6. 获取视角朝向
+7. 获取当前UID
+8. 获取当前神瞳Json
+9. 截图
+10.可视化调试【Debug模式】
+=====================
+-1. 获取版本号
+0. 退出
+请输入选项: 
+)";
 		int option = 0;
 		std::cin >> option;
 		std::cout << "\n";
@@ -257,11 +290,7 @@ int Run()
 			Run_Capture();
 			system("pause");
 			break;
-		case 11:
-			Run_GetVersion();
-			system("pause");
-			break;
-		case 13:
+		case 10:
 			while (1)
 			{
 				// 30ms 内检测到ECS键就退出
@@ -269,22 +298,15 @@ int Run()
 					break;
 				}
 				Sleep(100);
-				Run_GetPosit();
+				Run_GetAll();
 			}
+			break;
+		case -1:
+			Run_GetVersion();
+			system("pause");
 			break;
 		case 0:
 			return 0;
-			break;
-		case -1:
-			while (1) {
-				// 30ms 内检测到ECS键就退出
-				if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
-					break;
-				}
-				Sleep(30);
-				//TODO:
-				Run_GetDir();
-			}
 			break;
 		default:
 			break;
