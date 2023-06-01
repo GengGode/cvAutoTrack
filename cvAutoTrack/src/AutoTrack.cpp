@@ -336,8 +336,7 @@ bool AutoTrack::GetPosition(double& x, double& y)
 	}
 	if (!genshin_minimap.is_init_finish)
 	{
-		err = { 1, "没有初始化" };
-		return false;
+		init();
 	}
 	if (getMiniMapRefMat()==false)
 		{
@@ -640,10 +639,13 @@ bool AutoTrack::GetUID(int& uid)
 
 bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
 {
+	if (workflow_for_begin->run() == false)
+	{
+		return false;
+	}
 	if (!genshin_minimap.is_init_finish)
 	{
-		err = { 1, "没有初始化" };
-		return false;
+		init();
 	}
 	if (getMiniMapRefMat() == false)
 	{
@@ -874,7 +876,7 @@ bool AutoTrack::getMiniMapRefMat()
 }
 
 #ifdef _DEBUG
-cv::Mat gi_map = Resources::getInstance().MapTemplate;
+Resources* resource = &Resources::getInstance();
 inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle, float rotate)
 {
 	cv::Point2d pos(x, y);
@@ -882,9 +884,11 @@ inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle,
 	if (mapId == 0)
 		pos = TianLi::Utils::TransferAxes_inv(pos, user_world_center, user_world_scale);
 	//获取附近的地图
+	cv::Mat gi_map = resource->MapTemplate;
 	cv::Mat subMap = TianLi::Utils::get_some_map(gi_map, pos, 100);
-	//绘制箭头
-
+	//绘制箭头(没有素材就先用直线代替)
+	cv::Point2d center(subMap.size[1] / 2,subMap.size[0] / 2);
+	cv::Point2d direct(0, 0);
 	//绘制扇形
 
 	//在图中显示坐标信息
