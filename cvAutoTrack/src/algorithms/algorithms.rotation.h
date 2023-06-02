@@ -8,6 +8,9 @@ struct rotation_calculation_config
 	error_info err = { 0,"" };
 	
 };
+
+double lastRotate = 0;
+
 void rotation_calculation(cv::Mat& giMiniMapRef, double&a, rotation_calculation_config& config)
 {
 	cv::Mat img_object(giMiniMapRef(cv::Rect(40, 40, giMiniMapRef.cols - 80, giMiniMapRef.rows - 80)));
@@ -69,6 +72,7 @@ void rotation_calculation(cv::Mat& giMiniMapRef, double&a, rotation_calculation_
 	{
 		config.error = true;
 		config.err = { 3005 ,"获取视角朝向时，没有提取出视角扇形区域" };
+		a = lastRotate;
 		return;
 	}
 
@@ -98,4 +102,5 @@ void rotation_calculation(cv::Mat& giMiniMapRef, double&a, rotation_calculation_
 	p = p - cv::Point(img_object.cols / 2, img_object.rows / 2);
 
 	a = TianLi::Utils::Line2Angle(p);
+	lastRotate = a;
 }
