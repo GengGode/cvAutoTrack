@@ -883,13 +883,23 @@ inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle,
 	//转换到绝对坐标
 	if (mapId == 0)
 		pos = TianLi::Utils::TransferAxes_inv(pos, user_world_center, user_world_scale);
+
 	//获取附近的地图
 	cv::Mat gi_map = resource->MapTemplate;
-	cv::Mat subMap = TianLi::Utils::get_some_map(gi_map, pos, 100);
-	//绘制箭头(没有素材就先用直线代替)
-	cv::Point2d center(subMap.size[1] / 2,subMap.size[0] / 2);
-	cv::Point2d direct(0, 0);
+	cv::Mat subMap = TianLi::Utils::get_some_map(gi_map, pos, 150).clone();
+
+	cv::Point2i center(subMap.size[1] / 2, subMap.size[0] / 2);
+	
 	//绘制扇形
+	cv::Mat sectorMask = subMap.clone();
+	cv::ellipse(sectorMask, center, cv::Size2i(100, 100), -rotate - 135, 0, 90, cv::Scalar(255, 255, 255, 100), -1, cv::LINE_AA);
+	cv::addWeighted(subMap, 0.75, sectorMask,0.25,0,subMap);
+
+	//绘制玩家方向
+	cv::Point2i direct(0, 0);
+	direct.x = -(30 * sin((angle / 180.0) * _Pi)) + center.x;
+	direct.y = -(30 * cos((angle / 180.0) * _Pi)) + center.y;
+	cv::arrowedLine(subMap, center, direct, cv::Scalar(255, 255, 0), 5,cv::LINE_AA,0,0.5);
 
 	//在图中显示坐标信息
 	cv::imshow("Visual Debug", subMap);
