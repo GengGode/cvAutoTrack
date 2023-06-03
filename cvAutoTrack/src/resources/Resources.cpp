@@ -360,6 +360,7 @@ inline void MapKeypointCache::serialize(std::string outFileName)
   ss << this->upRight;
   ss << this->keyPoints;
   ss << this->descriptors;
+  ss << this->bulid_version_end;
   ss.align();
   ofs.close();
 }
@@ -377,6 +378,7 @@ inline void MapKeypointCache::deSerialize(std::string infileName)
   dss >> this->upRight;
   dss >> this->keyPoints;
   dss >> this->descriptors;
+  dss >> this->bulid_version_end;
   ifs.close();
 }
 
@@ -412,7 +414,7 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
     return false;
   }
 
-  if (cache.bulid_version._Equal(cache.bulid_version_end))    //写入不完整
+  if (cache.bulid_version != cache.bulid_version_end)    //写入不完整
     return false;
 
   keypoints = cache.keyPoints;
