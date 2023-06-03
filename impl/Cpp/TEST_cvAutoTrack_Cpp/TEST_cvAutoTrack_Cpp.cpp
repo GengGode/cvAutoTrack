@@ -136,7 +136,7 @@ void Run_GetAll()
 	double x, y, a, r;
 	int mapId,uid;
 	std::string mapType;
-	if (!GetAllInfo(x, y, mapId, a, r, uid))
+	if (GetAllInfo(x, y, mapId, a, r, uid))
 	{
 		switch (mapId) {
 		case 0:mapType = "提瓦特大陆"; break;
