@@ -1,9 +1,6 @@
 #pragma once
 #include "match/type/MatchType.h"
-namespace TianLi::Utils
-{
-  class Workflow;
-}
+
 class AutoTrack {
 public:
   AutoTrack(void);
@@ -56,8 +53,6 @@ public:
   bool DebugCapturePath(const char* path_buff, int buff_size);
 #pragma endregion
 private:
-  TianLi::Utils::Workflow* workflow_for_begin = nullptr;
-private:
 #pragma region 坐标映射相关变量
 
   //用户定义映射关系参数
@@ -80,6 +75,7 @@ private:
   GenshinMinimap genshin_minimap;
   GenshinAvatarPosition genshin_avatar_position;
 private:
+	bool try_get_genshin_windows();
   bool getGengshinImpactWnd();
   bool getGengshinImpactScreen();
   bool getMiniMapRefMat();

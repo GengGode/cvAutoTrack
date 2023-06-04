@@ -7,7 +7,6 @@
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "utils/Utils.h"
-#include "utils/workflow/utils.workflow.h"
 
 #include "algorithms/algorithms.direction.h"
 #include "algorithms/algorithms.rotation.h"
@@ -31,17 +30,11 @@ AutoTrack::AutoTrack()
 
 	genshin_handle.config.capture = new Bitblt();
 	genshin_handle.config.capture->init();
-	
-	workflow_for_begin = new TianLi::Utils::Workflow();
-	workflow_for_begin->append(clear_error_logs, 0, "正常退出");
-	workflow_for_begin->append([this]() {return getGengshinImpactWnd(); }, 101, "未能找到原神窗口句柄");
-	workflow_for_begin->append([this]() {return getGengshinImpactScreen(); }, 103, "获取原神画面失败");
 }
 
 AutoTrack::~AutoTrack(void)
 {
 	delete genshin_handle.config.capture;
-	delete workflow_for_begin;
 }
 
 bool AutoTrack::init()
@@ -330,7 +323,7 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 
 bool AutoTrack::GetPosition(double& x, double& y)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -388,7 +381,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 
 bool AutoTrack::GetDirection(double& a)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -416,7 +409,7 @@ bool AutoTrack::GetDirection(double& a)
 
 bool AutoTrack::GetRotation(double& a)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -478,7 +471,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		pos.clear();
 		seeId = 0;
 
-		if (workflow_for_begin->run() == false)
+		if (try_get_genshin_windows() == false)
 		{
 			return false;
 		}
@@ -570,7 +563,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 bool AutoTrack::GetStarJson(char* jsonBuff)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -606,7 +599,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 bool AutoTrack::GetUID(int& uid)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -639,7 +632,7 @@ bool AutoTrack::GetUID(int& uid)
 
 bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -777,6 +770,26 @@ int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
 		return false;
 	}
 	strcpy_s(json_buff, buff_size, msg.c_str());
+	return true;
+}
+
+bool AutoTrack::try_get_genshin_windows()
+{
+	if (!clear_error_logs())
+	{
+		err = { 0, "正常退出" };
+		return false;
+	}
+	if (!getGengshinImpactWnd())
+	{
+		err = { 101, "未能找到原神窗口句柄" };
+		return false;
+	}
+	if (!getGengshinImpactScreen())
+	{
+		err = { 103, "获取原神画面失败" };
+		return false;
+	}
 	return true;
 }
 
