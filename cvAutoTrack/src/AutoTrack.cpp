@@ -26,8 +26,8 @@ AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
 	
-	user_world_center = map_relative_center;
-	user_world_scale = map_relative_scale;
+	genshin_avatar_position.target_map_world_center = res.map_relative_center;
+	genshin_avatar_position.target_map_world_scale = res.map_relative_scale;
 
 	genshin_handle.config.capture = std::make_unique<Bitblt>();
 	genshin_handle.config.capture->init();
@@ -144,14 +144,14 @@ bool AutoTrack::SetHandle(long long int handle)
 
 bool AutoTrack::SetWorldCenter(double x, double y)
 {
-	user_world_center.x = x;
-	user_world_center.y = y;
+	genshin_avatar_position.target_map_world_center.x = x;
+	genshin_avatar_position.target_map_world_center.y = y;
 	return true;
 }
 
 bool AutoTrack::SetWorldScale(double scale)
 {
-	user_world_scale = scale;
+	genshin_avatar_position.target_map_world_scale = scale;
 	return true;
 }
 
@@ -355,7 +355,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	mapId = raw_pos.second;
 	if (mapId == 0)
 	{
-		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, user_world_center, user_world_scale);
+		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, genshin_avatar_position.target_map_world_center, genshin_avatar_position.target_map_world_scale);
 		x = user_Pos.x;
 		y = user_Pos.y;
 	}
@@ -880,7 +880,7 @@ inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle,
 	cv::Point2d pos(x, y);
 	//转换到绝对坐标
 	if (mapId == 0)
-		pos = TianLi::Utils::TransferAxes_inv(pos, user_world_center, user_world_scale);
+		pos = TianLi::Utils::TransferAxes_inv(pos, genshin_avatar_position.target_map_world_center, genshin_avatar_position.target_map_world_scale);
 
 	//获取附近的地图
 	cv::Mat gi_map = resource->MapTemplate;

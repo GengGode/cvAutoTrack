@@ -233,6 +233,8 @@ struct GenshinAvatarPositionConfig
 };
 struct GenshinAvatarPosition
 {
+	cv::Point2d target_map_world_center;
+	double target_map_world_scale = 1.0;
 	cv::Point2d position;
 	GenshinAvatarPositionConfig config;
 };

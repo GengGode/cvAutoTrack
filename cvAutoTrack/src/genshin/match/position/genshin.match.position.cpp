@@ -3,7 +3,6 @@
 
 #include "resources/Resources.h"
 #include "Match/surf/SurfMatch.h"
-#include "filter/kalman/Kalman.h"
 
 cv::Mat to_color(cv::Mat& img_object)
 {
