@@ -304,10 +304,6 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 		init();//初始化
 	}
 
-	/*
-	获取坐标的优先级远高于获取方向
-	所以只要能获取到坐标，就可以尝试输出，不至于因为识别不到方向导致追踪失效
-	*/
 	if (!GetPositionOfMap(x2, y2, mapId2))
 	{
 		return false;
@@ -645,24 +641,24 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		//err = { 1001, "获取所有信息时，没有识别到paimon" };
 		return false;
 	}
-
 	if (genshin_minimap.img_minimap.empty())
 	{
 		err = { 5, "原神小地图区域为空" };
 		return false;
 	}
-	// x,y,mapId
-	{
-		genshin_minimap.config.is_find_paimon = true;
-
-		GetPositionOfMap(x, y, mapId);
-	}
-
 	if (genshin_minimap.rect_avatar.empty())
 	{
 		err = { 11,"原神角色小箭头区域为空" };
 		return false;
 	}
+
+	// x,y,mapId
+	{
+		genshin_minimap.config.is_find_paimon = true;
+		GetPositionOfMap(x, y, mapId);
+	}
+
+
 	// a
 	{
 		direction_calculation_config  config;
@@ -670,7 +666,6 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		if (config.error)
 		{
 			err = config.err;
-			return false;
 		}
 	}
 	// r
@@ -680,7 +675,6 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		if (config.error)
 		{
 			err = config.err;
-			return false;
 		}
 	}
 	cv::Mat& giUIDRef = genshin_screen.img_uid;
@@ -704,14 +698,13 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 		if (config.error)
 		{
 			err = config.err;
-			return false;
 		}
 	}
 
 #ifdef _DEBUG
 	showMatchResult(x, y, mapId, a, r);
 #endif // _DEBUG
-	return clear_error_logs();
+  return clear_error_logs();
 }
 
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)

@@ -319,10 +319,11 @@ bool Dxgi::capture(cv::Mat& frame)
 	
 	// 将画面转换为OpenCV的Mat
 	frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
-    if (client_box_available)
-    {
-		frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
-    }
+  if (client_box_available)
+  {
+	frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
+  }
+  frame = frame.clone();
 	// 释放资源
     bufferTexture->Release();
 	return true;
