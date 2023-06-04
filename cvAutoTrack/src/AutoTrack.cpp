@@ -6,8 +6,8 @@
 
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
+#include "filter/kalman/Kalman.h"
 #include "utils/Utils.h"
-#include "utils/workflow/utils.workflow.h"
 
 #include "algorithms/algorithms.direction.h"
 #include "algorithms/algorithms.rotation.h"
@@ -26,22 +26,12 @@ AutoTrack::AutoTrack()
 {
 	err.enableWirteFile();
 	
-	user_world_center = map_relative_center;
-	user_world_scale = map_relative_scale;
+	genshin_avatar_position.target_map_world_center = res.map_relative_center;
+	genshin_avatar_position.target_map_world_scale = res.map_relative_scale;
 
-	genshin_handle.config.capture = new Bitblt();
+	genshin_handle.config.capture = std::make_shared<Bitblt>();
 	genshin_handle.config.capture->init();
-	
-	workflow_for_begin = new TianLi::Utils::Workflow();
-	workflow_for_begin->append(clear_error_logs, 0, "正常退出");
-	workflow_for_begin->append([this]() {return getGengshinImpactWnd(); }, 101, "未能找到原神窗口句柄");
-	workflow_for_begin->append([this]() {return getGengshinImpactScreen(); }, 103, "获取原神画面失败");
-}
-
-AutoTrack::~AutoTrack(void)
-{
-	delete genshin_handle.config.capture;
-	delete workflow_for_begin;
+	genshin_avatar_position.config.pos_filter = std::make_shared<Kalman>();
 }
 
 bool AutoTrack::init()
@@ -74,17 +64,15 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 {
 	if (genshin_handle.config.capture == nullptr)
 	{
-		genshin_handle.config.capture = new Bitblt();
+		genshin_handle.config.capture = std::make_shared<Bitblt>();
 		return true;
 	}
 	if (genshin_handle.config.capture->mode == Capture::Bitblt)
 	{
 		return true;
 	}
-
-	delete genshin_handle.config.capture;
-	genshin_handle.config.capture = new Bitblt();
-
+	genshin_handle.config.capture.reset();
+	genshin_handle.config.capture = std::make_shared<Bitblt>();
 	return true;
 }
 
@@ -92,18 +80,15 @@ bool AutoTrack::SetUseDx11CaptureMode()
 {
 	if (genshin_handle.config.capture == nullptr)
 	{
-		genshin_handle.config.capture = new Dxgi();
+		genshin_handle.config.capture = std::make_shared<Dxgi>();
 		return true;
 	}
-
 	if (genshin_handle.config.capture->mode == Capture::DirectX)
 	{
 		return true;
 	}
-
-	delete genshin_handle.config.capture;
-	genshin_handle.config.capture = new Dxgi();
-
+	genshin_handle.config.capture.reset();
+	genshin_handle.config.capture = std::make_shared<Dxgi>();
 	return true;
 }
 
@@ -159,14 +144,14 @@ bool AutoTrack::SetHandle(long long int handle)
 
 bool AutoTrack::SetWorldCenter(double x, double y)
 {
-	user_world_center.x = x;
-	user_world_center.y = y;
+	genshin_avatar_position.target_map_world_center.x = x;
+	genshin_avatar_position.target_map_world_center.y = y;
 	return true;
 }
 
 bool AutoTrack::SetWorldScale(double scale)
 {
-	user_world_scale = scale;
+	genshin_avatar_position.target_map_world_scale = scale;
 	return true;
 }
 
@@ -326,7 +311,7 @@ bool AutoTrack::GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 
 bool AutoTrack::GetPosition(double& x, double& y)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -370,7 +355,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 	mapId = raw_pos.second;
 	if (mapId == 0)
 	{
-		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, user_world_center, user_world_scale);
+		auto user_Pos = TianLi::Utils::TransferAxes(raw_pos.first, genshin_avatar_position.target_map_world_center, genshin_avatar_position.target_map_world_scale);
 		x = user_Pos.x;
 		y = user_Pos.y;
 	}
@@ -384,7 +369,7 @@ bool AutoTrack::GetPositionOfMap(double& x, double& y, int& mapId)
 
 bool AutoTrack::GetDirection(double& a)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -412,7 +397,7 @@ bool AutoTrack::GetDirection(double& a)
 
 bool AutoTrack::GetRotation(double& a)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -474,7 +459,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 		pos.clear();
 		seeId = 0;
 
-		if (workflow_for_begin->run() == false)
+		if (try_get_genshin_windows() == false)
 		{
 			return false;
 		}
@@ -566,7 +551,7 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
 
 bool AutoTrack::GetStarJson(char* jsonBuff)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -602,7 +587,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
 
 bool AutoTrack::GetUID(int& uid)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -635,7 +620,7 @@ bool AutoTrack::GetUID(int& uid)
 
 bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
 {
-	if (workflow_for_begin->run() == false)
+	if (try_get_genshin_windows() == false)
 	{
 		return false;
 	}
@@ -773,6 +758,26 @@ int AutoTrack::GetLastErrJson(char* json_buff, int buff_size)
 	return true;
 }
 
+bool AutoTrack::try_get_genshin_windows()
+{
+	if (!clear_error_logs())
+	{
+		err = { 0, "正常退出" };
+		return false;
+	}
+	if (!getGengshinImpactWnd())
+	{
+		err = { 101, "未能找到原神窗口句柄" };
+		return false;
+	}
+	if (!getGengshinImpactScreen())
+	{
+		err = { 103, "获取原神画面失败" };
+		return false;
+	}
+	return true;
+}
+
 bool AutoTrack::getGengshinImpactWnd()
 {
 	TianLi::Genshin::get_genshin_handle(genshin_handle);
@@ -875,7 +880,7 @@ inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle,
 	cv::Point2d pos(x, y);
 	//转换到绝对坐标
 	if (mapId == 0)
-		pos = TianLi::Utils::TransferAxes_inv(pos, user_world_center, user_world_scale);
+		pos = TianLi::Utils::TransferAxes_inv(pos, genshin_avatar_position.target_map_world_center, genshin_avatar_position.target_map_world_scale);
 
 	//获取附近的地图
 	cv::Mat gi_map = resource->MapTemplate;

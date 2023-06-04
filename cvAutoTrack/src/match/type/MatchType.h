@@ -65,7 +65,7 @@ struct GenshinHandleConfig
 	bool is_auto_find_genshin = true;
 	bool is_force_used_no_alpha = false;
 	HWND genshin_handle = nullptr;
-	Capture *capture = nullptr;
+	std::shared_ptr<Capture> capture;
 
 	std::vector<std::pair<std::wstring, GenshinWindowClass>> genshin_window_name_list = GenshinWindowNameList;
 };
@@ -229,10 +229,12 @@ struct GenshinAvatarPositionConfig
 	bool is_exist_last_match_minimap = false;
 	cv::Mat img_last_match_minimap;
 	bool is_use_filter = true;
-	Filter* pos_filter = nullptr;
+	std::shared_ptr<Filter> pos_filter;
 };
 struct GenshinAvatarPosition
 {
+	cv::Point2d target_map_world_center;
+	double target_map_world_scale = 1.0;
 	cv::Point2d position;
 	GenshinAvatarPositionConfig config;
 };
