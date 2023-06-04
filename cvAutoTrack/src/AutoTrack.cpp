@@ -29,9 +29,9 @@ AutoTrack::AutoTrack()
 	genshin_avatar_position.target_map_world_center = res.map_relative_center;
 	genshin_avatar_position.target_map_world_scale = res.map_relative_scale;
 
-	genshin_handle.config.capture = std::make_unique<Bitblt>();
+	genshin_handle.config.capture = std::make_shared<Bitblt>();
 	genshin_handle.config.capture->init();
-	genshin_avatar_position.config.pos_filter = std::make_unique<Kalman>();
+	genshin_avatar_position.config.pos_filter = std::make_shared<Kalman>();
 }
 
 bool AutoTrack::init()
@@ -64,7 +64,7 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 {
 	if (genshin_handle.config.capture == nullptr)
 	{
-		genshin_handle.config.capture = std::make_unique<Bitblt>();
+		genshin_handle.config.capture = std::make_shared<Bitblt>();
 		return true;
 	}
 	if (genshin_handle.config.capture->mode == Capture::Bitblt)
@@ -72,7 +72,7 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 		return true;
 	}
 	genshin_handle.config.capture.reset();
-	genshin_handle.config.capture = std::make_unique<Bitblt>();
+	genshin_handle.config.capture = std::make_shared<Bitblt>();
 	return true;
 }
 
@@ -80,7 +80,7 @@ bool AutoTrack::SetUseDx11CaptureMode()
 {
 	if (genshin_handle.config.capture == nullptr)
 	{
-		genshin_handle.config.capture = std::make_unique<Dxgi>();
+		genshin_handle.config.capture = std::make_shared<Dxgi>();
 		return true;
 	}
 	if (genshin_handle.config.capture->mode == Capture::DirectX)
@@ -88,7 +88,7 @@ bool AutoTrack::SetUseDx11CaptureMode()
 		return true;
 	}
 	genshin_handle.config.capture.reset();
-	genshin_handle.config.capture = std::make_unique<Dxgi>();
+	genshin_handle.config.capture = std::make_shared<Dxgi>();
 	return true;
 }
 
