@@ -4,8 +4,7 @@
 class AutoTrack
 {
 public:
-    AutoTrack(void);
-    ~AutoTrack();
+    AutoTrack();
 #pragma region 外部接口
     bool init();
     bool uninit();
