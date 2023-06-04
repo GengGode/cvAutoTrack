@@ -229,7 +229,7 @@ struct GenshinAvatarPositionConfig
 	bool is_exist_last_match_minimap = false;
 	cv::Mat img_last_match_minimap;
 	bool is_use_filter = true;
-	Filter* pos_filter = nullptr;
+	std::unique_ptr<Filter> pos_filter;
 };
 struct GenshinAvatarPosition
 {
