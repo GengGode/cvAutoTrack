@@ -119,6 +119,8 @@
     branches:
       only:
         - /dev-/
+        - dev
+
         
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
