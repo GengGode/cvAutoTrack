@@ -21,7 +21,8 @@ $upload_headers=@{
     'file-path' = $upload_path
 }
 try{
-    Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
+    $uploadInfo = Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
+    Write-Host $uploadInfo
     return 0
 }
 catch{
