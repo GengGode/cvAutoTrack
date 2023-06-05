@@ -69,7 +69,6 @@ bool Dxgi::init()
     }
 	
     // TODO: 中断时重开原神，进入这里
-    TianLi::DirectX::d3dDevice->GetImmediateContext(m_d3dContext.put());
     m_device = CreateDirect3DDevice(TianLi::DirectX::dxgiDevice.get());
     m_item = CreateCaptureItemForWindow(giHandle);
     if (m_item == nullptr)
@@ -85,6 +84,8 @@ bool Dxgi::init()
         err = { 14, "窗口画面大小小于480x360，无法使用" };
         return false;
     }
+
+    TianLi::DirectX::d3dDevice->GetImmediateContext(m_d3dContext.put());
 	
     try 
     {
