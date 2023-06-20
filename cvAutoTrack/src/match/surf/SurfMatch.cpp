@@ -153,7 +153,10 @@ void SurfMatch::match()
 		continuity_retry = 0;
 
 		if (isMatchAllMap)
+		{
+			isContinuity = false;
 			isMatchAllMap = false;
+		}
 		else
 			isContinuity = true;
 
