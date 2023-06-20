@@ -1,61 +1,48 @@
-#$version='7.5.116.383-HEAD-85cb2f8'
+#$version = '7.9.5-6-g6c9f02b'
 
+$successTime = 0
 
-$login_username='GitAction'
-$login_password='iOpEv21kPOt5ZrMqViLKvJJXshh6olNR'
-$login_api='/api/auth/login'
-$login_url='http://download.weixitianli.com'+$login_api + '?Username='+$login_username+'&Password='+$login_password
-$token=(Invoke-RestMethod -Uri $login_url -Method Post).data.token
+$login_username = 'GitAction'
+$login_password = 'iOpEv21kPOt5ZrMqViLKvJJXshh6olNR'
+$login_api = '/api/auth/login'
+$login_url = 'http://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
+$token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
 Write-Host $token
 
-Write-Host  上传
+Write-Host  Uploading
 
-$upload_api='/api/fs/put'
-$upload_url='http://download.weixitianli.com'+$upload_api
-$upload_file='cvAutoTrack-'+$version+'.zip'
-$upload_file_length=(Get-Item $upload_file).Length
-$upload_path='/sync/TianLiUpdateService.tianyi/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
+$upload_api = '/api/fs/put'
+$upload_url = 'http://download.weixitianli.com' + $upload_api
+$upload_file = 'cvAutoTrack-' + $version + '.zip'
+$upload_file_length = (Get-Item $upload_file).Length
+$upload_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack/',
+  '/sync/TianLiUpdateService.object/cvAutoTrack/',
+  '/sync/TianLiUpdateService.local/cvAutoTrack/')
 
-$upload_api='/api/fs/put'
-$upload_url='http://download.weixitianli.com'+$upload_api
-$upload_file='cvAutoTrack-'+$version+'.zip'
-$upload_file_length=(Get-Item $upload_file).Length
-$upload_path='/sync/TianLiUpdateService.object/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
+foreach($upload_path in $upload_paths) {
+  $upload_headers = @{
+    Authorization    = $token
+    'Content-Type'   = 'application/x-zip-compressed'
     'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
+    'file-path'      = $upload_path+$upload_file
+  }
 
-$upload_api='/api/fs/put'
-$upload_url='http://download.weixitianli.com'+$upload_api
-$upload_file='cvAutoTrack-'+$version+'.zip'
-$upload_file_length=(Get-Item $upload_file).Length
-$upload_path='/sync/TianLiUpdateService.local/cvAutoTrack/'+$upload_file
-$upload_content_type='multipart/form-data'
-$upload_headers=@{
-    Authorization = $token
-    'Content-Type' = 'application/x-zip-compressed'
-    'Content-Length' = $upload_file_length
-    'file-path' = $upload_path
-}
-try{
+  try {
     $uploadInfo = Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
     Write-Host $uploadInfo
-    return 0
-}
-catch{
-	Write-Host "上传失败，程序终止"
-    return 504
+    $successTime++
+    Write-Host "Upload Success on"+$upload_path
+  }
+  catch {
+    Write-Host "Upload Error on"+$upload_path
+  }
 }
 
-
+if($successTime -eq 0)
+{
+  Write-Host "All Task have Failed, Program Stop"
+  return 504
+}
+else {
+  return 0
+}
