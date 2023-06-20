@@ -129,7 +129,7 @@ void SurfMatch::match()
 	is_success_match = false;
 
 	// 非连续匹配，匹配整个大地图
-	if (!isContinuity)
+	if (isMatchAllMap)
 	{
 		pos = match_no_continuity(calc_is_faile);
 
@@ -149,8 +149,15 @@ void SurfMatch::match()
 
 	if (!calc_continuity_is_faile)
 	{
-		isContinuity = true;
+		last_pos = pos;
 		continuity_retry = 0;
+
+		if (isMatchAllMap)
+			isMatchAllMap = false;
+		else
+			isContinuity = true;
+
+		is_success_match = true;
 	}
 	else 
 	{
@@ -160,14 +167,10 @@ void SurfMatch::match()
 
 		if (continuity_retry >= max_continuity_retry)
 		{
-			isContinuity = false;
+			isMatchAllMap = true;
 			continuity_retry = 0;
 		}
-
-		return;
 	}
-	last_pos = pos;
-	is_success_match = true;
 }
 
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)

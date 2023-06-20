@@ -97,5 +97,8 @@ public:
 
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
+
+private:
+	bool isMatchAllMap = true;
 };
 
