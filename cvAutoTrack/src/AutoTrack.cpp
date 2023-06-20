@@ -7,7 +7,6 @@
 #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "filter/kalman/Kalman.h"
-#include "filter/smooth/Smooth.h"
 #include "utils/Utils.h"
 
 #include "algorithms/algorithms.direction.h"
@@ -32,7 +31,7 @@ AutoTrack::AutoTrack()
 
 	genshin_handle.config.capture = std::make_shared<Bitblt>();
 	genshin_handle.config.capture->init();
-	genshin_avatar_position.config.pos_filter = std::make_shared<Smooth>();
+	genshin_avatar_position.config.pos_filter = std::make_shared<Kalman>();
 }
 
 bool AutoTrack::init()
