@@ -391,7 +391,7 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
   std::string build_time = __DATE__ " " __TIME__;
 
   MapKeypointCache cache(
-    build_time, TianLi::Version::build_version, hessian_threshold, 
+    build_time, TianLi::Version::build_version, hessian_threshold,
     octaves, octave_layers, extended, upright,
     keypoints, descriptors);
 
@@ -410,9 +410,12 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
   try {
     cache.deSerialize("cvAutoTrack_Cache.xml");
   }
-  catch (std::exception){   //缓存损坏
+  catch (std::exception) {   //缓存损坏
     return false;
   }
+
+  if (cache.bulid_version != TianLi::Version::build_version)    //版本不一致
+    return false;
 
   if (cache.bulid_version != cache.bulid_version_end)    //写入不完整
     return false;
