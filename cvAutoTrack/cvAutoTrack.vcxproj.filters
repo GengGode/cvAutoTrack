@@ -116,9 +116,6 @@
     <Filter Include="src\utils\workflow">
       <UniqueIdentifier>{a3d4089a-bcb4-408c-b848-fa28dc81ebba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\utils\log">
-      <UniqueIdentifier>{057367a2-53dc-43de-8d05-1d3790daef72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\genshin\match\position">
       <UniqueIdentifier>{0638de7f-89ef-45cd-b3e8-6d8cfac31b22}</UniqueIdentifier>
     </Filter>
@@ -181,9 +178,6 @@
       <Filter>src\resources</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\Utils.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ErrorCode.h">
       <Filter>src\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\match\surf\SurfMatch.h">
@@ -294,12 +288,6 @@
     <ClInclude Include="src\genshin\genshin.h">
       <Filter>src\genshin</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\workflow\utils.workflow.h">
-      <Filter>src\utils\workflow</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\log\utils.log.h">
-      <Filter>src\utils\log</Filter>
-    </ClInclude>
     <ClInclude Include="src\genshin\match\position\genshin.match.position.h">
       <Filter>src\genshin\match\position</Filter>
     </ClInclude>
@@ -311,6 +299,11 @@
     </ClInclude>
     <ClInclude Include="src\resources\serialize.h">
       <Filter>src\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ErrorCode.h" />
+    <ClInclude Include="src\utils\log\utils.log.h" />
+    <ClInclude Include="src\utils\Logger.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -333,9 +326,6 @@
       <Filter>src\resources</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\Utils.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ErrorCode.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
     <ClCompile Include="src\match\surf\SurfMatch.cpp">
@@ -380,12 +370,6 @@
     <ClCompile Include="src\resources\resources.load.cpp">
       <Filter>src\resources</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
-      <Filter>src\utils\workflow</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\log\utils.log.cpp">
-      <Filter>src\utils\log</Filter>
-    </ClCompile>
     <ClCompile Include="src\genshin\match\position\genshin.match.position.cpp">
       <Filter>src\genshin\match\position</Filter>
     </ClCompile>
@@ -393,6 +377,8 @@
     <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ErrorCode.cpp" />
+    <ClCompile Include="src\utils\log\utils.log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">

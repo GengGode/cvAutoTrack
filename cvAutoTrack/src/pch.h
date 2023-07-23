@@ -137,4 +137,8 @@ inline LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
 	return GenerateMiniDump(lpExceptionInfo);
 }
 #define INSTALL_DUMP_() SetUnhandledExceptionFilter(ExceptionFilter)
+
+//日志库
+#include <utils/Logger.h>
+
 #endif //PCH_H

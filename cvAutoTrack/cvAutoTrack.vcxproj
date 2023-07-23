@@ -165,7 +165,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>D:\opencv\opencv_460\install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)third_party;D:\opencv\opencv_460\install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -394,6 +394,7 @@
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\resources\serialize.h" />
+    <ClInclude Include="src\utils\Logger.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\Ver.h" />
