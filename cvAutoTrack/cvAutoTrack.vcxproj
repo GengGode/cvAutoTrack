@@ -436,6 +436,7 @@
     <ClCompile Include="src\resources\import\resources.import.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />
     <ClCompile Include="src\resources\resources.load.cpp" />
+    <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="src\utils\log\utils.log.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
   </ItemGroup>

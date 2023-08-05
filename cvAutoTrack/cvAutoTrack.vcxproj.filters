@@ -379,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="src\ErrorCode.cpp" />
     <ClCompile Include="src\utils\log\utils.log.cpp" />
+    <ClCompile Include="src\utils\Logger.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">

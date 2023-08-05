@@ -1,5 +1,6 @@
 #pragma once
 #include <pch.h>
+
 //取消宏定义以防止潜在的命名冲突
 #pragma region UNDEF_LEVEL
 #undef ALL
@@ -29,7 +30,7 @@ namespace TianLi::Utils {
   }
 
   static constexpr int DEFAULT_EXPIRATION_TIME = 100;
-  static constexpr LogType DEFAULT_LOG_LEVEL = LogType::NONE;
+  static constexpr LogType DEFAULT_LOG_TYPE = LogType::NONE;
 
   enum class LogLevel {
     ALL,
@@ -83,10 +84,11 @@ namespace TianLi::Utils {
 
   class Logger {
   private:
-    bool consoleOutput;     //是否开启控制台输出
-    LogLevel logLevel;      //日志级别
-    std::fstream logFile;   //日志的文件流
-    size_t maxSize;
+    const std::string fileName = "AutoTrack.log";
+    bool consoleOutput = false;              //是否开启控制台输出
+    LogLevel logLevel = LogLevel::INFO;      //日志级别
+    std::fstream logFile;                    //日志的文件流
+    size_t maxSize = 5 * 1024 * 1024;        //日志的最大大小
 
     /// <summary>
     /// logEntries用于保存近期的日志，如果在输出日志时发现这个日志在近期日志中出现过，
@@ -101,195 +103,48 @@ namespace TianLi::Utils {
     /// 积极的清理最好还是不要发生，这意味着日志的分类不合理，比如没有把含有变量的日志单独分类
     /// 如果发生积极的清理行为，则会额外打印WARN日志提醒
     /// </summary>
-    std::hash<std::string> hash_fun;      //散列函数
+    std::hash<std::string> hash_fun;         //散列函数
     std::map<size_t, LogEntry> logEntries;   //近期日志字典表
     std::map<time_t, size_t> logQueue;       //日志队列，用于清理过期日志
 
-    Logger(const std::string& filename) :logLevel(LogLevel::INFO) {
-#ifdef _DEBUG
-      consoleOutput = true;
-#else
-      consoleOutput = false;
-#endif
-      logFile.open(filename, std::ios_base::in | std::ios_base::out);
-    }
+    Logger();
 
   public:
-    static Logger& getInstance(const std::string& filename = "") {
-      static Logger instance(filename);
+    static Logger& getInstance() {
+      static Logger instance;
       return instance;
-    }
+    };
 
-    void setLogLevel(LogLevel level) {
-      logLevel = level;
-    }
+    void setLogLevel(LogLevel level);
 
-    void enableConsoleOutput(bool enable) {
-      consoleOutput = enable;
-    }
+    void enableConsoleOutput(bool enable);
 
-    void trace(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::TRACE, message, logType, expirationTime);
-    }
+    void trace(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
 
-    void debug(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::DEBUG, message, logType, expirationTime);
-    }
+    void debug(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
 
-    void info(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::INFO, message, logType, expirationTime);
-    }
+    void info(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
 
-    void warn(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::WARN, message, logType, expirationTime);
-    }
+    void warn(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
 
-    void error(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::ERROR, message, logType, expirationTime);
-    }
+    void error(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
 
-    void fatal(const std::string& message, LogType logType = DEFAULT_LOG_LEVEL, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME) {
-      log(LogLevel::FATAL, message, logType, expirationTime);
-    }
+    void fatal(const std::string& message, LogType logType = DEFAULT_LOG_TYPE, std::time_t expirationTime = DEFAULT_EXPIRATION_TIME);
+
+    void putLogEntry(LogEntry);
 
   private:
-    void log(LogLevel level, const std::string& message, LogType logType, std::time_t expirationTime) {
-      if (level < logLevel) {
-        return;
-      }
+    void log(LogLevel level, const std::string& message, LogType logType, std::time_t expirationTime);
 
-      std::size_t key;
-      if (logType == LogType::NONE)
-        key = hash_fun(getLogLevelString(level) + message);
-      else
-        key = hash_fun(getLogLevelString(level)) + (size_t)logType;
+    std::string getLogLevelString(LogLevel level);
 
-      // 如果相同内容的日志已存在且未过期，则更新过期时间并返回
-      if (logEntries.find(key) != logEntries.end()) {
-        LogEntry& entry = logEntries[key];
-        if (!entry.isExpired()) {
-          entry.expirationTime = std::time(nullptr) + expirationTime;
-          return;
-        }
-      }
+    void log2File(std::string logString);
 
-      // 记录新的日志条目
-      logEntries[key] = LogEntry(level, logType, message, std::time(nullptr) + expirationTime);
+    std::string getSystemInfo();
 
-      // 获取当前时间
-      std::time_t now = std::time(nullptr);
-      std::tm tm_now;
-      localtime_s(&tm_now, &now);
-      char timestamp[20];
-      std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", &tm_now);
-
-      // 构建日志格式
-      std::stringstream logStream;
-      logStream << "[" << timestamp << "]" << getLogLevelString(level) << ":" << message;
-      std::string logString = logStream.str();
-
-      // 输出到文件
-      if (logFile.is_open()) {
-        log2File(logString);
-      }
-
-      // 输出到控制台
-      if (consoleOutput) {
-        std::cout << logString << std::endl;
-      }
-    }
-
-    std::string getLogLevelString(LogLevel level) {
-      switch (level) {
-      case LogLevel::TRACE:
-        return " TRACE";
-      case LogLevel::DEBUG:
-        return " DEBUG";
-      case LogLevel::INFO:
-        return " INFO";
-      case LogLevel::WARN:
-        return " WARN";
-      case LogLevel::ERROR:
-        return " ERROR";
-      case LogLevel::FATAL:
-        return " FATAL";
-      default:
-        return "";
-      }
-    }
-
-    void log2File(std::string logString)
-    {
-      if (logFile.tellp() >= maxSize)     //日志过大，裁剪其中一半内容
-      {
-        auto buf = std::make_unique<char[]>(maxSize);
-        logFile.seekp(maxSize / 2);
-        logFile.read(buf.get(), maxSize);
-        logFile.seekp(0);
-
-        std::string systemInfo = getSystemInfo().c_str();
-        logFile.write(systemInfo.c_str(), systemInfo.size());
-        logFile.write(buf.get(), maxSize);
-
-      }
-      logFile << logString << std::endl;
-    }
-
-    std::string getSystemInfo()
-    {
-      return get_sys_version() + "\n" + get_gpu_name();
-    }
-
-    std::string get_sys_version()
-    {
-      std::string result = "";
-      std::string ProductName;
-      std::string DisplayVersion;
-      std::string CurrentBuildNumber;
-      int UBR;
-      if (!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(ProductName)", ProductName, 64))
-        ProductName = "null";
-      if (!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(DisplayVersion)", DisplayVersion, 64))
-        DisplayVersion = "null";
-      if (!TianLi::Utils::getRegValue_REG_SZ(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(CurrentBuildNumber)", CurrentBuildNumber, 64))
-        CurrentBuildNumber = "null";
-      if (!TianLi::Utils::getRegValue_DWORD(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(UBR)", UBR))
-        UBR = 0;
-      result = std::format("{0}-{1}-{2}.{3}", ProductName, DisplayVersion, CurrentBuildNumber, UBR);
-      return result;
-    }
-    std::string get_gpu_name()
-    {
-      // Get the name of the GPU
-      IDXGIAdapter* pAdapter = nullptr;
-      IDXGIFactory* pFactory = nullptr;
-      try
-      {
-        HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
-        if (FAILED(hr))
-        {
-          return "Unknown";
-        }
-
-        hr = pFactory->EnumAdapters(0, &pAdapter);
-        if (FAILED(hr))
-        {
-          return "Unknown";
-        }
-
-        DXGI_ADAPTER_DESC desc;
-        hr = pAdapter->GetDesc(&desc);
-        if (FAILED(hr))
-        {
-          return "Unknown";
-        }
-
-        std::wstring ws(desc.Description);
-        return wstring2string(ws);
-      }
-      catch (...) {
-        return "获取GPU信息失败";
-      }
-    }
+    std::string get_sys_version();
+    std::string get_gpu_name();
   };
+  auto& logger = Logger::getInstance();
 };
+
