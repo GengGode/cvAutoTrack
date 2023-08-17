@@ -169,7 +169,7 @@ namespace TianLi::Resource::Utils
 
   //	return true;
   //}
-  void LoadPng_ID2Mat(int IDB, cv::Mat& mat)
+  void LoadImg_ID2Mat(int IDB, cv::Mat& mat, const wchar_t* format = L"PNG", int depth = 4)
   {
     IWICStream* pIWICStream = NULL;
     IWICBitmapDecoder* pIDecoder = NULL;
@@ -185,8 +185,12 @@ namespace TianLi::Resource::Utils
 
     if (hModu == NULL) throw "Get Dll Instance Fail!";
 
-    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
+    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), format);
+    if (imageResHandle == NULL) throw "Load Image Resource Fail!";
+
     imageResDataHandle = LoadResource(hModu, imageResHandle);
+    if (imageResHandle == NULL) throw "Load Image Resource Data Fail!";
+
     pImageFile = LockResource(imageResDataHandle);
     imageFileSize = SizeofResource(hModu, imageResHandle);
     /*
@@ -226,12 +230,12 @@ namespace TianLi::Resource::Utils
 
     bitmap_source = pIDecoderFrame;
 
-    UINT width = 0, height = 0, depht = 4;
+    UINT width = 0, height = 0;
     bitmap_source->GetSize(&width, &height);
     {
-      std::vector<BYTE> buffer(width * height * depht);
-      bitmap_source->CopyPixels(NULL, width * depht, static_cast<UINT>(buffer.size()), buffer.data());
-      HBITMAP hPngMat = CreateBitmap(width, height, 1, 8 * depht, buffer.data());
+      std::vector<BYTE> buffer(width * height * depth);
+      bitmap_source->CopyPixels(NULL, width * depth, static_cast<UINT>(buffer.size()), buffer.data());
+      HBITMAP hPngMat = CreateBitmap(width, height, 1, 8 * depth, buffer.data());
       HBitmap2MatAlpha(hPngMat, mat);
       DeleteObject(hPngMat);
     }
@@ -273,7 +277,7 @@ Resources::Resources()
   LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
   LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
 
-  LoadPng_ID2Mat(IDB_PNG_MINIMAP_CAILB, MinimapCailbTemplate);
+  LoadImg_ID2Mat(IDB_PNG_MINIMAP_CAILB, MinimapCailbTemplate);
 
   LoadBitmap_ID2Mat(IDB_BITMAP_UID_, UID);
   LoadBitmap_ID2Mat(IDB_BITMAP_UID0, UIDnumber[0]);
@@ -327,7 +331,7 @@ void Resources::install()
 {
   if (is_installed == false)
   {
-    LoadPng_ID2Mat(IDB_PNG_GIMAP, MapTemplate);
+    LoadImg_ID2Mat(IDB_JPG_GIMAP, MapTemplate, L"JPG", 3);
     is_installed = true;
   }
 }
@@ -392,7 +396,7 @@ bool save_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 
   MapKeypointCache cache(
     build_time, TianLi::Version::build_version, hessian_threshold,
-    octaves, octave_layers, extended, upright,
+    (WORD)octaves, (WORD)octave_layers, (WORD)extended, (WORD)upright,
     keypoints, descriptors);
 
   cache.serialize("cvAutoTrack_Cache.xml");
