@@ -318,8 +318,13 @@ bool Dxgi::capture(cv::Mat& frame)
         return false;
     }
 
-    // 将画面转换为OpenCV的Mat
-    frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
+    // 将画面转换为OpenCV的Mat（疑似会崩溃）
+    try {
+        frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
+    }
+    catch(std::exception e){
+        err = { 504, std::format("FATAL!! 出现了致命的错误，已自动跳过，原因:{}",e.what()) };
+    }
     if (frame_size.Width < 480 || frame_size.Height < 360)
     {
         err = { 14, "窗口画面大小小于480x360，无法使用" };
