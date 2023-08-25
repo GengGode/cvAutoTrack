@@ -323,7 +323,7 @@ bool Dxgi::capture(cv::Mat& frame)
         frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void*)data, pitch);
     }
     catch(std::exception e){
-        err = { 504, std::format("FATAL!! 出现了致命的错误，已自动跳过，原因:{}",e.what()) };
+        err = { 504, std::format("FATAL!! 出现了致命的错误，已自动跳过，原因:{}",e.what())};
         return false;
     }
     if (frame_size.Width < 480 || frame_size.Height < 360)
