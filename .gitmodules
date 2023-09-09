@@ -1,3 +1,6 @@
 [submodule "cvAutoTrack.Resource"]
 	path = cvAutoTrack.Resource
 	url = https://github.com/GengGode/cvAutoTrack.Resource
+[submodule "3rdParty/meojson"]
+	path = 3rdParty/meojson
+	url = https://github.com/MistEO/meojson
