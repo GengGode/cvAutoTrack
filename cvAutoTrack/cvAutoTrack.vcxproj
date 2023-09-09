@@ -159,13 +159,13 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_FEATURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>D:\opencv\opencv_460\install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -243,7 +243,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_FEATURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -254,7 +254,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(opencvStaticInc)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -294,7 +294,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_FEATURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -305,7 +305,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -374,6 +374,7 @@
     <ClInclude Include="src\match\type\MatchType.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\resources\AutoTrackCacheGenerator.h" />
     <ClInclude Include="src\resources\binary\image\cailb\resources.binary.image.cailb.h" />
     <ClInclude Include="src\resources\binary\image\paimon\resources.binary.image.paimon.h" />
     <ClInclude Include="src\resources\binary\image\resources.binary.image.h" />
@@ -431,6 +432,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\resources\AutoTrackCacheGenerator.cpp" />
     <ClCompile Include="src\resources\binary\resources.binary.cpp" />
     <ClCompile Include="src\resources\import\resources.import.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />

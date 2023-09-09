@@ -433,10 +433,26 @@ bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors
 {
     if (load_map_keypoint_cache(keypoints, descriptors) == false)
     {
+#ifdef _FEATURE
+        save_map_keypoint_cache("./AutoTrack_config.json5");
+#else
         return save_map_keypoint_cache(keypoints, descriptors);
+#endif
     }
     else
     {
         return true;
     }
 }
+
+#ifdef _FEATURE
+//测试新的缓存追踪模块
+#include <resources/AutoTrackCacheGenerator.h>
+
+bool save_map_keypoint_cache(std::string jsonPath)
+{
+    Tianli::Resource::AutoTrackCacheGenerator* generator = Tianli::Resource::AutoTrackCacheGenerator::getInstance();
+    generator->loadJson(jsonPath);
+    return true;
+}
+#endif
