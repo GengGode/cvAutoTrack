@@ -390,7 +390,9 @@
     <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\resources\AutoTrackCacheGenerator.cpp" />
+    <ClCompile Include="src\resources\AutoTrackCacheGenerator.cpp">
+      <Filter>src\resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc">
