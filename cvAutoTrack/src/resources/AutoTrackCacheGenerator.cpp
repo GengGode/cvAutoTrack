@@ -44,12 +44,28 @@ namespace Tianli::Resource {
         loadSettingFromJson(rootObj);
         //解析自动拼图表串
         loadTiledConfFromJson(rootObj);
-        //解析手动拼贴串
+        //解析子地区串
+        loadAreaConfFromJson(rootObj);
         return true;
     }
 
     bool AutoTrackCacheGenerator::loadSettingFromJson(json::object root)
     {
+        //json示例
+        /*
+        setting:
+        {
+          version: "4.0.0",
+          hessian_threshold: 1,
+          octave:1,
+          octave_layers:1,
+          extended:false,
+          upRight:false,
+          position_mode: "range",
+          resource_root_path: "./Maps/",
+          auto_tile_path_regex: "UI_MapBack_([A-Za-z]*)_?(-*[0-9]+)_(-*[0-9]+).png",
+        },
+        */
         json::object settingObj = root["setting"].as_object();
         m_setting_conf.version = settingObj["version"].as_string();
         //读取SURF参数
@@ -72,6 +88,22 @@ namespace Tianli::Resource {
 
     bool AutoTrackCacheGenerator::loadTiledConfFromJson(json::object root)
     {
+        //json示例
+        /*
+        tiled:[
+          {
+            area_id: 0,
+            area_filename: "",
+            name:"提瓦特大陆",
+            zero_tile_rect_in:[-854,-2191,513,-824],
+            zero_tile_rect_out:[0,0,1024,1024],
+            x_range: [-6,7],
+            y_range: [-7,5],
+            tile_size:[600,600],
+            zoom: 1.0
+          },
+        ]
+        */
         json::array tiledArray = root["tiled"].as_array();
 
         for (auto& it : tiledArray)
@@ -134,6 +166,80 @@ namespace Tianli::Resource {
 
             //将结果压入数组
             m_tiled_conf.emplace_back(tiledConf);
+        }
+        return true;
+    }
+
+    bool AutoTrackCacheGenerator::loadAreaConfFromJson(json::object root)
+    {
+        //json示例
+        /*
+        other_map:
+        [
+          {
+            parent: 0,
+            areas:
+            [
+              {
+                area_id: 1100101,
+                name: "蒙德城",
+                path: "Ui_Map_City_Mondstadt.png",
+                area_rect: [1267,-4102,1892,-3625],
+                tile_size: [830,628],
+                zoom: 3.0,
+              },
+            ],
+          }
+        ]
+        */
+
+        //解析other_map数组
+        json::array otherMapArray = root["other_map"].as_array();
+        //逐个解析对象
+        for (auto& it : otherMapArray)
+        {
+            json::object otherMapObj = it.as_object();
+            //获取父区域id
+            int parent = otherMapObj["parent"].as_integer();
+            //在地区表中加入新条目
+            m_areas_conf[parent] = vector<S_AreaConf>();
+            auto& areaConfArray = m_areas_conf[parent];
+            //解析areas数组
+            json::array areasArray = otherMapObj["areas"].as_array();
+            //逐个解析子地区
+            for (auto& subIt : areasArray)
+            {
+                json::object areaObj = subIt.as_object();
+                S_AreaConf areaConf;
+                //获取区域id
+                areaConf.area_id = areaObj["area_id"].as_integer();
+                //获取区域名称
+                areaConf.name = areaObj["name"].as_string();
+                //获取区域路径
+                areaConf.path = areaObj["path"].as_string();
+                //获取区域矩形
+                auto area_rect = areaObj["area_rect"].as_array();
+                areaConf.area_rect.x = area_rect[0].as_integer();
+                areaConf.area_rect.y = area_rect[1].as_integer();
+                if (m_setting_conf.position_mode == RECT)
+                {
+                    areaConf.area_rect.width = area_rect[2].as_integer();
+                    areaConf.area_rect.height = area_rect[3].as_integer();
+                }
+                else if (m_setting_conf.position_mode == E_RectType::RANGE)
+                {
+                    areaConf.area_rect.width = area_rect[2].as_integer() - area_rect[0].as_integer();
+                    areaConf.area_rect.height = area_rect[3].as_integer() - area_rect[1].as_integer();
+                }
+                //获取tile尺寸
+                auto tile_size = areaObj["tile_size"].as_array();
+                areaConf.tile_size.width = tile_size[0].as_integer();
+                areaConf.tile_size.height = tile_size[1].as_integer();
+                //获取缩放
+                areaConf.zoom = areaObj["zoom"].as_double();
+                //将结果压入数组
+                areaConfArray.emplace_back(areaConf);
+            }
         }
         return true;
     }

@@ -53,8 +53,12 @@ namespace Tianli::Resource
         };
 
         S_SettingConf m_setting_conf;
+        //自动拼图表
+        //成员归属于大区域
         std::vector<S_TiledConf> m_tiled_conf;
-
+        //地区数据
+        //键：归属的大区域
+        //值：包含的小区域
         std::map<int, std::vector<S_AreaConf>> m_areas_conf;
 
     public:
@@ -69,5 +73,6 @@ namespace Tianli::Resource
     private:
         bool loadSettingFromJson(json::object root);
         bool loadTiledConfFromJson(json::object root);
+        bool loadAreaConfFromJson(json::object root);
     };
 }
