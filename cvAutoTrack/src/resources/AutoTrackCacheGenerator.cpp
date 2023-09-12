@@ -2,6 +2,7 @@
 #include "AutoTrackCacheGenerator.h"
 #include <ErrorCode.h>
 #include <json5.hpp>
+#include <regex>
 
 namespace fs = std::filesystem;
 
@@ -16,11 +17,24 @@ namespace Tianli::Resource {
         return instance;
     }
 
-    bool AutoTrackCacheGenerator::loadJson(std::string const& jsonPath)
+    bool AutoTrackCacheGenerator::GenCache(std::string const& jsonPath, std::string const& resourcePath)
+    {
+        m_json_path = jsonPath;
+        m_resource_path = resourcePath;
+        loadJson();
+        for (auto& item : m_tiled_conf)
+        {
+            cv::Rect rect_in, rect_out;
+            margeTileImage(item, rect_in, rect_out);
+        }
+        return true;
+    }
+
+    bool AutoTrackCacheGenerator::loadJson()
     {
         //检查json文件，如果不存在，报错并返回false
-        if (!fs::exists(jsonPath)) {
-            err = { 470,std::format("配置文件\"{}\"不存在，请检查路径是否正确",jsonPath) };
+        if (!fs::exists(m_json_path)) {
+            err = { 470,std::format("配置文件\"{}\"不存在，请检查路径是否正确",m_json_path.string()) };
             return false;
         }
 
@@ -28,7 +42,7 @@ namespace Tianli::Resource {
         std::string jsonString;
 
         std::fstream jsonFile;
-        jsonFile.open(jsonPath, std::ios::in);
+        jsonFile.open(m_json_path, std::ios::in);
 
         std::stringstream jsonStream;
         jsonStream << jsonFile.rdbuf();
@@ -63,7 +77,7 @@ namespace Tianli::Resource {
           upRight:false,
           position_mode: "range",
           resource_root_path: "./Maps/",
-          auto_tile_path_regex: "UI_MapBack_([A-Za-z]*)_?(-*[0-9]+)_(-*[0-9]+).png",
+          auto_tile_path_regex: "UI_MapBack_<$name>_?<$y>_<$x>.png",
         },
         */
         json::object settingObj = root["setting"].as_object();
@@ -146,15 +160,6 @@ namespace Tianli::Resource {
                 tiledConf.zero_tile_rect_out.width = zero_tile_rect_out[2].as_integer() - zero_tile_rect_out[0].as_integer();
                 tiledConf.zero_tile_rect_out.height = zero_tile_rect_out[3].as_integer() - zero_tile_rect_out[1].as_integer();
             }
-
-            //获取x，y范围
-            auto x_range = tiledObj["x_range"].as_array();
-            tiledConf.x_range.start = x_range[0].as_integer();
-            tiledConf.x_range.end = x_range[1].as_integer();
-
-            auto y_range = tiledObj["y_range"].as_array();
-            tiledConf.y_range.start = y_range[0].as_integer();
-            tiledConf.y_range.end = y_range[1].as_integer();
 
             //获取tile尺寸
             auto tile_size = tiledObj["tile_size"].as_array();
@@ -242,5 +247,130 @@ namespace Tianli::Resource {
             }
         }
         return true;
+    }
+
+    cv::Mat AutoTrackCacheGenerator::margeTileImage(const S_TiledConf& tiledConf, cv::Rect2i& retRectIn, cv::Rect2i& retRectOut)
+    {
+        //获取匹配表达式
+        std::string match_regex = m_setting_conf.auto_tile_path_regex;
+        //获取x,y字段在表达式的先后顺序
+        bool isXFirst = false;
+        if (match_regex.find(R"(<$x>)") < match_regex.find(R"(<$y>)"))
+            isXFirst = true;
+        else
+            isXFirst = false;
+        //替换表达式，用于初步筛选
+        match_regex = std::regex_replace(match_regex, std::regex(R"(<\$name>)"), tiledConf.area_filename);
+        match_regex = std::regex_replace(match_regex, std::regex(R"(<\$y>)"), R"((-?[0-9]+))");
+        match_regex = std::regex_replace(match_regex, std::regex(R"(<\$x>)"), R"((-?[0-9]+))");
+        std::regex auto_path_regex(match_regex);
+
+        //对路径递归遍历，并记录下所有符合名称的文件名
+        std::vector<fs::path> file_list;
+        fs::path root_path = m_resource_path / fs::path(m_setting_conf.resource_root_path);
+
+        for (const auto& entry : fs::directory_iterator(root_path))
+        {
+            if (!fs::is_regular_file(entry.status())) {
+                continue; // 如果当前项不是普通文件，则跳过该项
+            }
+
+            std::string filename = entry.path().filename().string();
+            if (std::regex_match(filename, auto_path_regex)) {
+                file_list.emplace_back(entry.path());
+            }
+        }
+
+        //创建最初的图像
+        int width = tiledConf.tile_size.width;
+        int height = tiledConf.tile_size.height;
+        cv::Mat buf = cv::Mat(width, height, CV_8UC3, cv::Scalar(0x48, 0x35, 0x14));
+        //定义原点的位置
+        cv::Point2i origin;
+
+        //定义x，y的范围
+        cv::Range range_x(0, 0);
+        cv::Range range_y(0, 0);
+        //依次打开文件列表的文件，并拼接
+        for (auto& filepath : file_list)
+        {
+            //查找并捕获两个数字捕获组，作为坐标
+            int x = 0, y = 0;
+            std::smatch match;
+            std::string path_str = filepath.string();
+            if (std::regex_search(path_str, match, auto_path_regex))
+            {
+                if (isXFirst)
+                {
+                    x = std::stoi(match[1].str());
+                    y = std::stoi(match[2].str());
+                }
+                else
+                {
+                    x = std::stoi(match[2].str());
+                    y = std::stoi(match[1].str());
+                }
+                //更新x,y的范围
+                range_x.start = std::min(range_x.start, x);
+                range_x.end = std::max(range_x.end, x);
+                range_y.start = std::min(range_y.start, y);
+                range_y.end = std::max(range_y.end, y);
+            }
+            //读取瓦片图
+            cv::Mat tile = cv::imread(filepath.string(), cv::IMREAD_COLOR);
+            //拼接瓦片图
+            AddTileInBuf(buf, tile, tiledConf.tile_size, cv::Point2i(x, y), origin);
+        }
+
+        //计算全图的输入，输出坐标矩形
+        retRectIn = cv::Rect2i(
+            -range_x.end * tiledConf.zero_tile_rect_in.width + tiledConf.zero_tile_rect_in.x,
+            -range_y.end * tiledConf.zero_tile_rect_in.height + tiledConf.zero_tile_rect_in.y,
+            tiledConf.zero_tile_rect_in.width * (range_x.end - range_x.start + 1),
+            tiledConf.zero_tile_rect_in.height * (range_y.end - range_y.start + 1)
+        );
+        retRectOut = cv::Rect2i(
+            -range_x.end * tiledConf.zero_tile_rect_out.width + tiledConf.zero_tile_rect_out.x,
+            -range_y.end * tiledConf.zero_tile_rect_out.height + tiledConf.zero_tile_rect_out.y,
+            tiledConf.zero_tile_rect_out.width * (range_x.end - range_x.start + 1),
+            tiledConf.zero_tile_rect_out.height * (range_y.end - range_y.start + 1)
+        );
+        return buf;
+    }
+
+    void AutoTrackCacheGenerator::AddTileInBuf(cv::Mat& imgBuf, cv::Mat imgTile, cv::Size2i tileSize, cv::Point2i pos, cv::Point2i& originPos) {
+        //空白填充颜色
+        auto emptyColor = cv::Scalar(0x48, 0x35, 0x14);
+        //缩放到tile大小
+        cv::Mat imgResized(tileSize, CV_8UC3, emptyColor);
+        cv::resize(imgTile, imgResized, tileSize, cv::INTER_AREA);
+        imgTile = imgResized;
+
+        cv::Point pixelPos(-pos.x * tileSize.width, -pos.y * tileSize.height);
+
+        if (pixelPos.x < originPos.x) {
+            int border_size = originPos.x - pixelPos.x;
+            cv::copyMakeBorder(imgBuf, imgBuf, 0, 0, border_size, 0, cv::BORDER_CONSTANT, emptyColor);
+            originPos.x -= border_size;
+        }
+
+        if (pixelPos.y < originPos.y) {
+            int border_size = originPos.y - pixelPos.y;
+            cv::copyMakeBorder(imgBuf, imgBuf, border_size, 0, 0, 0, cv::BORDER_CONSTANT, emptyColor);
+            originPos.y -= border_size;
+        }
+
+        if (pixelPos.x + tileSize.width - originPos.x > imgBuf.cols) {
+            int border_size = pixelPos.x + tileSize.width - originPos.x - imgBuf.cols;
+            cv::copyMakeBorder(imgBuf, imgBuf, 0, 0, 0, border_size, cv::BORDER_CONSTANT, emptyColor);
+        }
+
+        if (pixelPos.y + tileSize.height - originPos.y > imgBuf.rows) {
+            int border_size = pixelPos.y + tileSize.height - originPos.y - imgBuf.rows;
+            cv::copyMakeBorder(imgBuf, imgBuf, 0, border_size, 0, 0, cv::BORDER_CONSTANT, emptyColor);
+        }
+
+        cv::Rect roi(pixelPos.x - originPos.x, pixelPos.y - originPos.y, tileSize.width, tileSize.height);
+        imgTile.copyTo(imgBuf(roi));
     }
 }

@@ -2,6 +2,8 @@
 #include <pch.h>
 #include <json5.hpp>
 
+namespace fs = std::filesystem;
+
 namespace Tianli::Resource
 {
     class AutoTrackCacheGenerator {
@@ -36,8 +38,6 @@ namespace Tianli::Resource
             std::string name;
             cv::Rect2i zero_tile_rect_in;
             cv::Rect2i zero_tile_rect_out;
-            cv::Range x_range;
-            cv::Range y_range;
             cv::Size2i tile_size;
             float zoom;
         };
@@ -51,7 +51,12 @@ namespace Tianli::Resource
             cv::Size2i tile_size;
             float zoom;
         };
+        //json文件的路径
+        fs::path m_json_path;
+        //资源根目录
+        fs::path m_resource_path;
 
+        //基本设置
         S_SettingConf m_setting_conf;
         //自动拼图表
         //成员归属于大区域
@@ -64,15 +69,29 @@ namespace Tianli::Resource
     public:
         static AutoTrackCacheGenerator* getInstance();
 
-        // 从json文件中加载图像，并生成缓存
+        // 生成追踪缓存
         // @param jsonPath json文件路径
-        // @param resourcePath 资源路径
-        // @return 缓存是否生成成功
-        bool loadJson(std::string const& jsonPath = "./AutoTrack_config.json5");
-
+        // @param resourcePath 资源根目录
+        // @return 是否生成成功
+        bool GenCache(std::string const& jsonPath = "./AutoTrack_config.json5", std::string const& resourcePath = ".");
     private:
+        // 反序列化json
+        // @param jsonPath json文件路径
+        // @return 是否读取成功
+        bool loadJson();
         bool loadSettingFromJson(json::object root);
         bool loadTiledConfFromJson(json::object root);
         bool loadAreaConfFromJson(json::object root);
+
+        // 获取自动拼图表的图像
+        // @param tiledConf 自动拼图表
+        // @param retRectIn 自动拼图表的图像输入坐标
+        // @param retRectOut 自动拼图表的图像输出坐标
+        // @return 自动拼图表的图像
+        cv::Mat margeTileImage(const S_TiledConf& tiledConf, cv::Rect2i& retRectIn, cv::Rect2i& retRectOut);
+
+
+
+        void AddTileInBuf(cv::Mat& imgBuf, cv::Mat imgTile, cv::Size2i tileSize, cv::Point2i pos, cv::Point2i& originPos);
     };
 }

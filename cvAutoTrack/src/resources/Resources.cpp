@@ -420,7 +420,6 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 
     if (cache.bulid_version != TianLi::Version::build_version)    //版本不一致
         return false;
-
     if (cache.bulid_version != cache.bulid_version_end)    //写入不完整
         return false;
 
@@ -452,7 +451,7 @@ bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors
 bool save_map_keypoint_cache(std::string jsonPath)
 {
     Tianli::Resource::AutoTrackCacheGenerator* generator = Tianli::Resource::AutoTrackCacheGenerator::getInstance();
-    generator->loadJson(jsonPath);
+    generator->GenCache();
     return true;
 }
 #endif
