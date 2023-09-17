@@ -3,6 +3,7 @@
 #include <ErrorCode.h>
 #include <json5.hpp>
 #include <regex>
+#include <utils/Utils.h>
 
 namespace fs = std::filesystem;
 
@@ -21,13 +22,91 @@ namespace Tianli::Resource {
     {
         m_json_path = jsonPath;
         m_resource_path = resourcePath;
+        //读取json的配置信息
         loadJson();
-        for (auto& item : m_tiled_conf)
-        {
-            cv::Rect rect_in, rect_out;
-            margeTileImage(item, rect_in, rect_out);
-        }
+
+        //初始化SURF
+        cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create(
+            m_setting_conf.hessian_threshold,
+            m_setting_conf.octaves,
+            m_setting_conf.octave_layers,
+            m_setting_conf.extended,
+            m_setting_conf.upRight);
+
+        GenTiledKeyPoints(detector);
+        GenAreaKeyPoints(detector);
         return true;
+    }
+
+    void AutoTrackCacheGenerator::GenTiledKeyPoints(cv::Ptr<cv::xfeatures2d::SURF>& detector)
+    {
+        //拼接自动拼图表，并生成特征点
+        for (auto& kw_item : m_tiled_conf)
+        {
+            auto& tile_conf = kw_item.second;
+            //拼接图像，并计算边界
+            auto marged_img = margeTileImage(tile_conf, tile_conf.ex_rect_in, tile_conf.ex_rect_out);
+            tile_conf.ex_rect_abs = cv::Rect2i(cv::Point(), marged_img.size());
+            //生成特征点和描述信息
+            vector<cv::KeyPoint> key_points;
+            cv::Mat descriptors;
+            detector->detectAndCompute(marged_img, cv::noArray(), key_points, descriptors);
+
+            //将坐标换算到新的坐标系下
+            for (auto& kp : key_points)
+            {
+                //换算坐标
+                kp.pt = TianLi::Utils::TransferAxes(kp.pt, tile_conf.ex_rect_abs, tile_conf.ex_rect_out);
+            }
+            //合并特征点
+            appendKeyPoint(key_points, descriptors);
+        }
+    }
+
+    void AutoTrackCacheGenerator::GenAreaKeyPoints(cv::Ptr<cv::xfeatures2d::SURF>& detector)
+    {
+        //遍历手动拼图对象
+        for (auto& kw_item : m_areas_conf)
+        {
+            auto& areas_conf = kw_item.second;
+            //读取图像，并生成特征点
+            auto img = cv::imread((fs::path(m_setting_conf.resource_root_path) / fs::path(areas_conf.path)).string());
+            if (img.empty())
+            {
+                err = { 471,std::format("配置文件指向的图像\"{}\"不存在，请检查路径是否正确",areas_conf.path) };
+            }
+            areas_conf.ex_rect_abs = cv::Rect2i(cv::Point(), img.size());
+            //生成特征点和描述信息
+            vector<cv::KeyPoint> key_points;
+            cv::Mat descriptors;
+            detector->detectAndCompute(img, cv::noArray(), key_points, descriptors);
+
+            //将坐标换算到新的坐标系下
+            for (auto& kp : key_points)
+            {
+                //换算坐标
+                kp.pt = TianLi::Utils::TransferAxes(kp.pt, areas_conf.ex_rect_abs, areas_conf.area_rect);
+                //读取父地区的坐标，再次换算
+                auto parent_id = areas_conf.parent_id;
+                auto inRect = m_tiled_conf[parent_id].ex_rect_in;
+                auto outRect = m_tiled_conf[parent_id].ex_rect_out;
+                kp.pt = TianLi::Utils::TransferAxes(kp.pt, inRect, outRect);
+            }
+
+            //合并特征点
+            appendKeyPoint(key_points, descriptors);
+        }
+    }
+
+    void AutoTrackCacheGenerator::appendKeyPoint(std::vector<cv::KeyPoint>& key_points, cv::Mat& descriptors)
+    {
+        //将特征点合并到总特征点表中
+        m_key_points.insert(m_key_points.end(), key_points.begin(), key_points.end());
+        if (m_descriptors.empty())
+            m_descriptors = descriptors;
+        else {
+            cv::vconcat(m_descriptors, descriptors);
+        }
     }
 
     bool AutoTrackCacheGenerator::loadJson()
@@ -84,7 +163,8 @@ namespace Tianli::Resource {
         m_setting_conf.version = settingObj["version"].as_string();
         //读取SURF参数
         m_setting_conf.hessian_threshold = settingObj["hessian_threshold"].as_double();
-        m_setting_conf.octave = settingObj["octave"].as_integer();
+        m_setting_conf.octaves = settingObj["octaves"].as_integer();
+        m_setting_conf.octave_layers = settingObj["octave_layers"].as_integer();
         m_setting_conf.extended = settingObj["extended"].as_boolean();
         m_setting_conf.upRight = settingObj["upRight"].as_boolean();
         //读取其他设置参数
@@ -170,7 +250,7 @@ namespace Tianli::Resource {
             tiledConf.zoom = tiledObj["zoom"].as_double();
 
             //将结果压入数组
-            m_tiled_conf.emplace_back(tiledConf);
+            m_tiled_conf[tiledConf.area_id] = (tiledConf);
         }
         return true;
     }
@@ -205,10 +285,7 @@ namespace Tianli::Resource {
         {
             json::object otherMapObj = it.as_object();
             //获取父区域id
-            int parent = otherMapObj["parent"].as_integer();
-            //在地区表中加入新条目
-            m_areas_conf[parent] = vector<S_AreaConf>();
-            auto& areaConfArray = m_areas_conf[parent];
+            int parentId = otherMapObj["parent"].as_integer();
             //解析areas数组
             json::array areasArray = otherMapObj["areas"].as_array();
             //逐个解析子地区
@@ -242,8 +319,10 @@ namespace Tianli::Resource {
                 areaConf.tile_size.height = tile_size[1].as_integer();
                 //获取缩放
                 areaConf.zoom = areaObj["zoom"].as_double();
-                //将结果压入数组
-                areaConfArray.emplace_back(areaConf);
+                //设定父节点
+                areaConf.parent_id = parentId;
+                //将结果放入到手动拼图配置中
+                m_areas_conf[areaConf.area_id] = areaConf;
             }
         }
         return true;
