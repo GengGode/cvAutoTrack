@@ -178,7 +178,7 @@ void SurfMatch::match()
             isMatchAllMap = true;
             continuity_retry = 0;
         }
-}
+    }
 #endif // FEATURE
 }
 
@@ -268,7 +268,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 
     std::vector<double> lisx;
     std::vector<double> lisy;
-    TianLi::Utils::remove_invalid(keypoint_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
+    TianLi::Utils::RemoveKeypointOffset(keypoint_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
 
     std::vector<cv::Point2d> list_not_on_city;
     for (int i = 0; i < keypoint_list.size(); i++)
@@ -343,7 +343,7 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 
     std::vector<double> lisx;
     std::vector<double> lisy;
-    TianLi::Utils::remove_invalid(keypoint_on_city_list, 0.8667, lisx, lisy);
+    TianLi::Utils::RemoveKeypointOffset(keypoint_on_city_list, 0.8667, lisx, lisy);
 
 
     std::vector<cv::Point2d> list_on_city;
@@ -432,7 +432,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
     std::vector<double> lisx;
     std::vector<double> lisy;
-    TianLi::Utils::remove_invalid(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
+    TianLi::Utils::RemoveKeypointOffset(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE / minimap_scale_param, lisx, lisy);
 
     std::vector<cv::Point2d> list_not_on_city;
     for (int i = 0; i < keypoint_not_on_city_list.size(); i++)
@@ -484,7 +484,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
     std::vector<double> list_x_on_city;
     std::vector<double> list_y_on_city;
-    TianLi::Utils::remove_invalid(keypoint_on_city_list, 0.8667, list_x_on_city, list_y_on_city);
+    TianLi::Utils::RemoveKeypointOffset(keypoint_on_city_list, 0.8667, list_x_on_city, list_y_on_city);
 
     std::vector<cv::Point2d> list_on_city;
     for (int i = 0; i < keypoint_on_city_list.size(); i++)
