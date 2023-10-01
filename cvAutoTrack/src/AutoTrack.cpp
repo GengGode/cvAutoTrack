@@ -718,8 +718,48 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 
 bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
 {
-	UNREFERENCED_PARAMETER(path);
-	UNREFERENCED_PARAMETER(uid);
+	cv::Mat image;
+	try
+	{
+		image = cv::imread(path, -1);
+	}
+	catch (cv::Exception &e)
+	{
+		err = { 100, "读取图片失败，" + std::string(e.what()) };
+		return false;
+	}
+	
+	if (image.empty())
+	{
+		err = { 101, "读取图片失败，图片为空" };
+		return false;
+	}
+	
+	// uid
+	{
+		std::vector<cv::Mat> channels;
+
+		cv::split(image, channels);
+
+		if (genshin_handle.config.capture->mode == Capture::DirectX)
+		{
+			cv::cvtColor(image, image, cv::COLOR_RGBA2GRAY);
+		}
+		else
+		{
+			image = channels[3];
+		}
+
+		uid_calculation_config config;
+		uid_calculation(image, uid, config);
+		if (config.error)
+		{
+			err = config.err;
+			return false;
+		}
+	}
+	
+	
 	UNREFERENCED_PARAMETER(x);
 	UNREFERENCED_PARAMETER(y);
 	UNREFERENCED_PARAMETER(a);
