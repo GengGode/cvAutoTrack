@@ -137,10 +137,6 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 		if (is_init)return;
 		Resources::getInstance().install();
 
-		if (out_genshin_position.config.pos_filter == nullptr)
-		{
-			out_genshin_position.config.pos_filter = new Kalman();
-		}
 
 		std::vector<cv::KeyPoint> gi_map_keypoints;
 		cv::Mat gi_map_descriptors;
@@ -157,10 +153,6 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 	{
 		surf_match.UnInit();
 		Resources::getInstance().release();
-		if (out_genshin_position.config.pos_filter)
-		{
-			delete out_genshin_position.config.pos_filter;
-		}
 		is_init = false;
 		return;
 	}

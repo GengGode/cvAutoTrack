@@ -164,9 +164,8 @@ namespace TianLi::Utils
 		}
 	}
 
-	cv::Point2d SPC(std::vector<double> lisx, std::vector<double> lisy)
+	bool SPC(std::vector<double> lisx, std::vector<double> lisy, cv::Point2d& out)
 	{
-		cv::Point2d pos;
 		double meanx = std::accumulate(lisx.begin(), lisx.end(), 0.0) / lisx.size();
 		double meany = std::accumulate(lisy.begin(), lisy.end(), 0.0) / lisy.size();
 		double x = meanx;
@@ -204,13 +203,14 @@ namespace TianLi::Utils
 			}
 			x = sumx / numx;
 			y = sumy / numy;
-			pos = cv::Point2d(x, y);
+			out = cv::Point2d(x, y);
 		}
 		else
 		{
-			pos = cv::Point2d(x, y);
+			out = cv::Point2d();
+			return 0;
 		}
-		return pos;
+		return true;
 	}
 
 	int getMaxID(double lis[], int len)
@@ -264,6 +264,11 @@ namespace TianLi::Utils
 	cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale)
 	{
 		return cv::Point2d((pos - origin) * scale);
+	}
+
+	cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale)
+	{
+		return cv::Point2d(pos / scale + origin);
 	}
 
 	std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)

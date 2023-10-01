@@ -7,6 +7,8 @@ struct direction_calculation_config
 	error_info err = { 0,"" };
 };
 
+double last_direction = 0;
+
 void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config)
 {
 	cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
@@ -95,6 +97,8 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 	{
 		config.error = true;
 		config.err = { 9,"提取小箭头特征误差过大" };
+		a = last_direction;
 		return;
 	}
+	last_direction = a;
 }

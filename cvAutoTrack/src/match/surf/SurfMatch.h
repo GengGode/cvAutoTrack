@@ -56,6 +56,7 @@ class SurfMatch
 
 
 	cv::Point2d pos;
+	cv::Point2d last_pos;		// 上一次匹配的地点，匹配失败，返回上一次的结果
 	cv::Rect rect_continuity_map;
 public:
 	SurfMatch() = default;
@@ -71,7 +72,8 @@ public:
 	bool isCoveying = false;
 	bool isOnCity = false;
 
-	int max_continuity_retry = 3;
+	int continuity_retry = 0;		//局部匹配重试次数
+	const int max_continuity_retry = 3;		//最大重试次数
 	
 	bool is_success_match = false;
 
@@ -95,5 +97,8 @@ public:
 
 	cv::Point2d getLocalPos();
 	bool getIsContinuity();
+
+private:
+	bool isMatchAllMap = true;
 };
 

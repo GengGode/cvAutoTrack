@@ -127,45 +127,53 @@ void SurfMatch::match()
 {
 	bool calc_is_faile = false;
 	is_success_match = false;
-	isContinuity = true;
 
-	// 尝试连续匹配，匹配角色附近小范围区域
-	if (isContinuity)
-	{
-		for (int retry_times = 1; retry_times <= max_continuity_retry; retry_times++)
-		{
-			bool calc_continuity_is_faile = false;
-			pos = match_continuity(calc_continuity_is_faile);
-
-			if (std::isnan(pos.x) || std::isnan(pos.y))
-			{
-				calc_continuity_is_faile = true;	//如果pos是nan，则算匹配失败
-				pos = cv::Point2d();
-			}
-			if (!calc_continuity_is_faile)
-				break;				//匹配成功，结束，否则重试
-			else if (retry_times == max_continuity_retry)
-				isContinuity = false;
-		}
-	}
-
-	// 直接非连续匹配，匹配整个大地图
-	if (!isContinuity)
+	// 非连续匹配，匹配整个大地图
+	if (isMatchAllMap)
 	{
 		pos = match_no_continuity(calc_is_faile);
-		if (std::isnan(pos.x) || std::isnan(pos.y))
+
+		// 没有有效结果，结束
+		if (calc_is_faile)
 		{
-			calc_is_faile = true;	//如果pos是nan，则算匹配失败
-			pos = cv::Point2d();
+			pos = last_pos;
+			is_success_match = false;
+			return;
 		}
-	}
-	// 没有有效结果，结束
-	if (calc_is_faile)
-	{
-		return;
+		continuity_retry = max_continuity_retry - 1;		//全局检测后只局部检测一次
 	}
 
-	is_success_match = true;
+	// 尝试连续匹配，匹配角色附近小范围区域
+	bool calc_continuity_is_faile = false;
+	pos = match_continuity(calc_continuity_is_faile);
+
+	if (!calc_continuity_is_faile)
+	{
+		last_pos = pos;
+		continuity_retry = 0;
+
+		if (isMatchAllMap)
+		{
+			isContinuity = false;
+			isMatchAllMap = false;
+		}
+		else
+			isContinuity = true;
+
+		is_success_match = true;
+	}
+	else 
+	{
+		pos = last_pos;
+		is_success_match = false;
+		continuity_retry++;
+
+		if (continuity_retry >= max_continuity_retry)
+		{
+			isMatchAllMap = true;
+			continuity_retry = 0;
+		}
+	}
 }
 
 cv::Point2d  SurfMatch::match_continuity(bool& calc_continuity_is_faile)
@@ -283,7 +291,11 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 		return all_map_pos;
 	}
 	// 从最佳匹配结果中剔除异常点计算角色位置返回
-	all_map_pos = TianLi::Utils::SPC(lisx, lisy);
+	if (!TianLi::Utils::SPC(lisx, lisy, all_map_pos))
+	{
+		calc_is_faile = true;
+		return all_map_pos;
+	}
 	return all_map_pos;
 }
 
@@ -358,7 +370,13 @@ cv::Point2d SurfMatch::match_continuity_on_city(bool& calc_continuity_is_faile)
 	
 	isOnCity = judgesIsOnCity(keypoint_on_city_list,0.5);		//大地图放大了2倍，所以小地图坐标也要这样处理
 
-	cv::Point2d pos_continuity_on_city = TianLi::Utils::SPC(lisx, lisy);
+	cv::Point2d pos_continuity_on_city;
+	
+	if (! TianLi::Utils::SPC(lisx, lisy, pos_continuity_on_city))
+	{
+		calc_continuity_is_faile = true;
+		return pos_continuity_on_city;
+	}
 
 	pos_continuity_on_city.x = (pos_continuity_on_city.x - someMap.cols / 2.0) / 2.0;
 	pos_continuity_on_city.y = (pos_continuity_on_city.y - someMap.rows / 2.0) / 2.0;
@@ -429,9 +447,14 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 	if (!judgesIsOnCity(keypoint_not_on_city_list, MAP_BOTH_SCALE_RATE))
 	{
 		isOnCity = false;
-		cv::Point2d p = TianLi::Utils::SPC(lisx, lisy);
+		cv::Point2d p;
+		if (!TianLi::Utils::SPC(lisx, lisy, p))
+		{
+			calc_continuity_is_faile = true;
+			return pos_not_on_city;
+		}
 		pos_not_on_city = cv::Point2d(p.x + pos.x - real_some_map_size_r, p.y + pos.y - real_some_map_size_r);
-		return pos_not_on_city;
+	return pos_not_on_city;
 	}
 	
 	cv::Point2d pos_on_city;
@@ -480,7 +503,12 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
 	isOnCity = judgesIsOnCity(keypoint_on_city_list, 0.5);
 
-	cv::Point2d p = TianLi::Utils::SPC(list_x_on_city, list_y_on_city);
+	cv::Point2d p;
+	if (!TianLi::Utils::SPC(list_x_on_city, list_y_on_city, p))
+	{
+		calc_continuity_is_faile = true;
+		return pos_on_city;
+	}
 
 	double x = (p.x - someMap.cols / 2.0) / 2.0;
 	double y = (p.y - someMap.rows / 2.0) / 2.0;

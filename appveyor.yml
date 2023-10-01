@@ -16,6 +16,8 @@
         OpenCvUrl: https://github.com/GengGode/OpencvStaticLib/releases/download/4.6.0/Opencv.zip
         ProjectName: cvAutoTrack
         ProJectExeName: cvAutoTrack
+
+        APPVEYOR_RDP_PASSWORD: A1B2C3D4##
     skip_tags: true
   
     install:
@@ -29,6 +31,9 @@
         - ps: ./ci/release_resource.ps1
 
     build_script:
+        # 编译器先开启远程桌面检查
+        - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
         - MSBuild %MyProjectDir%cvAutoTrack\cvAutoTrack.vcxproj /p:configuration="Compile"
         # 编译测试文件
         - MSBuild %MyProjectDir%impl\Cpp\TEST_cvAutoTrack_Cpp\TEST_cvAutoTrack_Cpp.vcxproj /p:configuration="Compile"
@@ -119,6 +124,8 @@
     branches:
       only:
         - /dev-/
+        - dev
+
         
     environment:
         MyProjectDir: C:\projects\cvAutoTrack\
@@ -345,8 +352,7 @@
 
         - ps: $buildversion = Get-Content version.ver
         - ps: $commitLog = git log -1 --pretty=%B
-  
-        
-        - ps: ./ci/upload_file.ps1
-        - ps: ./ci/manual_upload_release.ps1
+
+        - ps: $errCode = ./ci/upload_file.ps1
+        - ps: if($errCode -eq 0){./ci/manual_upload_release.ps1}
 

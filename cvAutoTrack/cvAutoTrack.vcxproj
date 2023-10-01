@@ -184,10 +184,8 @@
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PostBuildEvent>
-      <Command>if not exist "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug" (
-  mkdir "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug"
-)
-copy /B /Y "$(TargetPath)" "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug\$(targetFileName)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>src\version\build_version_before.bat</Command>
@@ -395,9 +393,9 @@ copy /B /Y "$(TargetPath)" "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug\$(
     <ClInclude Include="src\resources\import\resources.import.h" />
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
+    <ClInclude Include="src\resources\serialize.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
-    <ClInclude Include="src\utils\workflow\utils.workflow.h" />
     <ClInclude Include="src\Ver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -439,7 +437,6 @@ copy /B /Y "$(TargetPath)" "$(APPDATA)\..\localLow\空荧酒馆\Map\DLL\Debug\$(
     <ClCompile Include="src\resources\resources.load.cpp" />
     <ClCompile Include="src\utils\log\utils.log.cpp" />
     <ClCompile Include="src\utils\Utils.cpp" />
-    <ClCompile Include="src\utils\workflow\utils.workflow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource\cvAutoTrack.rc" />
