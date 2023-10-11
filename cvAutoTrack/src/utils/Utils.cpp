@@ -436,6 +436,12 @@ namespace TianLi::Utils
                     ((double)dstRect.height / srcRect.height) * (y - srcRect.y) + dstRect.y);
                 return { dstPoint,id };
             }
+
+        }
+        // 层级在地下，但是没有匹配到合适的点
+        if (y > 3838 + 3962)
+        {
+            return { cv::Point(0,0),0 };
         }
         return { cv::Point(x, y), 0 };
     }
@@ -470,7 +476,8 @@ namespace TianLi::Utils
                     }
                     good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
                                    img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
-                                  {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
+                                  {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}
+                        });
                 }
             }
 #ifdef _DEBUG
