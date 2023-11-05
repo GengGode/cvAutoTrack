@@ -62,4 +62,4 @@ set(BUILD_TESTS OFF)
 FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
 FetchContent_MakeAvailable(cereal)
 
-target_link_libraries(cvAutoTrack ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
+target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
