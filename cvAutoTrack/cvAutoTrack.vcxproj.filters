@@ -309,6 +309,9 @@
     <ClInclude Include="src\resources\serialize.h">
       <Filter>src\resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\trackCache.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">

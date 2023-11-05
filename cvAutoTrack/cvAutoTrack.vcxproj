@@ -395,6 +395,7 @@
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\resources\serialize.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
+    <ClInclude Include="src\utils\trackCache.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\Ver.h" />
   </ItemGroup>
