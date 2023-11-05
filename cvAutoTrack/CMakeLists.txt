@@ -1,6 +1,6 @@
 
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
+#set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -13,15 +13,29 @@ file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
 
 add_compile_options(/utf-8)
-add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
+
+if(BUILD_SUBMODULE)
+    add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
+    set(RcFile "")
+else()
+    set(RcFile cvAutoTrack.rc)
+endif()
+
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
     src/cvAutoTrack.cpp
     ${CppFiles}
     ${HppFiles}
     #${RcFiles}
-    #cvAutoTrack.rc
+    ${RcFile}
 )
-#set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MT")
+
+if(BUILD_SUBMODULE)
+    add_compile_options(/MD)
+    set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MD")
+else()
+    add_compile_options(/MT)
+    set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MT")
+endif()
 
 target_link_libraries(cvAutoTrack ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
