@@ -417,12 +417,13 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
     catch (std::exception) {   //缓存损坏
         return false;
     }
-
+#ifndef _DEBUG  //为了提高调试的效率，在Debug模式下，忽略对缓存文件的校验
     if (cache.bulid_version != TianLi::Version::build_version)    //版本不一致
         return false;
 
     if (cache.bulid_version != cache.bulid_version_end)    //写入不完整
         return false;
+#endif //_DEBUG
 
     keypoints = cache.keyPoints;
     descriptors = cache.descriptors;
