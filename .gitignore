@@ -281,3 +281,4 @@ bulid
 /out/build
 /cvAutoTrack/resource
 /CMakeSettings.json
+*.code-workspace
