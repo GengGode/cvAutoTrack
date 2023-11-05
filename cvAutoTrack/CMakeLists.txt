@@ -13,6 +13,15 @@ file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
 
 parse_version_file(src/version/version.ver)
+set(PROJECT_VERSION_MAJOR ${VERSION_MAJOR})
+set(PROJECT_VERSION_MINOR ${VERSION_MINOR})
+set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
+
+# version.rc
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc.in"
+    "version.rc"
+)
 
 add_compile_options(/utf-8)
 
@@ -30,6 +39,7 @@ add_library(cvAutoTrack SHARED
     ${HppFiles}
     #${RcFiles}
     ${RcFile}
+    version.rc
 )
 
 if(BUILD_SUBMODULE)
