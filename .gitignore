@@ -273,3 +273,6 @@ __pycache__/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/cvAutoTrack_Cache.xml
 /resource
 /api.txt
+/cvAutoTrack.CacheGenerator/src/Resource
+/cvAutoTrack.CacheGenerator/src/JsonConvertor.cpp
+/cvAutoTrack.CacheGenerator/src/JsonConvertor.h

@@ -309,9 +309,6 @@
     <ClInclude Include="src\resources\serialize.h">
       <Filter>src\resources</Filter>
     </ClInclude>
-    <ClInclude Include="src\resources\AutoTrackCacheGenerator.h">
-      <Filter>src\resources</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AutoTrack.cpp">
@@ -389,9 +386,6 @@
     <ClCompile Include="src\resources\import\resources.import.cpp" />
     <ClCompile Include="src\dllmain.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\resources\AutoTrackCacheGenerator.cpp">
-      <Filter>src\resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

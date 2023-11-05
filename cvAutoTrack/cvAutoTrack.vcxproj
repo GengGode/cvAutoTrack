@@ -374,7 +374,6 @@
     <ClInclude Include="src\match\type\MatchType.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\resource.h" />
-    <ClInclude Include="src\resources\AutoTrackCacheGenerator.h" />
     <ClInclude Include="src\resources\binary\image\cailb\resources.binary.image.cailb.h" />
     <ClInclude Include="src\resources\binary\image\paimon\resources.binary.image.paimon.h" />
     <ClInclude Include="src\resources\binary\image\resources.binary.image.h" />
@@ -432,7 +431,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\resources\AutoTrackCacheGenerator.cpp" />
     <ClCompile Include="src\resources\binary\resources.binary.cpp" />
     <ClCompile Include="src\resources\import\resources.import.cpp" />
     <ClCompile Include="src\resources\Resources.cpp" />
