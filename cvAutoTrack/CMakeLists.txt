@@ -23,13 +23,13 @@ configure_file(
     "version.rc"
 )
 
-add_compile_options(/utf-8)
-
 if(BUILD_SUBMODULE)
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
     unset(RcFile)
+    message(STATUS "build cvAutoTrack.resources")
 else()
     set(RcFile cvAutoTrack.rc)
+    message(STATUS "build cvAutoTrack")
 endif()
 
 # define CVAUTOTRACK_EXPORTS
@@ -48,9 +48,11 @@ add_library(cvAutoTrack SHARED
 if(BUILD_SUBMODULE)
     add_compile_options(/MD)
     set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MD")
+    message(STATUS "使用Opencv动态库")
 else()
     add_compile_options(/MT)
     set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MT")
+    message(STATUS "使用Opencv静态库")
 endif()
 
 include(FetchContent)

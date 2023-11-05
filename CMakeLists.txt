@@ -11,8 +11,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_CXX_STANDARD 20)
 if(MSVC)
     add_compile_options(/std:c++latest)
-    add_compile_options(/utf-8)
 endif()
+add_compile_options(/utf-8)
 
 project(libcvAutoTrack)
 
