@@ -260,8 +260,11 @@ paket-files/
 __pycache__/
 *.pyc
 /.vscode
-/cvAutoTrack/resource
+/cvAutoTrack/resource/png
+/cvAutoTrack/resource/*.png
+/cvAutoTrack/resource/*.bmp
 /cvAutoTrack/resource/cvAutoTrack.rc
+!/cvAutoTrack/resource/version.rc.in
 /cvAutoTrack/resource/Source.def
 /cvAutoTrack/src/version/
 !/cvAutoTrack/src/version/version_tag.tag
@@ -273,6 +276,4 @@ __pycache__/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/cvAutoTrack_Cache.xml
 /resource
 /api.txt
-/cvAutoTrack.CacheGenerator/src/Resource
-/cvAutoTrack.CacheGenerator/src/JsonConvertor.cpp
-/cvAutoTrack.CacheGenerator/src/JsonConvertor.h
+/build

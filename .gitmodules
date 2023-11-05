@@ -1,6 +1,9 @@
 [submodule "cvAutoTrack.Resource"]
 	path = cvAutoTrack.Resource
 	url = https://github.com/GengGode/cvAutoTrack.Resource
-[submodule "3rdParty/meojson"]
-	path = 3rdParty/meojson
-	url = https://github.com/MistEO/meojson
+[submodule "third_party/opencv-xfeatures2d-release-static"]
+	path = third_party/opencv-xfeatures2d-release-static
+	url = https://github.com/GengGode/opencv-xfeatures2d-release-static.git
+[submodule "third_party/opencv-xfeatures2d-shared"]
+	path = third_party/opencv-xfeatures2d-shared
+	url = https://github.com/GengGode/opencv-xfeatures2d-shared

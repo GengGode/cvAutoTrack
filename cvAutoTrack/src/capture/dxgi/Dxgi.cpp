@@ -19,6 +19,8 @@ namespace TianLi::DirectX
     static bool is_init_d3d = false;
     static winrt::com_ptr<ID3D11Device> d3dDevice;// = CreateD3DDevice();
     static winrt::impl::com_ref<IDXGIDevice> dxgiDevice;// = d3dDevice.as<IDXGIDevice>();
+    D3D11_TEXTURE2D_DESC desc_type{
+        0, 0, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_STAGING, 0, D3D11_CPU_ACCESS_READ, 0 };
 }
 
 Dxgi::Dxgi()
@@ -260,10 +262,10 @@ bool Dxgi::capture(cv::Mat& frame)
         return false;
     }
     auto frame_size = new_frame.ContentSize();
-    if (desc_type.Width != static_cast<UINT>(m_lastSize.Width) || desc_type.Height != static_cast<UINT>(m_lastSize.Height))
+    if (TianLi::DirectX::desc_type.Width != static_cast<UINT>(m_lastSize.Width) || TianLi::DirectX::desc_type.Height != static_cast<UINT>(m_lastSize.Height))
     {
-        desc_type.Width = m_lastSize.Width;
-        desc_type.Height = m_lastSize.Height;
+        TianLi::DirectX::desc_type.Width = m_lastSize.Width;
+        TianLi::DirectX::desc_type.Height = m_lastSize.Height;
     }
     if (frame_size.Width != m_lastSize.Width || frame_size.Height != m_lastSize.Height)
     {
@@ -285,9 +287,9 @@ bool Dxgi::capture(cv::Mat& frame)
     auto frameSurface = GetDXGIInterfaceFromObject<ID3D11Texture2D>(new_frame.Surface());
 
     //auto d3dDevice = GetDXGIInterfaceFromObject<ID3D11Device>(m_device);
-    TianLi::DirectX::d3dDevice->CreateTexture2D(&desc_type, nullptr, &bufferTexture);
+    TianLi::DirectX::d3dDevice->CreateTexture2D(&TianLi::DirectX::desc_type, nullptr, &bufferTexture);
     D3D11_BOX client_box;
-    bool client_box_available = get_client_box(giHandle, desc_type.Width, desc_type.Height, &client_box);
+    bool client_box_available = get_client_box(giHandle, TianLi::DirectX::desc_type.Width, TianLi::DirectX::desc_type.Height, &client_box);
 
     if (client_box_available)
     {
