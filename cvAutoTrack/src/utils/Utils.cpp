@@ -339,7 +339,7 @@ namespace TianLi::Utils
 	bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string &ret, int max_length)
 	{
 		HKEY hKey;
-		long lRes = RegOpenKeyEx(root, item.c_str(), 0, KEY_READ, &hKey);
+		long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
@@ -349,7 +349,7 @@ namespace TianLi::Utils
 		DWORD dwType = REG_SZ;
 		DWORD dwSize = max_length;
 
-		lRes = RegGetValue(hKey, NULL, key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
+		lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
@@ -379,7 +379,7 @@ namespace TianLi::Utils
 	bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int &ret)
 	{
 		HKEY hKey;
-		long lRes = RegOpenKeyEx(root, item.c_str(), 0, KEY_READ, &hKey);
+		long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);
@@ -389,7 +389,7 @@ namespace TianLi::Utils
 		DWORD dwType = REG_DWORD;
 		DWORD dwSize = sizeof(DWORD);
 
-		lRes = RegGetValue(hKey, NULL, key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
+		lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
 		if (lRes != ERROR_SUCCESS)
 		{
 			RegCloseKey(hKey);

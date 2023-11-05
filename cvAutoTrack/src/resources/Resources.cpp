@@ -185,7 +185,7 @@ namespace TianLi::Resource::Utils
 
     if (hModu == NULL) throw "Get Dll Instance Fail!";
 
-    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
+    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), "PNG");
     imageResDataHandle = LoadResource(hModu, imageResHandle);
     pImageFile = LockResource(imageResDataHandle);
     imageFileSize = SizeofResource(hModu, imageResHandle);

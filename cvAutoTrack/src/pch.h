@@ -7,19 +7,19 @@
 #ifndef PCH_H
 #define PCH_H
 
-#define WIN32_LEAN_AND_MEAN             // 从 Windows 头文件中排除极少使用的内容
+#define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
 // Windows 头文件
 #include <windows.h>
 
 // Opencv
 // 如果使用了c++14以上版本，关闭以下警告
 #ifdef _HAS_CXX17
-#pragma warning(disable: 4828)
-#pragma warning(disable: 5054)
-#pragma warning(disable: 6201)
-#pragma warning(disable: 6294)
-#pragma warning(disable: 26451)
-#pragma warning(disable: 26495)
+#pragma warning(disable : 4828)
+#pragma warning(disable : 5054)
+#pragma warning(disable : 6201)
+#pragma warning(disable : 6294)
+#pragma warning(disable : 26451)
+#pragma warning(disable : 26495)
 #endif
 
 #include <opencv2/opencv.hpp>
@@ -44,7 +44,7 @@
 #include <DispatcherQueue.h>
 
 #include <dwmapi.h>
-#pragma comment(lib,"dwmapi.lib")
+#pragma comment(lib, "dwmapi.lib")
 
 // STL
 #include <atomic>
@@ -78,15 +78,14 @@
 inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 {
 	// 定义函数指针
-	typedef BOOL(WINAPI* MiniDumpWriteDumpT)(
+	typedef BOOL(WINAPI * MiniDumpWriteDumpT)(
 		HANDLE,
 		DWORD,
 		HANDLE,
 		MINIDUMP_TYPE,
 		PMINIDUMP_EXCEPTION_INFORMATION,
 		PMINIDUMP_USER_STREAM_INFORMATION,
-		PMINIDUMP_CALLBACK_INFORMATION
-		);
+		PMINIDUMP_CALLBACK_INFORMATION);
 	// 从 "DbgHelp.dll" 库中获取 "MiniDumpWriteDump" 函数
 	MiniDumpWriteDumpT pfnMiniDumpWriteDump = NULL;
 	HMODULE hDbgHelp = LoadLibrary(_T("DbgHelp.dll"));
@@ -102,15 +101,15 @@ inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 	// 创建 dmp 文件件
-	TCHAR szFileName[MAX_PATH] = { 0 };
+	TCHAR szFileName[MAX_PATH] = {0};
 	TCHAR szVersion[] = TEXT("cvAutoTrack");
 	SYSTEMTIME stLocalTime;
 	GetLocalTime(&stLocalTime);
-	wsprintf(szFileName, L"%s-%04d%02d%02d-%02d%02d%02d.dmp",
-		szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
-		stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
+	wsprintfA(szFileName, "%s-%04d%02d%02d-%02d%02d%02d.dmp",
+			  szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
+			  stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
 	HANDLE hDumpFile = CreateFile(szFileName, GENERIC_READ | GENERIC_WRITE,
-		FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
+								  FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
 	if (INVALID_HANDLE_VALUE == hDumpFile)
 	{
 		FreeLibrary(hDbgHelp);
@@ -122,7 +121,7 @@ inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 	expParam.ExceptionPointers = pExceptionPointers;
 	expParam.ClientPointers = FALSE;
 	pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
-		hDumpFile, MiniDumpWithDataSegs, (pExceptionPointers ? &expParam : NULL), NULL, NULL);
+						 hDumpFile, MiniDumpWithDataSegs, (pExceptionPointers ? &expParam : NULL), NULL, NULL);
 	// 释放文件
 	CloseHandle(hDumpFile);
 	FreeLibrary(hDbgHelp);
@@ -137,4 +136,4 @@ inline LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
 	return GenerateMiniDump(lpExceptionInfo);
 }
 #define INSTALL_DUMP_() SetUnhandledExceptionFilter(ExceptionFilter)
-#endif //PCH_H
+#endif // PCH_H
