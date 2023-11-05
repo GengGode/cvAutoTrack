@@ -165,7 +165,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)third_party\cereal\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -254,7 +254,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)third_party\cereal\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -305,7 +305,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)3rdParty\meojson\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src;$(SolutionDir)third_party\cereal\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -394,8 +394,8 @@
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\resources\serialize.h" />
+    <ClInclude Include="src\resources\trackCache.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
-    <ClInclude Include="src\utils\trackCache.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\Ver.h" />
   </ItemGroup>

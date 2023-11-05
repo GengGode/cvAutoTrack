@@ -23,7 +23,6 @@ namespace trackCache
         float_t hessian_threshold = 1.0;
         bool extended = false;
         bool up_right = false;
-    private:
         //序列化模板
         template <class Archive>
         void serialize(Archive& ar)
@@ -40,7 +39,6 @@ namespace trackCache
         float zoom = 1.0;
         std::string name;
         std::string value;
-    private:
         //序列化模板
         template <class Archive>
         void serialize(Archive& ar)
@@ -103,7 +101,6 @@ namespace trackCache
         }
 
         //反序列化模板
-    private:
         template <class Archive>
         void load(Archive& ar)
         {

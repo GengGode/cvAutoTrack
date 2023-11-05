@@ -36,7 +36,7 @@ namespace TianLi::Resource::Utils
         _mat = v_mat;
         return true;
     }
- 
+
     void LoadImg_ID2Mat(int IDB, cv::Mat& mat, const wchar_t* format = L"PNG", int depth = 4)
     {
         IWICStream* pIWICStream = NULL;
@@ -207,15 +207,19 @@ bool Resources::map_is_embedded()
 
 bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
 {
-    if (std::filesystem::exists("cvAutoTrack_Cache.dat") == false)
+    std::string file_name = "cvAutoTrack_Cache.dat";
+    if (std::filesystem::exists(file_name) == false)
     {
         return false;
     }
 
+    trackCache::CacheFile cache_file_struct;
+    cache_file_struct = trackCache::Deserialize(file_name);
 
-
-    keypoints = cache.keyPoints;
-    descriptors = cache.descriptors;
+    auto setting = cache_file_struct.setting;
+    auto tag_info_map = cache_file_struct.tag_info_map;
+    keypoints = cache_file_struct.key_points;
+    descriptors = cache_file_struct.descriptors;
     return true;
 }
 
