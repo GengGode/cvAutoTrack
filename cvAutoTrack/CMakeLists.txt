@@ -12,11 +12,13 @@ file(GLOB_RECURSE CppFiles "src/*.cpp")
 file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
 
+parse_version_file(src/version/version.ver)
+
 add_compile_options(/utf-8)
 
 if(BUILD_SUBMODULE)
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
-    set(RcFile "")
+    unset(RcFile)
 else()
     set(RcFile cvAutoTrack.rc)
 endif()
