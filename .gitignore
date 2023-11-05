@@ -277,3 +277,7 @@ __pycache__/
 /resource
 /api.txt
 /build
+bulid
+/out/build
+/cvAutoTrack/resource
+/CMakeSettings.json
