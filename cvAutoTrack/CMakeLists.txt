@@ -50,4 +50,17 @@ else()
     set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MT")
 endif()
 
+include(FetchContent)
+set(BUILD_DOC OFF)
+set(BUILD_SANDBOX OFF)
+set(SKIP_PERFORMANCE_COMPARISON ON)
+set(BUILD_TESTS OFF)
+FetchContent_Declare(
+  cereal
+  GIT_REPOSITORY https://github.com/USCiLab/cereal.git 
+    GIT_TAG        v1.3.2)
+FetchContent_MakeAvailable(cereal)
+target_link_libraries(cvAutoTrack cereal)
+
+
 target_link_libraries(cvAutoTrack ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
