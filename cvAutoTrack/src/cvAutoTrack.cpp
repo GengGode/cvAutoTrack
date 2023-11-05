@@ -6,15 +6,15 @@
 #include "ErrorCode.h"
 #include "AutoTrack.h"
 
-#define INSTALL_DUMP(at_func)\
-    INSTALL_DUMP_();\
+#define INSTALL_DUMP(at_func) \
+	INSTALL_DUMP_();          \
 	return at_func
 
 static AutoTrack _at;
 
-bool __stdcall verison(char* versionBuff)
+bool __stdcall verison(char *versionBuff)
 {
-	INSTALL_DUMP(_at.GetVersion(versionBuff,32));
+	INSTALL_DUMP(_at.GetVersion(versionBuff, 32));
 }
 bool __stdcall init()
 {
@@ -44,7 +44,7 @@ bool __stdcall SetWorldScale(double scale)
 {
 	INSTALL_DUMP(_at.SetWorldScale(scale));
 }
-bool __stdcall ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
+bool __stdcall ImportMapBlock(int id_x, int id_y, const char *image_data, int image_data_size, int image_width, int image_height)
 {
 	INSTALL_DUMP(_at.ImportMapBlock(id_x, id_y, image_data, image_data_size, image_width, image_height));
 }
@@ -56,19 +56,19 @@ bool __stdcall ImportMapBlockCenterScale(int x, int y, double scale)
 {
 	INSTALL_DUMP(_at.ImportMapBlockCenterScale(x, y, scale));
 }
-bool __stdcall GetTransformOfMap(double& x, double& y, double& a, int& mapId)
+bool __stdcall GetTransformOfMap(double &x, double &y, double &a, int &mapId)
 {
 	INSTALL_DUMP(_at.GetTransformOfMap(x, y, a, mapId));
 }
-bool __stdcall GetPositionOfMap(double& x, double& y, int& mapId)
+bool __stdcall GetPositionOfMap(double &x, double &y, int &mapId)
 {
 	INSTALL_DUMP(_at.GetPositionOfMap(x, y, mapId));
 }
-bool __stdcall GetDirection(double & a)
+bool __stdcall GetDirection(double &a)
 {
 	INSTALL_DUMP(_at.GetDirection(a));
 }
-bool __stdcall GetRotation(double & a)
+bool __stdcall GetRotation(double &a)
 {
 	INSTALL_DUMP(_at.GetRotation(a));
 }
@@ -76,23 +76,23 @@ bool __stdcall GetStar(double &x, double &y, bool &isEnd)
 {
 	INSTALL_DUMP(_at.GetStar(x, y, isEnd));
 }
-bool __stdcall GetStarJson(char * jsonBuff)
+bool __stdcall GetStarJson(char *jsonBuff)
 {
 	INSTALL_DUMP(_at.GetStarJson(jsonBuff));
 }
-bool __stdcall GetUID(int & uid)
+bool __stdcall GetUID(int &uid)
 {
 	INSTALL_DUMP(_at.GetUID(uid));
 }
-bool __stdcall GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
+bool __stdcall GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid)
 {
 	INSTALL_DUMP(_at.GetAllInfo(x, y, mapId, a, r, uid));
 }
-bool __stdcall GetInfoLoadPicture(char * path, int & uid, double & x, double & y, double & a)
+bool __stdcall GetInfoLoadPicture(char *path, int &uid, double &x, double &y, double &a)
 {
 	INSTALL_DUMP(_at.GetInfoLoadPicture(path, uid, x, y, a));
 }
-bool __stdcall GetInfoLoadVideo(char * path, char * pathOutFile)
+bool __stdcall GetInfoLoadVideo(char *path, char *pathOutFile)
 {
 	INSTALL_DUMP(_at.GetInfoLoadVideo(path, pathOutFile));
 }
@@ -100,11 +100,11 @@ int __stdcall GetLastErr()
 {
 	INSTALL_DUMP(_at.GetLastError());
 }
-int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
+int __stdcall GetLastErrMsg(char *msg_buff, int buff_size)
 {
 	INSTALL_DUMP(_at.GetLastErrMsg(msg_buff, buff_size));
 }
-int __stdcall GetLastErrJson(char* json_buff, int buff_size)
+int __stdcall GetLastErrJson(char *json_buff, int buff_size)
 {
 	INSTALL_DUMP(_at.GetLastErrJson(json_buff, buff_size));
 }
@@ -116,11 +116,11 @@ bool __stdcall SetEnableFileLog()
 {
 	INSTALL_DUMP(_at.SetEnableFileLog());
 }
-bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
+bool __stdcall GetCompileVersion(char *version_buff, int buff_size)
 {
 	INSTALL_DUMP(_at.GetVersion(version_buff, buff_size));
 }
-bool __stdcall GetCompileTime(char* time_buff, int buff_size)
+bool __stdcall GetCompileTime(char *time_buff, int buff_size)
 {
 	INSTALL_DUMP(_at.GetCompileTime(time_buff, buff_size));
 }
@@ -132,7 +132,7 @@ bool __stdcall DebugCapture()
 {
 	INSTALL_DUMP(_at.DebugCapture());
 }
-bool __stdcall DebugCapturePath(const char* path_buff, int buff_size)
+bool __stdcall DebugCapturePath(const char *path_buff, int buff_size)
 {
 	INSTALL_DUMP(_at.DebugCapturePath(path_buff, buff_size));
 }
