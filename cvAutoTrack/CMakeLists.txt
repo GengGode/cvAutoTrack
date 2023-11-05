@@ -32,6 +32,9 @@ else()
     set(RcFile cvAutoTrack.rc)
 endif()
 
+# define CVAUTOTRACK_EXPORTS
+add_definitions(-DCVAUTOTRACK_EXPORTS)
+
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
     src/cvAutoTrack.cpp
@@ -51,16 +54,12 @@ else()
 endif()
 
 include(FetchContent)
+# 配置cereal
 set(BUILD_DOC OFF)
 set(BUILD_SANDBOX OFF)
 set(SKIP_PERFORMANCE_COMPARISON ON)
 set(BUILD_TESTS OFF)
-FetchContent_Declare(
-  cereal
-  GIT_REPOSITORY https://github.com/USCiLab/cereal.git 
-    GIT_TAG        v1.3.2)
+FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
 FetchContent_MakeAvailable(cereal)
-target_link_libraries(cvAutoTrack cereal)
-
 
 target_link_libraries(cvAutoTrack ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
