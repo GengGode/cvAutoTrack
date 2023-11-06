@@ -11,7 +11,7 @@ namespace TianLi::Resource::Utils
 {
   void LoadBitmap_ID2Mat(int IDB, cv::Mat& mat)
   {
-    auto H_Handle = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
+    auto H_Handle = LoadBitmap(GetModuleHandle(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
     BITMAP bmp;
     GetObject(H_Handle, sizeof(BITMAP), &bmp);
     int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
@@ -181,11 +181,11 @@ namespace TianLi::Resource::Utils
     DWORD imageFileSize = 0;
     IWICImagingFactory* m_pIWICFactory = NULL;
 
-    HMODULE hModu = GetModuleHandleW(L"CVAUTOTRACK.dll");
+    HMODULE hModu = GetModuleHandle(L"CVAUTOTRACK.dll");
 
     if (hModu == NULL) throw "Get Dll Instance Fail!";
 
-    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), "PNG");
+    imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), L"PNG");
     imageResDataHandle = LoadResource(hModu, imageResHandle);
     pImageFile = LockResource(imageResDataHandle);
     imageFileSize = SizeofResource(hModu, imageResHandle);

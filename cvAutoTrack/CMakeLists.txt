@@ -34,6 +34,8 @@ endif()
 
 # define CVAUTOTRACK_EXPORTS
 add_definitions(-DCVAUTOTRACK_EXPORTS)
+# Unicode
+add_definitions(-DUNICODE -D_UNICODE)
 
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h

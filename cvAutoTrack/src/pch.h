@@ -102,12 +102,12 @@ inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 	}
 	// 创建 dmp 文件件
 	TCHAR szFileName[MAX_PATH] = {0};
-	TCHAR szVersion[] = TEXT("cvAutoTrack");
+	TCHAR szVersion[] = L"cvAutoTrack";
 	SYSTEMTIME stLocalTime;
 	GetLocalTime(&stLocalTime);
-	wsprintfA(szFileName, "%s-%04d%02d%02d-%02d%02d%02d.dmp",
-			  szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
-			  stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
+	wsprintf(szFileName, L"%s-%04d%02d%02d-%02d%02d%02d.dmp",
+			 szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
+			 stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
 	HANDLE hDumpFile = CreateFile(szFileName, GENERIC_READ | GENERIC_WRITE,
 								  FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
 	if (INVALID_HANDLE_VALUE == hDumpFile)
