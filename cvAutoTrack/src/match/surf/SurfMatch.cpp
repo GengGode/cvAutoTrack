@@ -9,10 +9,10 @@ bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, doubl
 {
     auto get_average = [](const std::vector<double>& v) {
         return std::accumulate(v.begin(), v.end(), 0.0) / (double)v.size();
-    };
+        };
     auto get_sigma = [](const std::vector<double>& v, const double average) {
         return sqrt(std::accumulate(v.begin(), v.end(), 0.0, [&](const double acc, const double x) {return acc + pow(x - average, 2); }) / (double)v.size());
-    };
+        };
 
     std::vector<double> vec_distRatio;
     double distScene, distObject;
@@ -88,7 +88,7 @@ std::pair<std::vector<cv::Point2d>, double> judges_scale(std::vector<TianLi::Uti
 }
 
 
-void SurfMatch::setMap(cv::Mat gi_map)
+void SurfMatch::setMap_Dbg(cv::Mat gi_map)
 {
     _mapMat = gi_map;
 }
@@ -96,13 +96,6 @@ void SurfMatch::setMap(cv::Mat gi_map)
 void SurfMatch::setMiniMap(cv::Mat miniMapMat)
 {
     _miniMapMat = miniMapMat;
-}
-
-void SurfMatch::Init()
-{
-    if (isInit)return;
-    matcher.detect_and_compute(_mapMat, map.keypoints, map.descriptors);
-    isInit = true;
 }
 
 void SurfMatch::Init(std::vector<cv::KeyPoint>& gi_map_keypoints, cv::Mat& gi_map_descriptors)
@@ -305,7 +298,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     return all_map_pos;
 }
 
-
+#ifdef _DELETE
 /// <summary>
 /// 匹配 在城镇内
 /// </summary>
@@ -523,7 +516,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
     return pos_on_city;
 }
 
-
+#endif // _DELETE
 
 cv::Point2d SurfMatch::getLocalPos()
 {

@@ -183,19 +183,14 @@ Resources& Resources::getInstance()
 
 void Resources::install()
 {
-    if (is_installed == false)
-    {
-        LoadImg_ID2Mat(IDB_JPG_GIMAP, MapTemplate, L"JPG", 3);
-        is_installed = true;
-    }
+    //由于已经不再需要读取匹配图，所以始终返回为成功
+    is_installed = true;
 }
 
 void Resources::release()
 {
     if (is_installed == true)
     {
-        MapTemplate.release();
-        MapTemplate = cv::Mat();
         is_installed = false;
     }
 }
