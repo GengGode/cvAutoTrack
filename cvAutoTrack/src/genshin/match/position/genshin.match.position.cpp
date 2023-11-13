@@ -173,7 +173,6 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
     out_genshin_position.position = surf_match.getLocalPos();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
     out_genshin_position.config.is_coveying = surf_match.isCoveying;
-    out_genshin_position.config.is_on_city = surf_match.isOnCity;
 
     if (out_genshin_position.config.is_use_filter)
     {

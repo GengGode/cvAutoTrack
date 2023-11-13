@@ -211,14 +211,21 @@ namespace TianLi::Utils
             x = sumx / numx;
             y = sumy / numy;
             out = cv::Point2d(x, y);
+            return true;
+        }
+        else if (lisx.size() != 0)
+        {
+            // 计算标准差
+            out = cv::Point2d(meanx, meany);
+            return true;
         }
         else
         {
             // 如果x坐标或y坐标为空，则设置x和y坐标为空
             out = cv::Point2d();
-            return 0;
+            return false;
         }
-        return true;
+        return false;
     }
 
     int getMaxID(double lis[], int len)
@@ -292,21 +299,6 @@ namespace TianLi::Utils
 
     std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)
     {
-        // 地下层岩
-        const cv::Rect2d rect_DiXiaCengYan(-340, -565, 1700, 1700);
-        // 渊下宫
-        const cv::Rect2d rect_YuanXiaGong(0, 5543, 2400, 2401);
-        const std::vector<std::pair<cv::Rect2d, int>> rects = {
-            {rect_YuanXiaGong, 1},
-            {rect_DiXiaCengYan, 2}
-        };
-        for (auto& [rect, id] : rects)
-        {
-            if (rect.contains(cv::Point2d(x, y)))
-            {
-                return std::make_pair(cv::Point2d(x - rect.x, y - rect.y), id);
-            }
-        }
         return std::make_pair(cv::Point2d(x, y), 0);
     }
 
@@ -322,7 +314,7 @@ namespace TianLi::Utils
     {
         void calc_good_matches_show(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints)
         {
-#ifdef _DEBUG
+#ifdef _DELETE
             std::vector<cv::DMatch> good_matches;
 #else
             UNREFERENCED_PARAMETER(img_scene);
@@ -331,7 +323,7 @@ namespace TianLi::Utils
             {
                 if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
                 {
-#ifdef _DEBUG
+#ifdef _DELETE
                     good_matches.push_back(KNN_m[i][0]);
 #endif
                     if (KNN_m[i][0].queryIdx >= keypoint_object.size())
@@ -339,11 +331,13 @@ namespace TianLi::Utils
                         continue;
                     }
                     good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
-                                              {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
+                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y
+},
+{keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}
+                        });
                 }
             }
-#ifdef _DEBUG
+#ifdef _DELETE
             draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
 #endif
         }
@@ -358,7 +352,7 @@ namespace TianLi::Utils
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length)
     {
         HKEY hKey;
-		long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
+        long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
         if (lRes != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
@@ -368,7 +362,7 @@ namespace TianLi::Utils
         DWORD dwType = REG_SZ;
         DWORD dwSize = max_length;
 
-		lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
+        lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_SZ, &dwType, lpData, &dwSize);
         if (lRes != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
@@ -398,7 +392,7 @@ namespace TianLi::Utils
     bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int& ret)
     {
         HKEY hKey;
-		long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
+        long lRes = RegOpenKeyExW(root, item.c_str(), 0, KEY_READ, &hKey);
         if (lRes != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
@@ -408,7 +402,7 @@ namespace TianLi::Utils
         DWORD dwType = REG_DWORD;
         DWORD dwSize = sizeof(DWORD);
 
-		lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
+        lRes = RegGetValueW(hKey, NULL, key.c_str(), RRF_RT_REG_DWORD, &dwType, &lpData, &dwSize);
         if (lRes != ERROR_SUCCESS)
         {
             RegCloseKey(hKey);
