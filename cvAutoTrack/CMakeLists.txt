@@ -1,6 +1,10 @@
 
+#set(BUILD_SUBMODULE ON)
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-#set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
+if(BUILD_SUBMODULE)
+    set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
+endif()
+
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -22,6 +26,7 @@ configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc.in"
     "version.rc"
 )
+
 
 if(BUILD_SUBMODULE)
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
@@ -46,6 +51,14 @@ add_library(cvAutoTrack SHARED
     ${RcFile}
     version.rc
 )
+
+set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/Yu${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h")
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
+
+add_compile_options(/MP)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 
 if(BUILD_SUBMODULE)
     add_compile_options(/MD)
