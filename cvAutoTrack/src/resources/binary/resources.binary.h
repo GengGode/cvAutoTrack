@@ -4,9 +4,10 @@ namespace TianLi::Resources::Binary
 {
 	struct binary_resources
 	{
-		const unsigned char* data;
+		const unsigned char *data;
 		size_t size;
 	};
-
-	binary_resources get_image_binary(const char* name);
+	int get_image_count();
+	const char *get_image_name(int image_id);
+	binary_resources get_image_binary(const char *name);
 }

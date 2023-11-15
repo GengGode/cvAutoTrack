@@ -1,5 +1,5 @@
 
-#set(BUILD_SUBMODULE ON)
+set(BUILD_SUBMODULE ON)
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
 if(BUILD_SUBMODULE)
     set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
@@ -39,8 +39,6 @@ endif()
 
 # define CVAUTOTRACK_EXPORTS
 add_definitions(-DCVAUTOTRACK_EXPORTS)
-# Unicode
-add_definitions(-DUNICODE -D_UNICODE)
 
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
