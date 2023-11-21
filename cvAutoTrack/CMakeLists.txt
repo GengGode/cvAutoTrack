@@ -78,3 +78,9 @@ FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git
 FetchContent_MakeAvailable(cereal)
 
 target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} d3d11.lib d3dcompiler.lib dxgi.lib)
+
+if(BUILD_SUBMODULE)
+    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480.dll"
+                "$<TARGET_FILE_DIR:cvAutoTrack>")                    
+endif()
