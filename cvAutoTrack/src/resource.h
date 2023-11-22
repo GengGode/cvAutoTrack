@@ -17,7 +17,7 @@
 #define IDB_BITMAP_UID9                 119
 #define IDB_BITMAP_UID_                 120
 
-#define IDB_PNG_GIMAP                   130
+//#define IDB_PNG_GIMAP                   130
 #define IDB_PNG_MINIMAP_CAILB           131
 
 // #define IDR_XML_GIMAP_COMPUTE           140

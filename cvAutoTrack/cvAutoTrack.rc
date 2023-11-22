@@ -25,21 +25,21 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
-    "resource.h\0"
+"resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
-    "#include ""winres.h""\r\n"
-    "\0"
+"#include ""winres.h""\r\n"
+"\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
-    "\r\n"
-    "\0"
+"\r\n"
+"\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -81,7 +81,7 @@ IDB_BITMAP_UID_         BITMAP                  "resource\\png\\uid_.bmp"
 // PNG
 //
 
-IDB_PNG_GIMAP           PNG                     "resource\\GIMAP.png"
+IDB_PNG_GIMAP           PNG                     "resource\\GIMAP.jpg"
 
 IDB_PNG_MINIMAP_CAILB   PNG  				    "resource\\GIMINIMAP_CAILB.png"
 
