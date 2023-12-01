@@ -26,7 +26,7 @@ set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
 # version.rc
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc.in"
-    "version.rc"
+    "${VerRcFile}"
 )
 
 
@@ -44,8 +44,7 @@ endif()
 add_definitions(-DCVAUTOTRACK_EXPORTS)
 add_definitions(-DUSED_BINARY_IMAGE)
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile})
-source_group("Resource" PREFIX "./" FILES ${VerRcFile})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile} ${VerRcFile})
 
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
