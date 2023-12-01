@@ -31,6 +31,7 @@ configure_file(
 
 if(BUILD_SUBMODULE)
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
+    set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
     unset(RcFile)
     message(STATUS "build cvAutoTrack.resources")
 else()

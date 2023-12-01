@@ -21,6 +21,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 project(libcvAutoTrack)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+Set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake_targets")
 # 包含子项目
 add_subdirectory(source)
 add_subdirectory(tests)
