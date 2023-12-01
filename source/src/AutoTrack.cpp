@@ -677,9 +677,6 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
         }
     }
 
-#ifdef _DELETE
-    showMatchResult(x, y, mapId, a, r);
-#endif // _DEBUG
     return clear_error_logs();
 }
 
@@ -894,34 +891,3 @@ bool AutoTrack::getMiniMapRefMat()
 #endif
     return true;
 }
-
-#ifdef _DELETE
-Resources* resource = &Resources::getInstance();
-inline void AutoTrack::showMatchResult(float x, float y, int mapId, float angle, float rotate)
-{
-    cv::Point2d pos(x, y);
-    // 转换到绝对坐标
-    if (mapId == 0)
-        pos = TianLi::Utils::TransferAxes_inv(pos, genshin_avatar_position.target_map_world_center, genshin_avatar_position.target_map_world_scale);
-
-    // 获取附近的地图
-    cv::Mat gi_map = resource->MapTemplate;
-    cv::Mat subMap = TianLi::Utils::get_some_map(gi_map, pos, 150).clone();
-
-    cv::Point2i center(subMap.size[1] / 2, subMap.size[0] / 2);
-
-    // 绘制扇形
-    cv::Mat sectorMask = subMap.clone();
-    cv::ellipse(sectorMask, center, cv::Size2i(100, 100), -rotate - 135, 0, 90, cv::Scalar(255, 255, 255, 100), -1, cv::LINE_AA);
-    cv::addWeighted(subMap, 0.75, sectorMask, 0.25, 0, subMap);
-
-    // 绘制玩家方向
-    cv::Point2i direct(0, 0);
-    direct.x = -(30 * sin((angle / 180.0) * _Pi)) + center.x;
-    direct.y = -(30 * cos((angle / 180.0) * _Pi)) + center.y;
-    cv::arrowedLine(subMap, center, direct, cv::Scalar(255, 255, 0), 5, cv::LINE_AA, 0, 0.5);
-
-    // 在图中显示坐标信息
-    cv::imshow("Visual Debug", subMap);
-}
-#endif

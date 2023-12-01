@@ -314,32 +314,20 @@ namespace TianLi::Utils
     {
         void calc_good_matches_show(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints)
         {
-#ifdef _DELETE
-            std::vector<cv::DMatch> good_matches;
-#else
             UNREFERENCED_PARAMETER(img_scene);
-#endif
             for (size_t i = 0; i < KNN_m.size(); i++)
             {
                 if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
                 {
-#ifdef _DELETE
-                    good_matches.push_back(KNN_m[i][0]);
-#endif
                     if (KNN_m[i][0].queryIdx >= keypoint_object.size())
                     {
                         continue;
                     }
-                    good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y
-},
-{keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}
-                        });
+                    good_keypoints.push_back({{img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
+                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
+                                              {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}});
                 }
             }
-#ifdef _DELETE
-            draw_good_matches(img_scene, keypoint_scene, img_object, keypoint_object, good_matches);
-#endif
         }
     }
 
