@@ -323,11 +323,9 @@ namespace TianLi::Utils
                     {
                         continue;
                     }
-                    good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y
-},
-{keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}
-                        });
+                    good_keypoints.push_back({{img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
+                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
+                                              {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}});
                 }
             }
         }
