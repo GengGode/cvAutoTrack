@@ -20,6 +20,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 
 project(libcvAutoTrack)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # 包含子项目
 add_subdirectory(source)
 add_subdirectory(tests)
