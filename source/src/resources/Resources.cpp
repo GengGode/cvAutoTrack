@@ -10,26 +10,26 @@
 
 namespace TianLi::Resource::Utils
 {
-    void LoadBitmap_ID2Mat(int IDB, cv::Mat& mat)
+    void LoadBitmap_ID2Mat(int IDB, cv::Mat &mat)
     {
         auto H_Handle = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
         BITMAP bmp;
         GetObject(H_Handle, sizeof(BITMAP), &bmp);
         int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-        //int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
+        // int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
         cv::Mat v_mat;
         v_mat.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
         GetBitmapBits(H_Handle, bmp.bmHeight * bmp.bmWidth * nChannels, v_mat.data);
         mat = v_mat;
     }
-    bool HBitmap2MatAlpha(HBITMAP& _hBmp, cv::Mat& _mat)
+    bool HBitmap2MatAlpha(HBITMAP &_hBmp, cv::Mat &_mat)
     {
-        //BITMAP操作
+        // BITMAP操作
         BITMAP bmp;
         GetObject(_hBmp, sizeof(BITMAP), &bmp);
         int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
-        //int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
-        //mat操作
+        // int depth = bmp.bmBitsPixel == 1 ? 1 : 8;
+        // mat操作
         cv::Mat v_mat;
         v_mat.create(cv::Size(bmp.bmWidth, bmp.bmHeight), CV_MAKETYPE(CV_8UC3, nChannels));
         GetBitmapBits(_hBmp, bmp.bmHeight * bmp.bmWidth * nChannels, v_mat.data);
@@ -37,31 +37,33 @@ namespace TianLi::Resource::Utils
         return true;
     }
 
-    void LoadImg_ID2Mat(int IDB, cv::Mat& mat, const wchar_t* format = L"PNG", int depth = 4)
+    void LoadImg_ID2Mat(int IDB, cv::Mat &mat, const wchar_t *format = L"PNG", int depth = 4)
     {
-        IWICStream* pIWICStream = NULL;
-        IWICBitmapDecoder* pIDecoder = NULL;
-        IWICBitmapFrameDecode* pIDecoderFrame = NULL;
-        IWICBitmapSource* bitmap_source = NULL;
+        IWICStream *pIWICStream = NULL;
+        IWICBitmapDecoder *pIDecoder = NULL;
+        IWICBitmapFrameDecode *pIDecoderFrame = NULL;
+        IWICBitmapSource *bitmap_source = NULL;
         HRSRC imageResHandle = NULL;
         HGLOBAL imageResDataHandle = NULL;
-        void* pImageFile = NULL;
+        void *pImageFile = NULL;
         DWORD imageFileSize = 0;
-        IWICImagingFactory* m_pIWICFactory = NULL;
+        IWICImagingFactory *m_pIWICFactory = NULL;
 
         HMODULE hModu = GetModuleHandleW(L"CVAUTOTRACK.dll");
 
-        if (hModu == NULL) throw "Get Dll Instance Fail!";
+        if (hModu == NULL)
+            throw "Get Dll Instance Fail!";
 
         imageResHandle = FindResource(hModu, MAKEINTRESOURCE(IDB), format);
-        if (imageResHandle == NULL) throw "Load Image Resource Fail!";
+        if (imageResHandle == NULL)
+            throw "Load Image Resource Fail!";
 
         imageResDataHandle = LoadResource(hModu, imageResHandle);
-        if (imageResHandle == NULL) throw "Load Image Resource Data Fail!";
+        if (imageResHandle == NULL)
+            throw "Load Image Resource Data Fail!";
 
         pImageFile = LockResource(imageResDataHandle);
         imageFileSize = SizeofResource(hModu, imageResHandle);
-
 
         CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
@@ -69,19 +71,18 @@ namespace TianLi::Resource::Utils
             CLSID_WICImagingFactory,
             NULL,
             CLSCTX_INPROC_SERVER,
-            IID_PPV_ARGS(&m_pIWICFactory)
-        );
+            IID_PPV_ARGS(&m_pIWICFactory));
 
         m_pIWICFactory->CreateStream(&pIWICStream);
 
         pIWICStream->InitializeFromMemory(
-            reinterpret_cast<BYTE*>(pImageFile),
+            reinterpret_cast<BYTE *>(pImageFile),
             imageFileSize);
         m_pIWICFactory->CreateDecoderFromStream(
-            pIWICStream,                   // The stream to use to create the decoder
-            NULL,                          // Do not prefer a particular vendor
-            WICDecodeMetadataCacheOnLoad,  // Cache metadata when needed
-            &pIDecoder);                   // Pointer to the decoder
+            pIWICStream,                  // The stream to use to create the decoder
+            NULL,                         // Do not prefer a particular vendor
+            WICDecodeMetadataCacheOnLoad, // Cache metadata when needed
+            &pIDecoder);                  // Pointer to the decoder
         pIDecoder->GetFrame(0, &pIDecoderFrame);
 
         bitmap_source = pIDecoderFrame;
@@ -103,7 +104,7 @@ namespace TianLi::Resource::Utils
 using namespace TianLi::Resource::Utils;
 #ifdef USED_BINARY_IMAGE
 #include "resources.load.h"
-#endif // 
+#endif //
 
 Resources::Resources()
 {
@@ -129,7 +130,7 @@ Resources::Resources()
     {
         cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGB2GRAY);
     }
-#endif // 
+#endif //
     LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
     LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
 
@@ -175,7 +176,7 @@ Resources::~Resources()
     release();
 }
 
-Resources& Resources::getInstance()
+Resources &Resources::getInstance()
 {
     static Resources instance;
     return instance;
@@ -183,7 +184,7 @@ Resources& Resources::getInstance()
 
 void Resources::install()
 {
-    //由于已经不再需要读取匹配图，所以始终返回为成功
+    // 由于已经不再需要读取匹配图，所以始终返回为成功
     is_installed = true;
 }
 
@@ -212,13 +213,14 @@ bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
     return true;
 }
 
-struct QDTree {
-    std::unique_ptr<QDTree> tl;     //左上角指针
-    std::unique_ptr<QDTree> tr;     //右上角指针
-    std::unique_ptr<QDTree> bl;     //左下角指针
-    std::unique_ptr<QDTree> br;     //右下角指针
-    bool isGeode = false;       //是否为叶子节点
-    std::vector<cv::KeyPoint> pts;      //叶节点中存储的关键点
+struct QDTree
+{
+    std::unique_ptr<QDTree> tl;    // 左上角指针
+    std::unique_ptr<QDTree> tr;    // 右上角指针
+    std::unique_ptr<QDTree> bl;    // 左下角指针
+    std::unique_ptr<QDTree> br;    // 右下角指针
+    bool isGeode = false;          // 是否为叶子节点
+    std::vector<cv::KeyPoint> pts; // 叶节点中存储的关键点
 };
 
 /**
@@ -229,9 +231,8 @@ struct QDTree {
  * @param minPoints 分裂后每个节点至少包含的关键点个数，最小为1
  * @param maxDepth 分裂的最大深度，为0则不限制
  * @return
-*/
-bool buildQuadTree(const std::vector<cv::KeyPoint>& kp, std::unique_ptr<QDTree>& rootNode, float minSize = 0.0, int minPoints = 1, int depth = 0)
+ */
+bool buildQuadTree(const std::vector<cv::KeyPoint> &kp, std::unique_ptr<QDTree> &rootNode, float minSize = 0.0, int minPoints = 1, int depth = 0)
 {
-
-
+    return false;
 }
