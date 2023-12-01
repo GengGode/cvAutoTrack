@@ -62,7 +62,6 @@ namespace TianLi::Resource::Utils
         pImageFile = LockResource(imageResDataHandle);
         imageFileSize = SizeofResource(hModu, imageResHandle);
 
-
         CoInitializeEx(NULL, COINIT_MULTITHREADED);
 
         CoCreateInstance(
@@ -221,5 +220,4 @@ bool load_map_keypoint_cache(std::vector<cv::KeyPoint>& keypoints, cv::Mat& desc
 bool get_map_keypoint(std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors)
 {
     return load_map_keypoint_cache(keypoints, descriptors);
-
 }
