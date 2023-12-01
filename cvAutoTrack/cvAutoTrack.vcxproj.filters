@@ -294,9 +294,6 @@
     <ClInclude Include="src\genshin\genshin.h">
       <Filter>src\genshin</Filter>
     </ClInclude>
-    <ClInclude Include="src\utils\workflow\utils.workflow.h">
-      <Filter>src\utils\workflow</Filter>
-    </ClInclude>
     <ClInclude Include="src\utils\log\utils.log.h">
       <Filter>src\utils\log</Filter>
     </ClInclude>
@@ -309,7 +306,7 @@
     <ClInclude Include="src\resources\import\resources.import.h">
       <Filter>src\resources</Filter>
     </ClInclude>
-    <ClInclude Include="src\resources\serialize.h">
+    <ClInclude Include="src\resources\trackCache.h">
       <Filter>src\resources</Filter>
     </ClInclude>
   </ItemGroup>
@@ -379,9 +376,6 @@
     </ClCompile>
     <ClCompile Include="src\resources\resources.load.cpp">
       <Filter>src\resources</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utils\workflow\utils.workflow.cpp">
-      <Filter>src\utils\workflow</Filter>
     </ClCompile>
     <ClCompile Include="src\utils\log\utils.log.cpp">
       <Filter>src\utils\log</Filter>
