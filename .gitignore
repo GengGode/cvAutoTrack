@@ -285,3 +285,4 @@ bulid
 *.vcxproj
 *.sln
 /source/resource
+!/source/resource/version.rc.in
