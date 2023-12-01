@@ -214,11 +214,20 @@ bool Resources::map_is_embedded()
 bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
 {
     std::string file_name = "cvAutoTrack_Cache.dat";
-    if (std::filesystem::exists(file_name) == false)
+    // get module path
+    wchar_t module_path[MAX_PATH];
+    GetModuleFileNameW(NULL, module_path, MAX_PATH);
+    std::wstring module_path_wstr(module_path);
+    std::string module_path_str(module_path_wstr.begin(), module_path_wstr.end());
+    std::string::size_type pos = module_path_str.find_last_of('\\');
+    std::string module_dir = module_path_str.substr(0, pos + 1);
+    std::string cache_file_path = module_dir + file_name;
+    
+    if (std::filesystem::exists(cache_file_path) == false)
     {
         return false;
     }
-    cacheInfo = trackCache::Deserialize(file_name);
+    cacheInfo = trackCache::Deserialize(cache_file_path);
 
     return true;
 }
