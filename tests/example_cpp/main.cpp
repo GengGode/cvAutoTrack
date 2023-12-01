@@ -1,6 +1,6 @@
 #include <iostream>
 // #include <cvAutoTrack.h>
-#include "../../../cvAutoTrack/include/cvAutoTrack.h"
+#include "../../../source/include/cvAutoTrack.h"
 
 #include <Windows.h>
 
