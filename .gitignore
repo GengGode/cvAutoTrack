@@ -282,3 +282,6 @@ bulid
 /cvAutoTrack/resource
 /CMakeSettings.json
 *.code-workspace
+*.vcxproj
+*.sln
+/source/resource
