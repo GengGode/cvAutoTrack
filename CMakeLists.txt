@@ -21,6 +21,5 @@ add_definitions(-DUNICODE -D_UNICODE)
 project(libcvAutoTrack)
 
 # 包含子项目
-add_subdirectory(cvAutoTrack)
-add_subdirectory(test)
-add_subdirectory(impl)
+add_subdirectory(source)
+add_subdirectory(tests)
