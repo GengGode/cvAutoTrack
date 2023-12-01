@@ -42,6 +42,8 @@ endif()
 # define CVAUTOTRACK_EXPORTS
 add_definitions(-DCVAUTOTRACK_EXPORTS)
 
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile})
+
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
     src/cvAutoTrack.cpp
@@ -51,6 +53,7 @@ add_library(cvAutoTrack SHARED
     ${RcFile}
     version.rc
 )
+
 set_target_properties(cvAutoTrack PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
 
