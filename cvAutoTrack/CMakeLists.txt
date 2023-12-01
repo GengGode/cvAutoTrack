@@ -16,6 +16,7 @@ file(GLOB_RECURSE CppFiles "src/*.cpp")
 file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
 
+auto_increment_version_file(src/version/version_hash.hash src/version/version.ver)
 parse_version_file(src/version/version.ver)
 set(PROJECT_VERSION_MAJOR ${VERSION_MAJOR})
 set(PROJECT_VERSION_MINOR ${VERSION_MINOR})

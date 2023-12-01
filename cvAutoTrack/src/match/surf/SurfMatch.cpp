@@ -508,7 +508,7 @@ cv::Point2d SurfMatch::match_continuity_not_on_city(bool& calc_continuity_is_fai
 
     pos_on_city = cv::Point2d(x + pos.x, y + pos.y);
     return pos_on_city;
-}
+    }
 
 #endif // _DELETE
 

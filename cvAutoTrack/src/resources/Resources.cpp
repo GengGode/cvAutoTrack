@@ -6,7 +6,6 @@
 
 #include "resources/trackCache.h"
 
-
 #include "version/Version.h"
 
 namespace TianLi::Resource::Utils
