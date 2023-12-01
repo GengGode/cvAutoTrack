@@ -1,6 +1,3 @@
-[submodule "cvAutoTrack.Resource"]
-	path = cvAutoTrack.Resource
-	url = https://github.com/GengGode/cvAutoTrack.Resource
 [submodule "third_party/opencv-xfeatures2d-release-static"]
 	path = third_party/opencv-xfeatures2d-release-static
 	url = https://github.com/GengGode/opencv-xfeatures2d-release-static.git
