@@ -72,27 +72,3 @@ bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
 
     return true;
 }
-
-struct QDTree
-{
-    std::unique_ptr<QDTree> tl;    // 左上角指针
-    std::unique_ptr<QDTree> tr;    // 右上角指针
-    std::unique_ptr<QDTree> bl;    // 左下角指针
-    std::unique_ptr<QDTree> br;    // 右下角指针
-    bool isGeode = false;          // 是否为叶子节点
-    std::vector<cv::KeyPoint> pts; // 叶节点中存储的关键点
-};
-
-/**
- * @brief 从关键点构造四叉树
- * @param in kp 关键点数组
- * @param out rootNode 构造好的四叉树节点指针
- * @param minSize 分裂后的最小尺寸，为0则不限制
- * @param minPoints 分裂后每个节点至少包含的关键点个数，最小为1
- * @param maxDepth 分裂的最大深度，为0则不限制
- * @return
- */
-bool buildQuadTree(const std::vector<cv::KeyPoint> &kp, std::unique_ptr<QDTree> &rootNode, float minSize = 0.0, int minPoints = 1, int depth = 0)
-{
-    return false;
-}
