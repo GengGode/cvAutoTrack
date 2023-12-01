@@ -2,8 +2,7 @@
 #include "Resources.h"
 #include "resource.h"
 #include "resources/import/resources.import.h"
-#include <wincodec.h>
-
+#include "utils/convect.string.h"
 #include "resources/trackCache.h"
 
 #include "version/Version.h"
@@ -162,16 +161,15 @@ bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
     wchar_t module_path[MAX_PATH];
     GetModuleFileNameW(NULL, module_path, MAX_PATH);
     std::wstring module_path_wstr(module_path);
-    std::string module_path_str(module_path_wstr.begin(), module_path_wstr.end());
-    std::string::size_type pos = module_path_str.find_last_of('\\');
-    std::string module_dir = module_path_str.substr(0, pos + 1);
-    std::string cache_file_path = module_dir + file_name;
+    std::string module_path_str = utils::to_string(module_path_wstr);
+    std::filesystem::path module_dir = std::filesystem::path(module_path_str).parent_path();
+    auto cache_file_path = module_dir / file_name;
 
     if (std::filesystem::exists(cache_file_path) == false)
     {
         return false;
     }
-    cacheInfo = trackCache::Deserialize(cache_file_path);
+    cacheInfo = trackCache::Deserialize(cache_file_path.string());
 
     return true;
 }
