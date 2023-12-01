@@ -105,8 +105,8 @@ namespace TianLi::Resource::Utils
     }
 }
 using namespace TianLi::Resource::Utils;
-#ifdef USED_BINARY_IMAGE
 #include "resources.load.h"
+#ifdef USED_BINARY_IMAGE
 #endif //
 
 Resources::Resources()
@@ -116,7 +116,6 @@ Resources::Resources()
     if (resource_lib_handle == NULL)
         throw "Load cvAutoTrack.resources.dll Fail!";
 
-#ifdef USED_BINARY_IMAGE
     PaimonTemplate = TianLi::Resources::Load::load_image("paimon");
     StarTemplate = TianLi::Resources::Load::load_image("star");
     MinimapCailbTemplate = TianLi::Resources::Load::load_image("cailb");
@@ -138,51 +137,10 @@ Resources::Resources()
     {
         cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGB2GRAY);
     }
-#endif //
-    LoadBitmap_ID2Mat(IDB_BITMAP_PAIMON, PaimonTemplate);
-    LoadBitmap_ID2Mat(IDB_BITMAP_STAR, StarTemplate);
-
-    LoadImg_ID2Mat(IDB_PNG_MINIMAP_CAILB, MinimapCailbTemplate);
-
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID_, UID);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID0, UIDnumber[0]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID1, UIDnumber[1]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID2, UIDnumber[2]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID3, UIDnumber[3]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID4, UIDnumber[4]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID5, UIDnumber[5]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID6, UIDnumber[6]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID7, UIDnumber[7]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID8, UIDnumber[8]);
-    LoadBitmap_ID2Mat(IDB_BITMAP_UID9, UIDnumber[9]);
-
-    cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGBA2GRAY);
-    cv::cvtColor(UID, UID, cv::COLOR_RGBA2GRAY);
-    for (int i = 0; i < 10; i++)
-    {
-        cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGBA2GRAY);
-    }
 }
 
 Resources::~Resources()
 {
-    PaimonTemplate.release();
-    MinimapCailbTemplate.release();
-    StarTemplate.release();
-
-    UID.release();
-    UIDnumber[0].release();
-    UIDnumber[1].release();
-    UIDnumber[2].release();
-    UIDnumber[3].release();
-    UIDnumber[4].release();
-    UIDnumber[5].release();
-    UIDnumber[6].release();
-    UIDnumber[7].release();
-    UIDnumber[8].release();
-    UIDnumber[9].release();
-    release();
-
     FreeLibrary(resource_lib_handle);
 }
 
@@ -190,20 +148,6 @@ Resources &Resources::getInstance()
 {
     static Resources instance;
     return instance;
-}
-
-void Resources::install()
-{
-    // 由于已经不再需要读取匹配图，所以始终返回为成功
-    is_installed = true;
-}
-
-void Resources::release()
-{
-    if (is_installed == true)
-    {
-        is_installed = false;
-    }
 }
 
 bool Resources::map_is_embedded()
@@ -222,7 +166,7 @@ bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
     std::string::size_type pos = module_path_str.find_last_of('\\');
     std::string module_dir = module_path_str.substr(0, pos + 1);
     std::string cache_file_path = module_dir + file_name;
-    
+
     if (std::filesystem::exists(cache_file_path) == false)
     {
         return false;

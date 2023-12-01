@@ -135,7 +135,6 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
     if (genshin_minimap.is_run_init_start == true || is_init == false)
     {
         if (is_init)return;
-        Resources::getInstance().install();
 
 
         std::vector<cv::KeyPoint> gi_map_keypoints;
@@ -151,7 +150,6 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
     if (genshin_minimap.is_run_uninit_start == true)
     {
         surf_match.UnInit();
-        Resources::getInstance().release();
         is_init = false;
         return;
     }
