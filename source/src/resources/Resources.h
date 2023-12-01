@@ -8,9 +8,8 @@ private:
 public:
     ~Resources();
 
-    Resources(const Resources&) = delete;
-    Resources& operator=(const Resources&) = delete;
-    static Resources& getInstance();
+public:
+    HINSTANCE resource_lib_handle = NULL;
 
 public:
     std::map<std::pair<int, int>, cv::Mat> MapBlockCache;

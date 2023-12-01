@@ -12,7 +12,9 @@ namespace TianLi::Resource::Utils
 {
     void LoadBitmap_ID2Mat(int IDB, cv::Mat &mat)
     {
-        auto H_Handle = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
+        // auto H_Handle = LoadBitmap(GetModuleHandleW(L"CVAUTOTRACK.dll"), MAKEINTRESOURCE(IDB));
+        auto resource_lib_handle = LoadLibraryW(L"cvAutoTrack.resources.dll");
+        auto H_Handle = LoadBitmap(resource_lib_handle, MAKEINTRESOURCE(IDB));
         BITMAP bmp;
         GetObject(H_Handle, sizeof(BITMAP), &bmp);
         int nChannels = bmp.bmBitsPixel == 1 ? 1 : bmp.bmBitsPixel / 8;
@@ -49,7 +51,8 @@ namespace TianLi::Resource::Utils
         DWORD imageFileSize = 0;
         IWICImagingFactory *m_pIWICFactory = NULL;
 
-        HMODULE hModu = GetModuleHandleW(L"CVAUTOTRACK.dll");
+        // HMODULE hModu = GetModuleHandleW(L"CVAUTOTRACK.dll");
+        HMODULE hModu = LoadLibraryW(L"cvAutoTrack.resources.dll");
 
         if (hModu == NULL)
             throw "Get Dll Instance Fail!";
@@ -108,6 +111,11 @@ using namespace TianLi::Resource::Utils;
 
 Resources::Resources()
 {
+    // load_library cvAutoTrack.resources.dll
+    resource_lib_handle = LoadLibraryW(L"cvAutoTrack.resources.dll");
+    if (resource_lib_handle == NULL)
+        throw "Load cvAutoTrack.resources.dll Fail!";
+
 #ifdef USED_BINARY_IMAGE
     PaimonTemplate = TianLi::Resources::Load::load_image("paimon");
     StarTemplate = TianLi::Resources::Load::load_image("star");
@@ -174,6 +182,8 @@ Resources::~Resources()
     UIDnumber[8].release();
     UIDnumber[9].release();
     release();
+
+    FreeLibrary(resource_lib_handle);
 }
 
 Resources &Resources::getInstance()

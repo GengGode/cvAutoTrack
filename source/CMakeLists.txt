@@ -77,7 +77,7 @@ macro(add_pch_define target pch_header_file pch_source_file)
         set_target_properties(${target} PROPERTIES PCH_OUTPUT_NAME ${target}_${pch_file_name}.pch)
         set_source_files_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${pch_dir}/${target}_${pch_file_name}.pch")
     endif()
-    
+
 endmacro(add_pch_define)
 
 
@@ -88,7 +88,7 @@ set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
 #set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/Yu${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h")
 #set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
 add_pch_define(cvAutoTrack ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp)
-
+        
 add_compile_options(/MP)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
