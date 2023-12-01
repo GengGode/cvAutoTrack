@@ -9,11 +9,6 @@
 
 Resources::Resources()
 {
-    // load_library cvAutoTrack.resources.dll
-    resource_lib_handle = LoadLibraryW(L"cvAutoTrack.resources.dll");
-    if (resource_lib_handle == NULL)
-        throw "Load cvAutoTrack.resources.dll Fail!";
-
     PaimonTemplate = TianLi::Resources::Load::load_image("paimon");
     StarTemplate = TianLi::Resources::Load::load_image("star");
     MinimapCailbTemplate = TianLi::Resources::Load::load_image("cailb");
@@ -35,11 +30,6 @@ Resources::Resources()
     {
         cv::cvtColor(UIDnumber[i], UIDnumber[i], cv::COLOR_RGB2GRAY);
     }
-}
-
-Resources::~Resources()
-{
-    FreeLibrary(resource_lib_handle);
 }
 
 Resources &Resources::getInstance()
