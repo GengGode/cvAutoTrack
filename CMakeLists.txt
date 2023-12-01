@@ -5,7 +5,7 @@ include(cmake/auto_subdirectory.cmake)
 
 # 设置第三方目录
 set(ThridPatryDir ${CMAKE_SOURCE_DIR}/third_party)
-set(SourceDir ${CMAKE_SOURCE_DIR}/cvAutoTrack/src)
+set(SourceDir ${CMAKE_SOURCE_DIR}/source/src)
 # 设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
