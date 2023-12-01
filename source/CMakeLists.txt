@@ -15,6 +15,7 @@ include_directories(src)
 file(GLOB_RECURSE CppFiles "src/*.cpp")
 file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
+file(GLOB_RECURSE VerRcFile "version.rc")
 
 auto_increment_version_file(src/version/version_hash.hash src/version/version.ver)
 parse_version_file(src/version/version.ver)
@@ -43,6 +44,7 @@ endif()
 add_definitions(-DCVAUTOTRACK_EXPORTS)
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile})
+source_group("Resource" PREFIX "./" FILES ${VerRcFile})
 
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
@@ -51,6 +53,7 @@ add_library(cvAutoTrack SHARED
     ${HppFiles}
     #${RcFiles}
     ${RcFile}
+    ${VerRcFile}
 )
 
 macro(add_pch_define target pch_header_file pch_source_file)
