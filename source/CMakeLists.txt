@@ -51,6 +51,7 @@ add_library(cvAutoTrack SHARED
     ${HppFiles}
     #${RcFiles}
     ${RcFile}
+)
 
 macro(add_pch_define target pch_header_file pch_source_file)
     if(MSVC)
