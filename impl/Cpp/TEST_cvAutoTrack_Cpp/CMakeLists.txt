@@ -1,0 +1,2 @@
+add_executable(test_cpp TEST_cvAutoTrack_Cpp.cpp)
+target_link_libraries(test_cpp PRIVATE cvAutoTrack)
