@@ -111,22 +111,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>cvAutoTrack</TargetName>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\src;$(ProjectDir)include;$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(opencvstaticlib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <ExternalIncludePath>$(opencvstaticinc);$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)third_party\opencv-xfeatures2d-shared\include;$(SolutionDir)third_party\cereal\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>cvAutoTrack</TargetName>
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(opencvStaticLib);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <IncludePath>$(SolutionDir)third_party\opencv-xfeatures2d-shared\include;$(SolutionDir)third_party\cereal\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Compile|x64'">
     <TargetName>cvAutoTrack</TargetName>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(SolutionDir)third_party\opencv-xfeatures2d-shared\include;$(SolutionDir)third_party\cereal\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -159,13 +153,13 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;_FEATURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <AdditionalIncludeDirectories>D:\opencv\opencv_460\install/build_Static_World_NoCuda/install/include/;$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)cvAutoTrack\src;$(SolutionDir)cvAutoTrack\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -175,10 +169,10 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>aded.lib;ippicvmt.lib;IlmImfd.lib;ippiwd.lib;ittnotifyd.lib;libjpeg-turbod.lib;libopenjp2d.lib;libpngd.lib;libprotobufd.lib;libtiffd.lib;libwebpd.lib;opencv_img_hash460d.lib;opencv_world460d.lib;quircd.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world480d.lib;d3d11.lib;%(AdditionalDependencies);dxgi.lib</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
       <Version>3.0</Version>
-      <AdditionalLibraryDirectories>D:\opencv\opencv_460\install\build_Static_World_NoCuda\install\x64\vc17\staticlib;$(OpenCvDir)\$(Platform)\vc15\staticlib;$(opecvsstaticlib)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)third_party\opencv-xfeatures2d-shared\x64\vc17\lib</AdditionalLibraryDirectories>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>./src</AdditionalIncludeDirectories>
@@ -243,10 +237,10 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_FEATURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <ExceptionHandling>Async</ExceptionHandling>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -254,7 +248,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(opencvStaticInc)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)cvAutoTrack\src;$(SolutionDir)cvAutoTrack\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -266,12 +260,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>ade.lib;IlmImf.lib;ippicvmt.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;quirc.lib;zlib.lib;opencv_world460.lib;opencv_img_hash460.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world480.lib;d3d11.lib;%(AdditionalDependencies);dxgi.lib</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <Version>3.4</Version>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)third_party\opencv-xfeatures2d-shared\x64\vc17\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -294,7 +287,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;CVAUTOTRACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);_FEATURE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -305,7 +298,7 @@
       <BrowseInformation>false</BrowseInformation>
       <CallingConvention>Cdecl</CallingConvention>
       <UseFullPaths>false</UseFullPaths>
-      <AdditionalIncludeDirectories>$(OpenCvDir)\include;$(OpenCvDir)\include\opencv2;$(SolutionDir)cvAutoTrack\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)cvAutoTrack\src;$(SolutionDir)cvAutoTrack\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -318,11 +311,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>ade.lib;IlmImf.lib;ippicvmt.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;quirc.lib;zlib.lib;opencv_world460.lib;opencv_img_hash460.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ade.lib;IlmImf.lib;ippicvmt.lib;ippiw.lib;ittnotify.lib;libjpeg-turbo.lib;libopenjp2.lib;libpng.lib;libprotobuf.lib;libtiff.lib;libwebp.lib;quirc.lib;zlib.lib;opencv_world460.lib;opencv_img_hash460.lib;%(AdditionalDependencies);dxgi.lib</AdditionalDependencies>
       <ModuleDefinitionFile>resource/Source.def</ModuleDefinitionFile>
       <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <Version>3.1</Version>
-      <AdditionalLibraryDirectories>$(OpenCvDir)\$(Platform)\vc17\staticlib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)third_party\opencv-xfeatures2d-shared\x64\vc17\lib</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -394,6 +387,7 @@
     <ClInclude Include="src\resources\Resources.h" />
     <ClInclude Include="src\resources\resources.load.h" />
     <ClInclude Include="src\resources\serialize.h" />
+    <ClInclude Include="src\resources\trackCache.h" />
     <ClInclude Include="src\utils\log\utils.log.h" />
     <ClInclude Include="src\utils\Utils.h" />
     <ClInclude Include="src\Ver.h" />
