@@ -34,7 +34,7 @@ std::string get_sys_version()
 		CurrentBuildNumber = "null";
 	if (!TianLi::Utils::getRegValue_DWORD(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(UBR)", UBR))
 		UBR = 0;
-	result = std::format("{0}-{1}-{2}.{3}", ProductName,DisplayVersion,CurrentBuildNumber,UBR);
+	result = fmt::format("{0}-{1}-{2}.{3}", ProductName,DisplayVersion,CurrentBuildNumber,UBR);
 	return result;
 }
 std::string get_gpu_name()
@@ -133,7 +133,7 @@ inline void write_log(std::fstream& log_file,const std::string& time_stamp, cons
 		std::string keep_content = content.substr(line_start, end);
 		log_file << keep_content;
 	}
-	log_file << std::format("{} | 错误代码：{:6d}，错误信息：{}\n", time_stamp, error_code, error_message);
+	log_file << fmt::format("{} | 错误代码：{:6d}，错误信息：{}\n", time_stamp, error_code, error_message);
 }
 
 ErrorCode& ErrorCode::operator=(const std::pair<int, string>& err_code_msg)

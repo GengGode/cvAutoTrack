@@ -59,6 +59,9 @@
 #include <functional>
 #include <filesystem>
 
+// fmt
+#include <fmt/format.h>
+
 // D3D
 #include <d3d11_4.h>
 #include <dxgi1_6.h>

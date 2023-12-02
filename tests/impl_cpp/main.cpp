@@ -1,6 +1,7 @@
 #include <iostream>
 // #include <cvAutoTrack.h>
 #include "../../../source/include/cvAutoTrack.h"
+#include <fmt/format.h>
 
 #include <Windows.h>
 
@@ -178,7 +179,7 @@ void Run_GetAll()
 			mapType = "地下矿区";
 			break;
 		}
-		std::cout << std::format(R"(
+		std::cout << fmt::format(R"(
 全部信息：
 地区:{}
 坐标:x = {:6.2f}; y = {:6.2f}
