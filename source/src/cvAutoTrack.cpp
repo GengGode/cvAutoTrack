@@ -12,7 +12,7 @@
 	return at_func
 #define UNINIT_RETURN()\
     if(_inited.load()==false) return false;
-static std::atomic<bool> _inited = false;
+static std::atomic<bool> _inited = true;
 
 bool __stdcall verison(char* versionBuff)
 {

@@ -32,7 +32,7 @@ Resources::Resources()
     }
 }
 
-Resources &Resources::getInstance()
+Resources& Resources::getInstance()
 {
     static Resources instance;
     return instance;
@@ -43,7 +43,7 @@ bool Resources::map_is_embedded()
     return true;
 }
 
-bool load_cache(std::shared_ptr<trackCache::CacheInfo> cacheInfo)
+bool load_cache(std::shared_ptr<trackCache::CacheInfo>& cacheInfo)
 {
     std::string file_name = "cvAutoTrack_Cache.dat";
     // get module path
