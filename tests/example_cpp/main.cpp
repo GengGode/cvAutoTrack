@@ -299,6 +299,7 @@ int Run()
 8. 获取当前神瞳Json
 9. 截图
 10.可视化调试【Debug模式】
+11. 初始化
 =====================
 -1. 获取版本号
 0. 退出
@@ -309,6 +310,10 @@ int Run()
 		std::cout << "\n";
 		switch (option)
 		{
+		case 11:
+			init();
+			system("pause");
+			break;
 		case 1:
 			Run_SetDx();
 			system("pause");
