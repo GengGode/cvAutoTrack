@@ -86,9 +86,11 @@ set(SKIP_PERFORMANCE_COMPARISON ON)
 set(BUILD_TESTS OFF)
 FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
 FetchContent_MakeAvailable(cereal)
+set_target_properties(cereal PROPERTIES FOLDER "cvAutoTrack/dependencies")
 # 配置fmt
 FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 10.1.1)
 FetchContent_MakeAvailable(fmt)
+set_target_properties(fmt PROPERTIES FOLDER "cvAutoTrack/dependencies")
 
 target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal fmt::fmt-header-only d3d11.lib d3dcompiler.lib dxgi.lib)
 
