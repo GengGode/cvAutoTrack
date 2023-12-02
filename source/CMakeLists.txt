@@ -31,10 +31,10 @@ configure_file(
 
 
 if(BUILD_SUBMODULE)
-    add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
-    set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
-    unset(RcFile)
-    message(STATUS "build cvAutoTrack.resources")
+    # add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
+    # set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
+    # unset(RcFile)
+    # message(STATUS "build cvAutoTrack.resources")
 else()
     set(RcFile cvAutoTrack.rc)
     message(STATUS "build cvAutoTrack")
@@ -58,37 +58,11 @@ add_library(cvAutoTrack SHARED
     ${VerRcFile}
 )
 
-macro(add_pch_define target pch_header_file pch_source_file)
-    if(MSVC)
-        get_filename_component(pch_file_name ${pch_header_file} NAME_WE)
-
-        if(CMAKE_CONFIGURATION_TYPES)
-        #如果有配置选项（Debug/ReLease），路径添加以及配置选项
-            set(pch_dir "${CMAKE_CURRENT_BINARY_DIR}/pch/${CMAKE_CFG_INTDIR}")
-        else(CMAKE_CONFIGURATION_TYPES)
-            SET(pch_dir "${CMAKE_CURRENT_BINARY_DIR}/pch")
-        endif(CMAKE_CONFIGURATION_TYPES)
-
-        file(MAKE_DIRECTORY ${pch_dir})
-
-        set_target_properties(${target} PROPERTIES COMPILE_FLAGS "/Yu${pch_header_file}.h /FI${pch_header_file}.h /Fp${pch_dir}/${target}_${pch_file_name}.pch")
-
-        set_source_files_properties(${pch_source_file} PROPERTIES COMPILE_FLAGS "/Yc${pch_file_name}.h")
-        
-        set_target_properties(${target} PROPERTIES PCH_OUTPUT_DIR ${pch_dir})
-        set_target_properties(${target} PROPERTIES PCH_OUTPUT_NAME ${target}_${pch_file_name}.pch)
-        set_source_files_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${pch_dir}/${target}_${pch_file_name}.pch")
-    endif()
-
-endmacro(add_pch_define)
-
 
 
 set_target_properties(cvAutoTrack PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
 
-#set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/Yu${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h")
-#set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
 add_pch_define(cvAutoTrack ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp)
         
 add_compile_options(/MP)
@@ -107,11 +81,20 @@ set(SKIP_PERFORMANCE_COMPARISON ON)
 set(BUILD_TESTS OFF)
 FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
 FetchContent_MakeAvailable(cereal)
+# 配置fmt
+FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 10.1.1)
+FetchContent_MakeAvailable(fmt)
 
-target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal d3d11.lib d3dcompiler.lib dxgi.lib)
+target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal fmt::fmt-header-only d3d11.lib d3dcompiler.lib dxgi.lib)
 
-if(${BUILD_SUBMODULE})
-    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480.dll"
-                "$<TARGET_FILE_DIR:cvAutoTrack>")                    
+if(BUILD_SUBMODULE)
+    if(CMAKE_BUILD_TYPE MATCHES "Debug")
+        add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480d.dll"
+                    "$<TARGET_FILE_DIR:cvAutoTrack>") 
+    else()
+        add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480.dll"
+                    "$<TARGET_FILE_DIR:cvAutoTrack>") 
+    endif()         
 endif()
