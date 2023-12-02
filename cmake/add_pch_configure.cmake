@@ -1,0 +1,7 @@
+function(add_pch_define target pch_header_file pch_source_file)
+    if(MSVC)
+        get_filename_component(pch_file_name ${pch_header_file} NAME_WE)
+        target_compile_options(${target} PRIVATE /Yu${pch_file_name}.h)
+        set_source_files_properties(${pch_source_file} PROPERTIES COMPILE_FLAGS "/Yc${pch_file_name}.h")
+    endif()
+endfunction()

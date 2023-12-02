@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 include(cmake/parse_version.cmake)
 include(cmake/auto_subdirectory.cmake)
+include(cmake/add_pch_configure.cmake)
 
 # 设置第三方目录
 set(ThridPatryDir ${CMAKE_SOURCE_DIR}/third_party)
