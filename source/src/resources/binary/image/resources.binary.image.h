@@ -43,7 +43,7 @@ namespace TianLi::Resources::Binary::Image
 	{
 #ifdef USED_BINARY_IMAGE
 		sizeof(Png::cailb),
-		sizeof(Bmp::paimon),
+		sizeof(Png::paimon),
 		sizeof(Bmp::star),
 		sizeof(Bmp::uid_),
 		sizeof(Bmp::uid0),
