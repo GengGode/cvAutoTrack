@@ -7,31 +7,103 @@
 #define CVAUTOTRACK_CALL __stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
+/// @brief 资源初始化
+/// @return 初始化状态
 extern "C" bool CVAUTOTRACK_API InitResource();
+/// @brief 卸载资源
+/// @return 是否卸载成功
 extern "C" bool CVAUTOTRACK_API UnInitResource();
 
+/// @brief 启用循环调用服务
+/// @return 启用成功
 extern "C" bool CVAUTOTRACK_API StartServer();
+/// @brief 停止循环调用服务
+/// @return 停止成功
 extern "C" bool CVAUTOTRACK_API StopServer();
+/// @brief 循环调用间隔
+/// @param interval_ms 间隔时间
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetServerInterval(int interval_ms);
+/// @brief 设置循环调用回调函数
+/// @param callback 回调函数
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetServerCallback(void (*callback)(const char *json_buff, int buff_size));
 
+/// @brief 设置禁用日志文件
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetDisableFileLog();
+/// @brief 设置启用日志文件
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetEnableFileLog();
-extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
-extern "C" bool CVAUTOTRACK_API SetUseGraphicsCaptureMode();
-extern "C" bool CVAUTOTRACK_API SetUseDwmCaptureMode();
-extern "C" bool CVAUTOTRACK_API SetUseLocalImageCaptureMode();
-extern "C" bool CVAUTOTRACK_API SetScreenSourceCallback(void (*callback)(const char *image_encode_data, int image_data_size));
-extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const char *image_data, int image_width, int image_height, int image_channels));
-extern "C" bool CVAUTOTRACK_API SetScreenSourceImage(const char *image_encode_data, int image_data_size);
-extern "C" bool CVAUTOTRACK_API SetScreenSourceImageEx(const char *image_data, int image_width, int image_height, int image_channels);
-extern "C" bool CVAUTOTRACK_API SetScreenClientRectCallback(void (*callback)(int &x, int &y, int &width, int &height));
+/// @brief 设置日志文件路径
+/// @param path 路径，如果路径不存在会自动创建，默认为当前目录
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetLogFilePath(const char *path);
+/// @brief 设置日志文件名
+/// @param name 文件名，默认为cvAutoTrack.log
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetLogFileName(const char *name);
+/// @brief 设置使用Bitblt截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
+/// @brief 设置使用WidnowsGraphicsCaphics截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseGraphicsCaptureMode();
+/// @brief 设置使用Dwm截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseDwmCaptureMode();
+/// @brief 设置采集句柄
+/// @param handle 句柄，传入0则自动寻找句柄
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetCaptureHandle(long long int handle);
+/// @brief 设置采集句柄回调函数
+/// @param callback 回调函数
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetCaptureHandleCallback(long long int (*callback)());
+/// @brief 设置使用本地图片截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseLocalImageCaptureMode();
+/// @brief 设置视窗源回调函数
+/// @param callback 回调函数
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetScreenSourceCallback(void (*callback)(const char *image_encode_data, int image_data_size));
+/// @brief 设置视窗源回调函数扩展
+/// @param callback 回调函数
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const char *image_data, int image_width, int image_height, int image_channels));
+/// @brief 设置视窗源图片
+/// @param image_encode_data 图片文件二进制数据
+/// @param image_data_size 图片文件二进制数据大小
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetScreenSourceImage(const char *image_encode_data, int image_data_size);
+/// @brief 设置视窗源图片扩展
+/// @param image_data 图片数据指针
+/// @param image_width 图片宽度
+/// @param image_height 图片高度
+/// @param image_channels 图片通道数
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetScreenSourceImageEx(const char *image_data, int image_width, int image_height, int image_channels);
+/// @brief 设置视窗客户区位置回调函数，用于裁剪处理视窗源
+/// @param callback 回调函数
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetScreenClientRectCallback(void (*callback)(int &x, int &y, int &width, int &height));
+
+/// @brief 设置缓存路径
+/// @param path 现有路径，默认为当前目录
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetTrackCachePath(const char *path);
+/// @brief 设置缓存文件名
+/// @param name 文件名，默认为cvAutoTrack.Cache
+/// @return 找到缓存文件
 extern "C" bool CVAUTOTRACK_API SetTrackCacheName(const char *name);
-extern "C" bool CVAUTOTRACK_API SetHandle(long long int handle);
+/// @brief 设置世界坐标原点
+/// @param x 原点x坐标
+/// @param y 原点y坐标
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetWorldCenter(double x, double y);
+/// @brief 设置世界坐标缩放
+/// @param scale 缩放比例
+/// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetWorldScale(double scale);
 
 extern "C" bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char *image_encode_data, int image_data_size);
