@@ -7,103 +7,103 @@
 #define CVAUTOTRACK_CALL __stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
-/// @brief ×ÊÔ´³õÊ¼»¯
-/// @return ³õÊ¼»¯×´Ì¬
+/// @brief èµ„æºåˆå§‹åŒ–
+/// @return åˆå§‹åŒ–çŠ¶æ€
 extern "C" bool CVAUTOTRACK_API InitResource();
-/// @brief Ğ¶ÔØ×ÊÔ´
-/// @return ÊÇ·ñĞ¶ÔØ³É¹¦
+/// @brief å¸è½½èµ„æº
+/// @return æ˜¯å¦å¸è½½æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API UnInitResource();
 
-/// @brief ÆôÓÃÑ­»·µ÷ÓÃ·şÎñ
-/// @return ÆôÓÃ³É¹¦
+/// @brief å¯ç”¨å¾ªç¯è°ƒç”¨æœåŠ¡
+/// @return å¯ç”¨æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API StartServer();
-/// @brief Í£Ö¹Ñ­»·µ÷ÓÃ·şÎñ
-/// @return Í£Ö¹³É¹¦
+/// @brief åœæ­¢å¾ªç¯è°ƒç”¨æœåŠ¡
+/// @return åœæ­¢æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API StopServer();
-/// @brief Ñ­»·µ÷ÓÃ¼ä¸ô
-/// @param interval_ms ¼ä¸ôÊ±¼ä
-/// @return ÉèÖÃ³É¹¦
+/// @brief å¾ªç¯è°ƒç”¨é—´éš”
+/// @param interval_ms é—´éš”æ—¶é—´
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetServerInterval(int interval_ms);
-/// @brief ÉèÖÃÑ­»·µ÷ÓÃ»Øµ÷º¯Êı
-/// @param callback »Øµ÷º¯Êı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®å¾ªç¯è°ƒç”¨å›è°ƒå‡½æ•°
+/// @param callback å›è°ƒå‡½æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetServerCallback(void (*callback)(const char *json_buff, int buff_size));
 
-/// @brief ÉèÖÃ½ûÓÃÈÕÖ¾ÎÄ¼ş
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ç¦ç”¨æ—¥å¿—æ–‡ä»¶
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetDisableFileLog();
-/// @brief ÉèÖÃÆôÓÃÈÕÖ¾ÎÄ¼ş
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®å¯ç”¨æ—¥å¿—æ–‡ä»¶
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetEnableFileLog();
-/// @brief ÉèÖÃÈÕÖ¾ÎÄ¼şÂ·¾¶
-/// @param path Â·¾¶£¬Èç¹ûÂ·¾¶²»´æÔÚ»á×Ô¶¯´´½¨£¬Ä¬ÈÏÎªµ±Ç°Ä¿Â¼
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®æ—¥å¿—æ–‡ä»¶è·¯å¾„
+/// @param path è·¯å¾„ï¼Œå¦‚æœè·¯å¾„ä¸å­˜åœ¨ä¼šè‡ªåŠ¨åˆ›å»ºï¼Œé»˜è®¤ä¸ºå½“å‰ç›®å½•
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetLogFilePath(const char *path);
-/// @brief ÉèÖÃÈÕÖ¾ÎÄ¼şÃû
-/// @param name ÎÄ¼şÃû£¬Ä¬ÈÏÎªcvAutoTrack.log
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®æ—¥å¿—æ–‡ä»¶å
+/// @param name æ–‡ä»¶åï¼Œé»˜è®¤ä¸ºcvAutoTrack.log
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetLogFileName(const char *name);
-/// @brief ÉèÖÃÊ¹ÓÃBitblt½ØÍ¼Ä£Ê½
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä½¿ç”¨Bitbltæˆªå›¾æ¨¡å¼
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
-/// @brief ÉèÖÃÊ¹ÓÃWidnowsGraphicsCaphics½ØÍ¼Ä£Ê½
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä½¿ç”¨WidnowsGraphicsCaphicsæˆªå›¾æ¨¡å¼
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetUseGraphicsCaptureMode();
-/// @brief ÉèÖÃÊ¹ÓÃDwm½ØÍ¼Ä£Ê½
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä½¿ç”¨Dwmæˆªå›¾æ¨¡å¼
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetUseDwmCaptureMode();
-/// @brief ÉèÖÃ²É¼¯¾ä±ú
-/// @param handle ¾ä±ú£¬´«Èë0Ôò×Ô¶¯Ñ°ÕÒ¾ä±ú
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®é‡‡é›†å¥æŸ„
+/// @param handle å¥æŸ„ï¼Œä¼ å…¥0åˆ™è‡ªåŠ¨å¯»æ‰¾å¥æŸ„
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetCaptureHandle(long long int handle);
-/// @brief ÉèÖÃ²É¼¯¾ä±ú»Øµ÷º¯Êı
-/// @param callback »Øµ÷º¯Êı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®é‡‡é›†å¥æŸ„å›è°ƒå‡½æ•°
+/// @param callback å›è°ƒå‡½æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetCaptureHandleCallback(long long int (*callback)());
-/// @brief ÉèÖÃÊ¹ÓÃ±¾µØÍ¼Æ¬½ØÍ¼Ä£Ê½
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä½¿ç”¨æœ¬åœ°å›¾ç‰‡æˆªå›¾æ¨¡å¼
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetUseLocalImageCaptureMode();
-/// @brief ÉèÖÃÊÓ´°Ô´»Øµ÷º¯Êı
-/// @param callback »Øµ÷º¯Êı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®è§†çª—æºå›è°ƒå‡½æ•°
+/// @param callback å›è°ƒå‡½æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetScreenSourceCallback(void (*callback)(const char *image_encode_data, int image_data_size));
-/// @brief ÉèÖÃÊÓ´°Ô´»Øµ÷º¯ÊıÀ©Õ¹
-/// @param callback »Øµ÷º¯Êı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®è§†çª—æºå›è°ƒå‡½æ•°æ‰©å±•
+/// @param callback å›è°ƒå‡½æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const char *image_data, int image_width, int image_height, int image_channels));
-/// @brief ÉèÖÃÊÓ´°Ô´Í¼Æ¬
-/// @param image_encode_data Í¼Æ¬ÎÄ¼ş¶ş½øÖÆÊı¾İ
-/// @param image_data_size Í¼Æ¬ÎÄ¼ş¶ş½øÖÆÊı¾İ´óĞ¡
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®è§†çª—æºå›¾ç‰‡
+/// @param image_encode_data å›¾ç‰‡æ–‡ä»¶äºŒè¿›åˆ¶æ•°æ®
+/// @param image_data_size å›¾ç‰‡æ–‡ä»¶äºŒè¿›åˆ¶æ•°æ®å¤§å°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetScreenSourceImage(const char *image_encode_data, int image_data_size);
-/// @brief ÉèÖÃÊÓ´°Ô´Í¼Æ¬À©Õ¹
-/// @param image_data Í¼Æ¬Êı¾İÖ¸Õë
-/// @param image_width Í¼Æ¬¿í¶È
-/// @param image_height Í¼Æ¬¸ß¶È
-/// @param image_channels Í¼Æ¬Í¨µÀÊı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®è§†çª—æºå›¾ç‰‡æ‰©å±•
+/// @param image_data å›¾ç‰‡æ•°æ®æŒ‡é’ˆ
+/// @param image_width å›¾ç‰‡å®½åº¦
+/// @param image_height å›¾ç‰‡é«˜åº¦
+/// @param image_channels å›¾ç‰‡é€šé“æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetScreenSourceImageEx(const char *image_data, int image_width, int image_height, int image_channels);
-/// @brief ÉèÖÃÊÓ´°¿Í»§ÇøÎ»ÖÃ»Øµ÷º¯Êı£¬ÓÃÓÚ²Ã¼ô´¦ÀíÊÓ´°Ô´
-/// @param callback »Øµ÷º¯Êı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®è§†çª—å®¢æˆ·åŒºä½ç½®å›è°ƒå‡½æ•°ï¼Œç”¨äºè£å‰ªå¤„ç†è§†çª—æº
+/// @param callback å›è°ƒå‡½æ•°
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetScreenClientRectCallback(void (*callback)(int &x, int &y, int &width, int &height));
 
-/// @brief ÉèÖÃ»º´æÂ·¾¶
-/// @param path ÏÖÓĞÂ·¾¶£¬Ä¬ÈÏÎªµ±Ç°Ä¿Â¼
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ç¼“å­˜è·¯å¾„
+/// @param path ç°æœ‰è·¯å¾„ï¼Œé»˜è®¤ä¸ºå½“å‰ç›®å½•
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetTrackCachePath(const char *path);
-/// @brief ÉèÖÃ»º´æÎÄ¼şÃû
-/// @param name ÎÄ¼şÃû£¬Ä¬ÈÏÎªcvAutoTrack.Cache
-/// @return ÕÒµ½»º´æÎÄ¼ş
+/// @brief è®¾ç½®ç¼“å­˜æ–‡ä»¶å
+/// @param name æ–‡ä»¶åï¼Œé»˜è®¤ä¸ºcvAutoTrack.Cache
+/// @return æ‰¾åˆ°ç¼“å­˜æ–‡ä»¶
 extern "C" bool CVAUTOTRACK_API SetTrackCacheName(const char *name);
-/// @brief ÉèÖÃÊÀ½ç×ø±êÔ­µã
-/// @param x Ô­µãx×ø±ê
-/// @param y Ô­µãy×ø±ê
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä¸–ç•Œåæ ‡åŸç‚¹
+/// @param x åŸç‚¹xåæ ‡
+/// @param y åŸç‚¹yåæ ‡
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetWorldCenter(double x, double y);
-/// @brief ÉèÖÃÊÀ½ç×ø±êËõ·Å
-/// @param scale Ëõ·Å±ÈÀı
-/// @return ÉèÖÃ³É¹¦
+/// @brief è®¾ç½®ä¸–ç•Œåæ ‡ç¼©æ”¾
+/// @param scale ç¼©æ”¾æ¯”ä¾‹
+/// @return è®¾ç½®æˆåŠŸ
 extern "C" bool CVAUTOTRACK_API SetWorldScale(double scale);
 
 extern "C" bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char *image_encode_data, int image_data_size);
@@ -132,10 +132,10 @@ extern "C" int CVAUTOTRACK_API GetLastErr();
 extern "C" int CVAUTOTRACK_API GetLastErrMsg(char *msg_buff, int buff_size);
 extern "C" int CVAUTOTRACK_API GetLastErrJson(char *json_buff, int buff_size);
 
+extern "C" bool CVAUTOTRACK_API GetMapIsEmbedded();
 extern "C" bool CVAUTOTRACK_API GetCompileVersion(char *version_buff, int buff_size);
 extern "C" bool CVAUTOTRACK_API GetCompileTime(char *time_buff, int buff_size);
 
-extern "C" bool CVAUTOTRACK_API GetMapIsEmbedded();
 /// @brief 
 /// @param doc_buff 
 /// @param buff_size 
