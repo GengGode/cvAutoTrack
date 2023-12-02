@@ -22,7 +22,7 @@ namespace TianLi::Resources::Binary::Image
 	{
 #ifdef USED_BINARY_IMAGE
 		Png::cailb,
-		Bmp::paimon,
+		Png::paimon,
 		Bmp::star,
 		Bmp::uid_,
 		Bmp::uid0,
