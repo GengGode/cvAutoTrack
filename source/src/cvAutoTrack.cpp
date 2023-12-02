@@ -14,16 +14,12 @@
     if(_inited.load()==false) return false;
 static std::atomic<bool> _inited = true;
 
-bool __stdcall verison(char* versionBuff)
-{
-    INSTALL_DUMP(AutoTrack::Instance().GetVersion(versionBuff, 32));
-}
-bool __stdcall init()
+bool __stdcall InitResource()
 {
     INSTALL_DUMP(AutoTrack::Instance().init());
     _inited = true;
 }
-bool __stdcall uninit()
+bool __stdcall UnInitResource()
 {
     INSTALL_DUMP(AutoTrack::Instance().uninit());
 }
@@ -31,7 +27,7 @@ bool __stdcall SetUseBitbltCaptureMode()
 {
     INSTALL_DUMP(AutoTrack::Instance().SetUseBitbltCaptureMode());
 }
-bool __stdcall SetUseDx11CaptureMode()
+bool __stdcall SetUseGraphicsCaptureMode()
 {
     INSTALL_DUMP(AutoTrack::Instance().SetUseDx11CaptureMode());
 }
@@ -84,10 +80,10 @@ bool __stdcall GetStar(double& x, double& y, bool& isEnd)
     UNINIT_RETURN();
     INSTALL_DUMP(AutoTrack::Instance().GetStar(x, y, isEnd));
 }
-bool __stdcall GetStarJson(char* jsonBuff)
+bool __stdcall GetStarJson(char* json_buff, int buff_size)
 {
     UNINIT_RETURN();
-    INSTALL_DUMP(AutoTrack::Instance().GetStarJson(jsonBuff));
+    INSTALL_DUMP(AutoTrack::Instance().GetStarJson(json_buff));
 }
 bool __stdcall GetUID(int& uid)
 {
@@ -100,15 +96,15 @@ bool __stdcall GetAllInfo(double& x, double& y, int& mapId, double& a, double& r
     INSTALL_DUMP(AutoTrack::Instance().GetAllInfo(x, y, mapId, a, r, uid));
     return AutoTrack::Instance().GetAllInfo(x, y, mapId, a, r, uid);
 }
-bool __stdcall GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
+bool __stdcall GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a)
 {
     UNINIT_RETURN();
     INSTALL_DUMP(AutoTrack::Instance().GetInfoLoadPicture(path, uid, x, y, a));
 }
-bool __stdcall GetInfoLoadVideo(char* path, char* pathOutFile)
+bool __stdcall GetInfoLoadVideo(const char* path, const char* out_path)
 {
     UNINIT_RETURN();
-    INSTALL_DUMP(AutoTrack::Instance().GetInfoLoadVideo(path, pathOutFile));
+    INSTALL_DUMP(AutoTrack::Instance().GetInfoLoadVideo(path, out_path));
 }
 int __stdcall GetLastErr()
 {

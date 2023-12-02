@@ -42,8 +42,8 @@ public:
     bool GetUID(int& uid);
     bool GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
     /*********/
-    bool GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a);
-    bool GetInfoLoadVideo(char* path, char* pathOutFile);
+    bool GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a);
+    bool GetInfoLoadVideo(const char* path, const char* pathOutFile);
     /*********/
     int GetLastError();
     int GetLastErrMsg(char* msg_buff, int buff_size);

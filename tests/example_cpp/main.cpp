@@ -47,27 +47,27 @@ int TEST_init_and_uninit()
 {
 	std::cout << "测试 init 与 uninit\n";
 
-	init();
+	InitResource();
 
 	Sleep(1000);
 
-	uninit();
+	UnInitResource();
 
 	Sleep(1000);
 
-	init();
+	InitResource();
 
 	Sleep(1000);
 
-	uninit();
+	UnInitResource();
 
 	Sleep(1000);
 
-	init();
+	InitResource();
 
 	Sleep(1000);
 
-	uninit();
+	UnInitResource();
 
 	Sleep(1000);
 
@@ -78,7 +78,7 @@ int TEST_init_and_uninit()
 void Run_SetDx()
 {
 	// 设置Dx截图
-	if (SetUseDx11CaptureMode())
+	if(SetUseGraphicsCaptureMode())
 	{
 		std::cout << "设置Dx截图成功"
 				  << "\n";
@@ -217,7 +217,7 @@ void Run_GetUID()
 void Run_GetStars()
 {
 	char buff[1024] = {0};
-	if (GetStarJson(buff))
+	if (GetStarJson(buff,1024))
 	{
 		// 坐标需要映射 p + AvatarPos
 		std::cout << "当前神瞳Json : " << buff << "\n";
@@ -269,7 +269,7 @@ void Run_GetPosit()
 void Run_GetVersion()
 {
 	char *ver = new char[100];
-	verison(ver);
+	GetCompileVersion(ver, 100);
 	std::cout << ver << std::endl;
 	delete[] ver;
 }
@@ -311,8 +311,8 @@ int Run()
 		switch (option)
 		{
 		case 11:
-			init();
-			system("pause");
+			InitResource();
+				system("pause");
 			break;
 		case 1:
 			Run_SetDx();
@@ -443,7 +443,7 @@ void Test_video()
 	/*GetInfoLoadVideo(pathV, pathTxt);
 	std::cout << "错误码       : " << " " << GetLastErr() << " " << "\n";*/
 
-	if (init())
+	if (InitResource())
 	{
 		//	Sleep(2000);
 	}
@@ -481,7 +481,7 @@ void Test_video()
 	}
 	char buff[1024] = {0};
 #ifdef _DEBUG
-	if (GetStarJson(buff))
+	if (GetStarJson(buff,1024))
 	{
 		// 坐标需要映射 p * 1.33 + AvatarPos
 		std::cout << buff << "\n";

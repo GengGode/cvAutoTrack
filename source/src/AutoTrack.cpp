@@ -677,7 +677,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
     return clear_error_logs();
 }
 
-bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, double& a)
+bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a)
 {
     cv::Mat image;
     try
@@ -726,7 +726,7 @@ bool AutoTrack::GetInfoLoadPicture(char* path, int& uid, double& x, double& y, d
     return false;
 }
 
-bool AutoTrack::GetInfoLoadVideo(char* path, char* pathOutFile)
+bool AutoTrack::GetInfoLoadVideo(const char* path,const  char* pathOutFile)
 {
     UNREFERENCED_PARAMETER(path);
     UNREFERENCED_PARAMETER(pathOutFile);
