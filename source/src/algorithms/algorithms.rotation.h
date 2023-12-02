@@ -2,12 +2,6 @@
 #include "algorithms.include.h"
 #include "utils/Utils.h"
 
-struct rotation_calculation_config
-{
-	bool error = false;
-	error_info err = { 0,"" };
-	
-};
 
 double lastRotate = 0;
 

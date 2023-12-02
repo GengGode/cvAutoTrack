@@ -1,11 +1,6 @@
 #pragma once
 #include "algorithms.include.h"
 
-struct direction_calculation_config
-{
-	bool error = false;
-	error_info err = { 0,"" };
-};
 
 double last_direction = 0;
 
