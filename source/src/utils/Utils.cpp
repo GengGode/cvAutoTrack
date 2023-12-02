@@ -47,8 +47,12 @@ namespace TianLi::Utils
         double stdev = sqrt(accum / (list.size() - 1));
 
         // 清洗离群点
-        std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d)
-            { return abs(d - mean) < 0.382 * stdev; });
+        // std::ranges::copy_if(list, std::back_inserter(valid_list), [&](const double d)
+        //     { return abs(d - mean) < 0.382 * stdev; });
+        // c++17
+        for (auto& d : list)
+            if (abs(d - mean) < 0.382 * stdev)
+                valid_list.push_back(d);
         return valid_list;
     }
 

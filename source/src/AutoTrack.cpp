@@ -235,9 +235,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
     }
     }
 
-    auto last_time_stream = std::stringstream();
-    last_time_stream << genshin_screen.last_time;
-    std::string last_time_str = last_time_stream.str();
+    std::string last_time_str = fmt::format("{:%Y-%m-%d :%H:%M:%S}", std::chrono::system_clock::to_time_t(genshin_screen.last_time));
 
     cv::putText(out_info_img, last_time_str, cv::Point(out_info_img.cols / 2, out_info_img.rows / 2), 1, 1, cv::Scalar(128, 128, 128, 255), 1, 16, 0);
     auto err_msg_str = err.toJson();
