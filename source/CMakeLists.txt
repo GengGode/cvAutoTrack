@@ -71,7 +71,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 
 
-set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+if(BUILD_SUBMODULE)
+    set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    message(STATUS "使用Opencv动态库")
+else()
+    set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    message(STATUS "使用Opencv静态库")
+endif()
 
 include(FetchContent)
 # 配置cereal
