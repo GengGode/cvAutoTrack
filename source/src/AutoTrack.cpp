@@ -18,6 +18,7 @@
 #include "genshin/genshin.h"
 
 #include "version/Version.h"
+#include "utils/convect.string.h"
 
 AutoTrack::AutoTrack() : res(Resources::getInstance()), err(ErrorCode::getInstance())
 {
@@ -174,37 +175,6 @@ bool AutoTrack::SetEnableFileLog()
     return true;
 }
 
-bool AutoTrack::GetVersion(char* version_buff, int buff_size)
-{
-    if (version_buff == NULL || buff_size < 1)
-    {
-        err = { 291, "缓存区为空指针或是缓存区大小为小于1" };
-        return false;
-    }
-    if (TianLi::Version::build_version.size() > buff_size)
-    {
-        err = { 292, "缓存区大小不足" };
-        return false;
-    }
-    strcpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str());
-    return true;
-}
-
-bool AutoTrack::GetCompileTime(char* time_buff, int buff_size)
-{
-    if (time_buff == NULL || buff_size < 1)
-    {
-        err = { 291, "缓存区为空指针或是缓存区大小为小于1" };
-        return false;
-    }
-    if (TianLi::Version::build_time.size() > buff_size)
-    {
-        err = { 292, "缓存区大小不足" };
-        return false;
-    }
-    strcpy_s(time_buff, buff_size, TianLi::Version::build_time.c_str());
-    return true;
-}
 
 bool AutoTrack::GetMapIsEmbedded()
 {
@@ -273,6 +243,8 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
     auto err_msg_str = err.toJson();
     cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
+    auto path = utils::to_utf8(path_buff);
+    
     bool rel = cv::imwrite(path_buff, out_info_img);
 
     if (!rel)

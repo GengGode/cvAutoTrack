@@ -54,9 +54,7 @@ public:
 
     bool SetDisableFileLog();
     bool SetEnableFileLog();
-
-    bool GetVersion(char* version_buff, int buff_size);
-    bool GetCompileTime(char* time_buff, int buff_size);
+    
     bool GetMapIsEmbedded();
 
     bool DebugCapture();
