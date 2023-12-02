@@ -50,7 +50,7 @@ endfunction(check_commit_hash_is_dirty)
 
 function(auto_increment_version_file old_hash_file version_file)
     get_commit_hash(new_hash)
-    message(STATUS "当前版本号: ${version_file}: ${new_hash}")
+    message(STATUS "当前版本哈希: ${new_hash}")
     check_commit_hash_is_dirty(is_dirty)
     if(is_dirty)
         message(STATUS "当前版本有修改, 不自动更新版本号")
