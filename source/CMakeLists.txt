@@ -15,7 +15,7 @@ include_directories(src)
 file(GLOB_RECURSE CppFiles "src/*.cpp")
 file(GLOB_RECURSE HppFiles "src/*.h")
 file(GLOB_RECURSE RcFiles "resource/*.rc")
-file(GLOB_RECURSE VerRcFile "version.rc")
+set(VerRcFile "${CMAKE_BINARY_DIR}/resource/version.rc")
 
 auto_increment_version_file(src/version/version_hash.hash src/version/version.ver)
 parse_version_file(src/version/version.ver)
@@ -44,7 +44,9 @@ endif()
 add_definitions(-DCVAUTOTRACK_EXPORTS)
 add_definitions(-DUSED_BINARY_IMAGE)
 
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile} ${VerRcFile})
+source_group("include" FILES include/cvAutoTrack.h)
+source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile} ${VerRcFile})
+source_group("version" FILES ${VerRcFile})
 
 add_library(cvAutoTrack SHARED
     include/cvAutoTrack.h
