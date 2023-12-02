@@ -1,7 +1,7 @@
 
 set(BUILD_SUBMODULE ON)
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-if(BUILD_SUBMODULE)
+if(${BUILD_SUBMODULE})
     set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
 endif()
 
@@ -30,7 +30,7 @@ configure_file(
 )
 
 
-if(BUILD_SUBMODULE)
+if(${BUILD_SUBMODULE})
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
     set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
     unset(RcFile)
@@ -95,7 +95,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 
 if(BUILD_SUBMODULE)
-    if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+    if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Debug")
         add_compile_options(/MD)
         set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MD")
         message(STATUS "使用Opencv动态库")
@@ -121,7 +121,7 @@ FetchContent_MakeAvailable(cereal)
 
 target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal d3d11.lib d3dcompiler.lib dxgi.lib)
 
-if(BUILD_SUBMODULE)
+if(${BUILD_SUBMODULE})
     add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
                 "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480.dll"
                 "$<TARGET_FILE_DIR:cvAutoTrack>")                    
