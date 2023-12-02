@@ -30,7 +30,7 @@ configure_file(
 )
 
 
-if(${BUILD_SUBMODULE})
+if(BUILD_SUBMODULE)
     add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
     set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
     unset(RcFile)
@@ -96,21 +96,8 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 
-if(BUILD_SUBMODULE)
-    if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Debug")
-        add_compile_options(/MD)
-        set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MD")
-        message(STATUS "使用Opencv动态库")
-    else()
-        add_compile_options(/MDd)
-        set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MDd")
-        message(STATUS "使用Opencv动态库调试版")
-    endif()
-else()
-    add_compile_options(/MT)
-    set_target_properties(cvAutoTrack  PROPERTIES COMPILE_FLAGS "/MT")
-    message(STATUS "使用Opencv静态库")
-endif()
+
+set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 include(FetchContent)
 # 配置cereal
