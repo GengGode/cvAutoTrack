@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Dxgi.h"
-#include <future>
 
+#ifdef BUILD_CAPTURE_DXGI
 using namespace winrt;
 using namespace Windows;
 using namespace Windows::Foundation;
@@ -365,3 +365,5 @@ bool Dxgi::setHandle(HWND handle)
     }
     return true;
 }
+
+#endif // BUILD_CAPTURE_DXGI

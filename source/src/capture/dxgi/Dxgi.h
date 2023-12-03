@@ -1,6 +1,7 @@
 #pragma once
 #include "../Capture.h"
 
+#ifdef BUILD_CAPTURE_DXGI
 class Dxgi : public Capture
 {
 public:
@@ -40,3 +41,4 @@ private:
     // D3D11_TEXTURE2D_DESC desc_type{
     //     0, 0, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_STAGING, 0, D3D11_CPU_ACCESS_READ, 0};
 };
+#endif // BUILD_CAPTURE_DXGI

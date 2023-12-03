@@ -1,10 +1,13 @@
 
 set(BUILD_SUBMODULE ON)
+set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
+set(BUILD_CAPTURE_DXGI ON)
+
+# opencv
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
 if(${BUILD_SUBMODULE})
     set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
 endif()
-
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -29,16 +32,14 @@ configure_file(
     "${VerRcFile}"
 )
 
-
-if(BUILD_SUBMODULE)
-    # add_library(cvAutoTrack.resources SHARED cvAutoTrack.rc src/dllmain.cpp)
-    # set_target_properties(cvAutoTrack.resources PROPERTIES FOLDER "cvAutoTrack")
-    # unset(RcFile)
-    # message(STATUS "build cvAutoTrack.resources")
-else()
-    set(RcFile cvAutoTrack.rc)
-    message(STATUS "build cvAutoTrack")
+if(BUILD_CAPTURE_DXGI)
+    add_definitions(-DBUILD_CAPTURE_DXGI)
+    # file(GLOB_RECURSE DxgiCaptureCppFiles "src/dxgi/*.cpp")
+    # file(GLOB_RECURSE DxgiCaptureHppFiles "src/dxgi/*.h")
+    # list(APPEND CppFiles ${DxgiCaptureCppFiles})
+    # list(APPEND HppFiles ${DxgiCaptureHppFiles})
 endif()
+
 
 # define CVAUTOTRACK_EXPORTS
 add_definitions(-DCVAUTOTRACK_EXPORTS)
