@@ -4,7 +4,7 @@
 #include "ErrorCode.h"
 #include "resources/Resources.h"
 
-#include "capture/dxgi/Dxgi.h"
+// #include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "filter/kalman/Kalman.h"
 #include "utils/Utils.h"
@@ -76,18 +76,7 @@ bool AutoTrack::SetUseBitbltCaptureMode()
 
 bool AutoTrack::SetUseDx11CaptureMode()
 {
-    if (genshin_handle.config.capture == nullptr)
-    {
-        genshin_handle.config.capture = std::make_shared<Dxgi>();
-        return true;
-    }
-    if (genshin_handle.config.capture->mode == Capture::DirectX)
-    {
-        return true;
-    }
-    genshin_handle.config.capture.reset();
-    genshin_handle.config.capture = std::make_shared<Dxgi>();
-    return true;
+    return false;
 }
 
 bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
