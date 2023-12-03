@@ -38,7 +38,7 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ComContronl
+        name: cvAutoTrack
         path: ${{github.workspace}}/build/bin/Release/
         if-no-files-found: 'warn'
 
@@ -51,7 +51,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v3
       with:
-        name: ComContronl
+        name: cvAutoTrack
         path: ${{github.workspace}}/Release/
 
     - name: Create Release
@@ -86,7 +86,7 @@ jobs:
   #  - name: Download a Build Artifact
   #    uses: actions/download-artifact@v3
   #    with:
-  #      name: ComContronl
+  #      name: cvAutoTrack
   #      path: ${{github.workspace}}/Release/
   #
   #  - name: Get Current Version
