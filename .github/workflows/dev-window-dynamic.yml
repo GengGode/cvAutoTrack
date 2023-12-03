@@ -45,10 +45,10 @@ jobs:
     - name: Upload a Build Artifact for Release.Depends
       uses: actions/upload-artifact@v3
       with:
-        name: cvAutoTrack
+        name: cvAutoTrack.Depends
         path: ${{github.workspace}}/build/bin/Release/opencv_world480.dll
         if-no-files-found: 'warn'
-        
+
   release:
     # only run in master branch
     if: github.ref == 'refs/heads/master'
