@@ -57,4 +57,3 @@ inline auto CreateCompositionSurfaceForSwapChain(
         reinterpret_cast<void**>(winrt::put_abi(surface))));
     return surface;
 }
-	

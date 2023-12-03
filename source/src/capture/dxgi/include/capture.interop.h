@@ -11,4 +11,3 @@ inline auto CreateCaptureItemForWindow(HWND hwnd)
 	interop_factory->CreateForWindow(hwnd, winrt::guid_of<ABI::Windows::Graphics::Capture::IGraphicsCaptureItem>(), reinterpret_cast<void**>(winrt::put_abi(item)));
 	return item;
 }
-	
