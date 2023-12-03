@@ -4,6 +4,7 @@
 #include "resources/Resources.h"
 #include "Match/surf/SurfMatch.h"
 #include "filter/kalman/Kalman.h"
+#include "algorithms/algorithms.visual.odometer.h"
 
 cv::Mat to_color(cv::Mat& img_object)
 {
@@ -176,14 +177,40 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
     {
         cv::Point2d pos = out_genshin_position.position;
         cv::Point2d filt_pos;
-        if (out_genshin_position.config.is_coveying || out_genshin_position.config.is_continuity == false)
-        {
+        // 查看od初始化了没
+        auto u_k = cv::Point2d(0, 0);
+        auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config());
+        if (!od_valid) {
+            // TODO：no u_k update
             filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
+            set_mini_map(genshin_minimap.img_minimap);
         }
-        else
-        {
-            filt_pos = out_genshin_position.config.pos_filter->filterting(pos);
+        else {
+            cout << "u_k: " << u_k << endl;
+            filt_pos = out_genshin_position.config.pos_filter->filterting(pos, u_k);
         }
+
+
+        // if (out_genshin_position.config.is_coveying || out_genshin_position.config.is_continuity == false)
+        // {
+        //     filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
+        //     // TODO：封装
+        //     set_mini_map(genshin_minimap.img_minimap);
+        // }
+        // else
+        // {
+        //     auto u_k = cv::Point2d(0, 0);
+        //     auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config());
+        //     if (od_valid)
+        //     {
+        //         filt_pos = out_genshin_position.config.pos_filter->filterting(pos, u_k);
+        //     }
+        //     else
+        //     {
+        //         // TODO：no u_k update
+        //         filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
+        //     }
+        // }
         out_genshin_position.position = filt_pos;
     }
 

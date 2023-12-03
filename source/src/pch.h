@@ -68,6 +68,7 @@
 #include <d2d1_3.h>
 #include <wincodec.h>
 
+// Helpers
 
 // DUMP部分
 #include "Windows.h"
