@@ -1,11 +1,13 @@
 
-set(BUILD_SUBMODULE ON)
+set(WITH_DYNAMIC_OPENCV ON CACHE BOOL "link static opencv")
 set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
+
+set(WITH_DYNAMIC_OPENCV ON)
 set(BUILD_CAPTURE_DXGI ON)
 
 # opencv
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-if(${BUILD_SUBMODULE})
+if(WITH_DYNAMIC_OPENCV)
     set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
 endif()
 find_package(OpenCV REQUIRED)
@@ -71,11 +73,10 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 
-if(BUILD_SUBMODULE)
-    set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${WITH_DYNAMIC_OPENCV}>:DLL>")
+if(WITH_DYNAMIC_OPENCV)
     message(STATUS "使用Opencv动态库")
 else()
-    set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     message(STATUS "使用Opencv静态库")
 endif()
 
@@ -95,14 +96,6 @@ set_target_properties(fmt PROPERTIES FOLDER "cvAutoTrack/dependencies")
 
 target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal fmt::fmt-header-only d3d11.lib d3dcompiler.lib dxgi.lib)
 
-if(BUILD_SUBMODULE)
-    if(CMAKE_BUILD_TYPE MATCHES "Debug")
-        add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480d.dll"
-                    "$<TARGET_FILE_DIR:cvAutoTrack>") 
-    else()
-        add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/bin/opencv_world480.dll"
-                    "$<TARGET_FILE_DIR:cvAutoTrack>") 
-    endif()         
+if(WITH_DYNAMIC_OPENCV)
+    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_CONFIG_PATH}/../bin/opencv_world480$<$<CONFIG:Debug>:d>.dll" "$<TARGET_FILE_DIR:cvAutoTrack>") 
 endif()
