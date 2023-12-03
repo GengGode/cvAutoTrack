@@ -94,7 +94,7 @@ FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TA
 FetchContent_MakeAvailable(fmt)
 set_target_properties(fmt PROPERTIES FOLDER "cvAutoTrack/dependencies")
 
-target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal fmt::fmt-header-only d3d11.lib d3dcompiler.lib)
+target_link_libraries(cvAutoTrack PRIVATE  ${OpenCV_LIBS} cereal::cereal fmt::fmt-header-only d3d11.lib d3dcompiler.lib dxgi.lib)
 
 if(WITH_DYNAMIC_OPENCV)
     add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_CONFIG_PATH}/../bin/opencv_world480$<$<CONFIG:Debug>:d>.dll" "$<TARGET_FILE_DIR:cvAutoTrack>") 

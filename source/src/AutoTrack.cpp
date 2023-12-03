@@ -4,6 +4,7 @@
 #include "ErrorCode.h"
 #include "resources/Resources.h"
 
+#include "capture/dxgi/Dxgi.h"
 #include "capture/bitblt/Bitblt.h"
 #include "filter/kalman/Kalman.h"
 #include "utils/Utils.h"

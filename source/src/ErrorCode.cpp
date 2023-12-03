@@ -39,14 +39,17 @@ std::string get_sys_version()
 }
 std::string get_gpu_name()
 {
-	return "获取GPU信息失败";
 	// Get the name of the GPU
 #ifdef BUILD_CAPTURE_DXGI
 	IDXGIAdapter* pAdapter = nullptr;
 	IDXGIFactory* pFactory = nullptr;
 	try
 	{
-		HRESULT hr;
+		HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
+		if (FAILED(hr))
+		{
+			return "Unknown";
+		}
 
 		hr = pFactory->EnumAdapters(0, &pAdapter);
 		if (FAILED(hr))
