@@ -19,33 +19,28 @@ include_directories(src)
 
 file(GLOB_RECURSE CppFiles "src/*.cpp")
 file(GLOB_RECURSE HppFiles "src/*.h")
-file(GLOB_RECURSE RcFiles "resource/*.rc")
-set(VerRcFile "${CMAKE_BINARY_DIR}/resource/version.rc")
+set(VerRcFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc")
+set(VerHppFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.h")
 
-auto_increment_version_file(src/version/version_hash.hash src/version/version.ver)
-parse_version_file(src/version/version.ver)
+auto_increment_version_file("resource/version_hash.hash" "resource/version.ver")
+parse_version_file("resource/version.ver")
+get_commit_hash(PROJECT_VERSION_HASH)
+get_git_branch(PROJECT_VERSION_BRANCH)
 set(PROJECT_VERSION_MAJOR ${VERSION_MAJOR})
 set(PROJECT_VERSION_MINOR ${VERSION_MINOR})
 set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
+set(PROJECT_VERSION_BUILD ${VERSION_BUILD})
+
 
 # version.rc
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc.in"
-    "${VerRcFile}"
-)
+configure_file("${VerRcFile}.in" "${VerRcFile}")
+configure_file("${VerHppFile}.in" "${VerHppFile}")
 
-if(BUILD_CAPTURE_DXGI)
-    add_definitions(-DBUILD_CAPTURE_DXGI)
-    # file(GLOB_RECURSE DxgiCaptureCppFiles "src/dxgi/*.cpp")
-    # file(GLOB_RECURSE DxgiCaptureHppFiles "src/dxgi/*.h")
-    # list(APPEND CppFiles ${DxgiCaptureCppFiles})
-    # list(APPEND HppFiles ${DxgiCaptureHppFiles})
-endif()
-
-
-# define CVAUTOTRACK_EXPORTS
 add_definitions(-DCVAUTOTRACK_EXPORTS)
 add_definitions(-DUSED_BINARY_IMAGE)
+if(BUILD_CAPTURE_DXGI)
+    add_definitions(-DBUILD_CAPTURE_DXGI)
+endif()
 
 source_group("include" FILES include/cvAutoTrack.h)
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile} ${VerRcFile})
@@ -100,4 +95,4 @@ if(WITH_DYNAMIC_OPENCV)
     add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_CONFIG_PATH}/../bin/opencv_world480$<$<CONFIG:Debug>:d>.dll" "$<TARGET_FILE_DIR:cvAutoTrack>") 
 endif()
 
-add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/src/version/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
+add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
