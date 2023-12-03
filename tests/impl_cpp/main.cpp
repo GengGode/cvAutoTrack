@@ -2,43 +2,22 @@
 // #include <cvAutoTrack.h>
 #include "../../../source/include/cvAutoTrack.h"
 #include <fmt/format.h>
-
 #include <Windows.h>
-
 #include <vector>
-#include <format>
 
 int TEST()
 {
 	char version_buff[256] = {0};
-
 	if (GetCompileVersion(version_buff, 256))
-	{
-		std::cout << "版本号       : "
-				  << " " << version_buff << " "
-				  << "\n";
-	}
+		fmt::print("版本号       : {}\n", version_buff);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " " << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 
 	char version_time_buff[256] = {0};
-
 	if (GetCompileTime(version_time_buff, 256))
-	{
-		std::cout << "编译时间     : "
-				  << " " << version_time_buff << " "
-				  << "\n";
-	}
+		fmt::print("编译时间     : {}\n", version_time_buff);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " " << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 
 	std::cout << "测试完成\n";
 	return 0;
@@ -79,19 +58,12 @@ int TEST_init_and_uninit()
 void Run_SetDx()
 {
 	// 设置Dx截图
-	if(SetUseGraphicsCaptureMode())
-	{
-		std::cout << "设置Dx截图成功"
-				  << "\n";
-	}
+	if (SetUseGraphicsCaptureMode())
+		fmt::print("设置Dx截图成功\n");
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
+
 void Run_SetBit()
 {
 	// 设置Bitblt截图
@@ -115,51 +87,27 @@ void Run_GetTrans()
 	double a = 0;
 	int map_id = 0;
 	if (GetTransformOfMap(x, y, a, map_id))
-	{
-		std::cout << "坐标和角度   : "
-				  << " " << map_id << x << " " << y << " " << a << "\n";
-	}
+		fmt::print("坐标和角度   : {} {} {} {}\n", x, y, a, map_id);
 	else
-	{
-		std::cout << "错误码 : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
+
 void Run_GetDir()
 {
 	double a2 = 0;
 	if (GetDirection(a2))
-	{
-		std::cout << "角度         : "
-				  << " " << a2 << "\n";
-	}
+		fmt::print("角度         : {}\n", a2);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
 void Run_GetRot()
 {
 	double aa2 = 0;
 	if (GetRotation(aa2))
-	{
-		std::cout << "视角朝向     : "
-				  << " " << aa2 << "\n";
-	}
+		fmt::print("视角朝向     : {}\n", aa2);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
-
 void Run_GetAll()
 {
 	double x, y, a, r;
@@ -194,10 +142,7 @@ UseTime:{:4.2f}ms
 	}
 	else
 	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
+		fmt::print("错误码       : {}\n", GetLastErr());
 	}
 }
 
@@ -205,50 +150,27 @@ void Run_GetUID()
 {
 	int uid = 0;
 	if (GetUID(uid))
-	{
-		std::cout << "当前UID      : "
-				  << " " << uid << " "
-				  << "\n";
-	}
+		fmt::print("UID          : {}\n", uid);
+	
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
 void Run_GetStars()
 {
 	char buff[1024] = {0};
-	if (GetStarJson(buff,1024))
-	{
+	if (GetStarJson(buff, 1024))
 		// 坐标需要映射 p + AvatarPos
-		std::cout << "当前神瞳Json : " << buff << "\n";
-	}
+		fmt::print("神瞳Json     : {}\n", buff);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
 void Run_Capture()
 {
 	// 设置Dx截图
 	if (DebugCapture())
-	{
-		std::cout << "截图成功"
-				  << "\n";
-	}
+		fmt::print("截图成功\n");
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
 
 void Run_GetPosit()
@@ -257,17 +179,9 @@ void Run_GetPosit()
 	double x2 = 0;
 	double y2 = 0;
 	if (GetPositionOfMap(x2, y2, mapid))
-	{
-		std::cout << "坐标         : "
-				  << " " << x2 << " " << y2 << " " << mapid << "\n";
-	}
+	fmt::print("坐标         : {} {} {}\n", x2, y2, mapid);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " \n"
-				  << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 }
 
 void Run_GetVersion()
@@ -316,7 +230,7 @@ int Run()
 		{
 		case 11:
 			InitResource();
-				system("pause");
+			system("pause");
 			break;
 		case 1:
 			Run_SetDx();
@@ -465,30 +379,18 @@ void Test_video()
 				  << " " << x2 << " " << y2 << " " << a2 << "\n";
 	}
 	else
-	{
-		std::cout << "错误码       : "
-				  << " " << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 	// SetWorldScale(1.0);
 	if (GetInfoLoadPicture(path, uid, x2, y2, a2))
-	{
-		std::cout << "Now Coor and Angle: "
-				  << " " << uid << " "
-				  << " " << x2 << " " << y2 << " " << a2 << "\n";
-	}
+	fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
 	else
-	{
-		std::cout << "错误码       : "
-				  << " " << GetLastErr() << " "
-				  << "\n";
-	}
+		fmt::print("错误码       : {}\n", GetLastErr());
 	char buff[1024] = {0};
 #ifdef _DEBUG
-	if (GetStarJson(buff,1024))
-	{
-		// 坐标需要映射 p * 1.33 + AvatarPos
-		std::cout << buff << "\n";
-	}
+	if (GetStarJson(buff, 1024))
+		// 坐标需要映射 p + AvatarPos
+		fmt::print("神瞳Json     : {}\n", buff);
+	else
+		fmt::print("错误码       : {}\n", GetLastErr());
 #endif
 }
