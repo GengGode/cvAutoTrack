@@ -70,6 +70,10 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
     cv::BFMatcher matcher(cv::NORM_HAMMING);
     std::vector<std::vector<cv::DMatch>> matches;
     matcher.knnMatch(desp1, desp2, matches, 2);
+    // 解决没有匹配点的情况
+    if (matches.size() == 0) {
+        return false;
+    }
     std::vector<cv::DMatch> good_matches;
     for (int i = 0; i < matches.size(); i++) {
         if (matches[i][0].distance < 0.6 * matches[i][1].distance) {
