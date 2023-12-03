@@ -34,7 +34,7 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
         // use orb match to get the u, aka offset
         cv::Point2f offset;
         if (orb_match(last_mini_map, curr_mini_map, offset)) {
-            control = cv::Point2d(offset.x * config.scale, offset.y * config.scale);
+            control = cv::Point2d(- offset.x * config.scale, -offset.y * config.scale);
             last_mini_map = curr_mini_map.clone();
             return true;
         }
