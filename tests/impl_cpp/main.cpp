@@ -151,7 +151,7 @@ void Run_GetUID()
 	int uid = 0;
 	if (GetUID(uid))
 		fmt::print("UID          : {}\n", uid);
-	
+
 	else
 		fmt::print("错误码       : {}\n", GetLastErr());
 }
@@ -179,7 +179,7 @@ void Run_GetPosit()
 	double x2 = 0;
 	double y2 = 0;
 	if (GetPositionOfMap(x2, y2, mapid))
-	fmt::print("坐标         : {} {} {}\n", x2, y2, mapid);
+		fmt::print("坐标         : {} {} {}\n", x2, y2, mapid);
 	else
 		fmt::print("错误码       : {}\n", GetLastErr());
 }
@@ -373,16 +373,12 @@ void Test_video()
 
 	// SetWorldScale(0.666667);
 	if (GetInfoLoadPicture(path, uid, x2, y2, a2))
-	{
-		std::cout << "Now Coor and Angle: "
-				  << " " << uid << " "
-				  << " " << x2 << " " << y2 << " " << a2 << "\n";
-	}
+		fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
 	else
 		fmt::print("错误码       : {}\n", GetLastErr());
 	// SetWorldScale(1.0);
 	if (GetInfoLoadPicture(path, uid, x2, y2, a2))
-	fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
+		fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
 	else
 		fmt::print("错误码       : {}\n", GetLastErr());
 	char buff[1024] = {0};
