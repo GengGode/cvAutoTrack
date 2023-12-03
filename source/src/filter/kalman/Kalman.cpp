@@ -85,7 +85,8 @@ cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  A代表F: transitionMatrix
 	//预测估计协方差矩阵;
 	// 这啥啊，这不计算中的误差协方差
-	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
+	// 绑架问题不收敛的罪魁祸首，这个协方差会影响K的计算，从而影响后续的预测和更新
+	// setIdentity(KF.errorCovPost, cv::Scalar::all(1));
 
 	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
 	//initialize post state of kalman filter at random 
