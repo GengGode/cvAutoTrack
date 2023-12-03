@@ -14,6 +14,17 @@
     if(_inited.load()==false) return false;
 static std::atomic<bool> _inited = true;
 
+
+bool CVAUTOTRACK_API init()
+{
+    return InitResource();
+}
+
+bool CVAUTOTRACK_API uninit()
+{
+    return UnInitResource();
+}
+
 bool __stdcall InitResource()
 {
     INSTALL_DUMP(AutoTrack::Instance().init());
