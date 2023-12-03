@@ -6,6 +6,6 @@ public:
 	Untouched();
 	~Untouched();
 public:
-	virtual cv::Point2d filterting(const cv::Point2d& pos) override;
+	virtual cv::Point2d filterting(const cv::Point2d &pos, const cv::Point2f &u_k) override;
 	virtual cv::Point2d re_init_filterting(const cv::Point2d& pos) override;
 };

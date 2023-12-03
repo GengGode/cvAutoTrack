@@ -10,7 +10,7 @@ Untouched::~Untouched()
 {
 }
 
-cv::Point2d Untouched::filterting(const cv::Point2d& pos)
+cv::Point2d Untouched::filterting(const cv::Point2d &pos, const cv::Point2f &u_k)
 {
 	return pos;
 }

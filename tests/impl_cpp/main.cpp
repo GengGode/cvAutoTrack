@@ -165,8 +165,10 @@ void Run_GetAll()
 	double x, y, a, r;
 	int mapId, uid;
 	std::string mapType;
+	double time_beg = GetTickCount();
 	if (GetAllInfo(x, y, mapId, a, r, uid))
 	{
+		double time_end = GetTickCount();
 		switch (mapId)
 		{
 		case 0:
@@ -185,9 +187,10 @@ void Run_GetAll()
 坐标:x = {:6.2f}; y = {:6.2f}
 朝向:角色 = {:4.2f}; 相机 = {:4.2f}
 UID:{:d}
+UseTime:{:4.2f}ms
 ----------------
 )",
-								 mapType, x, y, a, r, uid);
+								 mapType, x, y, a, r, uid, time_end - time_beg);
 	}
 	else
 	{

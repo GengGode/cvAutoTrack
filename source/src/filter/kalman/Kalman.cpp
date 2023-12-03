@@ -5,36 +5,29 @@ Kalman::Kalman()
 {
 	type = FilterType::Kalman;
 	
-	KF = cv::KalmanFilter(stateNum, measureNum, 0);
-	state = cv::Mat(stateNum, 1, CV_32F); //state(x,y,detaX,detaY)
+	KF = cv::KalmanFilter(stateNum, measureNum, controlNum);
+	state = cv::Mat(stateNum, 1, CV_32F); 
 	processNoise = cv::Mat(stateNum, 1, CV_32F);
 	measurement = cv::Mat::zeros(measureNum, 1, CV_32F);	//measurement(x,y)
 
 	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //随机生成一个矩阵，期望是0，标准差为0.1;
-	KF.transitionMatrix = (cv::Mat_<float>(4, 4) <<
-		1, 0, 1, 0,
-		0, 1, 0, 1,
-		0, 0, 1, 0,
-		0, 0, 0, 1);//元素导入矩阵，按行;
-
-	//setIdentity: 缩放的单位对角矩阵;
-	//!< measurement matrix (H) 观测模型
-	setIdentity(KF.measurementMatrix);
-
-	//!< process noise covariance matrix (Q)
-	// wk 是过程噪声，并假定其符合均值为零，协方差矩阵为Qk(Q)的多元正态分布;
+	// set A
+	KF.transitionMatrix = (cv::Mat_<float>(2, 2) <<
+		1, 0,
+		0, 1);
+	// set B
+	KF.controlMatrix = (cv::Mat_<float>(2, 2) <<
+		1, 0,
+		0, 1);
+	// set Q
 	setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-5));
+	// set H
+	KF.measurementMatrix = (cv::Mat_<float>(2, 2) <<
+		1, 0,
+		0, 1);
+	// set R
+	setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-5));
 
-	//!< measurement noise covariance matrix (R)
-	//vk 是观测噪声，其均值为零，协方差矩阵为Rk,且服从正态分布;
-	setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-1));
-
-	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  A代表F: transitionMatrix
-	//预测估计协方差矩阵;
-	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
-
-	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
-	//initialize post state of kalman filter at random 
 	randn(KF.statePost, cv::Scalar::all(0), cv::Scalar::all(0.1));
 }
 
@@ -42,9 +35,14 @@ Kalman::~Kalman()
 {
 }
 
-cv::Point2d Kalman::filterting(const cv::Point2d& pos)
+cv::Point2d Kalman::filterting(const cv::Point2d& pos, const cv::Point2f& u_k)
 {
-	cv::Mat prediction = KF.predict();
+	// use u_k to predict
+	// make u_k to cv::Mat
+	cv::Mat u_k_mat = cv::Mat::zeros(2, 1, CV_32F);
+	u_k_mat.at<float>(0, 0) = u_k.x;
+	u_k_mat.at<float>(1, 0) = u_k.y;
+	cv::Mat prediction = KF.predict(u_k_mat);
 	cv::Point2d predictPt = cv::Point2d(prediction.at<float>(0), prediction.at<float>(1));
 
 	//3.update measurement
@@ -60,23 +58,22 @@ cv::Point2d Kalman::filterting(const cv::Point2d& pos)
 
 cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 {
-	KF.init(stateNum, measureNum, 0);
+	KF.init(stateNum, measureNum, controlNum);
 
 	state = cv::Mat(stateNum, 1, CV_32F); //state(x,y,detaX,detaY)
 	processNoise = cv::Mat(stateNum, 1, CV_32F);
 	measurement = cv::Mat::zeros(measureNum, 1, CV_32F);	//measurement(x,y)
 
 	randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); //随机生成一个矩阵，期望是0，标准差为0.1;
-	KF.transitionMatrix = (cv::Mat_<float>(4, 4) <<
-		1, 0, 1, 0,
-		0, 1, 0, 1,
-		0, 0, 1, 0,
-		0, 0, 0, 1);//元素导入矩阵，按行;
-
-	//setIdentity: 缩放的单位对角矩阵;
-	//!< measurement matrix (H) 观测模型
-	setIdentity(KF.measurementMatrix);
-
+	// set A
+	KF.transitionMatrix = (cv::Mat_<float>(2, 2) <<
+		1, 0,
+		0, 1);
+	// set B
+	KF.controlMatrix = (cv::Mat_<float>(2, 2) <<
+		1, 0,
+		0, 1);
+	// set Q
 	//!< process noise covariance matrix (Q)
 	// wk 是过程噪声，并假定其符合均值为零，协方差矩阵为Qk(Q)的多元正态分布;
 	setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-5));
@@ -87,6 +84,7 @@ cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 
 	//!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/  A代表F: transitionMatrix
 	//预测估计协方差矩阵;
+	// 这啥啊，这不计算中的误差协方差
 	setIdentity(KF.errorCovPost, cv::Scalar::all(1));
 
 	//!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
