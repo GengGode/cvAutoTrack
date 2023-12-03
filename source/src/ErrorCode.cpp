@@ -41,6 +41,7 @@ std::string get_gpu_name()
 {
 	return "获取GPU信息失败";
 	// Get the name of the GPU
+#ifdef BUILD_CAPTURE_DXGI
 	IDXGIAdapter* pAdapter = nullptr;
 	IDXGIFactory* pFactory = nullptr;
 	try
@@ -66,6 +67,8 @@ std::string get_gpu_name()
 	catch (...) {
 		return "获取GPU信息失败";
 	}
+#endif
+	return "获取GPU信息失败";
 }
 
 ErrorCode::ErrorCode()
