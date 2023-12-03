@@ -20,7 +20,10 @@
 #include "version/Version.h"
 #include "utils/convect.string.h"
 
-AutoTrack::AutoTrack() : res(Resources::getInstance()), err(ErrorCode::getInstance())
+ErrorCode &err = ErrorCode::getInstance();
+Resources &res = Resources::getInstance();
+
+AutoTrack::AutoTrack() 
 {
     err.enableWirteFile();
 

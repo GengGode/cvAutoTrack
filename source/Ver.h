@@ -10,12 +10,12 @@ inline bool GetCoreCompileVersion(char *version_buff, int buff_size)
 {
 	if (version_buff == nullptr || buff_size < 1)
 	{
-		err = {291, utils::to_gbk("»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1")};
+		err = {291, utils::to_gbk("ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1")};
 		return false;
 	}
 	if (TianLi::Version::build_version.size() > buff_size)
 	{
-		err = {292, utils::to_gbk("»º´æÇø´óĞ¡²»×ã")};
+		err = {292, utils::to_gbk("ç¼“å­˜åŒºå¤§å°ä¸è¶³")};
 		return false;
 	}
 	strcpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str());
@@ -26,12 +26,12 @@ inline bool GetCoreCompileTime(char *time_buff, int buff_size)
 {
 	if (time_buff == nullptr || buff_size < 1)
 	{
-		err = {291, utils::to_gbk("»º´æÇøÎª¿ÕÖ¸Õë»òÊÇ»º´æÇø´óĞ¡ÎªĞ¡ÓÚ1")};
+		err = {291, utils::to_gbk("ç¼“å­˜åŒºä¸ºç©ºæŒ‡é’ˆæˆ–æ˜¯ç¼“å­˜åŒºå¤§å°ä¸ºå°äº1")};
 		return false;
 	}
 	if (TianLi::Version::build_time.size() > buff_size)
 	{
-		err = {292, utils::to_gbk("»º´æÇø´óĞ¡²»×ã")};
+		err = {292, utils::to_gbk("ç¼“å­˜åŒºå¤§å°ä¸è¶³")};
 		return false;
 	}
 	strcpy_s(time_buff, buff_size, TianLi::Version::build_time.c_str());

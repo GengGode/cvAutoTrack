@@ -1,7 +1,7 @@
 function(parse_version_file version_file)
     file(READ "${version_file}" version_file_content)
     string(STRIP "${version_file_content}" version_file_content)
-    message(STATUS "当前编译版本: ${version_file}: ${version_file_content}")
+    message(STATUS "当前编译版本: ${version_file_content}")
     string(REPLACE "." ";" version_content_list "${version_file_content}")
     list(GET version_content_list 0 version_major)
     list(GET version_content_list 1 version_minor)
@@ -9,7 +9,6 @@ function(parse_version_file version_file)
     set(VERSION_MAJOR ${version_major} PARENT_SCOPE)
     set(VERSION_MINOR ${version_minor} PARENT_SCOPE)
     set(VERSION_PATCH ${version_patch} PARENT_SCOPE)
-    message(STATUS "parse_version_file: VERSION_MAJOR: ${version_major}")
 endfunction(parse_version_file)
 
 function(version_file_patch_update version_file)
@@ -25,16 +24,30 @@ endfunction(version_file_patch_update)
 
 function(get_commit_hash hash_value)
 find_package(Git QUIET)
-    if(NOT GIT_FOUND)
-        message(STATUS "git not found, skip get_commit_hash")
-        return()
-    endif()
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%h
-        OUTPUT_VARIABLE git_last_commit_hash
-        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
-    set(${hash_value} ${git_last_commit_hash} PARENT_SCOPE)
+if(NOT GIT_FOUND)
+    message(STATUS "git not found, skip get_commit_hash")
+    return()
+endif()
+execute_process(
+    COMMAND ${GIT_EXECUTABLE} log -1 --pretty=format:%h
+    OUTPUT_VARIABLE git_last_commit_hash
+    OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+set(${hash_value} ${git_last_commit_hash} PARENT_SCOPE)
 endfunction(get_commit_hash)
+
+function(get_git_branch branch_name)
+find_package(Git QUIET)
+if(NOT GIT_FOUND)
+    message(STATUS "git not found, skip get_git_branch")
+    return()
+endif()
+execute_process(
+    COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
+    OUTPUT_VARIABLE git_branch_name
+    OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+set(${branch_name} ${git_branch_name} PARENT_SCOPE)
+endfunction(get_git_branch)
+
 
 function(check_commit_hash_is_dirty is_dirty)
     execute_process(

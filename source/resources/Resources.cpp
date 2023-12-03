@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Resources.h"
-#include "resource.h"
 #include "resources/import/resources.import.h"
 #include "utils/convect.string.h"
 #include "resources/trackCache.h"

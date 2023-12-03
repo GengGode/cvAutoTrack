@@ -35,11 +35,18 @@ jobs:
         echo "dll version: $version"
         echo "_version=$version" >> $env:GITHUB_OUTPUT
 
-    - name: Upload a Build Artifact
+    - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
       with:
-        name: ComContronl
-        path: ${{github.workspace}}/build/bin/Release/
+        name: cvAutoTrack
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
+        if-no-files-found: 'warn'
+
+    - name: Upload a Build Artifact for Release.Depends
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack.Depends
+        path: ${{github.workspace}}/build/bin/Release/opencv_world480.dll
         if-no-files-found: 'warn'
 
   release:
@@ -51,7 +58,7 @@ jobs:
     - name: Download a Build Artifact
       uses: actions/download-artifact@v3
       with:
-        name: ComContronl
+        name: cvAutoTrack
         path: ${{github.workspace}}/Release/
 
     - name: Create Release
@@ -86,7 +93,7 @@ jobs:
   #  - name: Download a Build Artifact
   #    uses: actions/download-artifact@v3
   #    with:
-  #      name: ComContronl
+  #      name: cvAutoTrack
   #      path: ${{github.workspace}}/Release/
   #
   #  - name: Get Current Version

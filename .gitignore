@@ -266,10 +266,6 @@ __pycache__/
 /cvAutoTrack/resource/cvAutoTrack.rc
 !/cvAutoTrack/resource/version.rc.in
 /cvAutoTrack/resource/Source.def
-/cvAutoTrack/src/version/
-!/cvAutoTrack/src/version/version_tag.tag
-!/cvAutoTrack/src/version/GetNextBuildVersion.ps1
-!/cvAutoTrack/src/version/build_version_before.bat
 !/cvAutoTrack/src/utils/log/
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Capture.png
 /impl/Cpp/TEST_cvAutoTrack_Cpp/Output.txt
@@ -284,5 +280,5 @@ bulid
 *.code-workspace
 *.vcxproj
 *.sln
-/source/resource
-!/source/resource/version.rc.in
+source/resource/version.h
+source/resource/version.rc
