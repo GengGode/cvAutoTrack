@@ -13,14 +13,13 @@ endif()
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-include_directories(include)
-include_directories(src)
 
 
-file(GLOB_RECURSE CppFiles "src/*.cpp")
-file(GLOB_RECURSE HppFiles "src/*.h")
+file(GLOB_RECURSE CppFiles "*.cpp")
+file(GLOB_RECURSE HppFiles "*.h")
 set(VerRcFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc")
 set(VerHppFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.h")
+set(InfaceHppFile "${IncludeDir}/cvAutoTrack.h")
 
 auto_increment_version_file("resource/version_hash.hash" "resource/version.ver")
 parse_version_file("resource/version.ver")
@@ -42,26 +41,24 @@ if(BUILD_CAPTURE_DXGI)
     add_definitions(-DBUILD_CAPTURE_DXGI)
 endif()
 
-source_group("include" FILES include/cvAutoTrack.h)
+source_group("include" FILES ${InfaceHppFile})
 source_group(TREE ${CMAKE_SOURCE_DIR} FILES ${CppFiles} ${HppFiles} ${RcFiles} ${RcFile} ${VerRcFile})
 source_group("version" FILES ${VerRcFile})
 
-add_library(cvAutoTrack SHARED
-    include/cvAutoTrack.h
-    src/cvAutoTrack.cpp
-    ${CppFiles}
+include_directories(${IncludeDir})
+include_directories(${SourceDir})
+add_library(cvAutoTrack SHARED ${InfaceHppFile}
     ${HppFiles}
-    #${RcFiles}
+    ${CppFiles}
+    cvAutoTrack.cpp
     ${RcFile}
     ${VerRcFile}
 )
 
-
-
 set_target_properties(cvAutoTrack PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
 
-add_pch_define(cvAutoTrack ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.h ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp)
+add_pch_define(cvAutoTrack ${SourceDir}/pch.h ${SourceDir}/pch.cpp)
         
 add_compile_options(/MP)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")

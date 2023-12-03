@@ -1,20 +1,10 @@
 #pragma once
 #include "match/type/MatchType.h"
 
-class Resources;
-class ErrorCode;
 class AutoTrack
 {
-    Resources& res;
-    ErrorCode& err;
-
-private:
-    AutoTrack();
 public:
-    static AutoTrack& Instance() {
-        static AutoTrack _instance;
-        return _instance;
-    }
+    AutoTrack();
 
 #pragma region 外部接口
     bool init();
