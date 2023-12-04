@@ -1,7 +1,7 @@
 #include <iostream>
 //#include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
-#include "../../../source/include/cvAutoTrack.h"
+#include <cvAutoTrack.h>
 
 
 int main()

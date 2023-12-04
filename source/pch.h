@@ -7,10 +7,6 @@
 #ifndef PCH_H
 #define PCH_H
 
-#define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
-// Windows 头文件
-#include <windows.h>
-
 // Opencv
 // 如果使用了c++14以上版本，关闭以下警告
 #ifdef _HAS_CXX17
@@ -22,9 +18,11 @@
 #pragma warning(disable : 26495)
 #endif
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
 
+#ifdef SUPPORT_WINRT
+#define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
+// Windows 头文件
+#include <windows.h>
 #include <Unknwn.h>
 #include <inspectable.h>
 
@@ -45,6 +43,7 @@
 
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
+#endif // SUPPORT_WINRT
 
 // STL
 #include <atomic>
@@ -56,9 +55,14 @@
 #include <algorithm>
 #include <numeric>
 #include <future>
+#include <mutex>
 #include <fstream>
 #include <functional>
 #include <filesystem>
+
+// opencv
+#include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d.hpp>
 
 // fmt
 #include <fmt/format.h>
@@ -77,8 +81,8 @@
 #include "capture/dxgi/include/capture.interop.h"
 #endif // BUILD_CAPTURE_DXGI
 
+#ifdef SUPPORT_WINDUMP
 // DUMP部分
-#include "Windows.h"
 #include "DbgHelp.h"
 #include "tchar.h"
 inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
@@ -142,4 +146,7 @@ inline LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
     return GenerateMiniDump(lpExceptionInfo);
 }
 #define INSTALL_DUMP_() SetUnhandledExceptionFilter(ExceptionFilter)
+#else
+#define INSTALL_DUMP_()
+#endif // SUPPORT_WINDUMP
 #endif // PCH_H

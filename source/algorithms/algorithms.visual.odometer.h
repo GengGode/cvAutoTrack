@@ -34,7 +34,7 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
         // use orb match to get the u, aka offset
         cv::Point2f offset;
         if (orb_match(last_mini_map, curr_mini_map, offset)) {
-            control = cv::Point2d(offset.x * config.scale, offset.y * config.scale);
+            control = cv::Point2d(- offset.x * config.scale, -offset.y * config.scale);
             last_mini_map = curr_mini_map.clone();
             return true;
         }
@@ -51,16 +51,16 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
 bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
 {
     // 不crop了，因为上一张会被crop两次。
-    // img1 = TianLi::Utils::crop_border(img1, 0.15);
-    // img2 = TianLi::Utils::crop_border(img2, 0.15);
+    auto img1_cp = TianLi::Utils::crop_border(img1, 0.15);
+    auto img2_cp = TianLi::Utils::crop_border(img2, 0.15);
     // resize 是等比例缩放，就不超了
 
     // 分别计算orb特征点
     cv::Ptr<cv::ORB> orb = cv::ORB::create(5000);
     std::vector<cv::KeyPoint> kp1, kp2;
     cv::Mat desp1, desp2;
-    orb->detectAndCompute(img1, cv::Mat(), kp1, desp1);
-    orb->detectAndCompute(img2, cv::Mat(), kp2, desp2);
+    orb->detectAndCompute(img1_cp, cv::Mat(), kp1, desp1);
+    orb->detectAndCompute(img2_cp, cv::Mat(), kp2, desp2);
     
     if (desp1.empty() || desp2.empty()) {
         return false;
@@ -85,9 +85,9 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
         return false;
     }
 
-    auto img2_copy = img2.clone();
+    // auto img2_copy = img2_cp.clone();
     // 画出good matches，然后保存
-    // cv::drawMatches(img1, kp1, img2, kp2, good_matches, img2_copy);
+    // cv::drawMatches(img1_cp, kp1, img2_cp, kp2, good_matches, img2_copy);
     // cv::imwrite("good_matches.jpg", img2_copy);
 
     // 计算偏移量，直接取平均

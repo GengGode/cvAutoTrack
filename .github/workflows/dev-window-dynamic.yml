@@ -35,11 +35,18 @@ jobs:
         echo "dll version: $version"
         echo "_version=$version" >> $env:GITHUB_OUTPUT
 
-    - name: Upload a Build Artifact
+    - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
       with:
         name: cvAutoTrack
-        path: ${{github.workspace}}/build/bin/Release/
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
+        if-no-files-found: 'warn'
+
+    - name: Upload a Build Artifact for Release.Depends
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack.Depends
+        path: ${{github.workspace}}/build/bin/Release/opencv_world480.dll
         if-no-files-found: 'warn'
 
   release:
