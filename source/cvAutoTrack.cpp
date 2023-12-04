@@ -27,6 +27,14 @@ bool CVAUTOTRACK_API uninit()
     return UnInitResource();
 }
 
+#ifdef _DEBUG
+bool CVAUTOTRACK_API LoadDbgMapImg(const char* path)
+{
+    return false;
+}
+#endif // _DEBUG
+
+
 bool __stdcall InitResource()
 {
     INSTALL_DUMP(_at.init());
