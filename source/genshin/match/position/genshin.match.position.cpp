@@ -182,6 +182,7 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
         auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config());
         if (!od_valid) {
             // TODO：no u_k update
+            cout << "no u_k update" << endl;
             filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
             set_mini_map(genshin_minimap.img_minimap);
         }
