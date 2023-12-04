@@ -72,9 +72,9 @@ namespace trackCache
         //特征点容器定义，压缩特征点数据
         struct _Sample_KeyPoint
         {
-            int16_t x;
-            int16_t y;
-            uint16_t response;
+            float_t x;
+            float_t y;
+            float_t response;
             int32_t class_id;
             //序列化模板
             template <class Archive>
@@ -95,9 +95,9 @@ namespace trackCache
             for (const auto& kp : key_points)
             {
                 _Sample_KeyPoint sample_kp;
-                sample_kp.x = static_cast<int16_t>(kp.pt.x);
-                sample_kp.y = static_cast<int16_t>(kp.pt.y);
-                sample_kp.response = static_cast<uint16_t>(kp.response > UINT16_MAX ? UINT16_MAX : kp.response);
+                sample_kp.x = kp.pt.x;
+                sample_kp.y = kp.pt.y;
+                sample_kp.response = kp.response;
                 sample_kp.class_id = kp.class_id;
                 sample_key_points.emplace_back(sample_kp);
             }
