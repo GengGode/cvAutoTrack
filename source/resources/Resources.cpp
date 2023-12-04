@@ -3,7 +3,7 @@
 #include "resources/import/resources.import.h"
 #include "utils/convect.string.h"
 #include "resources/trackCache.h"
-#include "version/Version.h"
+#include "resource/version.h"
 #include "resources.load.h"
 
 Resources::Resources()

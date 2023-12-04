@@ -1,6 +1,6 @@
 #pragma once
 #include "utils/convect.string.h"
-#include "version/Version.h"
+#include "resource/version.h"
 #include "ErrorCode.h"
 #ifndef err
 #define err ErrorCode::getInstance()

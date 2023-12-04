@@ -6,4 +6,5 @@ namespace TianLi::Version
    const int version_revision = @PROJECT_VERSION_PATCH@;
    const std::string version_hash = "@PROJECT_VERSION_HASH@";
    const std::string build_version = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@-@PROJECT_VERSION_BRANCH@-@PROJECT_VERSION_HASH@";
+   const std::string build_time = "@PROJECT_VERSION_DATETIME@";
 }

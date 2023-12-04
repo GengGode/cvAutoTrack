@@ -69,6 +69,10 @@ set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
         
 if(MSVC)
     add_pch_define(cvAutoTrack ${SourceDir}/pch.h ${SourceDir}/pch.cpp)
+
+    #/utf-8
+    target_compile_options(cvAutoTrack PRIVATE "/utf-8")
+    add_definitions(-DUNICODE -D_UNICODE)
     
     add_compile_options(/MP)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
