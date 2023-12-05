@@ -1,5 +1,6 @@
 #pragma once
-#include "pch.h"
+#include <string>
+#include <Windows.h>
 namespace utils
 {
     static std::string utf8_to_gbk(const std::string &utf8_string)
