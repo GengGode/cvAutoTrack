@@ -13,6 +13,11 @@ set(ThridPatryDir ${CMAKE_SOURCE_DIR}/third_party)
 set(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 set(SourceDir ${CMAKE_SOURCE_DIR}/source)
 
+include_directories(${IncludeDir})
+include_directories(${ThridPatryDir})
+include_directories(${DependentPatryDir})
+
+
 # 设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
