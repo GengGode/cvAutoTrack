@@ -2,11 +2,10 @@ name: test-window-dynamic
 
 on:
   push:
-    # 除了master和dev分支，其他分支都不触发
     branches: [ "*" ]
   pull_request:
-    # 除了master和dev分支，其他分支都不触发
-    branches: [ master, dev ]
+    # 除了master分支，其他分支都不触发
+    branches: [ master ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -15,8 +14,6 @@ env:
 jobs:
   build:
     runs-on: windows-latest
-    outputs:
-      version: ${{ steps.get_version.outputs._version }}
 
     steps:
     - uses: actions/checkout@v3
