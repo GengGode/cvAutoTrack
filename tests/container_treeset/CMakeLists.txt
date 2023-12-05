@@ -1,5 +1,7 @@
 get_filename_component(dir_name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 set(test_name test_${dir_name})
+set(CMAKE_CXX_STANDARD 20)
+add_compile_options(/std:c++20)
 add_executable(${test_name} main.cpp  
 ${SourceDir}/resources/Resources.cpp
 ${SourceDir}/resources/resources.load.cpp
