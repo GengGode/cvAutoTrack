@@ -23,6 +23,7 @@ if(MSVC)
     # Unicode
     add_definitions(-DUNICODE -D_UNICODE)
 endif()
+add_compile_options(/utf-8)
 
 project(libcvAutoTrack)
 
@@ -32,6 +33,6 @@ Set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake_targets")
 # 包含子项目
 add_subdirectory(source)
 if(BUILD_CVAUTOTRACK_TESTS)
-    message(STATUS, "编译测试")
+    message(STATUS  "编译测试")
     add_subdirectory(tests)
 endif()
