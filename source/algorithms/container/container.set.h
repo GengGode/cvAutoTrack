@@ -68,19 +68,19 @@ namespace tianli::algorithms::container
                 auto split_center = cv::Point2d(parent->rect.width / 4.0, parent->rect.height / 4.0);
                 switch (split_type)
                 {
-                case SplitType::top_left:
+                case split_type::top_left:
                     rect = cv::Rect2d(parent->rect.tl(), split_size);
                     center = rect.tl() + split_center;
                     break;
-                case SplitType::top_right:
+                case split_type::top_right:
                     rect = cv::Rect2d(parent->rect.tl() + cv::Point2d(parent->rect.width / 2, 0), split_size);
                     center = rect.tl() + split_center;
                     break;
-                case SplitType::bottom_left:
+                case split_type::bottom_left:
                     rect = cv::Rect2d(parent->rect.tl() + cv::Point2d(0, parent->rect.height / 2), split_size);
                     center = rect.tl() + split_center;
                     break;
-                case SplitType::bottom_right:
+                case split_type::bottom_right:
                     rect = cv::Rect2d(parent->rect.tl() + cv::Point2d(parent->rect.width / 2, parent->rect.height / 2), split_size);
                     center = rect.tl() + split_center;
                     break;
