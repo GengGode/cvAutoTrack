@@ -12,7 +12,7 @@ namespace tianli::algorithms::container
         ~tree() = default;
         tree(const cv::Rect2d &rect, const std::vector<std::shared_ptr<point_index>> &items)
         {
-            root = std::make_shared<Node>();
+            root = std::make_shared<tree_node>();
             root->rect = rect;
             root->center = rect.tl() + cv::Point2d(rect.width / 2.0, rect.height / 2.0);
             for (auto &item : items)
@@ -20,12 +20,11 @@ namespace tianli::algorithms::container
         }
         tree(const std::vector<std::shared_ptr<point_index>> &items)
         {
-            double min_x = std::numeric_limits<double>::max();
-            double min_y = std::numeric_limits<double>::max();
-            double max_x = std::numeric_limits<double>::min();
-            double max_y = std::numeric_limits<double>::min();
-            std::for_each(items.begin(), items.end(), [&](auto &item)
-                          {
+            double min_x = (std::numeric_limits<double>::max)();
+            double min_y = (std::numeric_limits<double>::max)();
+            double max_x = (std::numeric_limits<double>::min)();
+            double max_y = (std::numeric_limits<double>::min)();
+            std::for_each(items.begin(), items.end(), [&](auto &item) {
             min_x = (std::min)(min_x, item->point().x);
             min_y = (std::min)(min_y, item->point().y);
             max_x = (std::max)(max_x, item->point().x);
@@ -35,7 +34,7 @@ namespace tianli::algorithms::container
             auto max_x_block = (std::trunc(max_x / tree_block_base_size) + (max_x > 0 ? 1 : -1)) * tree_block_base_size;
             auto max_y_block = (std::trunc(max_y / tree_block_base_size) + (max_y > 0 ? 1 : -1)) * tree_block_base_size;
 
-            root = std::make_shared<Node>();
+            root = std::make_shared<tree_node>();
             root->rect = cv::Rect2d(cv::Point2d(min_x_block, min_y_block), cv::Point2d(max_x_block, max_y_block));
             root->center = root->rect.contains(cv::Point2d(0, 0)) ? cv::Point2d(0, 0) : root->rect.tl() + cv::Point2d(root->rect.width / 2.0, root->rect.height / 2.0);
             for (auto &item : items)
