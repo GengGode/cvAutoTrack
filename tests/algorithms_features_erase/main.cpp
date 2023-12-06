@@ -26,8 +26,9 @@ int main(int v, char *s[])
     std::sort(kps_x_sorted.begin(), kps_x_sorted.end(), [](const cv::KeyPoint &a, const cv::KeyPoint &b) {
         return a.pt.x < b.pt.x;
     });
-    auto dis_min = 1.2;
-    // 如果两个点的x坐标差值小于dis_min，并且y坐标差值小于dis_min，则删除y坐标较小的点
+    auto dis_min = 100;
+    // 如果两个点的x坐标差值小于dis_min，并且y坐标差值小于dis_min，跳过y坐标小的点
+    std::vector<cv::KeyPoint> kps_erase;
     for (auto it = kps_x_sorted.begin(); it != kps_x_sorted.end(); ++it)
     {
         auto it_next = it + 1;
@@ -36,11 +37,10 @@ int main(int v, char *s[])
         if (std::abs(it->pt.x - it_next->pt.x) < dis_min && std::abs(it->pt.y - it_next->pt.y) < dis_min)
         {
             if (it->pt.y < it_next->pt.y)
-                kps.erase(it);
-            else
-                kps.erase(it_next);
+             continue;
         }
+        kps_erase.push_back(*it);
     }
 
-    std::cout << "erase features size:" << kps_x_sorted.size() << "\n";
+    std::cout << "erase features size:" << kps_erase.size() << "\n";
 }
