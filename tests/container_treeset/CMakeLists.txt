@@ -5,6 +5,7 @@ add_compile_options(/std:c++20)
 add_executable(${test_name} main.cpp  
 ${SourceDir}/resources/Resources.cpp
 ${SourceDir}/resources/resources.load.cpp
+${SourceDir}/resources/resources.binray.cpp
 )
 set_property(TARGET ${test_name} PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set_target_properties(${test_name} PROPERTIES FOLDER "tests")
