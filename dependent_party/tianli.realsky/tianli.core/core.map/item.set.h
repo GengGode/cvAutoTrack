@@ -153,7 +153,7 @@ public:
             while (that != nullptr)
             {
                 that->node_count = that->node_count + 4;
-                that = that->parent;
+                that = that->parent.lock();
             }
             return childs;
         }
@@ -237,7 +237,7 @@ public:
         }
 
     public:
-        std::shared_ptr<Node> parent;
+        std::weak_ptr<Node> parent;
         std::shared_ptr<Node> top_left;
         std::shared_ptr<Node> top_right;
         std::shared_ptr<Node> bottom_left;
