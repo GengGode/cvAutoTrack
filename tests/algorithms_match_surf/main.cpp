@@ -10,7 +10,6 @@
 
 using namespace tianli::algorithms::feature;
 
-
 int main(int v, char *s[])
 {
     features fts;
@@ -48,8 +47,8 @@ int main(int v, char *s[])
     auto some_fts = join(fts, some_key_points);
     std::cout << "some_fts size:" << some_fts.size() << "\n";
 
-    auto true_r = algorithms::match::match_features(some_fts, some_fts);
+    auto true_r = tianli::algorithms::match::match_features(some_fts, some_fts);
     std::cout << "match size:" << true_r.size() << "\n";
-    auto r = algorithms::match::match_features(fts, some_fts);
+    auto r = tianli::algorithms::match::match_features(fts, some_fts);
     std::cout << "match size:" << r.size() << "\n";
 }
