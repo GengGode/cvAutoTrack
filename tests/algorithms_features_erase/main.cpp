@@ -3,11 +3,11 @@
 #include <iostream>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include <fmt/format.h>
-#include "algorithms/algorithms.features.h"
+#include "algorithms/algorithms.feature.h"
 #include "algorithms/container/container.set.h"
 #include "resources/Resources.h"
 
-using namespace tianli::algorithms::features;
+using namespace tianli::algorithms::feature;
 #include <psapi.h>
 
 
