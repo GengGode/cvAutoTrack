@@ -56,6 +56,21 @@ cv::Point2d Kalman::filterting(const cv::Point2d& pos, const cv::Point2f& u_k)
 	return resP;
 }
 
+cv::Point2d Kalman::filterting(const cv::Point2f& u_k)
+{
+	// use u_k to predict
+	// make u_k to cv::Mat
+	cv::Mat u_k_mat = cv::Mat::zeros(controlNum, 1, CV_32F);
+	u_k_mat.at<float>(0, 0) = u_k.x;
+	u_k_mat.at<float>(1, 0) = u_k.y;
+	cv::Mat prediction = KF.predict(u_k_mat);
+	cv::Point2d predictPt = cv::Point2d(prediction.at<float>(0), prediction.at<float>(1));
+
+	// with no measurement
+
+	return predictPt;
+}
+
 cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 {
 	// set state
