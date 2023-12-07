@@ -17,7 +17,7 @@ private:
 	// x(k) = A*x(k-1) + B*u(k) + w(k)
 	// w(k) ~ N(0, Q)
 
-	// update model
+	// observation model
 	// z(k) = H*x(k) + v(k)
 	// v(k) ~ N(0, R)
 
