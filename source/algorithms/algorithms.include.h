@@ -29,6 +29,14 @@ struct odometer_config
     double scale = 1.0;
 };
 
+struct features
+{
+    std::vector<size_t> indexs;
+    std::vector<cv::KeyPoint> keypoints;
+    cv::Mat descriptors;
+    size_t size() const { return keypoints.size(); }
+};
+
 class point_index
 {
 public:

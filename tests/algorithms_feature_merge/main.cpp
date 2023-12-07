@@ -4,9 +4,9 @@
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include "resources/binary/resources.binary.h"
 #include <fmt/format.h>
-#include "algorithms/algorithms.features.h"
+#include "algorithms/algorithms.feature.h"
 
-using namespace tianli::algorithms::features;
+using namespace tianli::algorithms::feature;
 
 cv::Mat get(int i)
 {
@@ -23,7 +23,7 @@ cv::Ptr<cv::xfeatures2d::SURF> detector = cv::xfeatures2d::SURF::create();
 
 features gen(int i)
 {
-    features fts = features::from_image(detector, get(i));
+    features fts = from_image(detector, get(i));
     cv::Mat mat;
     drawKeypoints(get(i), fts.keypoints, mat, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     cv::imwrite(fmt::format("org_key_{}.png", i), mat);

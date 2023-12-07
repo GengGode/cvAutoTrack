@@ -1,23 +1,14 @@
 #pragma once
 #include "algorithms.include.h"
 
-namespace tianli::algorithms::features
+namespace tianli::algorithms::feature
 {
-    struct features
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
     {
-        std::vector<size_t> indexs;
-        std::vector<cv::KeyPoint> keypoints;
-        cv::Mat descriptors;
-
-        size_t size() const { return keypoints.size(); }
-
-        static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
-        {
-            features fts;
-            detector->detectAndCompute(image, mask, fts.keypoints, fts.descriptors);
-            return fts;
-        }
-    };
+        features fts;
+        detector->detectAndCompute(image, mask, fts.keypoints, fts.descriptors);
+        return fts;
+    }
 
     static features merge(const features &features_upper, const features &features_lower)
     {
