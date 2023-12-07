@@ -129,7 +129,7 @@ bool __stdcall SetEnableFileLog()
     INSTALL_DUMP(_at.SetEnableFileLog());
 }
 
-#include "Ver.h"
+#include "module.version.h"
 bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 {
     INSTALL_DUMP(GetCoreCompileVersion(version_buff, buff_size));

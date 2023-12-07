@@ -1,5 +1,4 @@
 #pragma once
-#ifdef USED_BINARY_IMAGE
 #include "paimon/resources.binary.image.paimon.h"
 #include "cailb/resources.binary.image.cailb.h"
 #include "star/resources.binary.image.star.h"
@@ -14,13 +13,11 @@
 #include "uid/resources.binary.image.uid7.h"
 #include "uid/resources.binary.image.uid8.h"
 #include "uid/resources.binary.image.uid9.h"
-#endif
 
 namespace TianLi::Resources::Binary::Image
 {
 	const unsigned char* image_list[] =
 	{
-#ifdef USED_BINARY_IMAGE
 		Png::cailb,
 		Png::paimon,
 		Bmp::star,
@@ -35,13 +32,9 @@ namespace TianLi::Resources::Binary::Image
 		Bmp::uid7,
 		Bmp::uid8,
 		Bmp::uid9
-#else
-		nullptr
-#endif
 	};
 	const size_t image_size[]=
 	{
-#ifdef USED_BINARY_IMAGE
 		sizeof(Png::cailb),
 		sizeof(Png::paimon),
 		sizeof(Bmp::star),
@@ -56,13 +49,9 @@ namespace TianLi::Resources::Binary::Image
 		sizeof(Bmp::uid7),
 		sizeof(Bmp::uid8),
 		sizeof(Bmp::uid9)
-#else
-		0
-#endif
 	};
 	const char* image_name[] =
 	{
-#ifdef USED_BINARY_IMAGE
 		"cailb",
 		"paimon",
 		"star",
@@ -77,8 +66,5 @@ namespace TianLi::Resources::Binary::Image
 		"uid7",
 		"uid8",
 		"uid9"
-#else
-		nullptr
-#endif
 	};
 }

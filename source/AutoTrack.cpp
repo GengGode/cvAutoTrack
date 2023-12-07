@@ -17,7 +17,7 @@
 
 #include "genshin/genshin.h"
 
-#include "version/Version.h"
+#include "resource/version.h"
 #include "utils/convect.string.h"
 
 ErrorCode &err = ErrorCode::getInstance();
