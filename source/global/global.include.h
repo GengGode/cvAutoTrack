@@ -4,14 +4,10 @@ namespace tianli::global
 {
     class error_info
     {
-
     };
     class error_resigter
     {
-
     };
-
-
 
     // 日志基类
     class logger
@@ -25,7 +21,8 @@ namespace tianli::global
             error,
             fatal
         };
-        virtual void write(level lv, const char* msg) = 0;
+        logger() = default;
+        virtual void write(level lv, const char *msg) { return; }
     };
-    
+
 } // namespace tianli::global

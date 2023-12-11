@@ -1,14 +1,14 @@
 #pragma once
-#include "../global/global.include.h"
-#include "../capture/capture.include.h"
+#include "global/global.include.h"
+#include "capture.include.h"
 #include "utils/utils.window.h"
 
-namespace tianli::capture
+namespace tianli::frame::capture
 {
-    class capture_bitblt : public tianli::capture_source
+    class capture_bitblt : public capture_source
     {
     public:
-        capture_bitblt(std::shared_ptr<global::logger> logger = nullptr) : tianli::capture_source(logger)
+        capture_bitblt(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger)
         {
             this->type = source_type::bitblt;
         }
@@ -41,8 +41,6 @@ namespace tianli::capture
         {
             if (callback == nullptr)
                 return false;
-            if (this->source_handle_callback == callback)
-                return true;
             if (uninitialized() == false)
                 return false;
             this->source_handle_callback = callback;
@@ -77,10 +75,11 @@ namespace tianli::capture
             BitBlt(hmemdc, 0, 0, client_size.width, client_size.height, hdc, 0, 0, SRCCOPY);
             DeleteDC(hmemdc);
             ReleaseDC(handle, hdc);
-            GetObject(hbitmap, sizeof(BITMAP), &this->source_bitmap);
-            int nChannels = this->source_bitmap.bmBitsPixel == 1 ? 1 : this->source_bitmap.bmBitsPixel / 8;
-            this->source_frame.create(cv::Size(this->source_bitmap.bmWidth, this->source_bitmap.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
-            GetBitmapBits(hbitmap, this->source_bitmap.bmHeight * this->source_bitmap.bmWidth * nChannels, this->source_frame.data);
+            BITMAP source_bitmap;
+            GetObject(hbitmap, sizeof(BITMAP), &source_bitmap);
+            int nChannels = source_bitmap.bmBitsPixel == 1 ? 1 : source_bitmap.bmBitsPixel / 8;
+            this->source_frame.create(cv::Size(source_bitmap.bmWidth, source_bitmap.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
+            GetBitmapBits(hbitmap, source_bitmap.bmHeight * source_bitmap.bmWidth * nChannels, this->source_frame.data);
             this->source_frame = this->source_frame(cv::Rect(client_rect.left, client_rect.top, client_size.width, client_size.height));
             if (this->source_frame.empty())
                 return false;
