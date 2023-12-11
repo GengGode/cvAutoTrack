@@ -128,6 +128,7 @@ void SurfMatch::match()
     bool calc_is_faile = false;
     is_success_match = false;
     pos = match_no_continuity(calc_is_faile);
+    is_success_match = !calc_is_faile;
 }
 
 
