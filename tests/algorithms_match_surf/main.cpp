@@ -5,47 +5,11 @@
 #include <fmt/format.h>
 #include "algorithms/algorithms.feature.h"
 #include "algorithms/container/container.set.h"
+#include "algorithms/match/match.surf.h"
 #include "resources/Resources.h"
 
 using namespace tianli::algorithms::feature;
-#include <psapi.h>
 
-
-double test_time(int max_width, int max_height, std::vector<std::shared_ptr<point_index>> key_point_objects)
-{
-    int test_cycle = 100;
-    int test_count = 0;
-
-    auto start = std::chrono::high_resolution_clock::now();
-
-    int mem_used_before = 0;
-    int mem_used_after = 0;
-
-    PROCESS_MEMORY_COUNTERS pmc;
-    auto mem_info = GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-    if (mem_info)
-    {
-        mem_used_before = pmc.WorkingSetSize;
-    }
-
-    for (int i = 0; i < test_cycle; i++)
-    {
-        test_count++;
-        auto item_set = tianli::algorithms::container::tree(key_point_objects);
-
-        mem_info = GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
-        if (mem_info)
-        {
-            mem_used_after = pmc.WorkingSetSize;
-        }
-
-        double mem_used = (mem_used_after - mem_used_before) / 1024.0 / 1024.0;
-        std::cout << "test_count:" << test_count << " mem_used:" << mem_used << std::endl;
-    }
-
-    auto end = std::chrono::high_resolution_clock::now();
-    return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / 1000000.0 / 100.0;
-}
 int main(int v, char *s[])
 {
     features fts;
@@ -78,6 +42,13 @@ int main(int v, char *s[])
     auto item_set = tianli::algorithms::container::tree(key_point_objects);
     item_set.print();
 
-    auto r = test_time(max_width, max_height, key_point_objects);
-    std::cout << "time:" << r << " ms\n";
+    auto some_key_points = item_set.find(cv::Rect(0, 0, 100, 100));
+    std::cout << "some_key_points size:" << some_key_points.size() << "\n";
+    auto some_fts = join(fts, some_key_points);
+    std::cout << "some_fts size:" << some_fts.size() << "\n";
+
+    auto true_r = tianli::algorithms::match::match_features(some_fts, some_fts);
+    std::cout << "match size:" << true_r.size() << "\n";
+    auto r = tianli::algorithms::match::match_features(fts, some_fts);
+    std::cout << "match size:" << r.size() << "\n";
 }

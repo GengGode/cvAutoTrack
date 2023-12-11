@@ -1,23 +1,14 @@
 #pragma once
 #include "algorithms.include.h"
 
-namespace tianli::algorithms::features
+namespace tianli::algorithms::feature
 {
-    struct features
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
     {
-        std::vector<size_t> indexs;
-        std::vector<cv::KeyPoint> keypoints;
-        cv::Mat descriptors;
-
-        size_t size() const { return keypoints.size(); }
-
-        static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
-        {
-            features fts;
-            detector->detectAndCompute(image, mask, fts.keypoints, fts.descriptors);
-            return fts;
-        }
-    };
+        features fts;
+        detector->detectAndCompute(image, mask, fts.keypoints, fts.descriptors);
+        return fts;
+    }
 
     static features merge(const features &features_upper, const features &features_lower)
     {
@@ -65,5 +56,23 @@ namespace tianli::algorithms::features
         features_vec.insert(features_vec.begin(), end_features);
         return features_vec;
     }
-
+    
+    static features join(const features &fts, std::vector<std::shared_ptr<point_index>> result)
+    {
+        features res;
+        res.keypoints = std::vector<cv::KeyPoint> (result.size());
+        res.descriptors = cv::Mat(result.size(), 64, CV_32F);
+        int index = 0;
+        for (const auto &item : result)
+        {
+            auto keypoint_ptr = std::dynamic_pointer_cast<keypoint_index>(item);
+            // 组合关键点
+            res.keypoints[index] = *keypoint_ptr->kp;
+            // 组合描述子
+            auto descriptor = fts.descriptors.row(keypoint_ptr->index);
+            descriptor.copyTo(res.descriptors.row(index));
+            index++;
+        }
+        return res;
+    }
 } // namespace tianli::algorithms

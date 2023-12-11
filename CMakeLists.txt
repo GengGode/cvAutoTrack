@@ -13,6 +13,11 @@ set(ThridPatryDir ${CMAKE_SOURCE_DIR}/third_party)
 set(IncludeDir ${CMAKE_SOURCE_DIR}/include)
 set(SourceDir ${CMAKE_SOURCE_DIR}/source)
 
+include_directories(${IncludeDir})
+include_directories(${ThridPatryDir})
+include_directories(${DependentPatryDir})
+
+
 # 设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -33,6 +38,9 @@ Set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "cmake_targets")
 # 包含子项目
 add_subdirectory(source)
 if(BUILD_CVAUTOTRACK_TESTS)
-    message(STATUS  "编译测试")
+    message(STATUS  "编译内容：cvAutoTrack, tests")
     add_subdirectory(tests)
+    else()
+    message(STATUS  "编译内容：cvAutoTrack | 不编译tests")
+    message(STATUS  "   (如果需要编译tests，请设置BUILD_CVAUTOTRACK_TESTS=ON)")
 endif()
