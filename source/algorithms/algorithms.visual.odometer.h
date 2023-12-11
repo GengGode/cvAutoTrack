@@ -1,5 +1,6 @@
 #pragma once
 #include "algorithms.include.h"
+#include "algorithms.solve.linear.h"
 
 // 视觉里程计
 // 每次小地图更新时调用
@@ -93,6 +94,19 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
     // cv::drawMatches(img1_cp, kp1, img2_cp, kp2, good_matches, img2_copy);
     // cv::imwrite("good_matches.jpg", img2_copy);
 
+    // 通过solve linear 获得缩放、dx、dy
+    // make good matches to src and dst
+    std::vector<cv::Point2f> src, dst;
+    for (int i = 0; i < good_matches.size(); i++) {
+        src.push_back(kp1[good_matches[i].queryIdx].pt);
+        dst.push_back(kp2[good_matches[i].trainIdx].pt);
+    }
+    double s, dx, dy;
+    solve_linear_s_dx_dy(src, dst, s, dx, dy);
+
+    cout<<"s: "<<s<<" dx: "<<dx<<" dy: "<<dy<<endl;
+
+
     // 计算偏移量，直接取平均
     cv::Point2f sum_offset(0, 0);
     for (int i = 0; i < good_matches.size(); i++) {
@@ -102,7 +116,7 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
 #ifdef _DEBUG
     auto end_time = std::chrono::steady_clock::now();
     auto time_cost = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
-    std::cout << "orb match time cost: " << time_cost << " ms" << std::endl;
+    // std::cout << "orb match time cost: " << time_cost << " ms" << std::endl;
 #endif
     return true;
 }

@@ -3,6 +3,7 @@
 #include "match/type/MatchType.h"
 #include "resources/Resources.h"
 #include "utils/Utils.h"
+#include "algorithms/algorithms.solve.linear.h"
 
 
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale)
@@ -172,7 +173,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 #ifdef _DEBUG
     auto end_time = std::chrono::steady_clock::now();
     auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
-    std::cout<<"detect_and_compute time cost: " << cost_time << " ms" << std::endl;
+    // std::cout<<"detect_and_compute time cost: " << cost_time << " ms" << std::endl;
 #endif
     // 没有提取到特征点直接返回，结果无效
     if (mini_map.keypoints.size() == 0)
@@ -188,7 +189,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 #ifdef _DEBUG
     end_time = std::chrono::steady_clock::now();
     cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
-    std::cout << "match time cost: " << cost_time << " ms" << std::endl;
+    // std::cout << "match time cost: " << cost_time << " ms" << std::endl;
 #endif
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
@@ -199,6 +200,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
         calc_is_faile = true;
         return map_pos;
     }
+    // TODO：solve linear
 
     std::vector<double> lisx;
     std::vector<double> lisy;
