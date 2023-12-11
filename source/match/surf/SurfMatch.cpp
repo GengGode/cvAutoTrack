@@ -87,12 +87,6 @@ std::pair<std::vector<cv::Point2d>, double> judges_scale(std::vector<TianLi::Uti
     return stdev_a > stdev_b ? std::make_pair(scale_a_list, stdev_a) : std::make_pair(scale_a_list, stdev_a);
 }
 
-
-void SurfMatch::setMap_Dbg(cv::Mat gi_map)
-{
-    _mapMat = gi_map;
-}
-
 void SurfMatch::setMiniMap(cv::Mat miniMapMat)
 {
     _miniMapMat = miniMapMat;
@@ -104,20 +98,24 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     map.keypoints = std::move(cache_info->key_points);
     map.descriptors = std::move(cache_info->descriptors);
 
+    //如果图像非空，则设定调试图像
+    if (Resources::getInstance().DbgMap.empty())
+    {
+        _mapMat = Resources::getInstance().DbgMap;
+    }
+
     double hessian_threshold = cache_info->setting.hessian_threshold;
-    int octave = cache_info->setting.octave;
+    int octaves = cache_info->setting.octaves;
     int octave_layers = cache_info->setting.octave_layers;
     bool extended = cache_info->setting.extended;
     bool upright = cache_info->setting.up_right;
-    matcher = Match(hessian_threshold, octave, octave_layers, extended, upright);
+    matcher = Match(hessian_threshold, octaves, octave_layers, extended, upright);
     isInit = true;
 }
 
 void SurfMatch::UnInit()
 {
     if (!isInit)return;
-    _mapMat.release();
-    _mapMat = cv::Mat();
     map.keypoints.clear();
     map.descriptors.release();
     isInit = false;

@@ -67,13 +67,6 @@ public:
 
     bool is_success_match = false;
 
-    /**
-     * @brief 新算法不再硬性需求匹配图，为了保持兼容性，保留设置图像的接口
-     * @brief 请仅在调试时使用，以显示特征点的生成情况
-     * @brief 请勿在发行版中使用，否则程序效率会受到影响
-     * @param gi_map 调试使用的匹配图
-    */
-    void setMap_Dbg(cv::Mat gi_map);
     void setMiniMap(cv::Mat miniMapMat);
     void Init(std::shared_ptr<trackCache::CacheInfo> cache_info);
     void UnInit();

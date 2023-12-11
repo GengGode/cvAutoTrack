@@ -20,10 +20,10 @@
 #include "resource/version.h"
 #include "utils/convect.string.h"
 
-ErrorCode &err = ErrorCode::getInstance();
-Resources &res = Resources::getInstance();
+ErrorCode& err = ErrorCode::getInstance();
+Resources& res = Resources::getInstance();
 
-AutoTrack::AutoTrack() 
+AutoTrack::AutoTrack()
 {
     err.enableWirteFile();
 
@@ -250,7 +250,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
     cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
     auto path = utils::to_utf8(path_buff);
-    
+
     bool rel = cv::imwrite(path_buff, out_info_img);
 
     if (!rel)
@@ -704,7 +704,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
     return false;
 }
 
-bool AutoTrack::GetInfoLoadVideo(const char* path,const  char* pathOutFile)
+bool AutoTrack::GetInfoLoadVideo(const char* path, const  char* pathOutFile)
 {
     UNREFERENCED_PARAMETER(path);
     UNREFERENCED_PARAMETER(pathOutFile);
@@ -861,3 +861,13 @@ bool AutoTrack::getMiniMapRefMat()
 
     return true;
 }
+
+#ifdef _DEBUG
+bool AutoTrack::LoadDbgMapImg(const char* path)
+{
+    // 读取调试地图
+    res.DbgMap = cv::imread(path);
+    return true;
+}
+#endif // _DEBUG
+

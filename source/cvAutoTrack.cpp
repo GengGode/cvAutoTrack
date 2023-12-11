@@ -12,7 +12,7 @@
 	return at_func
 #define UNINIT_RETURN()\
     if(_inited.load()==false) return false;
-    
+
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
 
@@ -30,7 +30,7 @@ bool CVAUTOTRACK_API uninit()
 #ifdef _DEBUG
 bool CVAUTOTRACK_API LoadDbgMapImg(const char* path)
 {
-    return false;
+    return _at.LoadDbgMapImg(path);
 }
 #endif // _DEBUG
 
