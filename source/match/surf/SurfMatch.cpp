@@ -461,7 +461,7 @@ Match::Match(double hessian_threshold, int octaves, int octave_layers, bool exte
 std::vector<std::vector<cv::DMatch>> Match::match(const cv::Mat& query_descriptors, const cv::Mat& train_descriptors)
 {
     std::vector<std::vector<cv::DMatch>> match_group;
-    matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+    matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE);
     matcher->knnMatch(query_descriptors, train_descriptors, match_group, 2);
     return match_group;
 }
