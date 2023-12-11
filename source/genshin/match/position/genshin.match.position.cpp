@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "genshin.match.position.h"
 
 #include "resources/Resources.h"
@@ -167,7 +167,15 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 
     surf_match.setMiniMap(genshin_minimap.img_minimap);
 
+#ifdef _DEBUG
+    auto beg_time = std::chrono::steady_clock::now();
+#endif
     surf_match.match();
+#ifdef _DEBUG
+    auto end_time = std::chrono::steady_clock::now();
+    auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
+    cout << "match cost time: " << cost_time << " match success: "<< surf_match.is_success_match << endl;
+#endif
 
     out_genshin_position.position = surf_match.getLocalPos();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
@@ -189,7 +197,7 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
         if (ms_valid) {
             filt_pos = out_genshin_position.config.pos_filter->update(pos);
         }
-        
+
         // 特判tp之后
         if (!od_valid && ms_valid) {
             filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);

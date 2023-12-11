@@ -165,7 +165,15 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     cv::resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
     // 小地图区域计算特征点
+#ifdef _DEBUG
+    auto beg_time = std::chrono::steady_clock::now();
+#endif
     matcher.detect_and_compute(img_object, mini_map);
+#ifdef _DEBUG
+    auto end_time = std::chrono::steady_clock::now();
+    auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
+    std::cout<<"detect_and_compute time cost: " << cost_time << " ms" << std::endl;
+#endif
     // 没有提取到特征点直接返回，结果无效
     if (mini_map.keypoints.size() == 0)
     {
@@ -173,7 +181,15 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
         return map_pos;
     }
     // 匹配特征点
+#ifdef _DEBUG
+    beg_time = std::chrono::steady_clock::now();
+#endif
     std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(mini_map, map);
+#ifdef _DEBUG
+    end_time = std::chrono::steady_clock::now();
+    cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
+    std::cout << "match time cost: " << cost_time << " ms" << std::endl;
+#endif
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
     TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);

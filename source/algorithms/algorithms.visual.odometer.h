@@ -50,6 +50,9 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
 // 几乎必然是同比例的，返回偏移量
 bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
 {
+#ifdef _DEBUG
+    auto beg_time = std::chrono::steady_clock::now();
+#endif
     // 不crop了，因为上一张会被crop两次。
     auto img1_cp = TianLi::Utils::crop_border(img1, 0.15);
     auto img2_cp = TianLi::Utils::crop_border(img2, 0.15);
@@ -96,5 +99,10 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
         sum_offset += kp2[good_matches[i].trainIdx].pt - kp1[good_matches[i].queryIdx].pt;
     }
     offset = cv::Point2f(sum_offset.x / good_matches.size(), sum_offset.y / good_matches.size());
+#ifdef _DEBUG
+    auto end_time = std::chrono::steady_clock::now();
+    auto time_cost = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
+    std::cout << "orb match time cost: " << time_cost << " ms" << std::endl;
+#endif
     return true;
 }
