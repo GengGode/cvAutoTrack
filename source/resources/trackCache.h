@@ -19,16 +19,17 @@ namespace trackCache
     struct Setting
     {
         std::string version = "1.0.0";
-        int32_t octave = 1;
+        int32_t octaves = 1;
         int32_t octave_layers = 1;
         float_t hessian_threshold = 1.0;
         bool extended = false;
         bool up_right = false;
+        cv::Rect2i roi = cv::Rect(0, 0, 0, 0);        //坐标的总范围
         //序列化模板
         template <class Archive>
         void serialize(Archive& ar)
         {
-            ar(version, extended, up_right, octave, octave_layers, hessian_threshold);
+            ar(version, extended, up_right, octaves, octave_layers, hessian_threshold, roi.x, roi.y, roi.width, roi.height);
         }
     };
 
