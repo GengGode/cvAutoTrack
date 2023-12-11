@@ -37,6 +37,9 @@ Kalman::~Kalman()
 
 cv::Point2d Kalman::filterting(const cv::Point2d& pos, const cv::Point2f& u_k)
 {
+	// KF中弃用！
+	// 若要调用，相当于调用了一次predict和一次update
+
 	// use u_k to predict
 	// make u_k to cv::Mat
 	cv::Mat u_k_mat = cv::Mat::zeros(controlNum, 1, CV_32F);
@@ -56,20 +59,6 @@ cv::Point2d Kalman::filterting(const cv::Point2d& pos, const cv::Point2f& u_k)
 	return resP;
 }
 
-cv::Point2d Kalman::filterting(const cv::Point2f& u_k)
-{
-	// use u_k to predict
-	// make u_k to cv::Mat
-	cv::Mat u_k_mat = cv::Mat::zeros(controlNum, 1, CV_32F);
-	u_k_mat.at<float>(0, 0) = u_k.x;
-	u_k_mat.at<float>(1, 0) = u_k.y;
-	cv::Mat prediction = KF.predict(u_k_mat);
-	cv::Point2d predictPt = cv::Point2d(prediction.at<float>(0), prediction.at<float>(1));
-
-	// with no measurement
-
-	return predictPt;
-}
 
 cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 {
@@ -85,6 +74,29 @@ cv::Point2d Kalman::re_init_filterting(const cv::Point2d& pos)
 	measurement.at<float>(1, 0) = static_cast<float>(pos.y);
 	KF.correct(measurement);
 
+	cv::Point2d resP = cv::Point2d(KF.statePost.at<float>(0), KF.statePost.at<float>(1));
+	return resP;
+}
+
+cv::Point2d Kalman::predict(const cv::Point2f& u_k)
+{
+	// use u_k to predict
+	// make u_k to cv::Mat
+	cv::Mat u_k_mat = cv::Mat::zeros(controlNum, 1, CV_32F);
+	u_k_mat.at<float>(0, 0) = u_k.x;
+	u_k_mat.at<float>(1, 0) = u_k.y;
+	cv::Mat prediction = KF.predict(u_k_mat);
+	cv::Point2d predictPt = cv::Point2d(prediction.at<float>(0), prediction.at<float>(1));
+	return predictPt;
+}
+
+cv::Point2d Kalman::update(const cv::Point2d& pos)
+{
+	// update measurement
+	measurement.at<float>(0, 0) = static_cast<float>(pos.x);
+	measurement.at<float>(1, 0) = static_cast<float>(pos.y);
+	// update
+	KF.correct(measurement);
 	cv::Point2d resP = cv::Point2d(KF.statePost.at<float>(0), KF.statePost.at<float>(1));
 	return resP;
 }

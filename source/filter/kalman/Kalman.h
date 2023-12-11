@@ -10,8 +10,11 @@ public:
 	// not must one predict one correct
 	// predict x for n times -> correct
 	virtual cv::Point2d filterting(const cv::Point2d &pos, const cv::Point2f &u_k) override;
-	cv::Point2d filterting(const cv::Point2f &u_k);
 	virtual cv::Point2d re_init_filterting(const cv::Point2d& pos) override;
+
+	virtual cv::Point2d predict(const cv::Point2f &u_k) override;
+	virtual cv::Point2d update(const cv::Point2d &pos) override;
+
 private:
 	int stateNum = 2;
 	int measureNum = 2;
