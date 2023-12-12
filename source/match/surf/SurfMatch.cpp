@@ -227,6 +227,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     scale_mini2map = s;
 
     #ifdef _FULL_LINEAR_SOLVE
+    {
         // 组装 ^W_A T
         cv::Mat affine_mat = cv::Mat::eye(3, 3, CV_64F);
         affine_mat.at<double>(0, 0) = s;
@@ -238,6 +239,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
         A_origin_in_coor_A.at<double>(0, 2) = 1.0;
         cv::Mat A_origin_in_coor_M = affine_mat * A_origin_in_coor_A;
         return cv::Point2d(A_origin_in_coor_M.at<double>(0, 0), A_origin_in_coor_M.at<double>(1, 0));
+    }
     #endif
 
 #endif
