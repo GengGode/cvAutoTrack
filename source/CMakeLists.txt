@@ -65,6 +65,7 @@ add_library(cvAutoTrack SHARED ${InfaceHppFile}
 
 set_target_properties(cvAutoTrack PROPERTIES VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH})
 set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
+set_target_properties(cvAutoTrack PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
         
 if(MSVC)
@@ -121,3 +122,4 @@ if(WITH_DYNAMIC_OPENCV)
     add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_CONFIG_PATH}/../bin/opencv_world480$<$<CONFIG:Debug>:d>.dll" "$<TARGET_FILE_DIR:cvAutoTrack>") 
 endif()
 add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
+set_target_properties(copy_version_file PROPERTIES FOLDER "scripts")
