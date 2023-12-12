@@ -7,6 +7,7 @@ double lastRotate = 0;
 
 void rotation_calculation(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);			//算法1，基于Alpha通道，高精度
 void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);	//算法2，基于屏幕空间，低精度
+void rotation_calculation_3nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);	//算法3，YUV空间，低精度
 
 void rotation_calculation(cv::Mat& giMiniMapRef, double&a, rotation_calculation_config& config)
 {
@@ -137,3 +138,16 @@ void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, rotation_calcula
 	lastRotate = a;
 	return;
 }
+
+// TODO: 未完成
+void rotation_calculation_3nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config)
+{
+	cv::Mat yuv;
+	cv::cvtColor(giMiniMapRef, yuv, cv::COLOR_BGR2YUV);
+	std::vector<cv::Mat> yuv_channels;
+	cv::split(yuv, yuv_channels);
+	cv::Mat y = yuv_channels[0];
+	cv::Mat u = yuv_channels[1];
+	cv::Mat v = yuv_channels[2];
+}
+

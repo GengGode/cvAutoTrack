@@ -3,6 +3,8 @@
 
 
 double last_direction = 0;
+void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config);
+void direction_calculation_2nd(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config);
 
 void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config)
 {
@@ -96,4 +98,9 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 		return;
 	}
 	last_direction = a;
+}
+
+void direction_calculation_2nd(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config)
+{
+	
 }
