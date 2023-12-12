@@ -220,9 +220,9 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     auto liear_valid = solve_linear_s_dx_dy(src, dst, s, dx, dy);
     if (!liear_valid)
     {
-        // goto old_style;
-        calc_is_faile = true;
-        return map_pos;
+        goto old_style;
+        // calc_is_faile = true;
+        // return map_pos;
     }
     scale_mini2map = s;
 
@@ -241,7 +241,7 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     #endif
 
 #endif
-
+old_style:
     std::vector<double> lisx;
     std::vector<double> lisy;
     TianLi::Utils::RemoveKeypointOffset(keypoint_list, 1.3 / minimap_scale_param, lisx, lisy);
