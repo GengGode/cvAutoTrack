@@ -1,13 +1,7 @@
-#pragma once
-#include "algorithms.include.h"
-
-// 从匹配点对求解带仅缩放、dx和dy的线性方程
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::Point2f> &dst, double &s, double &dx, double &dy);
+#include "algorithms.solve.linear.h"
 
 
-
-
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::Point2f> &dst, double &s, double &dx, double &dy)
+bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::Point2f> &dst, double &s, double &dx, double &dy)
 {
     // assert(src.size() == dst.size());
     // assert(src.size() >= 2);
@@ -33,10 +27,6 @@ inline bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::
     }
     // 最小二乘
     cv::Mat x = (A.t() * A).inv() * A.t() * b;
-    // cv::solve + SVD
-    // cv::Mat x;
-    // cv::solve(A, b, x, cv::DECOMP_SVD);
-
     s = x.at<double>(0, 0);
     dx = x.at<double>(1, 0);
     dy = x.at<double>(2, 0);

@@ -67,6 +67,8 @@
 // fmt
 #include <fmt/format.h>
 
+#define _DEBUG
+
 #ifdef BUILD_CAPTURE_DXGI
 // D3D
 #include <d3d11_4.h>

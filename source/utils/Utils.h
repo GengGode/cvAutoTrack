@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 namespace TianLi::Utils
 {
@@ -71,10 +72,23 @@ namespace TianLi::Utils
     //绘制好的特征点
     void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
     //计算好的特征点
-    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints);
+    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, 
+                           std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, 
+                           double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints,
+                           std::vector<cv::DMatch>& good_matches);
 
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
     bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int& ret);
+
+    // copy from openvslam
+    std::mt19937 create_random_engine();
+    std::vector<unsigned int> create_random_array(const size_t size, const unsigned int rand_min, const unsigned int rand_max);
+    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2f>& normalized_pts, cv::Mat& transform);
+
+    template<typename T>
+    static cv::Mat to_homogeneous(T& pt) {
+        return (cv::Mat_<double>(3, 1) << pt.x, pt.y, 1.0);
+    }
 
 }

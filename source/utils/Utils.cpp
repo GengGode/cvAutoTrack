@@ -313,13 +313,13 @@ namespace TianLi::Utils
         drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
         drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
     }
-
-    namespace CalcMatch
+    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, 
+                           cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, 
+                           std::vector<std::vector<cv::DMatch>>& KNN_m, 
+                           double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints, 
+                           std::vector<cv::DMatch>& good_matches)
     {
-        void calc_good_matches_show(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints)
-        {
-            UNREFERENCED_PARAMETER(img_scene);
-            for (size_t i = 0; i < KNN_m.size(); i++)
+        for (size_t i = 0; i < KNN_m.size(); i++)
             {
                 if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
                 {
@@ -327,17 +327,13 @@ namespace TianLi::Utils
                     {
                         continue;
                     }
+                    good_matches.push_back(KNN_m[i][0]);
                     good_keypoints.push_back({{img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
                                                img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
                                               {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}});
                 }
             }
-        }
-    }
 
-    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints)
-    {
-        CalcMatch::calc_good_matches_show(img_scene, keypoint_scene, img_object, keypoint_object, KNN_m, ratio_thresh, good_keypoints);
     }
 
     // 注册表读取
@@ -405,4 +401,108 @@ namespace TianLi::Utils
         RegCloseKey(hKey);
         return true;
     }
+
+    std::mt19937 create_random_engine() {
+        std::random_device random_device;
+        std::vector<std::uint_least32_t> v(10);
+        std::generate(v.begin(), v.end(), std::ref(random_device));
+        std::seed_seq seed(v.begin(), v.end());
+        return std::mt19937(seed);
+    }
+
+    std::vector<unsigned int> create_random_array(const size_t size, const unsigned int rand_min, const unsigned int rand_max) {
+        assert(rand_min <= rand_max);
+        assert(size <= static_cast<size_t>(rand_max - rand_min + 1));
+
+        // メルセンヌ・ツイスタ作成
+        // 翻译：创建梅森旋转器
+        auto random_engine = create_random_engine();
+        std::uniform_int_distribution<unsigned int> uniform_int_distribution(rand_min, rand_max);
+
+        // sizeより少し大きくランダム数列(重複あり)を作成する
+        // 翻译：比size稍大的随机数列（可能有重复项）
+        const auto make_size = static_cast<size_t>(size * 1.2);
+
+        // vがsizeになるまで繰り返す
+        // 翻译：重复直到v的大小为size
+        std::vector<unsigned int> v;
+        v.reserve(size);
+        while (v.size() != size) {
+            // ランダム整数列を順に追加(重複がある可能性がある)
+            // 翻译：按顺序添加随机整数列（可能有重复项）
+            while (v.size() < make_size) {
+                v.push_back(uniform_int_distribution(random_engine));
+            }
+
+            // ソートして重複を除く -> 重複が除かれた数列の末尾のイテレータがunique_endに入る
+            // 翻译：排序并删除重复项->唯一末尾的迭代器进入unique_end
+            std::sort(v.begin(), v.end());
+            auto unique_end = std::unique(v.begin(), v.end());
+
+            // vのサイズが大きすぎたら，sizeまでのイテレータに変えておく
+            // 翻译：如果v的大小太大，则将其更改为迭代器大小
+            if (size < static_cast<size_t>(std::distance(v.begin(), unique_end))) {
+                unique_end = std::next(v.begin(), size);
+            }
+
+            // 重複部分から最後までを削除する
+            // 翻译：删除重复部分到最后
+            v.erase(unique_end, v.end());
+        }
+
+        // 昇順になっているのでシャッフル
+        // 翻译：因为它是升序的，所以洗牌
+        std::shuffle(v.begin(), v.end(), random_engine);
+
+        return v;
+    }
+    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2f>& normalized_pts, cv::Mat& transform) {
+        double mean_x = 0;
+        double mean_y = 0;
+        const auto num_keypts = keypts.size();
+
+        normalized_pts.resize(num_keypts);
+
+        for (const auto& keypt : keypts) {
+            mean_x += keypt.pt.x;
+            mean_y += keypt.pt.y;
+        }
+        mean_x = mean_x / num_keypts;
+        mean_y = mean_y / num_keypts;
+
+        double mean_l1_dev_x = 0;
+        double mean_l1_dev_y = 0;
+
+        for (unsigned int index = 0; index < num_keypts; ++index) {
+            normalized_pts.at(index).x = keypts.at(index).pt.x - mean_x;
+            normalized_pts.at(index).y = keypts.at(index).pt.y - mean_y;
+
+            mean_l1_dev_x += std::abs(normalized_pts.at(index).x);
+            mean_l1_dev_y += std::abs(normalized_pts.at(index).y);
+        }
+
+        mean_l1_dev_x = mean_l1_dev_x / num_keypts;
+        mean_l1_dev_y = mean_l1_dev_y / num_keypts;
+
+        const double mean_l1_dev_x_inv = static_cast<double>(1.0) / mean_l1_dev_x;
+        const double mean_l1_dev_y_inv = static_cast<double>(1.0) / mean_l1_dev_y;
+
+        for (auto& normalized_pt : normalized_pts) {
+            normalized_pt.x *= mean_l1_dev_x_inv;
+            normalized_pt.y *= mean_l1_dev_y_inv;
+        }
+
+        transform = cv::Mat::eye(3, 3, CV_64F);
+        transform.at<double>(0, 0) = mean_l1_dev_x_inv;
+        transform.at<double>(1, 1) = mean_l1_dev_y_inv;
+        transform.at<double>(0, 2) = -mean_x * mean_l1_dev_x_inv;
+        transform.at<double>(1, 2) = -mean_y * mean_l1_dev_y_inv;
+
+        // transform(0, 0) = mean_l1_dev_x_inv;
+        // transform(1, 1) = mean_l1_dev_y_inv;
+        // transform(0, 2) = -mean_x * mean_l1_dev_x_inv;
+        // transform(1, 2) = -mean_y * mean_l1_dev_y_inv;
+    }
+
+
 }

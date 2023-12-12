@@ -111,6 +111,7 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     bool extended = cache_info->setting.extended;
     bool upright = cache_info->setting.up_right;
     matcher = Match(hessian_threshold, octave, octave_layers, extended, upright);
+    // 
     isInit = true;
 }
 
@@ -128,9 +129,279 @@ void SurfMatch::match()
 {
     bool calc_is_faile = false;
     is_success_match = false;
+    _mapMat = cv::Mat::zeros(2304, 1740, CV_8UC3);
     pos = match_no_continuity(calc_is_faile);
+
+    // pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
     is_success_match = !calc_is_faile;
 }
+
+
+
+cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out, 
+                                    int max_iter_num) 
+{
+    // 同样的，首先获得一组包含外点的匹配
+
+    // make the same name to copy the code 
+    auto& mather = this->matcher;
+    auto& map_mat = this->_mapMat;
+    auto& mini_map_mat = this->_miniMapMat;
+    auto& map = this->map;
+
+    
+    // return value
+    cv::Point2d map_pos;
+
+    // 提取小地图特征点
+    cv::Mat img_object = TianLi::Utils::crop_border(mini_map_mat, 0.15);
+    matcher.detect_and_compute(img_object, mini_map);
+    if (mini_map.keypoints.size() == 0)
+    {
+        calc_is_faile = true;
+        return map_pos;
+    }
+
+    // 通过最优比次优剔除部分较差的匹配点
+    // MD 筛完了，直接最优匹配先
+
+    matcher_bf = cv::BFMatcher::create(cv::NORM_L2, true);
+    // 直接match，不用knnmatch
+    std::vector<cv::DMatch> matches;
+    matcher_bf->match(mini_map.descriptors, map.descriptors, matches);
+
+    // draw match
+    cv::Mat img_matches;
+    cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, matches, img_matches);
+    cv::imwrite("match.jpg", img_matches);
+
+    std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
+    // trans to MatchKeyPoint
+    for (auto& match : matches)
+    {
+        TianLi::Utils::MatchKeyPoint tmp_keypoint;
+        tmp_keypoint.query = cv::Point2d(
+            img_object.cols / 2.0 - mini_map.keypoints[match.queryIdx].pt.x,
+            img_object.rows / 2.0 - mini_map.keypoints[match.queryIdx].pt.y
+        );
+        tmp_keypoint.train = map.keypoints[match.trainIdx].pt;
+        keypoint_list.push_back(tmp_keypoint);
+    }
+
+
+    // std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(mini_map, map);
+    // std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
+    // TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);
+    std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
+    if (keypoint_list.size() == 0 || keypoint_list.size() < 4) // add: < 3 constraint
+    {
+        calc_is_faile = true;
+        return map_pos;
+    }
+
+    // 然后请出RANSAC剔除外点
+    // 这里需要自行实现仅有缩放和平移的仿射变换的ransac
+
+    // 稍微处理一下名字以适应 openvslam 超来的代码
+    
+    auto best_score_ = 0.0;
+    auto& best_H_21_ = affine_mat_out;
+    const auto num_matches = static_cast<unsigned int>(keypoint_list.size());
+    this->undist_keypts_1.reserve(num_matches);
+    this->undist_keypts_2.reserve(num_matches);
+    for (unsigned int i = 0; i < num_matches; ++i) {
+        cv::KeyPoint t_p1 = cv::KeyPoint(keypoint_list.at(i).query, 1.0);
+        cv::KeyPoint t_p2 = cv::KeyPoint(keypoint_list.at(i).train, 1.0);
+        undist_keypts_1.push_back(t_p1);
+        undist_keypts_2.push_back(t_p2);
+    }
+
+
+    // 0. Normalize keypoint coordinates
+    std::vector<cv::Point2f> normalized_keypts_1, normalized_keypts_2;
+    cv::Mat transform_1, transform_2;
+    TianLi::Utils::normalize(undist_keypts_1, normalized_keypts_1, transform_1);
+    TianLi::Utils::normalize(undist_keypts_2, normalized_keypts_2, transform_2);
+    cv::Mat transform_2_inv = transform_2.inv();
+
+
+    // 1. Prepare for RANSAC
+    this->matches_12 = keypoint_list;
+
+    constexpr unsigned int min_set_size = 4; // homography 只需要4个点，openvslam用了8个点；这里也翻倍用4个点
+    // RANSAC variables
+    best_score_ = 0.0;
+    std::vector<bool> is_inlier_match_;
+
+
+    // 用于求解的最小集合
+    std::vector<cv::Point2f> min_set_keypts_1(min_set_size);
+    std::vector<cv::Point2f> min_set_keypts_2(min_set_size);
+    
+    // shared var in ransac loop
+    // homography matrix from shot 1 to shot 2, and
+    // homography matrix from shot 2 to shot 1
+    cv::Mat H_21_in_sac, H_12_in_sac;
+    // inlier/outlier flags
+    std::vector<bool> is_inlier_match_in_sac(num_matches, true);
+    // score of homography matrix
+    double score_in_sac;
+
+    // 2. RANSAC loop
+
+    for (unsigned int i = 0; i < max_iter_num; ++i) { // 好好好，用++i
+        // 2-1. 获取最小集合，这里是两个点
+        const auto idxs = TianLi::Utils::create_random_array(min_set_size, 0U, num_matches-1);
+        for (unsigned int j = 0; j < min_set_size; ++j) {
+            min_set_keypts_1.at(j) = normalized_keypts_1.at(idxs.at(j));
+            min_set_keypts_2.at(j) = normalized_keypts_2.at(idxs.at(j));
+        }
+
+        // 2-2. 求解仿射变换
+        cv::Mat normalized_H_21 = cv::Mat::eye(3, 3, CV_64F);
+        double s_, dx_, dy_;
+        solve_linear_s_dx_dy(min_set_keypts_1, min_set_keypts_2, s_, dx_, dy_);
+        // std::cout<<"s_: "<<s_<<" dx_: "<<dx_<<" dy_: "<<dy_<<std::endl;
+        normalized_H_21.at<double>(0, 0) = s_;
+        normalized_H_21.at<double>(0, 2) = dx_;
+        normalized_H_21.at<double>(1, 1) = s_;
+        normalized_H_21.at<double>(1, 2) = dy_;
+        // as types
+
+        H_21_in_sac = transform_2_inv * normalized_H_21 * transform_1;
+
+        // 2-3. 计算内点以及score
+        score_in_sac = check_inliers(H_21_in_sac, is_inlier_match_in_sac);
+        // std::cout<<"score_in_sac: "<<score_in_sac<<std::endl;
+        if (best_score_ < score_in_sac) {
+            best_score_ = score_in_sac;
+            is_inlier_match_ = is_inlier_match_in_sac;
+        }
+    }
+    std::cout<<"best_score_: "<<best_score_<<" is_inlier_match_.size(): "<<is_inlier_match_.size()<<std::endl;
+    auto num_inliers = std::count(is_inlier_match_.begin(), is_inlier_match_.end(), true);
+    auto solution_is_valid_ = (best_score_ > 0.0) && (num_inliers >= min_set_size); // the negative side of calc_is_faile
+    std::cout<<"solution_is_valid_: "<<solution_is_valid_<<"inliers: "<<num_inliers<<std::endl;
+
+    if (!solution_is_valid_) {
+        calc_is_faile = true;
+        return map_pos;
+    }
+
+    // 3. Recompute a homography matrix only with the inlier matches
+    std::vector<cv::Point2f> inlier_normalized_keypts_1;
+    std::vector<cv::Point2f> inlier_normalized_keypts_2;
+    inlier_normalized_keypts_1.reserve(matches_12.size());
+    inlier_normalized_keypts_2.reserve(matches_12.size());
+    for (unsigned int i = 0; i < num_matches; ++i) {
+        if (!is_inlier_match_.at(i)) {
+            continue;
+        }
+        inlier_normalized_keypts_1.push_back(normalized_keypts_1.at(i));
+        inlier_normalized_keypts_2.push_back(normalized_keypts_2.at(i));
+    }
+
+    cv::Mat normalized_H_21 = cv::Mat::eye(3, 3, CV_64F);
+    double s_, dx_, dy_;
+    solve_linear_s_dx_dy(inlier_normalized_keypts_1, inlier_normalized_keypts_2, s_, dx_, dy_);
+    normalized_H_21.at<double>(0, 0) = s_;
+    normalized_H_21.at<double>(0, 2) = dx_;
+    normalized_H_21.at<double>(1, 1) = s_;
+    normalized_H_21.at<double>(1, 2) = dy_;
+    best_H_21_ = transform_2_inv * normalized_H_21 * transform_1;
+    // best_score_ = check_inliers(best_H_21_, is_inlier_match_);
+
+    // 抄完了，该计算offset了
+    // H_21 实际上是 ^W_A T, 即 对于特征点P, 有 ^W P = T dot ^A P
+    // 为了得到坐标系A原点在世界坐标的位置，
+    // 实际就是变换矩阵的最后一列，即 T = [dx, dy, 1]^T
+
+    map_pos.x = best_H_21_.at<double>(0, 2);
+    map_pos.y = best_H_21_.at<double>(1, 2);
+    calc_is_faile = false;
+
+    return map_pos;
+
+}
+
+double SurfMatch::check_inliers(cv::Mat& H_21, std::vector<bool>& is_inlier_match) {
+    const auto num_matches = matches_12.size();
+    double sigma_ = 3.0f; // just hard code it, same as openvslam
+
+    // chi-squared value (p=0.05, n=2)
+    constexpr double chi_sq_thr = 5.99;
+
+    is_inlier_match.resize(num_matches);
+
+    const cv::Mat H_12 = H_21.inv();
+
+    double score = 0.0f;
+
+    const double inv_sigma_sq = 1.0 / (sigma_ * sigma_);
+
+    for (unsigned int i = 0; i < num_matches; ++i) {
+        // const auto& keypt_1 = undist_keypts_1.at(matches_12.at(i).first);
+        // const auto& keypt_2 = undist_keypts_2.at(matches_12.at(i).second);
+        const auto& keypt_1 = matches_12.at(i).query;
+        const auto& keypt_2 = matches_12.at(i).train;
+
+        // 1. Transform to homogeneous coordinates
+
+        auto pt_1 = TianLi::Utils::to_homogeneous(keypt_1);
+        auto pt_2 = TianLi::Utils::to_homogeneous(keypt_2);
+
+        // 2. Compute symmetric transfer error
+
+        // 2-1. Transform a point in shot 1 to the epipolar line in shot 2,
+        //      then compute a transfer error (= dot product)
+
+        cv::Mat transformed_pt_1 = H_21 * pt_1;
+        transformed_pt_1 = transformed_pt_1 / transformed_pt_1.at<double>(2);
+
+        cv::Mat delta_ = transformed_pt_1 - pt_2;
+        auto squared_norm = delta_.dot(delta_);
+        const double dist_sq_1 = squared_norm;
+
+        // standardization
+        const double chi_sq_1 = dist_sq_1 * inv_sigma_sq;
+
+        // if a match is inlier, accumulate the score
+        if (chi_sq_thr < chi_sq_1) {
+            is_inlier_match.at(i) = false;
+            continue;
+        }
+        else {
+            is_inlier_match.at(i) = true;
+            score += chi_sq_thr - chi_sq_1;
+        }
+
+        // 2. Transform a point in shot 2 to the epipolar line in shot 1,
+        //    then compute a transfer error (= dot product)
+
+        cv::Mat transformed_pt_2 = H_12 * pt_2;
+        transformed_pt_2 = transformed_pt_2 / transformed_pt_2.at<double>(2);
+
+        delta_ = transformed_pt_2 - pt_1;
+        squared_norm = delta_.dot(delta_);
+        const double dist_sq_2 = squared_norm;
+
+        // standardization
+        const double chi_sq_2 = dist_sq_2 * inv_sigma_sq;
+
+        // if a match is inlier, accumulate the score
+        if (chi_sq_thr < chi_sq_2) {
+            is_inlier_match.at(i) = false;
+            continue;
+        }
+        else {
+            is_inlier_match.at(i) = true;
+            score += chi_sq_thr - chi_sq_2;
+        }
+    }
+
+    return score;
+}
+
 
 
 
@@ -193,7 +464,13 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 #endif
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
-    TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);
+    std::vector<cv::DMatch> keypoint_list_dmatch;
+    TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list, keypoint_list_dmatch);
+
+    // 绘制匹配结果
+    cv::Mat img_matches;
+    cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);
+    cv::imwrite("match.jpg", img_matches);
 
     if (keypoint_list.size() == 0)
     {
@@ -202,48 +479,8 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     }
 
     auto scale_mini2map = 1.3 / minimap_scale_param;
-#ifdef USE_LINEAR_SOLVE_SCALE
+    std::cout<<"scale_mini2map: "<<scale_mini2map<<std::endl;
 
-    if (keypoint_list.size() < 2) {
-        calc_is_faile = true;
-        return map_pos;
-    }
-    // keypoint_list: 角色中心小地图坐标下的特征点 -> 大地图坐标下的特征点
-    // 使用基于线性方程的方法，求解s、dx、dy自由度的仿射变换 ^W_A T
-    double s, dx, dy;
-    std::vector<cv::Point2f> src, dst;
-    for (auto& keypoint : keypoint_list)
-    {
-        src.push_back(keypoint.query);
-        dst.push_back(keypoint.train);
-    }
-    auto liear_valid = solve_linear_s_dx_dy(src, dst, s, dx, dy);
-    if (!liear_valid)
-    {
-        goto old_style;
-        // calc_is_faile = true;
-        // return map_pos;
-    }
-    scale_mini2map = s;
-
-    #ifdef _FULL_LINEAR_SOLVE
-    {
-        // 组装 ^W_A T
-        cv::Mat affine_mat = cv::Mat::eye(3, 3, CV_64F);
-        affine_mat.at<double>(0, 0) = s;
-        affine_mat.at<double>(0, 2) = dx;
-        affine_mat.at<double>(1, 1) = s;
-        affine_mat.at<double>(1, 2) = dy;
-
-        cv::Mat A_origin_in_coor_A = cv::Mat::zeros(3, 1, CV_64F);
-        A_origin_in_coor_A.at<double>(0, 2) = 1.0;
-        cv::Mat A_origin_in_coor_M = affine_mat * A_origin_in_coor_A;
-        return cv::Point2d(A_origin_in_coor_M.at<double>(0, 0), A_origin_in_coor_M.at<double>(1, 0));
-    }
-    #endif
-
-#endif
-old_style:
     std::vector<double> lisx;
     std::vector<double> lisy;
     TianLi::Utils::RemoveKeypointOffset(keypoint_list, 1.3 / minimap_scale_param, lisx, lisy);

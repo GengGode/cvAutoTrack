@@ -53,6 +53,8 @@ public:
 
 public:
     Match matcher;
+    // 直接暴力匹配
+    cv::Ptr<cv::DescriptorMatcher> matcher_bf;
 
     Match::KeyMatPoint map;
     Match::KeyMatPoint some_map;
@@ -79,6 +81,16 @@ public:
     void UnInit();
     void match();
 
+    /**
+     * @brief 使用自行实现的ransac算法进行匹配
+     * @param calc_is_faile 是否计算失败
+     * @param affine_mat_out 输出的仿射矩阵
+     * @param max_iter_num 最大迭代次数
+     * @return 匹配的位置
+    */
+    cv::Point2d match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out, 
+                             int max_iter_num);
+
     cv::Point2d match_continuity(bool& calc_continuity_is_faile);
     cv::Point2d match_continuity_on_city(bool& calc_continuity_is_faile);
     cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
@@ -91,5 +103,12 @@ public:
 
 private:
     bool isMatchAllMap = true;
+
+    std::vector<cv::KeyPoint> undist_keypts_1, undist_keypts_2;
+    std::vector<TianLi::Utils::MatchKeyPoint> matches_12;
+    
+
+    double check_inliers(cv::Mat& H_21, std::vector<bool>& is_inlier_match);
+
 };
 
