@@ -88,7 +88,11 @@ namespace tianli::frame::capture
             frame = this->source_frame;
             return true;
         }
-
+        
+    private:
+        RECT source_rect = {0, 0, 0, 0};
+        RECT source_client_rect = {0, 0, 0, 0};
+        cv::Size source_client_size;
     };
 
 } // namespace tianli::capture

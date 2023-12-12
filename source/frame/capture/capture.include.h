@@ -19,9 +19,6 @@ namespace tianli::frame::capture
     protected:
         std::function<HWND()> source_handle_callback;
         HWND source_handle = nullptr;
-        RECT source_rect = {0, 0, 0, 0};
-        RECT source_client_rect = {0, 0, 0, 0};
-        cv::Size source_client_size;
         cv::Mat source_frame;
     };
 
