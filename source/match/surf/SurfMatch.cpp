@@ -200,7 +200,47 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
         calc_is_faile = true;
         return map_pos;
     }
-    // TODO：solve linear
+
+    auto scale_mini2map = 1.3 / minimap_scale_param;
+#ifdef USE_LINEAR_SOLVE_SCALE
+
+    if (keypoint_list.size() < 2) {
+        calc_is_faile = true;
+        return map_pos;
+    }
+    // keypoint_list: 角色中心小地图坐标下的特征点 -> 大地图坐标下的特征点
+    // 使用基于线性方程的方法，求解s、dx、dy自由度的仿射变换 ^W_A T
+    double s, dx, dy;
+    std::vector<cv::Point2f> src, dst;
+    for (auto& keypoint : keypoint_list)
+    {
+        src.push_back(keypoint.query);
+        dst.push_back(keypoint.train);
+    }
+    auto liear_valid = solve_linear_s_dx_dy(src, dst, s, dx, dy);
+    if (!liear_valid)
+    {
+        // goto old_style;
+        calc_is_faile = true;
+        return map_pos;
+    }
+    scale_mini2map = s;
+
+    #ifdef _FULL_LINEAR_SOLVE
+        // 组装 ^W_A T
+        cv::Mat affine_mat = cv::Mat::eye(3, 3, CV_64F);
+        affine_mat.at<double>(0, 0) = s;
+        affine_mat.at<double>(0, 2) = dx;
+        affine_mat.at<double>(1, 1) = s;
+        affine_mat.at<double>(1, 2) = dy;
+
+        cv::Mat A_origin_in_coor_A = cv::Mat::zeros(3, 1, CV_64F);
+        A_origin_in_coor_A.at<double>(0, 2) = 1.0;
+        cv::Mat A_origin_in_coor_M = affine_mat * A_origin_in_coor_A;
+        return cv::Point2d(A_origin_in_coor_M.at<double>(0, 0), A_origin_in_coor_M.at<double>(1, 0));
+    #endif
+
+#endif
 
     std::vector<double> lisx;
     std::vector<double> lisy;
