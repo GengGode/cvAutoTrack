@@ -4,6 +4,7 @@
 #include <frame/frame.include.h>
 #include <frame/capture/capture.include.h>
 #include <frame/capture/capture.bitblt.h>
+#include <utils/convect.string.h>
 
 int main()
 {
@@ -16,7 +17,7 @@ int main()
     else
         std::cout << "frame is not empty" << std::endl;
     cv::imwrite("test.png", frame);
-    std::cout<< frame.size()<< std::endl;
+    std::cout << frame.size() << std::endl;
 
     capture->set_handle(GetForegroundWindow());
     capture->get_frame(frame);
@@ -25,18 +26,17 @@ int main()
     else
         std::cout << "frame is not empty" << std::endl;
     cv::imwrite("test.png", frame);
-    std::cout<< frame.size()<< std::endl;
+    std::cout << frame.size() << std::endl;
 
-    capture->set_source_handle_callback([]()->HWND{
-        auto handle = FindWindow(NULL,"VS Code");
-        return handle;
-    });
+    capture->set_source_handle_callback([]() { return FindWindowW(NULL, utils::to_wstring("原神").c_str()); });
     capture->get_frame(frame);
     if (frame.empty())
         std::cout << "frame is empty" << std::endl;
     else
         std::cout << "frame is not empty" << std::endl;
     cv::imwrite("test.png", frame);
-    std::cout<< frame.size()<< std::endl;
+    cv::imshow("gi", frame);
+    cv::waitKey(0);
+    std::cout << frame.size() << std::endl;
     return 0;
 }
