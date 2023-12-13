@@ -201,7 +201,7 @@ namespace tianli::frame::capture
             {
                 // Debug下每次都获取最新的画面
 #ifdef _DEBUG
-                Direct3D11CaptureFrame new_frame_null{nullptr};
+                winrt::Windows::Graphics::Capture::Direct3D11CaptureFrame new_frame_null{nullptr};
                 do
                 {
                     new_frame = m_framePool.TryGetNextFrame();
