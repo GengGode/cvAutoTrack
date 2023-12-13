@@ -5,12 +5,12 @@
 #include <frame/capture/capture.include.h>
 #include <frame/capture/capture.window_graphics.h>
 #include <utils/convect.string.h>
-#include <global/log/log.stdlog.h>
+#include <global/record/record.stdlog.h>
 
 int main()
 {
     cv::Mat frame;
-    auto logger = std::make_shared<tianli::global::log::std_logger>();
+    auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto capture = std::make_shared<tianli::frame::capture::capture_window_graphics>(logger);
     capture->set_handle(GetForegroundWindow());
     capture->get_frame(frame);
