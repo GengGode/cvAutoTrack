@@ -54,29 +54,15 @@ namespace tianli::frame::capture
                 return true;
             if (IsWindow(this->source_handle) == false)
                 return false;
-            try
-            {
-                m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
-                m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
-            }
-            catch (winrt::hresult_error &e)
-            {
-                tianli::global::error_info err;
 
-                err.msg = ::utils::to_string(e.message().c_str());
-                err.file = __FUNCTION__;
-                logger->log(err);
-            }
-            catch (std::exception &e)
-            {
-                tianli::global::error_info err;
-                err.msg = e.what();
-                err.file = __FUNCTION__;
-                logger->log(err);
-            }
+            m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
+            m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
+
             if (m_item == nullptr)
                 return false;
+            
             auto size = m_item.Size();
+            m_lastSize = size;
             m_swapChain = utils::window_graphics::CreateDXGISwapChain(utils::window_graphics::graphics_global::get_instance().d3d_device, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), DXGI_FORMAT_B8G8R8A8_UNORM, 2);
 
             if (size.Width < 480 || size.Height < 360)
@@ -86,23 +72,8 @@ namespace tianli::frame::capture
 
             utils::window_graphics::graphics_global::get_instance().d3d_device->GetImmediateContext(m_d3dContext.put());
 
-            try
-            {
-                auto fun_get_frame_pool = [=]() -> auto
-                {
-                    auto device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
-                    return winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::Create(device.as<winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice>(), static_cast<winrt::Windows::Graphics::DirectX::DirectXPixelFormat>(87), 2, size);
-                };
-                // 另一个线程运行 get_frame_pool
-                std::future<winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool> f_frame_pool = std::async(std::launch::async, fun_get_frame_pool);
-
-                m_framePool = f_frame_pool.get();
-                m_session = m_framePool.CreateCaptureSession(m_item);
-            }
-            catch (...)
-            {
-                // Ignore any errors
-            }
+            m_framePool = winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::Create(m_device.as<winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice>(), static_cast<winrt::Windows::Graphics::DirectX::DirectXPixelFormat>(87), 2, size);
+            m_session = m_framePool.CreateCaptureSession(m_item);
 
             // 判断 WindowsSDK 版本大于等于 10.0.22000.0
 #if (WINVER >= _WIN32_WINNT_WIN10_21H1)
@@ -126,9 +97,8 @@ namespace tianli::frame::capture
             }
 #endif
 
-            m_lastSize = size;
-
             m_session.StartCapture();
+            
             this->is_initialized = true;
             return true;
         }
@@ -297,12 +267,11 @@ namespace tianli::frame::capture
                 {
                     return false;
                 }
-                frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
+                this->source_frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
             }
             // 释放资源
             bufferTexture->Release();
-            return true;
-
+            
             if (this->source_frame.empty())
                 return false;
             if (this->source_frame.cols < 480 || this->source_frame.rows < 360)

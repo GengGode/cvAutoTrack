@@ -13,6 +13,7 @@ int main()
     auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto capture = std::make_shared<tianli::frame::capture::capture_window_graphics>(logger);
     capture->set_handle(GetForegroundWindow());
+    std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())
         std::cout << "frame is empty" << std::endl;
@@ -24,6 +25,7 @@ int main()
     std::cout << frame.size() << std::endl;
 
     capture->set_handle(GetDesktopWindow());
+    std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())
         std::cout << "frame is empty" << std::endl;
@@ -36,6 +38,7 @@ int main()
 
     capture->set_source_handle_callback([]()
                                         { return FindWindowW(NULL, utils::to_wstring("原神").c_str()); });
+    std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())
         std::cout << "frame is empty" << std::endl;
