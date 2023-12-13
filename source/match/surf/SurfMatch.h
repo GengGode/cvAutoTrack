@@ -53,8 +53,6 @@ public:
 
 public:
     Match matcher;
-    // 直接暴力匹配
-    cv::Ptr<cv::DescriptorMatcher> matcher_bf;
 
     Match::KeyMatPoint map;
     Match::KeyMatPoint some_map;

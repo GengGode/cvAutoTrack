@@ -104,6 +104,14 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     if (isInit)return;
     map.keypoints = std::move(cache_info->key_points);
     map.descriptors = std::move(cache_info->descriptors);
+#ifdef _DEBUG
+    auto& res = Resources::getInstance();
+    _mapMat = res.GIMAP;
+    // scale x 1.5
+    cv::resize(_mapMat, _mapMat, cv::Size(0, 0), 1.1, 1.1, cv::INTER_CUBIC);
+    // computer keypoint and descriptor
+    matcher.detect_and_compute(_mapMat, map);
+#endif
 
     double hessian_threshold = cache_info->setting.hessian_threshold;
     int octave = cache_info->setting.octave;
@@ -129,10 +137,10 @@ void SurfMatch::match()
 {
     bool calc_is_faile = false;
     is_success_match = false;
-    _mapMat = cv::Mat::zeros(2304, 1740, CV_8UC3);
-    pos = match_no_continuity(calc_is_faile);
+    // _mapMat = cv::Mat::zeros(2304, 1740, CV_8UC3);
+    // pos = match_no_continuity(calc_is_faile);
 
-    // pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
+    pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
     is_success_match = !calc_is_faile;
 }
 
@@ -163,35 +171,12 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     }
 
     // 通过最优比次优剔除部分较差的匹配点
-    // MD 筛完了，直接最优匹配先
-
-    matcher_bf = cv::BFMatcher::create(cv::NORM_L2, true);
-    // 直接match，不用knnmatch
-    std::vector<cv::DMatch> matches;
-    matcher_bf->match(mini_map.descriptors, map.descriptors, matches);
-
-    // draw match
-    cv::Mat img_matches;
-    cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, matches, img_matches);
-    cv::imwrite("match.jpg", img_matches);
-
+    // MD 筛完了，把阈值调小
+    std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(mini_map, map);
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
-    // trans to MatchKeyPoint
-    for (auto& match : matches)
-    {
-        TianLi::Utils::MatchKeyPoint tmp_keypoint;
-        tmp_keypoint.query = cv::Point2d(
-            img_object.cols / 2.0 - mini_map.keypoints[match.queryIdx].pt.x,
-            img_object.rows / 2.0 - mini_map.keypoints[match.queryIdx].pt.y
-        );
-        tmp_keypoint.train = map.keypoints[match.trainIdx].pt;
-        keypoint_list.push_back(tmp_keypoint);
-    }
+    std::vector<cv::DMatch> keypoint_list_dmatch;
+    TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, 0.825, keypoint_list, keypoint_list_dmatch);
 
-
-    // std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(mini_map, map);
-    // std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
-    // TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list);
     std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
     if (keypoint_list.size() == 0 || keypoint_list.size() < 4) // add: < 3 constraint
     {
@@ -228,7 +213,7 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     // 1. Prepare for RANSAC
     this->matches_12 = keypoint_list;
 
-    constexpr unsigned int min_set_size = 4; // homography 只需要4个点，openvslam用了8个点；这里也翻倍用4个点
+    constexpr unsigned int min_set_size = 2; // homography 只需要4个点，openvslam用了8个点；这里也+1
     // RANSAC variables
     best_score_ = 0.0;
     std::vector<bool> is_inlier_match_;
@@ -278,7 +263,7 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
             is_inlier_match_ = is_inlier_match_in_sac;
         }
     }
-    std::cout<<"best_score_: "<<best_score_<<" is_inlier_match_.size(): "<<is_inlier_match_.size()<<std::endl;
+    // std::cout<<"best_score_: "<<best_score_<<" is_inlier_match_.size(): "<<is_inlier_match_.size()<<std::endl;
     auto num_inliers = std::count(is_inlier_match_.begin(), is_inlier_match_.end(), true);
     auto solution_is_valid_ = (best_score_ > 0.0) && (num_inliers >= min_set_size); // the negative side of calc_is_faile
     std::cout<<"solution_is_valid_: "<<solution_is_valid_<<"inliers: "<<num_inliers<<std::endl;
@@ -326,10 +311,10 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
 
 double SurfMatch::check_inliers(cv::Mat& H_21, std::vector<bool>& is_inlier_match) {
     const auto num_matches = matches_12.size();
-    double sigma_ = 3.0f; // just hard code it, same as openvslam
+    double sigma_ = 1.0f; // just hard code it, same as openvslam
 
     // chi-squared value (p=0.05, n=2)
-    constexpr double chi_sq_thr = 5.99;
+    constexpr double chi_sq_thr = 5.9915;
 
     is_inlier_match.resize(num_matches);
 
@@ -467,19 +452,24 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     std::vector<cv::DMatch> keypoint_list_dmatch;
     TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list, keypoint_list_dmatch);
 
-    // 绘制匹配结果
-    cv::Mat img_matches;
-    cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);
-    cv::imwrite("match.jpg", img_matches);
-
     if (keypoint_list.size() == 0)
     {
         calc_is_faile = true;
         return map_pos;
     }
 
+#ifdef _DEBUG
+    std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
+    // 绘制匹配结果
+    // cv::Mat img_matches;
+    // cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);
+    // cv::imwrite("match.jpg", img_matches);
+    // exit(0);
     auto scale_mini2map = 1.3 / minimap_scale_param;
     std::cout<<"scale_mini2map: "<<scale_mini2map<<std::endl;
+
+#endif
+
 
     std::vector<double> lisx;
     std::vector<double> lisy;

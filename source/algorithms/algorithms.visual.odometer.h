@@ -101,10 +101,10 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
         src.push_back(kp1[good_matches[i].queryIdx].pt);
         dst.push_back(kp2[good_matches[i].trainIdx].pt);
     }
-    double s, dx, dy;
-    solve_linear_s_dx_dy(src, dst, s, dx, dy);
+    // double s, dx, dy;
+    // solve_linear_s_dx_dy(src, dst, s, dx, dy);
 
-    cout<<"s: "<<s<<" dx: "<<dx<<" dy: "<<dy<<endl;
+    // cout<<"s: "<<s<<" dx: "<<dx<<" dy: "<<dy<<endl;
 
 
     // 计算偏移量，直接取平均

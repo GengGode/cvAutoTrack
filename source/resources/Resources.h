@@ -7,6 +7,7 @@ private:
     Resources();
 
 public:
+    // 好好好，单例模式
     ~Resources() = default;
 
     Resources(const Resources&) = delete;
@@ -22,6 +23,10 @@ public:
     cv::Mat StarTemplate;
     cv::Mat UID;
     cv::Mat UIDnumber[10];
+
+#ifdef _DEBUG
+    cv::Mat GIMAP;
+#endif
 
     // 天理坐标映射关系参数 地图中心
     // 地图中天理坐标中心的像素坐标
