@@ -206,10 +206,7 @@ namespace tianli::frame::capture
                 {
                     new_frame = m_framePool.TryGetNextFrame();
                     if (new_frame == nullptr)
-                    {
-                        err = {10002, "获取新的画面失败"};
                         return false;
-                    }
                     new_frame_null = m_framePool.TryGetNextFrame();
                     if (new_frame_null != nullptr)
                     {
