@@ -69,4 +69,4 @@ namespace tianli::frame::capture::utils::window_scale
 #define WINDOW_VERSION window_first_version
 #endif
     using namespace WINDOW_VERSION;
-} // namespace tianli::frame::capture::utils::window
+} // namespace tianli::frame::capture::utils::window_scale
