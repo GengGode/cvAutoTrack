@@ -167,9 +167,8 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 
     surf_match.setMiniMap(genshin_minimap.img_minimap);
 
-    surf_match.match();
+    surf_match.match(out_genshin_position.position);
 
-    out_genshin_position.position = surf_match.getLocalPos();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
     out_genshin_position.config.is_coveying = surf_match.isCoveying;
 

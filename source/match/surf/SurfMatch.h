@@ -2,14 +2,6 @@
 #include "utils/Utils.h"
 #include "resources/trackCache.h"
 
-bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale);
-std::pair<std::vector<cv::Point2d>, double> judges_scale(std::vector<TianLi::Utils::MatchKeyPoint> match_points, double scale_a, double scale_b);
-
-// 特征点匹配的剔除因子，越大越严格
-constexpr double SURF_MATCH_RATIO_THRESH = 0.66;
-// 地图中取小部分区域的半径，目前为小地图标准半径
-constexpr int DEFAULT_SOME_MAP_SIZE_R = 106;
-
 class Match
 {
 public:
@@ -70,19 +62,10 @@ public:
     void setMiniMap(cv::Mat miniMapMat);
     void Init(std::shared_ptr<trackCache::CacheInfo> cache_info);
     void UnInit();
-    void match();
-
-    cv::Point2d match_continuity(bool& calc_continuity_is_faile);
-    cv::Point2d match_continuity_on_city(bool& calc_continuity_is_faile);
-    cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
-
-    cv::Point2d match_no_continuity(bool& calc_is_faile);
-    cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
-
-    cv::Point2d getLocalPos();
-    bool getIsContinuity();
+    bool match(cv::Point2d& pos);
 
 private:
-    bool isMatchAllMap = true;
+    bool match_all_map(cv::Point2d& pos);
+
 };
 
