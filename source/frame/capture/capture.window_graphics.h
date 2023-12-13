@@ -4,6 +4,7 @@
 #include "utils/utils.window_scale.h"
 #include "utils/utils.window_graphics.h"
 #include "utils/utils.window_graphics.interop.h"
+#include <utils/convect.string.h>
 
 #include <winrt/Windows.Graphics.Capture.h>
 #include <winrt/Windows.Graphics.DirectX.h>
@@ -49,15 +50,34 @@ namespace tianli::frame::capture
     public:
         bool initialization() override
         {
+            if (this->is_initialized)
+                return true;
             if (IsWindow(this->source_handle) == false)
                 return false;
+            try
+            {
+                m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
+                m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
+            }
+            catch (winrt::hresult_error &e)
+            {
+                tianli::global::error_info err;
 
-            m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
-            m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
+                err.msg = ::utils::to_string(e.message().c_str());
+                err.file = __FUNCTION__;
+                logger->log(err);
+            }
+            catch (std::exception &e)
+            {
+                tianli::global::error_info err;
+                err.msg = e.what();
+                err.file = __FUNCTION__;
+                logger->log(err);
+            }
             if (m_item == nullptr)
                 return false;
             auto size = m_item.Size();
-            m_swapChain = utils::window_graphics::CreateDXGISwapChain(utils::window_graphics::graphics_global::get_instance().d3d_device, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), DXGI_FORMAT_B8G8R8X8_UNORM, 2);
+            m_swapChain = utils::window_graphics::CreateDXGISwapChain(utils::window_graphics::graphics_global::get_instance().d3d_device, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), DXGI_FORMAT_B8G8R8A8_UNORM, 2);
 
             if (size.Width < 480 || size.Height < 360)
             {
@@ -109,11 +129,30 @@ namespace tianli::frame::capture
             m_lastSize = size;
 
             m_session.StartCapture();
-
+            this->is_initialized = true;
             return true;
         }
         bool uninitialized() override
         {
+            if (this->is_initialized == false)
+                return true;
+
+            try
+            {
+                if (m_session != nullptr)
+                    m_session.Close();
+                if (m_framePool != nullptr)
+                    m_framePool.Close();
+            }
+            catch (...)
+            {
+                //
+            }
+            m_session = nullptr;
+            m_framePool = nullptr;
+            m_swapChain = nullptr;
+            m_item = nullptr;
+            this->is_initialized = false;
             return true;
         }
         bool set_handle(HWND handle = 0) override
@@ -164,21 +203,7 @@ namespace tianli::frame::capture
             if (m_framePool == nullptr)
             {
                 uninitialized();
-                try
-                {
-                    if (m_session != nullptr)
-                        m_session.Close();
-                    if (m_framePool != nullptr)
-                        m_framePool.Close();
-                }
-                catch (...)
-                {
-                    //
-                }
-                m_session = nullptr;
-                m_framePool = nullptr;
-                m_swapChain = nullptr;
-                m_item = nullptr;
+
                 bool res = initialization();
                 if (res == false)
                 {
@@ -191,24 +216,7 @@ namespace tianli::frame::capture
             // 获取最新的画面
             try
             {
-                // Debug下每次都获取最新的画面
-#ifdef _DEBUG
-                winrt::Windows::Graphics::Capture::Direct3D11CaptureFrame new_frame_null{nullptr};
-                do
-                {
-                    new_frame = m_framePool.TryGetNextFrame();
-                    if (new_frame == nullptr)
-                        return false;
-                    new_frame_null = m_framePool.TryGetNextFrame();
-                    if (new_frame_null != nullptr)
-                    {
-                        new_frame.Close();
-                        new_frame = new_frame_null;
-                    }
-                } while (new_frame_null == nullptr);
-#else
                 new_frame = m_framePool.TryGetNextFrame();
-#endif // _DEBUG
             }
             catch (...)
             {
