@@ -3,7 +3,6 @@
 #include <global/global.include.h>
 #include "capture.include.h"
 #include "utils/utils.window_scale.h"
-#include "utils/utils.window_graphics.interop.h"
 #include "utils/utils.window_graphics.h"
 
 
