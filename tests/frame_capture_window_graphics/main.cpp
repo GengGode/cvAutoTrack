@@ -1,0 +1,51 @@
+#include <opencv2/opencv.hpp>
+#include <Windows.h>
+#include <iostream>
+#include <frame/frame.include.h>
+#include <frame/capture/capture.include.h>
+#include <frame/capture/capture.window_graphics.h>
+#include <utils/convect.string.h>
+#include <global/record/record.stdlog.h>
+
+int main()
+{
+    cv::Mat frame;
+    auto logger = std::make_shared<tianli::global::record::std_logger>();
+    auto capture = std::make_shared<tianli::frame::capture::capture_window_graphics>(logger);
+    capture->set_handle(GetForegroundWindow());
+    capture->get_frame(frame);
+    if (frame.empty())
+        std::cout << "frame is empty" << std::endl;
+    else
+    {
+        std::cout << "frame is not empty" << std::endl;
+        cv::imwrite("test.png", frame);
+    }
+    std::cout << frame.size() << std::endl;
+
+    capture->set_handle(GetDesktopWindow());
+    capture->get_frame(frame);
+    if (frame.empty())
+        std::cout << "frame is empty" << std::endl;
+    else
+    {
+        std::cout << "frame is not empty" << std::endl;
+        cv::imwrite("test.png", frame);
+    }
+    std::cout << frame.size() << std::endl;
+
+    capture->set_source_handle_callback([]()
+                                        { return FindWindowW(NULL, utils::to_wstring("原神").c_str()); });
+    capture->get_frame(frame);
+    if (frame.empty())
+        std::cout << "frame is empty" << std::endl;
+    else
+    {
+        std::cout << "frame is not empty" << std::endl;
+        cv::imwrite("test.png", frame);
+        cv::imshow("gi", frame);
+        cv::waitKey(0);
+    }
+    std::cout << frame.size() << std::endl;
+    return 0;
+}

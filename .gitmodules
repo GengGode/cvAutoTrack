@@ -4,3 +4,6 @@
 [submodule "third_party/opencv-xfeatures2d-shared"]
 	path = third_party/opencv-xfeatures2d-shared
 	url = https://github.com/GengGode/opencv-xfeatures2d-shared
+[submodule "third_party/opencv-highgui-shared"]
+	path = third_party/opencv-highgui-shared
+	url = https://github.com/GengGode/opencv-highgui-shared.git
