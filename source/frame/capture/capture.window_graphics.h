@@ -5,12 +5,10 @@
 #include "utils/utils.window_scale.h"
 #include "utils/utils.window_graphics.h"
 
-
 namespace tianli::frame::capture
 {
     class capture_window_graphics : public capture_source
     {
-
         winrt::com_ptr<IInspectable> m_device{nullptr};
         winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{nullptr};
         winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{nullptr};
@@ -18,7 +16,6 @@ namespace tianli::frame::capture
         winrt::Windows::Graphics::Capture::GraphicsCaptureSession m_session{nullptr};
         winrt::Windows::Graphics::SizeInt32 m_lastSize;
         winrt::com_ptr<IDXGISwapChain1> m_swapChain{nullptr};
-        std::atomic<bool> m_closed = false;
 
     public:
         capture_window_graphics(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger)
@@ -38,8 +35,8 @@ namespace tianli::frame::capture
 
             m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
             m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
-            
-            if(m_item == nullptr)
+
+            if (m_item == nullptr)
                 return false;
 
             m_lastSize = m_item.Size();
@@ -57,29 +54,25 @@ namespace tianli::frame::capture
             this->is_initialized = true;
             return true;
         }
+
         bool uninitialized() override
         {
             if (this->is_initialized == false)
                 return true;
 
-            try
-            {
-                if (m_session != nullptr)
-                    m_session.Close();
-                if (m_framePool != nullptr)
-                    m_framePool.Close();
-            }
-            catch (...)
-            {
-                //
-            }
+            if (m_session != nullptr)
+                m_session.Close();
+            if (m_framePool != nullptr)
+                m_framePool.Close();
             m_session = nullptr;
             m_framePool = nullptr;
             m_swapChain = nullptr;
             m_item = nullptr;
+
             this->is_initialized = false;
             return true;
         }
+
         bool set_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
@@ -94,6 +87,7 @@ namespace tianli::frame::capture
             this->is_callback = false;
             return true;
         }
+
         bool set_source_handle_callback(std::function<HWND()> callback) override
         {
             if (callback == nullptr)
@@ -106,52 +100,27 @@ namespace tianli::frame::capture
             this->is_callback = true;
             return true;
         }
+
         bool get_frame(cv::Mat &frame) override
         {
-            auto handle = this->source_handle;
-            if (this->is_callback)
-                handle = this->source_handle_callback();
-            if (handle == nullptr)
-                return false;
-            if (IsWindow(handle) == false)
-                return false;
-            RECT rect = {0, 0, 0, 0};
-            if (GetWindowRect(handle, &rect) == false)
-                return false;
-            RECT client_rect = {0, 0, 0, 0};
-            if (GetClientRect(handle, &client_rect) == false)
-                return false;
-            double screen_scale = utils::window_scale::get_screen_scale(handle);
-            cv::Size client_size = {0, 0};
-
             static ID3D11Texture2D *bufferTexture;
+
+            if (this->is_callback)
+                set_handle(this->source_handle_callback());
+
             if (m_framePool == nullptr)
             {
                 uninitialized();
-
-                bool res = initialization();
-                if (res == false)
-                {
+                if (initialization() == false)
                     return false;
-                }
             }
 
-            // 判断是否可以获取新的的画面
             winrt::Windows::Graphics::Capture::Direct3D11CaptureFrame new_frame{nullptr};
-            // 获取最新的画面
-            try
-            {
-                new_frame = m_framePool.TryGetNextFrame();
-            }
-            catch (...)
-            {
-                // Ignore any errors
-                return false;
-            }
+
+            new_frame = m_framePool.TryGetNextFrame();
             if (new_frame == nullptr)
-            {
                 return false;
-            }
+            
             auto frame_size = new_frame.ContentSize();
             auto &desc = utils::window_graphics::graphics_global::get_instance().desc_type;
             if (desc.Width != static_cast<UINT>(m_lastSize.Width) || desc.Height != static_cast<UINT>(m_lastSize.Height))
@@ -159,6 +128,7 @@ namespace tianli::frame::capture
                 desc.Width = m_lastSize.Width;
                 desc.Height = m_lastSize.Height;
             }
+
             if (frame_size.Width != m_lastSize.Width || frame_size.Height != m_lastSize.Height)
             {
                 m_framePool.Recreate(
@@ -184,14 +154,13 @@ namespace tianli::frame::capture
 
             if (client_box_available)
             {
-                m_d3dContext->CopySubresourceRegion(bufferTexture,
-                                                    0, 0, 0, 0, frameSurface.get(),
-                                                    0, &client_box);
+                m_d3dContext->CopySubresourceRegion(bufferTexture,  0, 0, 0, 0, frameSurface.get(),  0, &client_box);
             }
             else
             {
                 m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
             }
+            
             if (bufferTexture == nullptr)
             {
                 return false;
@@ -203,25 +172,13 @@ namespace tianli::frame::capture
             auto data = mappedTex.pData;
             auto pitch = mappedTex.RowPitch;
             if (data == nullptr)
-            {
                 return false;
-            }
 
-            // 将画面转换为OpenCV的Mat（疑似会崩溃）
-            try
-            {
-                frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, (void *)data, pitch);
-            }
-            catch (std::exception e)
-            {
-                return false;
-            }
+            frame = cv::Mat(frame_size.Height, frame_size.Width, CV_8UC4, data, pitch);
             if (client_box_available)
             {
                 if (client_box.right - client_box.left > frame_size.Width || client_box.bottom - client_box.top > frame_size.Height)
-                {
                     return false;
-                }
                 this->source_frame = frame(cv::Rect(0, 0, client_box.right - client_box.left, client_box.bottom - client_box.top));
             }
             // 释放资源
