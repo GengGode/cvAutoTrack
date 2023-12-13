@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-namespace tianli::frame::capture::utils::window
+namespace tianli::frame::capture::utils::window_scale
 {
     namespace window_last_version
     {
