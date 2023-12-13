@@ -1,35 +1,18 @@
 #pragma once
-#include "global/global.include.h"
+#include <utils/convect.string.h>
+#include <global/global.include.h>
 #include "capture.include.h"
 #include "utils/utils.window_scale.h"
-#include "utils/utils.window_graphics.h"
 #include "utils/utils.window_graphics.interop.h"
-#include <utils/convect.string.h>
+#include "utils/utils.window_graphics.h"
 
-#include <winrt/Windows.Graphics.Capture.h>
-#include <winrt/Windows.Graphics.DirectX.h>
-#include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
-#include <Windows.Graphics.DirectX.Direct3D11.interop.h>
-
-#include <winrt/Windows.Graphics.Capture.h>
-#include <windows.graphics.capture.interop.h>
-#include <windows.graphics.capture.h>
-
-#include <winrt/windows.foundation.metadata.h>
-
-#include <d3d11_4.h>
-#include <dxgi1_6.h>
-#include <d2d1_3.h>
-
-#include <functional>
-#include <future>
 
 namespace tianli::frame::capture
 {
     class capture_window_graphics : public capture_source
     {
-        // winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice
-        winrt::com_ptr<::IInspectable> m_device{nullptr};
+
+        winrt::com_ptr<IInspectable> m_device{nullptr};
         winrt::com_ptr<ID3D11DeviceContext> m_d3dContext{nullptr};
         winrt::Windows::Graphics::Capture::GraphicsCaptureItem m_item{nullptr};
         winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool m_framePool{nullptr};
@@ -42,7 +25,6 @@ namespace tianli::frame::capture
         capture_window_graphics(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger)
         {
             this->type = source_type::window_graphics;
-
             auto init_global = utils::window_graphics::graphics_global::get_instance();
         }
         ~capture_window_graphics() = default;
@@ -57,48 +39,22 @@ namespace tianli::frame::capture
 
             m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
             m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
-
-            if (m_item == nullptr)
-                return false;
             
-            auto size = m_item.Size();
-            m_lastSize = size;
-            m_swapChain = utils::window_graphics::CreateDXGISwapChain(utils::window_graphics::graphics_global::get_instance().d3d_device, static_cast<uint32_t>(size.Width), static_cast<uint32_t>(size.Height), DXGI_FORMAT_B8G8R8A8_UNORM, 2);
-
-            if (size.Width < 480 || size.Height < 360)
-            {
+            if(m_item == nullptr)
                 return false;
-            }
+
+            m_lastSize = m_item.Size();
+            m_swapChain = utils::window_graphics::CreateDXGISwapChain(utils::window_graphics::graphics_global::get_instance().d3d_device, static_cast<uint32_t>(m_lastSize.Width), static_cast<uint32_t>(m_lastSize.Height), DXGI_FORMAT_B8G8R8A8_UNORM, 2);
 
             utils::window_graphics::graphics_global::get_instance().d3d_device->GetImmediateContext(m_d3dContext.put());
 
-            m_framePool = winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::Create(m_device.as<winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice>(), static_cast<winrt::Windows::Graphics::DirectX::DirectXPixelFormat>(87), 2, size);
+            m_framePool = winrt::Windows::Graphics::Capture::Direct3D11CaptureFramePool::Create(m_device.as<winrt::Windows::Graphics::DirectX::Direct3D11::IDirect3DDevice>(), static_cast<winrt::Windows::Graphics::DirectX::DirectXPixelFormat>(87), 2, m_lastSize);
             m_session = m_framePool.CreateCaptureSession(m_item);
 
-            // 判断 WindowsSDK 版本大于等于 10.0.22000.0
-#if (WINVER >= _WIN32_WINNT_WIN10_21H1)
-            try
-            {
-                if (winrt::Windows::Foundation::Metadata::ApiInformation::IsPropertyPresent(L"Windows.Graphics.Capture.GraphicsCaptureSession", L"IsBorderRequired"))
-                {
-
-                    winrt::Windows::Graphics::Capture::GraphicsCaptureAccess::
-                        RequestAccessAsync(
-                            winrt::Windows::Graphics::Capture::
-                                GraphicsCaptureAccessKind::Borderless)
-                            .get();
-                    m_session.IsBorderRequired(false);
-                    m_session.IsCursorCaptureEnabled(false);
-                }
-            }
-            catch (...)
-            {
-                // Ignore any errors
-            }
-#endif
+            utils::window_graphics::set_capture_session_property(m_session);
 
             m_session.StartCapture();
-            
+
             this->is_initialized = true;
             return true;
         }
@@ -271,7 +227,7 @@ namespace tianli::frame::capture
             }
             // 释放资源
             bufferTexture->Release();
-            
+
             if (this->source_frame.empty())
                 return false;
             if (this->source_frame.cols < 480 || this->source_frame.rows < 360)
