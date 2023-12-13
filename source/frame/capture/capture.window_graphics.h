@@ -3,6 +3,7 @@
 #include "capture.include.h"
 #include "utils/utils.window_scale.h"
 #include "utils/utils.window_graphics.h"
+#include "utils/utils.window_graphics.interop.h"
 
 #include <winrt/Windows.Graphics.Capture.h>
 #include <winrt/Windows.Graphics.DirectX.h>
@@ -36,15 +37,6 @@ namespace tianli::frame::capture
         winrt::com_ptr<IDXGISwapChain1> m_swapChain{nullptr};
         std::atomic<bool> m_closed = false;
 
-        winrt::Windows::Graphics::Capture::GraphicsCaptureItem get_window_handle_from_itme(HWND handle)
-        {
-            auto activation_factory = winrt::get_activation_factory<winrt::Windows::Graphics::Capture::GraphicsCaptureItem>();
-            auto interop_factory = activation_factory.as<IGraphicsCaptureItemInterop>();
-            winrt::Windows::Graphics::Capture::GraphicsCaptureItem item = {nullptr};
-            interop_factory->CreateForWindow(handle, winrt::guid_of<ABI::Windows::Graphics::Capture::IGraphicsCaptureItem>(), reinterpret_cast<void **>(winrt::put_abi(item)));
-            return item;
-        }
-
     public:
         capture_window_graphics(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger)
         {
@@ -61,7 +53,7 @@ namespace tianli::frame::capture
                 return false;
 
             m_device = utils::window_graphics::CreateDirect3DDevice(utils::window_graphics::graphics_global::get_instance().dxgi_device.get());
-            m_item = get_window_handle_from_itme(this->source_handle);
+            m_item = utils::window_graphics::CreateCaptureItemForWindow(this->source_handle);
             if (m_item == nullptr)
                 return false;
             auto size = m_item.Size();
