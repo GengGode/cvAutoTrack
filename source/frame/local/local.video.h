@@ -54,34 +54,27 @@ namespace tianli::frame::local
             }
             if (cache_local_file == this->source_local)
             {
-                if (this->cache_frame_current >= this->cache_source_frame.size())
-                    this->cache_frame_current = 0;
-                frame = this->cache_source_frame[this->cache_frame_current];
+                if (this->cache_source_video.isOpened() == false)
+                    this->cache_source_video.open(this->cache_local_file);
+                if (this->cache_source_video.isOpened() == false)
+                    return false;
+                this->cache_source_video >> frame;
+                if (frame.empty())
+                    return false;
                 return true;
             }
             this->cache_local_file = this->source_local;
-            auto video = cv::VideoCapture(this->cache_local_file);
-            if (video.isOpened() == false)
+            this->cache_source_video.open(this->cache_local_file);
+            if (this->cache_source_video.isOpened() == false)
                 return false;
-            this->cache_source_frame.clear();
-            while (true)
-            {
-                cv::Mat frame;
-                video >> frame;
-                if (frame.empty())
-                    break;
-                this->cache_source_frame.push_back(frame);
-            }
-            video.release();
-            if (this->cache_source_frame.empty())
+            this->cache_source_video >> frame;
+            if (frame.empty())
                 return false;
-            this->cache_frame_current = 0;
-            frame = this->cache_source_frame[this->cache_frame_current];
             return true;
         }
 
     protected:
-        std::vector<cv::Mat> cache_source_frame;
+        cv::VideoCapture cache_source_video;
         std::string cache_local_file;
         int cache_frame_current;
     };
