@@ -1,57 +1,63 @@
 #pragma once
 #include "algorithms.include.h"
+#include <opencv2/core/mat.hpp>
 
 namespace tianli::algorithms::feature
 {
-    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF>& detector, const cv::Mat& image, const cv::Mat& mask = cv::Mat(), const int padding = 0)
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Rect &roi, const cv::Mat &mask = cv::Mat())
     {
+        const int border_size = 100;
         features border_fts;
-        cv::Mat border;
-        cv::Mat border_mask;
-        if (padding)
-        {
-            cv::copyMakeBorder(image, border, padding, padding, padding, padding, cv::BORDER_REPLICATE, cv::Scalar(0, 0, 0));
-            if (mask.empty())
-            {
-                cv::copyMakeBorder(mask, border_mask, padding, padding, padding, padding, cv::BORDER_REPLICATE, cv::Scalar(0, 0, 0));
-            }
-        }
-        else {
-            border = image;
-            border_mask = mask;
-        }
+        cv::Rect border_rect = cv::Rect(0, 0, image.cols, image.rows)  & cv::Rect(roi.x - border_size, roi.y - border_size, roi.width + 2 * border_size, roi.height + 2 * border_size);
+        cv::Rect border_mask_rect = border_rect;
 
-        if (!mask.empty())
-        {
-            detector->detectAndCompute(border, border_mask, border_fts.keypoints, border_fts.descriptors);
-        }
-        else
-        {
-            detector->detectAndCompute(border, cv::noArray(), border_fts.keypoints, border_fts.descriptors);
-        }
-        if (border_fts.size() == 0) return border_fts;    //没有捕获到特征点，直接返回
+        cv::Mat border = image(border_rect);
+        cv::Mat border_mask = mask.empty() ? cv::Mat() : mask(border_mask_rect);
 
+        detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
         std::vector<int> selected_row_indexs;
         for (int i = 0; i < border_fts.keypoints.size(); i++)
         {
-            auto& kp = border_fts.keypoints[i];
-            if (kp.pt.x < padding || kp.pt.y < padding || kp.pt.x > image.cols + padding || kp.pt.y > image.rows + padding)
+            auto &kp = border_fts.keypoints[i];
+            if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
                 continue;
-            keypoints.emplace_back(kp.pt - cv::Point2f(padding, padding), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
+            keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
             selected_row_indexs.push_back(i);
         }
 
         features fts;
         fts.keypoints = keypoints;
-        if (fts.descriptors.empty())
+        fts.descriptors = fts.descriptors.rowRange(0, keypoints.size()).clone();
+        for (int i = 0; i < selected_row_indexs.size(); i++)
+            fts.descriptors.row(i).copyTo(fts.descriptors.row(selected_row_indexs[i]));
+        return fts;
+    }
+
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
+    {
+        const int border_size = 100;
+        features border_fts;
+        cv::Mat border;
+        cv::Mat border_mask;
+        cv::copyMakeBorder(image, border,border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+        cv::copyMakeBorder(mask, border_mask,border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+
+        detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
+        std::vector<cv::KeyPoint> keypoints;
+        std::vector<int> selected_row_indexs;
+        for (int i = 0; i < border_fts.keypoints.size(); i++)
         {
-            fts.descriptors = border_fts.descriptors.clone();
+            auto &kp = border_fts.keypoints[i];
+            if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
+                continue;
+            keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
+            selected_row_indexs.push_back(i);
         }
-        else
-        {
-            fts.descriptors = fts.descriptors.rowRange(0, keypoints.size()).clone();
-        }
+
+        features fts;
+        fts.keypoints = keypoints;
+        fts.descriptors = fts.descriptors.rowRange(0, keypoints.size()).clone();
         for (int i = 0; i < selected_row_indexs.size(); i++)
             fts.descriptors.row(i).copyTo(fts.descriptors.row(selected_row_indexs[i]));
         return fts;
