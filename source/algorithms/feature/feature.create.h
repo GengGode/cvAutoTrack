@@ -23,6 +23,7 @@ namespace tianli::algorithms::feature::create
         std::vector<features> grid_features_level_1(grid_size);
         std::vector<features> grid_features_level_2(grid_size);
         std::vector<features> grid_features_level_3(grid_size);
+        std::vector<cv::Rect> grid_rects(grid_size);
 
         std::vector<features> res_features(grid_size);
 
@@ -39,6 +40,7 @@ namespace tianli::algorithms::feature::create
                 const size_t grid_height = grid_y + grid_radius > image.size[0] ? image.size[0] - grid_y : grid_radius;
                 // 考虑到边界位置的特征点算法无法提取，对图片进行扩增边界
                 const cv::Rect grid_rect(grid_x, grid_y, grid_width, grid_height);
+                grid_rects[grid_index] = grid_rect;
                 // 计算网格中的特征点
                 cv::Mat grid_image = image(grid_rect);
                 cv::Mat grid_mask = mask(grid_rect);
@@ -74,9 +76,11 @@ namespace tianli::algorithms::feature::create
 
         // 合并所有特征点
         features result_features;
-        for(const auto &grid_feature : res_features)
+        for(int i =0;i< grid_size;i++)
         {
-            result_features = merge(result_features, grid_feature);
+            auto &grid_feature = res_features[i];
+            auto &grid_rect = grid_rects[i];
+            result_features = merge(result_features, grid_feature, cv::Point2d(grid_rect.x, grid_rect.y));
         }
         return result_features;
     }
