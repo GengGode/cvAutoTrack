@@ -18,7 +18,7 @@ namespace tianli::frame::local
 
     protected:
         std::function<cv::Mat()> source_frame_callback;
-        std::string source_local = nullptr;
+        std::string source_local;
         cv::Mat source_frame;
     };
 
