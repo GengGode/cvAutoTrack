@@ -192,8 +192,9 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     auto best_score_ = 0.0;
     auto& best_H_21_ = affine_mat_out;
     const auto num_matches = static_cast<unsigned int>(keypoint_list.size());
-    this->undist_keypts_1.reserve(num_matches);
-    this->undist_keypts_2.reserve(num_matches);
+    std::vector<cv::KeyPoint> undist_keypts_1, undist_keypts_2;
+    undist_keypts_1.reserve(num_matches);
+    undist_keypts_2.reserve(num_matches);
     for (unsigned int i = 0; i < num_matches; ++i) {
         cv::KeyPoint t_p1 = cv::KeyPoint(keypoint_list.at(i).query, 1.0);
         cv::KeyPoint t_p2 = cv::KeyPoint(keypoint_list.at(i).train, 1.0);
@@ -211,7 +212,7 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
 
 
     // 1. Prepare for RANSAC
-    this->matches_12 = keypoint_list;
+    auto matches_12 = keypoint_list;
 
     constexpr unsigned int min_set_size = 2; // homography 只需要4个点，openvslam用了8个点；这里也+1
     // RANSAC variables
@@ -256,7 +257,11 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
         H_21_in_sac = transform_2_inv * normalized_H_21 * transform_1;
 
         // 2-3. 计算内点以及score
-        score_in_sac = check_inliers(H_21_in_sac, is_inlier_match_in_sac);
+        score_in_sac = check_inliers(
+            H_21_in_sac, is_inlier_match_in_sac,
+            undist_keypts_1, undist_keypts_2,
+            matches_12
+        );
         // std::cout<<"score_in_sac: "<<score_in_sac<<std::endl;
         if (best_score_ < score_in_sac) {
             best_score_ = score_in_sac;
@@ -309,7 +314,10 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
 
 }
 
-double SurfMatch::check_inliers(cv::Mat& H_21, std::vector<bool>& is_inlier_match) {
+double SurfMatch::check_inliers(
+    cv::Mat& H_21, std::vector<bool>& is_inlier_match,
+    std::vector<cv::KeyPoint>& undist_keypts_1, std::vector<cv::KeyPoint>& undist_keypts_2,
+    std::vector<TianLi::Utils::MatchKeyPoint>& matches_12) {
     const auto num_matches = matches_12.size();
     double sigma_ = 1.0f; // just hard code it, same as openvslam
 

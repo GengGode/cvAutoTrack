@@ -102,11 +102,11 @@ public:
 private:
     bool isMatchAllMap = true;
 
-    std::vector<cv::KeyPoint> undist_keypts_1, undist_keypts_2;
-    std::vector<TianLi::Utils::MatchKeyPoint> matches_12;
-    
-
-    double check_inliers(cv::Mat& H_21, std::vector<bool>& is_inlier_match);
+    double check_inliers(
+        cv::Mat& H_21, std::vector<bool>& is_inlier_match,
+        std::vector<cv::KeyPoint>& undist_keypts_1, std::vector<cv::KeyPoint>& undist_keypts_2,
+        std::vector<TianLi::Utils::MatchKeyPoint>& matches_12
+    );
 
 };
 
