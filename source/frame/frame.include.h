@@ -13,8 +13,8 @@ namespace tianli::frame
             unknown,
             bitblt,
             window_graphics,
-            local_video,
-            local_picture
+            video,
+            picture
         };
         enum class source_mode
         {
