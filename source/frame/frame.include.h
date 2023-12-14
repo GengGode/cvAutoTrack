@@ -4,7 +4,6 @@
 
 namespace tianli::frame
 {
-
     class frame_source
     {
     public:
