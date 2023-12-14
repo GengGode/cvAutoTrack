@@ -1,4 +1,5 @@
 #pragma once
+#include <opencv2/opencv.hpp>
 #include "../global/global.include.h"
 
 namespace tianli::frame

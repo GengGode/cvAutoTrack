@@ -1,17 +1,18 @@
 #pragma once
+#include <string>
 
 namespace tianli::global
 {
     class error_info
     {
-
+    public:
+        std::string msg;
+        // std::source_location local;
+        std::string file;
     };
     class error_resigter
     {
-
     };
-
-
 
     // 日志基类
     class logger
@@ -25,7 +26,9 @@ namespace tianli::global
             error,
             fatal
         };
-        virtual void write(level lv, const char* msg) = 0;
+        logger() = default;
+        virtual void write(level lv, const char *msg) { return; }
+        virtual void log(error_info err) { return; }
     };
-    
+
 } // namespace tianli::global

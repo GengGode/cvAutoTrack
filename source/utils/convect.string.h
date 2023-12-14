@@ -52,10 +52,10 @@ namespace utils
     static std::wstring to_wstring(const std::string &string)
     {
         std::wstring ret_string;
-        int len = MultiByteToWideChar(CP_ACP, 0, string.c_str(), -1, NULL, 0);
+        int len = MultiByteToWideChar(CP_UTF8, 0, string.c_str(), -1, NULL, 0);
         wchar_t *utf8_wstring = new wchar_t[len + 1];
         memset(utf8_wstring, 0, len * 2 + 2);
-        MultiByteToWideChar(CP_ACP, 0, string.c_str(), -1, utf8_wstring, len);
+        MultiByteToWideChar(CP_UTF8, 0, string.c_str(), -1, utf8_wstring, len);
         ret_string = utf8_wstring;
         delete[] utf8_wstring;
         return ret_string;
