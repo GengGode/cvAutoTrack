@@ -105,12 +105,10 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     map.keypoints = std::move(cache_info->key_points);
     map.descriptors = std::move(cache_info->descriptors);
 #ifdef _DEBUG
-    auto& res = Resources::getInstance();
-    _mapMat = res.GIMAP;
-    // scale x 1.5
-    cv::resize(_mapMat, _mapMat, cv::Size(0, 0), 1.1, 1.1, cv::INTER_CUBIC);
+    // auto& res = Resources::getInstance();
+    // _mapMat = res.GIMAP;
     // computer keypoint and descriptor
-    matcher.detect_and_compute(_mapMat, map);
+    // matcher.detect_and_compute(_mapMat, map);
 #endif
 
     double hessian_threshold = cache_info->setting.hessian_threshold;
@@ -463,21 +461,42 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     std::vector<cv::DMatch> keypoint_list_dmatch;
     TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, SURF_MATCH_RATIO_THRESH, keypoint_list, keypoint_list_dmatch);
 
-    if (keypoint_list.size() == 0)
+    if (keypoint_list.size() < 2)
     {
         calc_is_faile = true;
         return map_pos;
     }
 
+    // 添加通过求解线性方程组的方法求解缩放+平移
+    // 通过缩放判断是否在城镇内
+    double scale_mini2map, dx_mini2map, dy_mini2map;
+    // make two point set
+    std::vector<cv::Point2d> mini_map_points;
+    std::vector<cv::Point2d> map_points;
+    for (auto& point : keypoint_list)
+    {
+        mini_map_points.push_back(point.query);
+        map_points.push_back(point.train);
+    }
+    solve_linear_s_dx_dy(mini_map_points, map_points, scale_mini2map, dx_mini2map, dy_mini2map);
+    
+    // 难绷，小地图坐标系是反的
+    scale_mini2map = - scale_mini2map;
+    dx_mini2map = - dx_mini2map;
+    dy_mini2map = - dy_mini2map;
+
+    // TODO: 按照scale 比例判断是否在城镇内
+
 #ifdef _DEBUG
     std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
+    std::cout<<"s: "<<scale_mini2map<<" dx: "<<dx_mini2map<<" dy: "<<dy_mini2map<<std::endl;
     // 绘制匹配结果
     // cv::Mat img_matches;
     // cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);
     // cv::imwrite("match.jpg", img_matches);
     // exit(0);
-    auto scale_mini2map = 1.3 / minimap_scale_param;
-    std::cout<<"scale_mini2map: "<<scale_mini2map<<std::endl;
+    // double scale_mini2map = 1.3 / minimap_scale_param;
+    // std::cout<<"scale_mini2map: "<<scale_mini2map<<std::endl;
 
 #endif
 
