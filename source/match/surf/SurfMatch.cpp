@@ -138,9 +138,9 @@ void SurfMatch::match()
     bool calc_is_faile = false;
     is_success_match = false;
     // _mapMat = cv::Mat::zeros(2304, 1740, CV_8UC3);
-    // pos = match_no_continuity(calc_is_faile);
+    pos = match_no_continuity(calc_is_faile);
 
-    pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
+    // pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
     is_success_match = !calc_is_faile;
 }
 
@@ -490,12 +490,12 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     }
     list_point = TianLi::Utils::extract_valid(list_point);
 
-    lisx.clear();
-    lisy.clear();
+    lisx.reserve(list_point.size());
+    lisy.reserve(list_point.size());
     for (int i = 0; i < list_point.size(); i++)
     {
-        lisx.push_back(list_point[i].x);
-        lisy.push_back(list_point[i].y);
+        lisx[i] = list_point[i].x;
+        lisy[i] = list_point[i].y;
     }
 
     double x_stdev = TianLi::Utils::stdev_abs(lisx);
