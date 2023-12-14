@@ -28,9 +28,9 @@ namespace tianli::algorithms::feature
 
         features fts;
         fts.keypoints = keypoints;
-        fts.descriptors = cv::Mat(keypoints.size(), 64, CV_32F);
+        fts.descriptors = cv::Mat(keypoints.size(), border_fts.descriptors.cols, CV_32F);
         for (int i = 0; i < selected_row_indexs.size(); i++)
-            fts.descriptors.row(i).copyTo(border_fts.descriptors.row(selected_row_indexs[i]));
+            border_fts.descriptors.row(selected_row_indexs[i]).copyTo(fts.descriptors.row(i));
         return fts;
     }
 
@@ -57,9 +57,9 @@ namespace tianli::algorithms::feature
 
         features fts;
         fts.keypoints = keypoints;
-        fts.descriptors = cv::Mat(keypoints.size(), 64, CV_32F);
+        fts.descriptors = cv::Mat(keypoints.size(), border_fts.descriptors.cols, CV_32F);
         for (int i = 0; i < selected_row_indexs.size(); i++)
-            fts.descriptors.row(i).copyTo(border_fts.descriptors.row(selected_row_indexs[i]));
+            border_fts.descriptors.row(selected_row_indexs[i]).copyTo(fts.descriptors.row(i));
         return fts;
     }
 
