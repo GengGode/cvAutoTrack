@@ -36,7 +36,7 @@ namespace tianli::algorithms::feature::create
 
         std::for_each(std::execution::par_unseq, grid_features.begin(), grid_features.end(), [&](std::pair<cv::Rect, features> &grid_feature) 
                       {
-                          const auto &detector = cv::xfeatures2d::SURF::create(100, 1, 3, true, false);
+                          const auto &detector = cv::xfeatures2d::SURF::create(100, 1, 3, false, true);
                           float threshold = 100.0;
                           features feature;
                           for (int i = 0; i < 10; i++)
