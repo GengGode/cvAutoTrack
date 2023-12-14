@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/utils/logger.hpp>
 #include <Windows.h>
 #include <iostream>
 #include <frame/frame.include.h>
@@ -9,6 +10,9 @@
 
 int main()
 {
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
+    cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
+
     cv::Mat frame;
     auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto capture = std::make_shared<tianli::frame::capture::capture_window_graphics>(logger);
