@@ -23,7 +23,7 @@ namespace tianli::frame::capture
             this->type = source_type::window_graphics;
             auto init_global = utils::window_graphics::graphics_global::get_instance();
         }
-        ~capture_window_graphics() = default;
+        ~capture_window_graphics() override = default;
 
     public:
         bool initialization() override
@@ -120,7 +120,7 @@ namespace tianli::frame::capture
             new_frame = m_framePool.TryGetNextFrame();
             if (new_frame == nullptr)
                 return false;
-            
+
             auto frame_size = new_frame.ContentSize();
             auto &desc = utils::window_graphics::graphics_global::get_instance().desc_type;
             if (desc.Width != static_cast<UINT>(m_lastSize.Width) || desc.Height != static_cast<UINT>(m_lastSize.Height))
@@ -154,13 +154,13 @@ namespace tianli::frame::capture
 
             if (client_box_available)
             {
-                m_d3dContext->CopySubresourceRegion(bufferTexture,  0, 0, 0, 0, frameSurface.get(),  0, &client_box);
+                m_d3dContext->CopySubresourceRegion(bufferTexture, 0, 0, 0, 0, frameSurface.get(), 0, &client_box);
             }
             else
             {
                 m_d3dContext->CopyResource(bufferTexture, frameSurface.get());
             }
-            
+
             if (bufferTexture == nullptr)
             {
                 return false;
