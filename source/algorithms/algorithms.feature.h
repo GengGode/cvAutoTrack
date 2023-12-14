@@ -6,8 +6,10 @@ namespace tianli::algorithms::feature
     static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
     {
         features border_fts;
-        auto border = cv::copyMakeBorder(image, 100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
-        auto border_mask = cv::copyMakeBorder(mask, 100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+        cv::Mat border; 
+        cv::Mat border_mask;
+        cv::copyMakeBorder(image,border, 100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+        cv::copyMakeBorder(mask, border_mask,100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
         detector->detectAndCompute(border, border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
         std::vector<int> selected_row_indexs;
