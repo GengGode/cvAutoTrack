@@ -11,13 +11,24 @@ namespace tianli::algorithms::feature
         if (padding)
         {
             cv::copyMakeBorder(image, border, padding, padding, padding, padding, cv::BORDER_REPLICATE, cv::Scalar(0, 0, 0));
-            cv::copyMakeBorder(mask, border_mask, padding, padding, padding, padding, cv::BORDER_REPLICATE, cv::Scalar(0, 0, 0));
+            if (mask.empty())
+            {
+                cv::copyMakeBorder(mask, border_mask, padding, padding, padding, padding, cv::BORDER_REPLICATE, cv::Scalar(0, 0, 0));
+            }
         }
         else {
             border = image;
             border_mask = mask;
         }
-        detector->detectAndCompute(border, border_mask, border_fts.keypoints, border_fts.descriptors);
+
+        if (!mask.empty())
+        {
+            detector->detectAndCompute(border, border_mask, border_fts.keypoints, border_fts.descriptors);
+        }
+        else
+        {
+            detector->detectAndCompute(border, cv::noArray(), border_fts.keypoints, border_fts.descriptors);
+        }
         if (border_fts.size() == 0) return border_fts;    //没有捕获到特征点，直接返回
 
         std::vector<cv::KeyPoint> keypoints;
