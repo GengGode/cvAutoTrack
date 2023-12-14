@@ -1,5 +1,6 @@
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d.hpp>
 #include "utils/Utils.h"
 
 typedef std::pair<int, std::string> error_info;
@@ -7,25 +8,25 @@ typedef std::pair<int, std::string> error_info;
 struct direction_calculation_config
 {
     bool error = false;
-    error_info err = {0, ""};
+    error_info err = { 0, "" };
 };
 
 struct rotation_calculation_config
 {
     bool error = false;
-    error_info err = {0, ""};
+    error_info err = { 0, "" };
 };
 
 struct position_calculation_config
 {
     bool error = false;
-    error_info err = {0, ""};
+    error_info err = { 0, "" };
 };
 
 struct odometer_config
 {
     bool error = false;
-    error_info err = {0, ""};
+    error_info err = { 0, "" };
     double scale = 1.0;
 };
 
@@ -41,7 +42,7 @@ class point_index
 {
 public:
     point_index() = default;
-    point_index(const cv::Point2d &pos) : _point(pos) {}
+    point_index(const cv::Point2d& pos) : _point(pos) {}
     ~point_index() = default;
     virtual cv::Point2d point() { return _point; }
 
@@ -71,7 +72,7 @@ public:
     /// @brief 根据范围查找物品项
     /// @param rect 范围
     /// @return std::vector<std::shared_ptr<ItemInface>> 物品项集合
-    virtual std::vector<std::shared_ptr<point_index>> find(const cv::Rect2d &rect) = 0;
+    virtual std::vector<std::shared_ptr<point_index>> find(const cv::Rect2d& rect) = 0;
 
 public:
     /// @brief 判断物品项集合是否为空
