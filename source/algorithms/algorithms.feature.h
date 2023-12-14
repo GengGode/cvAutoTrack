@@ -10,7 +10,7 @@ namespace tianli::algorithms::feature
         return fts;
     }
 
-    static features merge(const features &features_upper, const features &features_lower)
+    static features merge(const features &features_upper, const features &features_lower, const cv::Point2d diff_offset = cv::Point2d(0, 0))
     {
         features features_merge;
         auto &[ids, kps, des] = features_merge;
@@ -19,7 +19,8 @@ namespace tianli::algorithms::feature
         for (auto i : features_lower.indexs)
             ids.push_back(features_upper.size() + i);
         kps = features_upper.keypoints;
-        kps.insert(kps.end(), features_lower.keypoints.begin(), features_lower.keypoints.end());
+        std::for_each(features_lower.keypoints.begin(), features_lower.keypoints.end(), [&](const auto &kp)
+                      { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
         des = cv::Mat(features_upper.size() + features_lower.size(), 64, CV_16FC4);
         des(cv::Rect(0, 0, 64, features_upper.size())) = features_upper.descriptors.clone();
         des(cv::Rect(0, features_upper.size(), 64, features_lower.size())) = features_lower.descriptors.clone();
