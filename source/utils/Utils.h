@@ -1,5 +1,9 @@
 #pragma once
 
+#define NOMINMAX
+#include <windows.h>
+
+
 namespace TianLi::Utils
 {
     struct MatchKeyPoint
