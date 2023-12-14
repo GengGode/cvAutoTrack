@@ -2,12 +2,12 @@
 #include "algorithms.include.h"
 
 // 从匹配点对求解带仅缩放、dx和dy的线性方程
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::Point2f> &dst, double &s, double &dx, double &dy);
+inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d> &src, std::vector<cv::Point2d> &dst, double &s, double &dx, double &dy);
 
 
 
 
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2f> &src, std::vector<cv::Point2f> &dst, double &s, double &dx, double &dy)
+inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d> &src, std::vector<cv::Point2d> &dst, double &s, double &dx, double &dy)
 {
     // assert(src.size() == dst.size());
     // assert(src.size() >= 2);

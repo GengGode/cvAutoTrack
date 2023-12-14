@@ -84,7 +84,7 @@ namespace TianLi::Utils
     // copy from openvslam
     std::mt19937 create_random_engine();
     std::vector<unsigned int> create_random_array(const size_t size, const unsigned int rand_min, const unsigned int rand_max);
-    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2f>& normalized_pts, cv::Mat& transform);
+    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2d>& normalized_pts, cv::Mat& transform);
 
     template<typename T>
     static cv::Mat to_homogeneous(T& pt) {

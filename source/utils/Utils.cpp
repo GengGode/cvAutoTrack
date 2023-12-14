@@ -456,7 +456,7 @@ namespace TianLi::Utils
 
         return v;
     }
-    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2f>& normalized_pts, cv::Mat& transform) {
+    void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2d>& normalized_pts, cv::Mat& transform) {
         double mean_x = 0;
         double mean_y = 0;
         const auto num_keypts = keypts.size();

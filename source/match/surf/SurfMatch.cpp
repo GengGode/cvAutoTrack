@@ -204,7 +204,7 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
 
 
     // 0. Normalize keypoint coordinates
-    std::vector<cv::Point2f> normalized_keypts_1, normalized_keypts_2;
+    std::vector<cv::Point2d> normalized_keypts_1, normalized_keypts_2;
     cv::Mat transform_1, transform_2;
     TianLi::Utils::normalize(undist_keypts_1, normalized_keypts_1, transform_1);
     TianLi::Utils::normalize(undist_keypts_2, normalized_keypts_2, transform_2);
@@ -221,8 +221,8 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
 
 
     // 用于求解的最小集合
-    std::vector<cv::Point2f> min_set_keypts_1(min_set_size);
-    std::vector<cv::Point2f> min_set_keypts_2(min_set_size);
+    std::vector<cv::Point2d> min_set_keypts_1(min_set_size);
+    std::vector<cv::Point2d> min_set_keypts_2(min_set_size);
     
     // shared var in ransac loop
     // homography matrix from shot 1 to shot 2, and
@@ -279,8 +279,8 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     }
 
     // 3. Recompute a homography matrix only with the inlier matches
-    std::vector<cv::Point2f> inlier_normalized_keypts_1;
-    std::vector<cv::Point2f> inlier_normalized_keypts_2;
+    std::vector<cv::Point2d> inlier_normalized_keypts_1;
+    std::vector<cv::Point2d> inlier_normalized_keypts_2;
     inlier_normalized_keypts_1.reserve(matches_12.size());
     inlier_normalized_keypts_2.reserve(matches_12.size());
     for (unsigned int i = 0; i < num_matches; ++i) {
