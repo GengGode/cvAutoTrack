@@ -14,7 +14,7 @@ int main()
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
 
     // 随机生成一个MP4视频
-    auto writer = cv::VideoWriter("test.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(1920, 1080), true);
+    auto writer = cv::VideoWriter("test.mp4", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, cv::Size(1920, 1080), true);
     cv::Mat test = cv::Mat::zeros(1080, 1920, CV_8UC3);
     for (int i = 0; i < 30; ++i)
     {
