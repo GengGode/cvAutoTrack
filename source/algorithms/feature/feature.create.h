@@ -42,14 +42,15 @@ namespace tianli::algorithms::feature::create
                 const size_t grid_y = h_index * grid_radius;
                 const size_t grid_width = grid_x + grid_radius > image.size[1] ? image.size[1] - grid_x : grid_radius;
                 const size_t grid_height = grid_y + grid_radius > image.size[0] ? image.size[0] - grid_y : grid_radius;
-                // 考虑到边界位置的特征点算法无法提取，对图片进行扩增边界
+                // 放大滑动窗口以适配边界区域
+
                 const cv::Rect grid_rect(grid_x, grid_y, grid_width + 2 * border_size, grid_height + 2 * border_size);
                 grid_rects[grid_index] = grid_rect;
                 // 计算网格中的特征点
-                cv::Mat grid_image = image(grid_rect);
+                cv::Mat grid_image = paddingImg(grid_rect);
                 cv::Mat grid_mask;
                 if (!mask.empty())
-                    grid_mask = mask(grid_rect);
+                    grid_mask = paddingImg(grid_rect);
                 else
                     grid_mask = cv::Mat(grid_image.rows, grid_image.cols, CV_8UC1);
                 grid_features[grid_index] = feature::from_image(detector, grid_image, grid_mask);
@@ -88,7 +89,7 @@ namespace tianli::algorithms::feature::create
         {
             auto& grid_feature = res_features[i];
             auto& grid_rect = grid_rects[i];
-            result_features = merge(result_features, grid_feature, cv::Point2d(grid_rect.x, grid_rect.y));
+            result_features = merge(result_features, grid_feature, cv::Point2d(grid_rect.x - border_size, grid_rect.y - border_size));
         }
         return result_features;
     }
