@@ -176,8 +176,9 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
     std::vector<cv::DMatch> keypoint_list_dmatch;
     TianLi::Utils::calc_good_matches(map_mat, map.keypoints, img_object, mini_map.keypoints, KNN_m, 0.825, keypoint_list, keypoint_list_dmatch);
-
+#ifdef _DEBUG
     std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
+#endif
     if (keypoint_list.size() == 0 || keypoint_list.size() < 4) // add: < 3 constraint
     {
         calc_is_faile = true;
@@ -271,7 +272,9 @@ cv::Point2d SurfMatch::match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out
     // std::cout<<"best_score_: "<<best_score_<<" is_inlier_match_.size(): "<<is_inlier_match_.size()<<std::endl;
     auto num_inliers = std::count(is_inlier_match_.begin(), is_inlier_match_.end(), true);
     auto solution_is_valid_ = (best_score_ > 0.0) && (num_inliers >= min_set_size); // the negative side of calc_is_faile
+#ifdef _DEBUG
     std::cout<<"solution_is_valid_: "<<solution_is_valid_<<"inliers: "<<num_inliers<<std::endl;
+#endif
 
     if (!solution_is_valid_) {
         calc_is_faile = true;
