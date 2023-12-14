@@ -1,4 +1,5 @@
 #pragma once
+#include <opencv2/opencv.hpp>
 #include "../global/global.include.h"
 
 namespace tianli::frame
@@ -12,8 +13,8 @@ namespace tianli::frame
             unknown,
             bitblt,
             window_graphics,
-            local_video,
-            local_picture
+            video,
+            picture
         };
         enum class source_mode
         {
