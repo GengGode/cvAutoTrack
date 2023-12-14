@@ -28,7 +28,7 @@ namespace tianli::algorithms::feature
         return fts;
     }
 
-    static features merge(const features &features_upper, const features &features_lower, const cv::Point2d diff_offset = cv::Point2d(0, 0))
+    static features merge(const features &features_upper, const features &features_lower, const cv::Point2f diff_offset = cv::Point2f(0, 0))
     {
         features features_merge;
         auto &[ids, kps, des] = features_merge;
