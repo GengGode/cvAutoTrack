@@ -8,13 +8,23 @@ namespace tianli::algorithms::feature
     {
         const int border_size = 100;
         features border_fts;
+
         cv::Rect border_rect = cv::Rect(0, 0, image.cols, image.rows) & cv::Rect(roi.x - border_size, roi.y - border_size, roi.width + 2 * border_size, roi.height + 2 * border_size);
         cv::Rect border_mask_rect = border_rect;
 
-        cv::Mat border = image(border_rect);
+        cv::Mat border_img = image(border_rect);
         cv::Mat border_mask = mask.empty() ? cv::Mat() : mask(border_mask_rect);
 
-        detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
+        //获取图像四边需要填充的像素数
+        int pt = -std::min(0, roi.y - border_size);
+        int pd = std::max(0, roi.y + roi.height + border_size - image.rows);
+        int pl = -std::min(0, roi.x - border_size);
+        int pr = std::max(0, roi.x + roi.width + border_size - image.cols);
+        //填充图像
+        cv::copyMakeBorder(border_img, border_img, pt, pd, pl, pr, cv::BORDER_REPLICATE);
+        if (mask.empty() == false) cv::copyMakeBorder(border_mask, border_mask, pt, pd, pl, pr, cv::BORDER_REPLICATE);
+
+        detector->detectAndCompute(border_img, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
         std::vector<int> selected_row_indexs;
         for (int i = 0; i < border_fts.keypoints.size(); i++)
@@ -73,7 +83,7 @@ namespace tianli::algorithms::feature
             ids.push_back(features_upper.size() + i);
         kps = features_upper.keypoints;
         std::for_each(features_lower.keypoints.begin(), features_lower.keypoints.end(), [&](const auto &kp)
-                      { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
+            { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
         des = cv::Mat(features_upper.size() + features_lower.size(), 64, CV_16FC4);
         des(cv::Rect(0, 0, 64, features_upper.size())) = features_upper.descriptors.clone();
         des(cv::Rect(0, features_upper.size(), 64, features_lower.size())) = features_lower.descriptors.clone();
@@ -83,7 +93,7 @@ namespace tianli::algorithms::feature
     static std::vector<features> split(const features &featuress)
     {
         if (featuress.indexs.size() == 0)
-            return {featuress};
+            return { featuress };
         auto &[ids, kps, des] = featuress;
         std::vector<features> features_vec;
         auto iter_size = featuress.size();
