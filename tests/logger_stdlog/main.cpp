@@ -13,8 +13,8 @@ int main()
     logger->perl("test");
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     logger->perl_end("test");
-    logger->perl("test");
+    logger->perl();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    logger->perl_end("test");
-    
+    logger->perl_end();
+
 }

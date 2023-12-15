@@ -11,13 +11,13 @@ namespace tianli::global::record
             std::cout << "    |: " << err.location << " : " << err.msg << std::endl;
         }
         
-        void perl(std::string perl_label) override
+        void perl(std::string perl_label = "default") override
         {
             auto now = std::chrono::system_clock::now();
             perl_map[perl_label] = now;
             current_perl_it = perl_map.find(perl_label);
         }
-        void perl_end(std::string perl_label)  override
+        void perl_end(std::string perl_label = "default")  override
         {
             auto now = std::chrono::system_clock::now();
             if (perl_label.empty())
@@ -40,6 +40,6 @@ namespace tianli::global::record
 
     private:
         std::map<std::string, std::chrono::system_clock::time_point> perl_map;
-        auto current_perl_it = perl_map.end();
+        std::map<std::string, std::chrono::system_clock::time_point>::iterator current_perl_it = perl_map.end();
     };
 } // namespace tianli::global::log
