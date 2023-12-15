@@ -51,6 +51,9 @@ namespace tianli::global
         logger() = default;
         virtual void write(level lv, const char *msg) { return; }
         virtual void log(error_type err) { return; }
+        // 用于启用一次计时测量
+        virtual void perl(std::string perl_label) { return; }
+        virtual void perl_end(std::string perl_label = "") { return; }
     };
 
 
