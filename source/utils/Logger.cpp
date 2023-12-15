@@ -160,37 +160,37 @@ std::string TianLi::Utils::Logger::get_sys_version()
 std::string TianLi::Utils::Logger::get_gpu_name()
 {
     // Get the name of the GPU
-#ifdef BUILD_CAPTURE_DXGI
-    IDXGIAdapter* pAdapter = nullptr;
-    IDXGIFactory* pFactory = nullptr;
-    try
-    {
-        HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
-        if (FAILED(hr))
-        {
-            return "Unknown";
-        }
-
-        hr = pFactory->EnumAdapters(0, &pAdapter);
-        if (FAILED(hr))
-        {
-            return "Unknown";
-        }
-
-        DXGI_ADAPTER_DESC desc;
-        hr = pAdapter->GetDesc(&desc);
-        if (FAILED(hr))
-        {
-            return "Unknown";
-        }
-
-        std::wstring ws(desc.Description);
-        return wstring2string(ws);
-    }
-    catch (...) {
-        return "获取GPU信息失败";
-    }
-#endif 
+//#ifdef BUILD_CAPTURE_DXGI
+//    IDXGIAdapter* pAdapter = nullptr;
+//    IDXGIFactory* pFactory = nullptr;
+//    try
+//    {
+//        HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
+//        if (FAILED(hr))
+//        {
+//            return "Unknown";
+//        }
+//
+//        hr = pFactory->EnumAdapters(0, &pAdapter);
+//        if (FAILED(hr))
+//        {
+//            return "Unknown";
+//        }
+//
+//        DXGI_ADAPTER_DESC desc;
+//        hr = pAdapter->GetDesc(&desc);
+//        if (FAILED(hr))
+//        {
+//            return "Unknown";
+//        }
+//
+//        std::wstring ws(desc.Description);
+//        return wstring2string(ws);
+//    }
+//    catch (...) {
+//        return "获取GPU信息失败";
+//    }
+//#endif 
     return "获取GPU信息失败";
 
 }
