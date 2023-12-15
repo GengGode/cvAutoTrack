@@ -30,6 +30,9 @@ namespace tianli::frame::capture
         {
             if (this->is_initialized)
                 return true;
+
+            if (this->is_callback)
+                this->source_handle = this->source_handle_callback();
             if (IsWindow(this->source_handle) == false)
                 return false;
 
