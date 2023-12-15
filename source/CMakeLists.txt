@@ -3,7 +3,6 @@ set(WITH_DYNAMIC_OPENCV ON CACHE BOOL "link static opencv")
 set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
 set(BUILD_SUPPORT_WINRT ON CACHE BOOL "support winrt api")
 set(BUILD_SUPPORT_WINDUMP ON CACHE BOOL "support window dump")
-set(_DEBUG ON CACHE BOOL "debug mode")
 
 set(WITH_DYNAMIC_OPENCV ON)
 set(BUILD_CAPTURE_DXGI ON)
