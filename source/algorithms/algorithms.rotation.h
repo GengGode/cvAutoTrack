@@ -67,8 +67,8 @@ cv::Mat cvMatRoll(const cv::Mat& src,cv::Point2d shift)
 	cv::Mat dst;
 	transFormMat.at<float>(0, 0) = 1;
 	transFormMat.at<float>(1, 1) = 1;
-	transFormMat.at<float>(0, 2) = shift.x;
-	transFormMat.at<float>(1, 2) = shift.y;
+	transFormMat.at<float>(0, 2) = static_cast<float>(shift.x);
+	transFormMat.at<float>(1, 2) = static_cast<float>(shift.y);
 	cv::warpAffine(src, dst, transFormMat, src.size(), cv::INTER_NEAREST, cv::BORDER_WRAP);
 	return dst;
 }
