@@ -4,7 +4,6 @@
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "algorithms/algorithms.solve.linear.h"
-#include "Logger.h"
 
 
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale)
@@ -421,7 +420,6 @@ cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 
 cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat& mini_map_mat, Match::KeyMatPoint& mini_map, Match::KeyMatPoint& map, bool& calc_is_faile, double& stdev, double minimap_scale_param)
 {
-    auto& logger = TianLi::Utils::Logger::getInstance();
     cv::Point2d map_pos;
 
     cv::Mat img_object = TianLi::Utils::crop_border(mini_map_mat, 0.15);
@@ -445,7 +443,6 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     end_time = std::chrono::steady_clock::now();
     cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
     // std::cout << "match time cost: " << cost_time << " ms" << std::endl;
-    // logger.info("match time cost: " + std::to_string(cost_time) + " ms");
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
     std::vector<cv::DMatch> keypoint_list_dmatch;
@@ -477,9 +474,9 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 
     // TODO: 按照scale 比例判断是否在城镇内
 
+    // std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
+    // std::cout<<"s: " << std::to_string(scale_mini2map) << " dx: " << std::to_string(dx_mini2map) << " dy: " << std::to_string(dy_mini2map) << std::endl;
     
-    logger.info("keypoint_list.size(): " + std::to_string(keypoint_list.size()));
-    logger.info("s: " + std::to_string(scale_mini2map) + " dx: " + std::to_string(dx_mini2map) + " dy: " + std::to_string(dy_mini2map));
     // 绘制匹配结果
     // cv::Mat img_matches;
     // cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);

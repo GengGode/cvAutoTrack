@@ -1,7 +1,6 @@
 #pragma once
 #include "algorithms.include.h"
 #include "algorithms.solve.linear.h"
-#include "Logger.h"
 
 // 视觉里程计
 // 每次小地图更新时调用
@@ -52,7 +51,6 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
 // 几乎必然是同比例的，返回偏移量
 bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
 {
-    auto& logger = TianLi::Utils::Logger::getInstance();
     auto beg_time = std::chrono::steady_clock::now();
 
     // 不crop了，因为上一张会被crop两次。
@@ -117,7 +115,5 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
     auto end_time = std::chrono::steady_clock::now();
     auto time_cost = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
 
-    
-    // logger.info("orb match time cost: " + std::to_string(time_cost) + " ms");
     return true;
 }
