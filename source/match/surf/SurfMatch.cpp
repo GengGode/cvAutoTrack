@@ -112,7 +112,7 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
 #endif
 
     double hessian_threshold = cache_info->setting.hessian_threshold;
-    int octave = cache_info->setting.octave;
+    int octave = cache_info->setting.octaves;
     int octave_layers = cache_info->setting.octave_layers;
     bool extended = cache_info->setting.extended;
     bool upright = cache_info->setting.up_right;

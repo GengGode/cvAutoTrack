@@ -1,32 +1,65 @@
 #pragma once
 #include "algorithms.include.h"
+#include <opencv2/core/mat.hpp>
 
 namespace tianli::algorithms::feature
 {
-    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Rect &roi, const cv::Mat &mask = cv::Mat())
     {
+        const int border_size = 100;
         features border_fts;
-        cv::Mat border; 
-        cv::Mat border_mask;
-        cv::copyMakeBorder(image,border, 100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
-        cv::copyMakeBorder(mask, border_mask,100, 100, 100, 100, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
-        detector->detectAndCompute(border, border_mask, border_fts.keypoints, border_fts.descriptors);
+        cv::Rect border_rect = cv::Rect(0, 0, image.cols, image.rows) & cv::Rect(roi.x - border_size, roi.y - border_size, roi.width + 2 * border_size, roi.height + 2 * border_size);
+        cv::Rect border_mask_rect = border_rect;
+
+        cv::Mat border = image(border_rect);
+        cv::Mat border_mask = mask.empty() ? cv::Mat() : mask(border_mask_rect);
+
+        detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
         std::vector<int> selected_row_indexs;
         for (int i = 0; i < border_fts.keypoints.size(); i++)
         {
             auto &kp = border_fts.keypoints[i];
-            if (kp.pt.x < 100 || kp.pt.y < 100 || kp.pt.x > image.cols + 100 || kp.pt.y > image.rows + 100)
+            if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
                 continue;
-            keypoints.emplace_back(kp.pt - cv::Point2f(100, 100), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
+            keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
             selected_row_indexs.push_back(i);
         }
 
         features fts;
         fts.keypoints = keypoints;
-        fts.descriptors = fts.descriptors.rowRange(0, keypoints.size()).clone();
+        fts.descriptors = cv::Mat(keypoints.size(), border_fts.descriptors.cols, CV_32F);
         for (int i = 0; i < selected_row_indexs.size(); i++)
-            fts.descriptors.row(i).copyTo(fts.descriptors.row(selected_row_indexs[i]));
+            border_fts.descriptors.row(selected_row_indexs[i]).copyTo(fts.descriptors.row(i));
+        return fts;
+    }
+
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
+    {
+        const int border_size = 100;
+        features border_fts;
+        cv::Mat border;
+        cv::Mat border_mask;
+        cv::copyMakeBorder(image, border, border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+        cv::copyMakeBorder(mask, border_mask, border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+
+        detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
+        std::vector<cv::KeyPoint> keypoints;
+        std::vector<int> selected_row_indexs;
+        for (int i = 0; i < border_fts.keypoints.size(); i++)
+        {
+            auto &kp = border_fts.keypoints[i];
+            if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
+                continue;
+            keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
+            selected_row_indexs.push_back(i);
+        }
+
+        features fts;
+        fts.keypoints = keypoints;
+        fts.descriptors = cv::Mat(keypoints.size(), border_fts.descriptors.cols, CV_32F);
+        for (int i = 0; i < selected_row_indexs.size(); i++)
+            border_fts.descriptors.row(selected_row_indexs[i]).copyTo(fts.descriptors.row(i));
         return fts;
     }
 
