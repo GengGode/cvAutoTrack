@@ -9,24 +9,24 @@ namespace tianli::algorithms::feature::create
     {
         const float target_density_rate = 1.0 / (grid_radius * grid_radius) * target_density;
         // 将图像根据尺寸划分为网格，为了避免出现过小的块，宽高会减去一半边长，以实现将不足一半边长的块向前合并
-        const size_t grid_h_count = std::max(1, static_cast<int>(std::ceil((image.size[1] - grid_radius / 2) / grid_radius)));
-        const size_t grid_v_count = std::max(1, static_cast<int>(std::ceil((image.size[0] - grid_radius / 2) / grid_radius)));
-        const size_t grid_size = grid_h_count * grid_v_count;
+        const size_t grid_row_count = std::max(1, static_cast<int>(std::ceil((image.size[1] - grid_radius / 2) / grid_radius)));
+        const size_t grid_col_count = std::max(1, static_cast<int>(std::ceil((image.size[0] - grid_radius / 2) / grid_radius)));
+        const size_t grid_size = grid_row_count * grid_col_count;
 
         std::vector<std::pair<cv::Rect, features>> grid_features(grid_size);
         //  结果特征点
         features result_features;
-        for (int h_index = 0; h_index < grid_h_count; h_index++)
+        for (int grid_row = 0; grid_row < grid_row_count; grid_row++)
         {
-            for (int v_index = 0; v_index < grid_v_count; v_index++)
+            for (int grid_col = 0; grid_col < grid_col_count; grid_col++)
             {
                 // 计算网格索引
-                const size_t grid_index = h_index * grid_v_count + v_index;
+                const size_t grid_index = grid_row * grid_col_count + grid_col;
                 // 计算网格范围
-                const size_t grid_x = h_index * grid_radius;
-                const size_t grid_y = v_index * grid_radius;
-                const size_t grid_width = h_index - 1 ? image.size[1] - grid_x : grid_radius;
-                const size_t grid_height = v_index - 1 ? image.size[0] - grid_y : grid_radius;
+                const size_t grid_x = grid_row * grid_radius;
+                const size_t grid_y = grid_col * grid_radius;
+                const size_t grid_width = grid_row - 1 ? image.size[1] - grid_x : grid_radius;
+                const size_t grid_height = grid_col - 1 ? image.size[0] - grid_y : grid_radius;
 
                 const cv::Rect grid_rect = cv::Rect(grid_x, grid_y, grid_width, grid_height);
                 grid_features[grid_index].first = grid_rect;
