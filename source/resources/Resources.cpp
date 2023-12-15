@@ -22,10 +22,7 @@ Resources::Resources()
     UIDnumber[7] = TianLi::Resources::Load::load_image("uid7");
     UIDnumber[8] = TianLi::Resources::Load::load_image("uid8");
     UIDnumber[9] = TianLi::Resources::Load::load_image("uid9");
-#ifdef _DEBUG
-    GIMAP = cv::imread("F:/Dev/cvAutoTrack/GIMAP.png");
-    cv::cvtColor(GIMAP, GIMAP, cv::COLOR_RGB2GRAY);
-#endif
+
 
     cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGB2GRAY);
     cv::cvtColor(UID, UID, cv::COLOR_RGB2GRAY);

@@ -4,6 +4,7 @@
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "algorithms/algorithms.solve.linear.h"
+#include "Logger.h"
 
 
 bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale)
@@ -104,12 +105,7 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     if (isInit)return;
     map.keypoints = std::move(cache_info->key_points);
     map.descriptors = std::move(cache_info->descriptors);
-#ifdef _DEBUG
-    // auto& res = Resources::getInstance();
-    // _mapMat = res.GIMAP;
-    // computer keypoint and descriptor
-    // matcher.detect_and_compute(_mapMat, map);
-#endif
+
 
     double hessian_threshold = cache_info->setting.hessian_threshold;
     int octave = cache_info->setting.octaves;
@@ -425,21 +421,18 @@ cv::Point2d SurfMatch::match_no_continuity_1st(bool& calc_is_faile)
 
 cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat& mini_map_mat, Match::KeyMatPoint& mini_map, Match::KeyMatPoint& map, bool& calc_is_faile, double& stdev, double minimap_scale_param)
 {
+    auto& logger = TianLi::Utils::Logger::getInstance();
     cv::Point2d map_pos;
 
     cv::Mat img_object = TianLi::Utils::crop_border(mini_map_mat, 0.15);
     cv::resize(img_object, img_object, cv::Size(0, 0), minimap_scale_param, minimap_scale_param, cv::INTER_CUBIC);
 
     // 小地图区域计算特征点
-#ifdef _DEBUG
     auto beg_time = std::chrono::steady_clock::now();
-#endif
     matcher.detect_and_compute(img_object, mini_map);
-#ifdef _DEBUG
     auto end_time = std::chrono::steady_clock::now();
     auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
     // std::cout<<"detect_and_compute time cost: " << cost_time << " ms" << std::endl;
-#endif
     // 没有提取到特征点直接返回，结果无效
     if (mini_map.keypoints.size() == 0)
     {
@@ -447,15 +440,12 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
         return map_pos;
     }
     // 匹配特征点
-#ifdef _DEBUG
     beg_time = std::chrono::steady_clock::now();
-#endif
     std::vector<std::vector<cv::DMatch>> KNN_m = matcher.match(mini_map, map);
-#ifdef _DEBUG
     end_time = std::chrono::steady_clock::now();
     cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
     // std::cout << "match time cost: " << cost_time << " ms" << std::endl;
-#endif
+    // logger.info("match time cost: " + std::to_string(cost_time) + " ms");
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
     std::vector<cv::DMatch> keypoint_list_dmatch;
@@ -487,9 +477,9 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
 
     // TODO: 按照scale 比例判断是否在城镇内
 
-#ifdef _DEBUG
-    std::cout<<"keypoint_list.size(): "<<keypoint_list.size()<<std::endl;
-    std::cout<<"s: "<<scale_mini2map<<" dx: "<<dx_mini2map<<" dy: "<<dy_mini2map<<std::endl;
+    
+    logger.info("keypoint_list.size(): " + std::to_string(keypoint_list.size()));
+    logger.info("s: " + std::to_string(scale_mini2map) + " dx: " + std::to_string(dx_mini2map) + " dy: " + std::to_string(dy_mini2map));
     // 绘制匹配结果
     // cv::Mat img_matches;
     // cv::drawMatches(img_object, mini_map.keypoints, map_mat, map.keypoints, keypoint_list_dmatch, img_matches);
@@ -498,7 +488,6 @@ cv::Point2d match_all_map(Match& matcher, const cv::Mat& map_mat, const cv::Mat&
     // double scale_mini2map = 1.3 / minimap_scale_param;
     // std::cout<<"scale_mini2map: "<<scale_mini2map<<std::endl;
 
-#endif
 
 
     std::vector<double> lisx;

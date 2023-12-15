@@ -131,6 +131,7 @@ cv::Point2d match_no_continuity_2nd(bool& calc_is_faile)
 
 void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPosition& out_genshin_position)
 {
+    auto& logger = TianLi::Utils::Logger::getInstance();
     static SurfMatch surf_match;
     static bool is_init = false;
     if (genshin_minimap.is_run_init_start == true || is_init == false)
@@ -167,15 +168,11 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 
     surf_match.setMiniMap(genshin_minimap.img_minimap);
 
-#ifdef _DEBUG
     auto beg_time = std::chrono::steady_clock::now();
-#endif
     surf_match.match();
-#ifdef _DEBUG
     auto end_time = std::chrono::steady_clock::now();
     auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
-    cout << "match cost time: " << cost_time << " match success: "<< surf_match.is_success_match << endl;
-#endif
+    logger.info("match cost time: " + std::to_string(cost_time) + " match success: " + std::to_string(surf_match.is_success_match));
 
     out_genshin_position.position = surf_match.getLocalPos();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
