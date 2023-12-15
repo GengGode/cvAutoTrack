@@ -184,8 +184,8 @@ namespace tianli::frame::capture::utils::window_graphics
                     RequestAccessAsync(
                         winrt::Windows::Graphics::Capture::GraphicsCaptureAccessKind::Borderless)
                         .get();
-                session.IsBorderRequired(false);
-                session.IsCursorCaptureEnabled(false);
+                session.IsBorderRequired(is_border);
+                session.IsCursorCaptureEnabled(is_cursor);
             }
         }
         catch (...)
