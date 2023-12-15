@@ -7,13 +7,14 @@ namespace tianli::algorithms::feature::create
     // NEED_TEST: 构造均匀分布的特征点，基于网格划分，在每个网格内至少采样到目标密度的特征点
     static features from_image(const cv::Mat &image, const int target_density = 100, const int grid_radius = 512, const cv::Mat &mask = cv::Mat())
     {
-        const float target_density_rate = 1.0 / (grid_radius * grid_radius) * target_density;
-        // 将图像根据尺寸划分为网格，为了避免出现过小的块，宽高会减去一半边长，以实现将不足一半边长的块向前合并
-        const size_t grid_row_count = std::max(1, static_cast<int>(std::ceil((image.size[1] - grid_radius / 2) / grid_radius)));
-        const size_t grid_col_count = std::max(1, static_cast<int>(std::ceil((image.size[0] - grid_radius / 2) / grid_radius)));
-        const size_t grid_size = grid_row_count * grid_col_count;
+        const float target_density_rate = 1.0f / (grid_radius * grid_radius) * target_density;
+        // 将图像根据尺寸划分为网格，以均分为原则，尽可能接近给定的半径
+        const size_t grid_row_count = std::ceil(1.0 * image.rows / grid_radius);
+        const size_t grid_col_count = std::ceil(1.0 * image.cols / grid_radius);
+        const cv::Size2d grid_size(image.cols / grid_col_count, image.rows / grid_row_count);
+        const size_t grid_count = grid_row_count * grid_col_count;
 
-        std::vector<std::pair<cv::Rect, features>> grid_features(grid_size);
+        std::vector<std::pair<cv::Rect, features>> grid_features(grid_count);
         //  结果特征点
         features result_features;
         for (int grid_row = 0; grid_row < grid_row_count; grid_row++)
@@ -23,10 +24,10 @@ namespace tianli::algorithms::feature::create
                 // 计算网格索引
                 const size_t grid_index = grid_row * grid_col_count + grid_col;
                 // 计算网格范围
-                const size_t grid_x = grid_row * grid_radius;
-                const size_t grid_y = grid_col * grid_radius;
-                const size_t grid_width = grid_row - 1 ? image.size[1] - grid_x : grid_radius;
-                const size_t grid_height = grid_col - 1 ? image.size[0] - grid_y : grid_radius;
+                const size_t grid_x = grid_col * grid_size.width;
+                const size_t grid_y = grid_row * grid_size.height;
+                const size_t grid_width = grid_col == grid_col_count - 1 ? image.cols - grid_x : grid_size.width;
+                const size_t grid_height = grid_row == grid_row_count - 1 ? image.rows - grid_y : grid_size.height;
 
                 const cv::Rect grid_rect = cv::Rect(grid_x, grid_y, grid_width, grid_height);
                 grid_features[grid_index].first = grid_rect;
@@ -47,9 +48,10 @@ namespace tianli::algorithms::feature::create
                     feature = feature::from_image(detector, image, grid_feature.first, mask);
                     threshold /= 2.0;
                 }
-                grid_feature.second = feature; });
+                grid_feature.second = feature;
+            });
 
-        for (int i = 0; i < grid_size; i++)
+        for (int i = 0; i < grid_count; i++)
             result_features = merge(result_features, grid_features[i].second, cv::Point2d(grid_features[i].first.x, grid_features[i].first.y));
         return result_features;
     }
