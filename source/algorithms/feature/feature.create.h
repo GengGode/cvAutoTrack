@@ -8,8 +8,8 @@ namespace tianli::algorithms::feature::create
     static features from_image(const cv::Mat& image, const int target_density = 100, const int grid_radius = 512, const cv::Mat& mask = cv::Mat())
     {
         // 将图像根据尺寸划分为网格
-        const size_t grid_width = std::ceil(image.size[1] / grid_radius);
-        const size_t grid_height = std::ceil(image.size[0] / grid_radius);
+        const size_t grid_width = std::ceil(image.size[1] / (float)grid_radius);
+        const size_t grid_height = std::ceil(image.size[0] / (float)grid_radius);
         const size_t grid_size = grid_width * grid_height;
         // std::vector<cv::Rect> grid_rects(grid_size);
         // std::vector<features> grid_features(grid_size);
@@ -36,7 +36,7 @@ namespace tianli::algorithms::feature::create
 
         std::for_each(std::execution::par_unseq, grid_features.begin(), grid_features.end(), [&](std::pair<cv::Rect, features>& grid_feature)
             {
-                const int fixed_target_density = grid_feature.first.area() / (grid_radius * grid_radius) * target_density;
+                const int fixed_target_density = grid_feature.first.area() / float(grid_radius * grid_radius) * target_density;
 
                 const auto& detector = cv::xfeatures2d::SURF::create(100, 1, 3, true, false);
                 float threshold = 100.0;
