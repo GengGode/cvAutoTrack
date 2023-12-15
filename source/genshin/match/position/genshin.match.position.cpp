@@ -167,7 +167,10 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
 
     surf_match.setMiniMap(genshin_minimap.img_minimap);
 
+    auto beg_time = std::chrono::steady_clock::now();
     surf_match.match();
+    auto end_time = std::chrono::steady_clock::now();
+    auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
 
     out_genshin_position.position = surf_match.getLocalPos();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
@@ -177,41 +180,24 @@ void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_m
     {
         cv::Point2d pos = out_genshin_position.position;
         cv::Point2d filt_pos;
-        // 查看od初始化了没
+        // u_k: 视觉里程计控制量；od_valid: 视觉里程计是否有效；ms_valid: 全局匹配是否有效
         auto u_k = cv::Point2d(0, 0);
         auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config());
-        if (!od_valid) {
-            // TODO：no u_k update
-            cout << "no u_k update" << endl;
+        auto ms_valid = surf_match.is_success_match;
+        
+        // 里程计能更就更；全局匹配能配就配
+        if (od_valid) {
+            filt_pos = out_genshin_position.config.pos_filter->predict(u_k);
+        }
+        if (ms_valid) {
+            filt_pos = out_genshin_position.config.pos_filter->update(pos);
+        }
+
+        // 特判tp之后
+        if (!od_valid && ms_valid) {
             filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
-            set_mini_map(genshin_minimap.img_minimap);
-        }
-        else {
-            cout << "u_k: " << u_k << endl;
-            filt_pos = out_genshin_position.config.pos_filter->filterting(pos, u_k);
         }
 
-
-        // if (out_genshin_position.config.is_coveying || out_genshin_position.config.is_continuity == false)
-        // {
-        //     filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
-        //     // TODO：封装
-        //     set_mini_map(genshin_minimap.img_minimap);
-        // }
-        // else
-        // {
-        //     auto u_k = cv::Point2d(0, 0);
-        //     auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config());
-        //     if (od_valid)
-        //     {
-        //         filt_pos = out_genshin_position.config.pos_filter->filterting(pos, u_k);
-        //     }
-        //     else
-        //     {
-        //         // TODO：no u_k update
-        //         filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
-        //     }
-        // }
         out_genshin_position.position = filt_pos;
     }
 

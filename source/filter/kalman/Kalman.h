@@ -6,8 +6,15 @@ public:
 	Kalman();
 	~Kalman();
 public:
+	// predict with u_k or not
+	// not must one predict one correct
+	// predict x for n times -> correct
 	virtual cv::Point2d filterting(const cv::Point2d &pos, const cv::Point2f &u_k) override;
 	virtual cv::Point2d re_init_filterting(const cv::Point2d& pos) override;
+
+	virtual cv::Point2d predict(const cv::Point2f &u_k) override;
+	virtual cv::Point2d update(const cv::Point2d &pos) override;
+
 private:
 	int stateNum = 2;
 	int measureNum = 2;
@@ -17,7 +24,7 @@ private:
 	// x(k) = A*x(k-1) + B*u(k) + w(k)
 	// w(k) ~ N(0, Q)
 
-	// update model
+	// observation model
 	// z(k) = H*x(k) + v(k)
 	// v(k) ~ N(0, R)
 
