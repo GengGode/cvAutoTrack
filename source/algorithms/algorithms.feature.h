@@ -16,10 +16,10 @@ namespace tianli::algorithms::feature
         cv::Mat border_mask = mask.empty() ? cv::Mat() : mask(border_mask_rect);
 
         //获取图像四边需要填充的像素数
-        int pt = -std::min(0, roi.y - border_size);
-        int pd = std::max(0, roi.y + roi.height + border_size - image.rows);
-        int pl = -std::min(0, roi.x - border_size);
-        int pr = std::max(0, roi.x + roi.width + border_size - image.cols);
+        int pt = -(std::min)(0, roi.y - border_size);
+        int pd = (std::max)(0, roi.y + roi.height + border_size - image.rows);
+        int pl = -(std::min)(0, roi.x - border_size);
+        int pr = (std::max)(0, roi.x + roi.width + border_size - image.cols);
         //填充图像
         cv::copyMakeBorder(border_img, border_img, pt, pd, pl, pr, cv::BORDER_REPLICATE);
         if (mask.empty() == false) cv::copyMakeBorder(border_mask, border_mask, pt, pd, pl, pr, cv::BORDER_REPLICATE);
