@@ -14,8 +14,8 @@ namespace tianli::frame::local
         ~local_source() override = default;
         bool set_source_handle_callback(std::function<HWND()> callback) override { return false; };
 
-        virtual bool set_current_file(std::string file) = 0;
-
+        bool set_handle(HWND handle = 0) override { return false; }
+        
     protected:
         std::function<cv::Mat()> source_frame_callback;
         std::string source_local;
