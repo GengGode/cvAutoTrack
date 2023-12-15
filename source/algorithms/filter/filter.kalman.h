@@ -4,6 +4,115 @@
 
 namespace tianli::algorithms::filter
 {
+
+    class KalmanFilter
+    {
+    public:
+        KalmanFilter() {}
+        KalmanFilter(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
+        {
+            init(dynamParams, measureParams, controlParams, type);
+        }
+        void init(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
+        {
+            CV_Assert(DP > 0 && MP > 0);
+            CV_Assert(type == CV_32F || type == CV_64F);
+            CP = std::max(CP, 0);
+
+            statePre = Mat::zeros(DP, 1, type);
+            statePost = Mat::zeros(DP, 1, type);
+            transitionMatrix = Mat::eye(DP, DP, type);
+
+            processNoiseCov = Mat::eye(DP, DP, type);
+            measurementMatrix = Mat::zeros(MP, DP, type);
+            measurementNoiseCov = Mat::eye(MP, MP, type);
+
+            errorCovPre = Mat::zeros(DP, DP, type);
+            errorCovPost = Mat::zeros(DP, DP, type);
+            gain = Mat::zeros(DP, MP, type);
+
+            if (CP > 0)
+                controlMatrix = Mat::zeros(DP, CP, type);
+            else
+                controlMatrix.release();
+
+            temp1.create(DP, DP, type);
+            temp2.create(MP, DP, type);
+            temp3.create(MP, MP, type);
+            temp4.create(MP, DP, type);
+            temp5.create(MP, 1, type);
+        }
+
+        const cv::Mat &predict(const cv::Mat &control = Mat())
+        {
+            CV_INSTRUMENT_REGION();
+
+            // update the state: x'(k) = A*x(k)
+            statePre = transitionMatrix * statePost;
+
+            if (!control.empty())
+                // x'(k) = x'(k) + B*u(k)
+                statePre += controlMatrix * control;
+
+            // update error covariance matrices: temp1 = A*P(k)
+            temp1 = transitionMatrix * errorCovPost;
+
+            // P'(k) = temp1*At + Q
+            gemm(temp1, transitionMatrix, 1, processNoiseCov, 1, errorCovPre, GEMM_2_T);
+
+            // handle the case when there will be no measurement before the next predict.
+            statePre.copyTo(statePost);
+            errorCovPre.copyTo(errorCovPost);
+
+            return statePre;
+        }
+        const cv::Mat &correct(const cv::Mat &measurement)
+        {
+            CV_INSTRUMENT_REGION();
+
+            // temp2 = H*P'(k)
+            temp2 = measurementMatrix * errorCovPre;
+
+            // temp3 = temp2*Ht + R
+            gemm(temp2, measurementMatrix, 1, measurementNoiseCov, 1, temp3, GEMM_2_T);
+
+            // temp4 = inv(temp3)*temp2 = Kt(k)
+            solve(temp3, temp2, temp4, DECOMP_SVD);
+
+            // K(k)
+            gain = temp4.t();
+
+            // temp5 = z(k) - H*x'(k)
+            temp5 = measurement - measurementMatrix * statePre;
+
+            // x(k) = x'(k) + K(k)*temp5
+            statePost = statePre + gain * temp5;
+
+            // P(k) = P'(k) - K(k)*temp2
+            errorCovPost = errorCovPre - gain * temp2;
+
+            return statePost;
+        }
+
+        cv::Mat statePre;            //!< predicted state (x'(k)): x(k)=A*x(k-1)+B*u(k)
+        cv::Mat statePost;           //!< corrected state (x(k)): x(k)=x'(k)+K(k)*(z(k)-H*x'(k))
+        cv::Mat transitionMatrix;    //!< state transition matrix (A)
+        cv::Mat controlMatrix;       //!< control matrix (B) (not used if there is no control)
+        cv::Mat measurementMatrix;   //!< measurement matrix (H)
+        cv::Mat processNoiseCov;     //!< process noise covariance matrix (Q)
+        cv::Mat measurementNoiseCov; //!< measurement noise covariance matrix (R)
+        cv::Mat errorCovPre;         //!< priori error estimate covariance matrix (P'(k)): P'(k)=A*P(k-1)*At + Q)*/
+        cv::Mat gain;                //!< Kalman gain matrix (K(k)): K(k)=P'(k)*Ht*inv(H*P'(k)*Ht+R)
+        cv::Mat errorCovPost;        //!< posteriori error estimate covariance matrix (P(k)): P(k)=(I-K(k)*H)*P'(k)
+
+        // temporary matrices
+        cv::Mat temp1;
+        cv::Mat temp2;
+        cv::Mat temp3;
+        cv::Mat temp4;
+        cv::Mat temp5;
+    };
+
     class filter_kalman : public filter
     {
     public:
@@ -11,7 +120,7 @@ namespace tianli::algorithms::filter
         {
             this->type = filter_type::kalman;
 
-            KF = cv::KalmanFilter(stateNum, measureNum, controlNum);
+            KF = KalmanFilter(stateNum, measureNum, controlNum);
             state = cv::Mat(stateNum, 1, CV_32F);
             processNoise = cv::Mat(stateNum, 1, CV_32F);
             measurement = cv::Mat::zeros(measureNum, 1, CV_32F); // measurement(x,y)
@@ -129,7 +238,7 @@ namespace tianli::algorithms::filter
         // H = [1 0; 0 1]
         // Q = [1 0; 0 1] * 1e-5
         // R = [1 0; 0 1] * 1e-5
-        cv::KalmanFilter KF;
+        KalmanFilter KF;
         cv::Mat state;
         cv::Mat processNoise;
         cv::Mat measurement;
