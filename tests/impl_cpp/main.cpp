@@ -212,7 +212,7 @@ int Run()
     }
     else
     {
-        std::cout << "载入测试图像map.jpg失败，将无法可视化特征点" << std::endl;
+        std::cout << "载入测试图像\"map.jpg\"失败，将无法可视化特征点" << std::endl;
     }
 #endif // _DEBUG
 
