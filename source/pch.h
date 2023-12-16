@@ -59,19 +59,6 @@
 #include <fmt/format.h>
 
 
-#ifdef BUILD_CAPTURE_DXGI
-// D3D
-#include <d3d11_4.h>
-#include <dxgi1_6.h>
-#include <d2d1_3.h>
-#include <wincodec.h>
-
-// Helpers
-#include "capture/dxgi/include/d3dHelpers.h"
-#include "capture/dxgi/include/direct3d11.interop.h"
-#include "capture/dxgi/include/capture.interop.h"
-#endif // BUILD_CAPTURE_DXGI
-
 #ifdef SUPPORT_WINDUMP
 // DUMP部分
 #include "DbgHelp.h"
