@@ -34,6 +34,8 @@ struct features
     std::vector<size_t> indexs;
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
+    features() = default;
+    features(const std::vector<cv::KeyPoint> &keypoints, const cv::Mat &descriptors);
     size_t size() const { return keypoints.size(); }
 };
 
