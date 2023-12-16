@@ -165,15 +165,15 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         return;
     }
 
-    surf_match.setMiniMap(genshin_minimap.img_minimap);
-
     auto beg_time = std::chrono::steady_clock::now();
-    surf_match.match();
+    cv::Point2d matched_pos;
+    surf_match.GetNextPosition(genshin_minimap.img_minimap, matched_pos);
     auto end_time = std::chrono::steady_clock::now();
     auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
 
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
     out_genshin_position.config.is_coveying = surf_match.isCoveying;
+    out_genshin_position.position = matched_pos;
 
     if (out_genshin_position.config.is_use_filter)
     {
