@@ -73,14 +73,6 @@ namespace TianLi::Utils
     //！！！即将弃用
     std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y);
 
-    //绘制好的特征点
-    void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
-    //计算好的特征点
-    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, 
-                           std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, 
-                           double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints,
-                           std::vector<cv::DMatch>& good_matches);
-
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
     bool getRegValue_DWORD(HKEY root, std::wstring item, std::wstring key, int& ret);

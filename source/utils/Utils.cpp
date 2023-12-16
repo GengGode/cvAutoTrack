@@ -306,35 +306,7 @@ namespace TianLi::Utils
         return std::make_pair(cv::Point2d(x, y), 0);
     }
 
-    void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches)
-    {
-        cv::Mat img_matches, imgmap, imgminmap;
-        drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-        drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-        drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-    }
-    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, 
-                           cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, 
-                           std::vector<std::vector<cv::DMatch>>& KNN_m, 
-                           double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint>& good_keypoints, 
-                           std::vector<cv::DMatch>& good_matches)
-    {
-        for (size_t i = 0; i < KNN_m.size(); i++)
-            {
-                if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-                {
-                    if (KNN_m[i][0].queryIdx >= keypoint_object.size())
-                    {
-                        continue;
-                    }
-                    good_matches.push_back(KNN_m[i][0]);
-                    good_keypoints.push_back({{img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-                                               img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
-                                              {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y}});
-                }
-            }
 
-    }
 
     // 注册表读取
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length)
