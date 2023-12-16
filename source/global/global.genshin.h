@@ -6,8 +6,6 @@
 #include <Windows.h>
 #include "frame/frame.include.h"
 #include "algorithms/filter/filter.include.h"
-// TODO: need replace
-#include "filter/kalman/Kalman.h"
 
 namespace tianli::global
 {
@@ -231,8 +229,7 @@ namespace tianli::global
         bool is_exist_last_match_minimap = false;
         cv::Mat img_last_match_minimap;
         bool is_use_filter = true;
-        //std::shared_ptr<tianli::algorithms::filter::filter> pos_filter;
-        std::shared_ptr<Filter> pos_filter;
+        std::shared_ptr<tianli::algorithms::filter::filter> pos_filter;
     };
     struct GenshinAvatarPosition
     {
