@@ -23,6 +23,7 @@ Resources::Resources()
     UIDnumber[8] = TianLi::Resources::Load::load_image("uid8");
     UIDnumber[9] = TianLi::Resources::Load::load_image("uid9");
 
+
     cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGB2GRAY);
     cv::cvtColor(UID, UID, cv::COLOR_RGB2GRAY);
     for (int i = 0; i < 10; i++)

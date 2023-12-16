@@ -4,9 +4,9 @@
 
 namespace TianLi::Genshin
 {
-	GenshinHandle func_get_handle(HWND& in)
+	tianli::global::GenshinHandle func_get_handle(HWND &in)
 	{
-		static GenshinHandle out;
+		static tianli::global::GenshinHandle out;
 		if (in == 0)
 		{
 			get_genshin_handle(out);
@@ -18,16 +18,16 @@ namespace TianLi::Genshin
 		return out;
 	}
 
-	void get_genshin_handle(GenshinHandle& genshin_handle)
+	void get_genshin_handle(tianli::global::GenshinHandle &genshin_handle)
 	{
 		if (genshin_handle.config.is_auto_find_genshin)
 		{
 			auto& giHandle = genshin_handle.handle;
 
-			auto now_class = GenshinWindowClass::Unity;
+			auto now_class = tianli::global::GenshinWindowClass::Unity;
 			for (auto& [genshin_window_name, genshin_window_class] : genshin_handle.config.genshin_window_name_list)
 			{
-				if (genshin_window_class == GenshinWindowClass::Unity)
+				if (genshin_window_class == tianli::global::GenshinWindowClass::Unity)
 				{
 					giHandle = FindWindowW(L"UnityWndClass", genshin_window_name.c_str());
 				}
@@ -43,7 +43,7 @@ namespace TianLi::Genshin
 			}
 
 			//窗口投影（源） - 云·原神
-			if (now_class == GenshinWindowClass::Obs || now_class == GenshinWindowClass::None)
+			if (now_class == tianli::global::GenshinWindowClass::Obs || now_class == tianli::global::GenshinWindowClass::None)
 			{
 				genshin_handle.config.is_force_used_no_alpha = true;
 			}
@@ -208,7 +208,7 @@ namespace TianLi::Genshin
 		}
 	}
 
-	void update_genshin_handle(const HWND& old_handle, GenshinHandle& out_genshin_handle)
+	void update_genshin_handle(const HWND &old_handle, tianli::global::GenshinHandle &out_genshin_handle)
 	{
 		static unsigned char tick_count = 0;
 		if (IsWindowVisible(old_handle))

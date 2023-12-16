@@ -12,10 +12,13 @@ namespace tianli::frame::capture
         {
             this->type = source_type::bitblt;
         }
-        ~capture_bitblt() = default;
+        ~capture_bitblt() override = default;
+
     public:
         bool initialization() override
         {
+            if (this->is_callback)
+                this->source_handle = this->source_handle_callback();
             if (IsWindow(this->source_handle) == false)
                 return false;
             return true;
@@ -24,17 +27,18 @@ namespace tianli::frame::capture
         {
             return true;
         }
-        bool set_handle(HWND handle = 0) override{
+        bool set_handle(HWND handle = 0) override
+        {
             if (handle == nullptr)
                 return false;
             if (handle == this->source_handle)
                 return true;
-            if(uninitialized() == false)
+            if (uninitialized() == false)
                 return false;
             this->source_handle = handle;
-            if(initialization() == false)
+            if (initialization() == false)
                 return false;
-                this->is_callback = false;
+            this->is_callback = false;
             return true;
         }
         bool set_source_handle_callback(std::function<HWND()> callback) override
@@ -56,12 +60,12 @@ namespace tianli::frame::capture
                 handle = this->source_handle_callback();
             if (handle == nullptr)
                 return false;
-                if(IsWindow(handle) == false)
-                    return false;
+            if (IsWindow(handle) == false)
+                return false;
             RECT rect = {0, 0, 0, 0};
             if (GetWindowRect(handle, &rect) == false)
                 return false;
-                RECT client_rect = {0, 0, 0, 0};
+            RECT client_rect = {0, 0, 0, 0};
             if (GetClientRect(handle, &client_rect) == false)
                 return false;
             double screen_scale = utils::window_scale::get_screen_scale(handle);
@@ -88,7 +92,7 @@ namespace tianli::frame::capture
             frame = this->source_frame;
             return true;
         }
-        
+
     private:
         RECT source_rect = {0, 0, 0, 0};
         RECT source_client_rect = {0, 0, 0, 0};

@@ -21,4 +21,6 @@ add_custom_command(TARGET ${test_name} POST_BUILD
         "${OpenCV_CONFIG_PATH}/../bin/opencv_video480$<$<CONFIG:Debug>:d>.dll"
         "${OpenCV_CONFIG_PATH}/../bin/opencv_videoio480$<$<CONFIG:Debug>:d>.dll"
         "${OpenCV_CONFIG_PATH}/../bin/opencv_xfeatures2d480$<$<CONFIG:Debug>:d>.dll"
+        #"${OpenCV_CONFIG_PATH}/../bin/opencv_videoio_ffmpeg480_64.dll"
         $<TARGET_FILE_DIR:${test_name}>)
+message(STATUS "${test_name} 需要复制 \${OpenCV_CONFIG_PATH}/../bin/opencv_videoio_ffmpeg480_64.dll 当前未启用")

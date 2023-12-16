@@ -61,7 +61,7 @@ namespace utils
         return ret_string;
     }
 
-    static  bool is_utf8(const std::string &string)
+    static bool is_utf8(const std::string &string)
     {
         int len = MultiByteToWideChar(CP_UTF8, 0, string.c_str(), -1, NULL, 0);
         wchar_t *utf8_wstring = new wchar_t[len + 1];
@@ -85,7 +85,7 @@ namespace utils
             return gbk_to_utf8(string);
     }
 
-    static  std::string to_gbk(const std::string &string)
+    static std::string to_gbk(const std::string &string)
     {
         if (is_utf8(string))
             return utf8_to_gbk(string);

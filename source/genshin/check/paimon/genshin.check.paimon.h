@@ -1,7 +1,7 @@
 #pragma once
-#include "match/type/MatchType.h"
+#include "global/global.genshin.h"
 
 namespace TianLi::Genshin::Check
 {
-	bool check_paimon(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon);
+	bool check_paimon(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinPaimon &out_genshin_paimon);
 }

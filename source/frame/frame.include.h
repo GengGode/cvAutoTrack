@@ -1,10 +1,8 @@
 #pragma once
-#include <opencv2/opencv.hpp>
 #include "../global/global.include.h"
 
 namespace tianli::frame
 {
-
     class frame_source
     {
     public:
@@ -13,8 +11,8 @@ namespace tianli::frame
             unknown,
             bitblt,
             window_graphics,
-            local_video,
-            local_picture
+            video,
+            picture
         };
         enum class source_mode
         {
@@ -41,6 +39,8 @@ namespace tianli::frame
         virtual bool initialization() { return false; }
         virtual bool uninitialized() { return false; }
         virtual bool get_frame(cv::Mat &frame) = 0;
+        virtual bool set_handle(HWND handle = 0) = 0;
+        virtual bool set_current_file(std::string file) = 0;
         virtual bool set_source_handle_callback(std::function<HWND()> callback) = 0;
         virtual bool set_source_frame_callback(std::function<cv::Mat()> callback) = 0;
     };

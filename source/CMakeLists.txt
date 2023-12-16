@@ -74,7 +74,9 @@ if(MSVC)
     #/utf-8
     target_compile_options(cvAutoTrack PRIVATE "/utf-8")
     add_definitions(-DUNICODE -D_UNICODE)
-    
+    #/W4
+    #target_compile_options(cvAutoTrack PRIVATE "/W4")
+
     add_compile_options(/MP)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")

@@ -62,10 +62,36 @@ public:
     void setMiniMap(cv::Mat miniMapMat);
     void Init(std::shared_ptr<trackCache::CacheInfo> cache_info);
     void UnInit();
-    bool match(cv::Point2d& pos);
+    void match();
+
+    /**
+     * @brief 使用自行实现的ransac算法进行匹配
+     * @param calc_is_faile 是否计算失败
+     * @param affine_mat_out 输出的仿射矩阵
+     * @param max_iter_num 最大迭代次数
+     * @return 匹配的位置
+    */
+    cv::Point2d match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out, 
+                             int max_iter_num);
+
+    cv::Point2d match_continuity(bool& calc_continuity_is_faile);
+    cv::Point2d match_continuity_on_city(bool& calc_continuity_is_faile);
+    cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
+
+    cv::Point2d match_no_continuity(bool& calc_is_faile);
+    cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
+
+    cv::Point2d getLocalPos();
+    bool getIsContinuity();
 
 private:
-    bool match_all_map(cv::Point2d& pos);
+    bool isMatchAllMap = true;
+
+    double check_inliers(
+        cv::Mat& H_21, std::vector<bool>& is_inlier_match,
+        std::vector<cv::KeyPoint>& undist_keypts_1, std::vector<cv::KeyPoint>& undist_keypts_2,
+        std::vector<TianLi::Utils::MatchKeyPoint>& matches_12
+    );
 
 };
 

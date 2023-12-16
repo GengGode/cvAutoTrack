@@ -1,26 +1,92 @@
 #pragma once
 #include <dxgi.h>
-#include <d2d1_1.h>
 #include <dxgi1_2.h>
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
 
-#include <inspectable.h>
-#include <winrt/base.h>
+#include <winrt/Windows.Graphics.Capture.h>
+#include <winrt/windows.foundation.metadata.h>
+#include <windows.graphics.capture.interop.h>
 #include <windows.graphics.directx.direct3d11.interop.h>
-#include <winrt/Windows.UI.Composition.h>
-#include <windows.ui.composition.interop.h>
 
 namespace tianli::frame::capture::utils::window_graphics
 {
-
     struct __declspec(uuid("A9B3D012-3DF2-4EE3-B8D1-8695F457D3C1"))
         IDirect3DDxgiInterfaceAccess : ::IUnknown
     {
         virtual HRESULT __stdcall GetInterface(GUID const &id, void **object) = 0;
     };
+
+    inline auto CreateDirect3DDevice(IDXGIDevice *dxgi_device)
+    {
+        winrt::com_ptr<::IInspectable> d3d_device;
+        winrt::check_hresult(CreateDirect3D11DeviceFromDXGIDevice(dxgi_device, d3d_device.put()));
+        return d3d_device;
+    }
+
+    inline auto CreateDXGISwapChain(winrt::com_ptr<ID3D11Device> const &device, const DXGI_SWAP_CHAIN_DESC1 *desc)
+    {
+        auto dxgiDevice = device.as<IDXGIDevice2>();
+        winrt::com_ptr<IDXGIAdapter> adapter;
+        winrt::check_hresult(dxgiDevice->GetParent(winrt::guid_of<IDXGIAdapter>(), adapter.put_void()));
+        winrt::com_ptr<IDXGIFactory2> factory;
+        winrt::check_hresult(adapter->GetParent(winrt::guid_of<IDXGIFactory2>(), factory.put_void()));
+
+        winrt::com_ptr<IDXGISwapChain1> swapchain;
+        winrt::check_hresult(factory->CreateSwapChainForComposition(
+            device.get(),
+            desc,
+            nullptr,
+            swapchain.put()));
+
+        return swapchain;
+    }
+
+    inline auto CreateDXGISwapChain(winrt::com_ptr<ID3D11Device> const &device, uint32_t width, uint32_t height, DXGI_FORMAT format, uint32_t bufferCount)
+    {
+        DXGI_SWAP_CHAIN_DESC1 desc = {};
+        desc.Width = width;
+        desc.Height = height;
+        desc.Format = format;
+        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        desc.SampleDesc.Count = 1;
+        desc.SampleDesc.Quality = 0;
+        desc.BufferCount = bufferCount;
+        desc.Scaling = DXGI_SCALING_STRETCH;
+        desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+        desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
+
+        return CreateDXGISwapChain(device, &desc);
+    }
+
+    inline auto CreateCaptureItemForWindow(HWND hwnd)
+    {
+        auto activation_factory = winrt::get_activation_factory<winrt::Windows::Graphics::Capture::GraphicsCaptureItem>();
+        auto interop_factory = activation_factory.as<IGraphicsCaptureItemInterop>();
+        winrt::Windows::Graphics::Capture::GraphicsCaptureItem item = {nullptr};
+        interop_factory->CreateForWindow(hwnd, winrt::guid_of<ABI::Windows::Graphics::Capture::IGraphicsCaptureItem>(), reinterpret_cast<void **>(winrt::put_abi(item)));
+        return item;
+    }
+
+    inline auto CreateCaptureItemForMonitor(HMONITOR hmon)
+    {
+        auto activation_factory = winrt::get_activation_factory<winrt::Windows::Graphics::Capture::GraphicsCaptureItem>();
+        auto interop_factory = activation_factory.as<IGraphicsCaptureItemInterop>();
+        winrt::Windows::Graphics::Capture::GraphicsCaptureItem item = {nullptr};
+        winrt::check_hresult(interop_factory->CreateForMonitor(hmon, winrt::guid_of<ABI::Windows::Graphics::Capture::IGraphicsCaptureItem>(), winrt::put_abi(item)));
+        return item;
+    }
+
+    template <typename T>
+    inline auto GetDXGIInterfaceFromObject(winrt::Windows::Foundation::IInspectable const &object)
+    {
+        auto access = object.as<IDirect3DDxgiInterfaceAccess>();
+        winrt::com_ptr<T> result;
+        winrt::check_hresult(access->GetInterface(winrt::guid_of<T>(), result.put_void()));
+        return result;
+    }
 
     class graphics_global
     {
@@ -61,66 +127,7 @@ namespace tianli::frame::capture::utils::window_graphics
             0, 0, 1, 1, DXGI_FORMAT_B8G8R8A8_UNORM, {1, 0}, D3D11_USAGE_STAGING, 0, D3D11_CPU_ACCESS_READ, 0};
     };
 
-    inline auto CreateDirect3DDevice(IDXGIDevice *dxgi_device)
-    {
-        winrt::com_ptr<::IInspectable> d3d_device;
-        winrt::check_hresult(CreateDirect3D11DeviceFromDXGIDevice(dxgi_device, d3d_device.put()));
-        return d3d_device;
-    }
-
-    inline auto CreateDirect3DSurface(IDXGISurface *dxgi_surface)
-    {
-        winrt::com_ptr<::IInspectable> d3d_surface;
-        winrt::check_hresult(CreateDirect3D11SurfaceFromDXGISurface(dxgi_surface, d3d_surface.put()));
-        return d3d_surface;
-    }
-
-    template <typename T>
-    auto GetDXGIInterfaceFromObject(winrt::Windows::Foundation::IInspectable const &object)
-    {
-        auto access = object.as<IDirect3DDxgiInterfaceAccess>();
-        winrt::com_ptr<T> result;
-        winrt::check_hresult(access->GetInterface(winrt::guid_of<T>(), result.put_void()));
-        return result;
-    }
-
-    inline auto CreateDXGISwapChain(winrt::com_ptr<ID3D11Device> const &device, const DXGI_SWAP_CHAIN_DESC1 *desc)
-    {
-        auto dxgiDevice = device.as<IDXGIDevice2>();
-        winrt::com_ptr<IDXGIAdapter> adapter;
-        winrt::check_hresult(dxgiDevice->GetParent(winrt::guid_of<IDXGIAdapter>(), adapter.put_void()));
-        winrt::com_ptr<IDXGIFactory2> factory;
-        winrt::check_hresult(adapter->GetParent(winrt::guid_of<IDXGIFactory2>(), factory.put_void()));
-
-        winrt::com_ptr<IDXGISwapChain1> swapchain;
-        winrt::check_hresult(factory->CreateSwapChainForComposition(
-            device.get(),
-            desc,
-            nullptr,
-            swapchain.put()));
-
-        return swapchain;
-    }
-
-    inline auto CreateDXGISwapChain(winrt::com_ptr<ID3D11Device> const &device, uint32_t width, uint32_t height, DXGI_FORMAT format, uint32_t bufferCount)
-    {
-        DXGI_SWAP_CHAIN_DESC1 desc = {};
-        desc.Width = width;
-        desc.Height = height;
-        desc.Format = format;
-        desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.BufferCount = bufferCount;
-        desc.Scaling = DXGI_SCALING_STRETCH;
-        desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-        desc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-
-        return CreateDXGISwapChain(device, &desc);
-    }
-
-    bool get_client_box(HWND window, uint32_t width, uint32_t height,
-                        D3D11_BOX *client_box)
+    bool get_client_box(HWND window, uint32_t width, uint32_t height, D3D11_BOX *client_box)
     {
         RECT client_rect{}, window_rect{};
         POINT upper_left{};
@@ -130,35 +137,26 @@ namespace tianli::frame::capture::utils::window_graphics
             !IsIconic(window) && GetClientRect(window, &client_rect) &&
             !IsIconic(window) && (client_rect.right > 0) &&
             (client_rect.bottom > 0) &&
-            (DwmGetWindowAttribute(window, DWMWA_EXTENDED_FRAME_BOUNDS,
-                                   &window_rect,
-                                   sizeof(window_rect)) == S_OK) &&
+            (DwmGetWindowAttribute(window, DWMWA_EXTENDED_FRAME_BOUNDS, &window_rect, sizeof(window_rect)) == S_OK) &&
             ClientToScreen(window, &upper_left);
         if (client_box_available)
         {
-            const uint32_t left =
-                (upper_left.x > window_rect.left)
-                    ? (upper_left.x - window_rect.left)
-                    : 0;
+            const uint32_t left =  (upper_left.x > window_rect.left)   ? (upper_left.x - window_rect.left)  : 0;
             client_box->left = left;
 
-            const uint32_t top = (upper_left.y > window_rect.top)
-                                     ? (upper_left.y - window_rect.top)
-                                     : 0;
+            const uint32_t top = (upper_left.y > window_rect.top) ? (upper_left.y - window_rect.top) : 0;
             client_box->top = top;
 
             uint32_t texture_width = 1;
             if (width > left)
             {
-                texture_width =
-                    min(width - left, (uint32_t)client_rect.right);
+                texture_width = (std::min)(width - left, (uint32_t)client_rect.right);
             }
 
             uint32_t texture_height = 1;
             if (height > top)
             {
-                texture_height =
-                    min(height - top, (uint32_t)client_rect.bottom);
+                texture_height = (std::min)(height - top, (uint32_t)client_rect.bottom);
             }
 
             client_box->right = left + texture_width;
@@ -167,10 +165,33 @@ namespace tianli::frame::capture::utils::window_graphics
             client_box->front = 0;
             client_box->back = 1;
 
-            client_box_available = (client_box->right <= width) &&
-                                   (client_box->bottom <= height);
+            client_box_available = (client_box->right <= width) && (client_box->bottom <= height);
         }
 
         return client_box_available;
+    }
+
+    void set_capture_session_property(winrt::Windows::Graphics::Capture::GraphicsCaptureSession &session, bool is_border = false, bool is_cursor = false)
+    {
+        // 判断 WindowsSDK 版本大于等于 10.0.22000.0
+#if (WINVER >= _WIN32_WINNT_WIN10_21H1)
+        try
+        {
+            if (winrt::Windows::Foundation::Metadata::ApiInformation::IsPropertyPresent(L"Windows.Graphics.Capture.GraphicsCaptureSession", L"IsBorderRequired"))
+            {
+
+                winrt::Windows::Graphics::Capture::GraphicsCaptureAccess::
+                    RequestAccessAsync(
+                        winrt::Windows::Graphics::Capture::GraphicsCaptureAccessKind::Borderless)
+                        .get();
+                session.IsBorderRequired(is_border);
+                session.IsCursorCaptureEnabled(is_cursor);
+            }
+        }
+        catch (...)
+        {
+            // Ignore any errors
+        }
+#endif
     }
 } // namespace tianli::frame::capture::utils::window_graphics

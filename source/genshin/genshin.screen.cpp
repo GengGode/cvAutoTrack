@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "genshin.screen.h"
-#include "capture/Capture.h"
+#include "frame/frame.include.h"
 #include <chrono>
+using namespace std::chrono_literals;
 
-void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, GenshinScreen& out_genshin_screen)
+void TianLi::Genshin::get_genshin_screen(const tianli::global::GenshinHandle &genshin_handle, tianli::global::GenshinScreen &out_genshin_screen)
 {
 	static HBITMAP hBmp;
 
@@ -18,7 +19,7 @@ void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, Ge
 	if (now_time - out_genshin_screen.last_time > 20ms || giFrame.empty())
 	{
 		out_genshin_screen.last_time = now_time;
-		genshin_handle.config.capture->capture(giFrame);
+		genshin_handle.config.source->get_frame(giFrame);
 	}
 
 

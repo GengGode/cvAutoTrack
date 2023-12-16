@@ -12,9 +12,9 @@ namespace tianli::frame::capture
             this->mode = source_mode::handle;
         }
         ~capture_source() override = default;
-        bool set_source_frame_callback(std::function<cv::Mat()> callback) override { return false; };
-
-        virtual bool set_handle(HWND handle = 0) = 0;
+        bool set_source_frame_callback(std::function<cv::Mat()> callback) override { return false; }
+        
+        bool set_current_file(std::string file) override { return false; }
 
     protected:
         std::function<HWND()> source_handle_callback;
