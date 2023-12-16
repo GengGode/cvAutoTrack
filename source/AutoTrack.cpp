@@ -7,7 +7,7 @@
 #include "frame/capture/capture.bitblt.h"
 #include "frame/capture/capture.window_graphics.h"
 
-#include "filter/kalman/Kalman.h"
+#include "algorithms/filter/filter.kalman.h"
 #include "utils/Utils.h"
 
 #include "algorithms/algorithms.direction.h"
@@ -33,7 +33,7 @@ AutoTrack::AutoTrack()
 
     genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     genshin_handle.config.source->initialization();
-    genshin_avatar_position.config.pos_filter = std::make_shared<Kalman>();
+    genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
 }
 
 bool AutoTrack::init()

@@ -3,7 +3,7 @@
 
 #include "resources/Resources.h"
 #include "Match/surf/SurfMatch.h"
-#include "filter/kalman/Kalman.h"
+
 #include "algorithms/filter/filter.include.h"
 #include "algorithms/algorithms.visual.odometer.h"
 
