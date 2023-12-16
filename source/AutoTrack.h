@@ -1,5 +1,5 @@
 #pragma once
-#include "match/type/MatchType.h"
+#include "global/global.genshin.h"
 
 class AutoTrack
 {
@@ -51,11 +51,11 @@ public:
     bool DebugCapturePath(const char* path_buff, int buff_size);
 #pragma endregion
 private:
-    GenshinHandle genshin_handle;
-    GenshinScreen genshin_screen;
-    GenshinPaimon genshin_paimon;
-    GenshinMinimap genshin_minimap;
-    GenshinAvatarPosition genshin_avatar_position;
+    tianli::global::GenshinHandle genshin_handle;
+    tianli::global::GenshinScreen genshin_screen;
+    tianli::global::GenshinPaimon genshin_paimon;
+    tianli::global::GenshinMinimap genshin_minimap;
+    tianli::global::GenshinAvatarPosition genshin_avatar_position;
 
 private:
     bool try_get_genshin_windows();

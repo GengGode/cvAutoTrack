@@ -1,7 +1,7 @@
 #pragma once
-#include "match/type/MatchType.h"
+#include "global/global.genshin.h"
 
 namespace TianLi::Genshin
 {
-	void get_genshin_screen(const GenshinHandle& genshin_handle, GenshinScreen& out_genshin_screen);
+	void get_genshin_screen(const tianli::global::GenshinHandle &genshin_handle, tianli::global::GenshinScreen &out_genshin_screen);
 }

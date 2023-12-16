@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "genshin.cailb.minimap.h"
 #include "../../../resources/Resources.h"
-bool match_minimap_cailb(const GenshinScreen& genshin_screen, GenshinMinimapCailb& out_genshin_minimap_cailb)
+bool match_minimap_cailb(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinMinimapCailb &out_genshin_minimap_cailb)
 {
 	static std::vector<cv::Mat> split_minimap_cailb_template;
 	static cv::Mat minimap_cailb_template;
@@ -82,7 +82,7 @@ bool match_minimap_cailb(const GenshinScreen& genshin_screen, GenshinMinimapCail
 	return true;
 }
 
-bool cailb_minimap_impl(const GenshinScreen& genshin_screen, GenshinMinimap& out_genshin_minimap)
+bool cailb_minimap_impl(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinMinimap &out_genshin_minimap)
 {
 	auto& paimon_rect = genshin_screen.config.rect_paimon;
 	// not find paimon 
@@ -92,7 +92,7 @@ bool cailb_minimap_impl(const GenshinScreen& genshin_screen, GenshinMinimap& out
 	auto minimap_rect = genshin_screen.config.is_handle_mode ? genshin_screen.config.rect_minimap_handle : genshin_screen.config.rect_minimap;
 	if (genshin_screen.config.is_search_mode)
 	{
-		static GenshinMinimapCailb genshin_minimap_cailb;
+		static tianli::global::GenshinMinimapCailb genshin_minimap_cailb;
 		bool is_find_minimap_cailb = match_minimap_cailb(genshin_screen, genshin_minimap_cailb);
 		if (is_find_minimap_cailb == false)
 		{
@@ -155,7 +155,7 @@ bool cailb_minimap_impl(const GenshinScreen& genshin_screen, GenshinMinimap& out
 	return true;
 }
 
-bool TianLi::Genshin::Cailb::cailb_minimap(const GenshinScreen& genshin_screen, GenshinMinimap& out_genshin_minimap)
+bool TianLi::Genshin::Cailb::cailb_minimap(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinMinimap &out_genshin_minimap)
 {
 	return cailb_minimap_impl(genshin_screen, out_genshin_minimap);
 }

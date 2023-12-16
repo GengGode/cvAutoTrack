@@ -1,11 +1,11 @@
 #pragma once
-#include "match/type/MatchType.h"
+#include "global/global.genshin.h"
 
 namespace TianLi::Genshin
 {
-	GenshinHandle func_get_handle(HWND& in);
+	tianli::global::GenshinHandle func_get_handle(HWND &in);
 
-	void get_genshin_handle(GenshinHandle& genshin_handle);
+	void get_genshin_handle(tianli::global::GenshinHandle &genshin_handle);
 
-	void update_genshin_handle(const HWND& old_handle, GenshinHandle& out_genshin_handle);
+	void update_genshin_handle(const HWND &old_handle, tianli::global::GenshinHandle &out_genshin_handle);
 }

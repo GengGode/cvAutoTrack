@@ -6,6 +6,10 @@
 #if cplusplus >= 202002L
 #include <source_location>
 #endif
+
+#include <opencv2/opencv.hpp>
+#include <Windows.h>
+
 namespace tianli::global
 {
     class error_type

@@ -25,7 +25,7 @@ double cala_keypoint_diff(const cv::Mat& mat,const cv::Rect& roi,const std::vect
 	}
 	return paimon_check_diff;
 }
-bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
+bool check_paimon_search_impl(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinPaimon &out_genshin_paimon)
 {
 	static std::vector<cv::Mat> split_paimon_template;
 	// 派蒙正比例二值模板 黑白
@@ -129,7 +129,7 @@ bool check_paimon_search_impl(const GenshinScreen& genshin_screen, GenshinPaimon
 	out_genshin_paimon.is_visial = false;
 	return false;
 }
-bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
+bool check_paimon_impl(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinPaimon &out_genshin_paimon)
 {
 	auto paimon_keys = out_genshin_paimon.config.paimon_check_vec;
 	auto paimon_handle_keys = out_genshin_paimon.config.paimon_handle_check_vec;
@@ -171,7 +171,7 @@ bool check_paimon_impl(const GenshinScreen& genshin_screen, GenshinPaimon& out_g
 	return check_paimon_search_impl(genshin_screen, out_genshin_paimon);
 }
 
-bool TianLi::Genshin::Check::check_paimon(const GenshinScreen& genshin_screen, GenshinPaimon& out_genshin_paimon)
+bool TianLi::Genshin::Check::check_paimon(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinPaimon &out_genshin_paimon)
 {
 	return check_paimon_impl(genshin_screen, out_genshin_paimon);
 }

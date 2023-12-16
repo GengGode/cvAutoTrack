@@ -3,7 +3,7 @@
 #include "capture/Capture.h"
 #include <chrono>
 
-void TianLi::Genshin::get_genshin_screen(const GenshinHandle& genshin_handle, GenshinScreen& out_genshin_screen)
+void TianLi::Genshin::get_genshin_screen(const tianli::global::GenshinHandle &genshin_handle, tianli::global::GenshinScreen &out_genshin_screen)
 {
 	static HBITMAP hBmp;
 

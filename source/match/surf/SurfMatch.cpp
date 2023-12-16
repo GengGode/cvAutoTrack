@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SurfMatch.h"
-#include "match/type/MatchType.h"
+#include "global/global.genshin.h"
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "algorithms/algorithms.solve.linear.h"

@@ -6,6 +6,9 @@
 #include <Windows.h>
 #include "frame/frame.include.h"
 #include "algorithms/filter/filter.include.h"
+// TODO: need replace
+#include "capture/Capture.h"
+#include "filter/kalman/Kalman.h"
 
 namespace tianli::global
 {
@@ -67,7 +70,8 @@ namespace tianli::global
         bool is_auto_find_genshin = true;
         bool is_force_used_no_alpha = false;
         HWND genshin_handle = nullptr;
-        std::shared_ptr<tianli::frame::frame_source> source;
+        // std::shared_ptr<tianli::frame::frame_source> source;
+        std::shared_ptr<Capture> capture;
 
         std::vector<std::pair<std::wstring, GenshinWindowClass>> genshin_window_name_list = GenshinWindowNameList;
     };
@@ -229,7 +233,8 @@ namespace tianli::global
         bool is_exist_last_match_minimap = false;
         cv::Mat img_last_match_minimap;
         bool is_use_filter = true;
-        std::shared_ptr<tianli::algorithms::filter::filter> pos_filter;
+        //std::shared_ptr<tianli::algorithms::filter::filter> pos_filter;
+        std::shared_ptr<Filter> pos_filter;
     };
     struct GenshinAvatarPosition
     {

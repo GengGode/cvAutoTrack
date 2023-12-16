@@ -4,6 +4,7 @@
 #include "resources/Resources.h"
 #include "Match/surf/SurfMatch.h"
 #include "filter/kalman/Kalman.h"
+#include "algorithms/filter/filter.include.h"
 #include "algorithms/algorithms.visual.odometer.h"
 
 cv::Mat to_color(cv::Mat& img_object)
@@ -128,8 +129,7 @@ cv::Point2d match_no_continuity_2nd(bool& calc_is_faile)
     return pos_continuity_no;
 }
 
-
-void TianLi::Genshin::Match::get_avatar_position(const GenshinMinimap& genshin_minimap, GenshinAvatarPosition& out_genshin_position)
+void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, tianli::global::GenshinAvatarPosition &out_genshin_position)
 {
     static SurfMatch surf_match;
     static bool is_init = false;
