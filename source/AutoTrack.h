@@ -57,6 +57,9 @@ private:
     tianli::global::GenshinMinimap genshin_minimap;
     tianli::global::GenshinAvatarPosition genshin_avatar_position;
 
+public:
+    std::shared_ptr<tianli::frame::frame_source> get_source() { return genshin_handle.config.frame_source; }
+
 private:
     bool try_get_genshin_windows();
     bool getGengshinImpactWnd();
