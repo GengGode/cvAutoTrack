@@ -16,7 +16,7 @@ int main()
     cv::Mat frame;
     auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto capture = std::make_shared<tianli::frame::capture::capture_window_graphics>(logger);
-    capture->set_handle(GetForegroundWindow());
+    capture->set_capture_handle(GetForegroundWindow());
     std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())
@@ -28,7 +28,7 @@ int main()
     }
     std::cout << frame.size() << std::endl;
 
-    capture->set_handle(GetDesktopWindow());
+    capture->set_capture_handle(GetDesktopWindow());
     std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())

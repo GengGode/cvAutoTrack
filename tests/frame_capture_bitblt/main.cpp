@@ -9,7 +9,7 @@
 int main()
 {
     auto capture = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    capture->set_handle(GetDesktopWindow());
+    capture->set_capture_handle(GetDesktopWindow());
     cv::Mat frame;
     capture->get_frame(frame);
     if (frame.empty())
@@ -19,7 +19,7 @@ int main()
     cv::imwrite("test.png", frame);
     std::cout << frame.size() << std::endl;
 
-    capture->set_handle(GetForegroundWindow());
+    capture->set_capture_handle(GetForegroundWindow());
     capture->get_frame(frame);
     if (frame.empty())
         std::cout << "frame is empty" << std::endl;
