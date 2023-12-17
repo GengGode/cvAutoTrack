@@ -52,6 +52,12 @@ extern "C" bool CVAUTOTRACK_API SetUseGraphicsCaptureMode();
 /// @brief 设置使用Dwm截图模式
 /// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetUseDwmCaptureMode();
+/// @brief 设置使用本地图片截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseLocalPictureMode();
+/// @brief 设置使用本地图片截图模式
+/// @return 设置成功
+extern "C" bool CVAUTOTRACK_API SetUseLocalVideoMode();
 /// @brief 设置采集句柄
 /// @param handle 句柄，传入0则自动寻找句柄
 /// @return 设置成功
@@ -60,17 +66,14 @@ extern "C" bool CVAUTOTRACK_API SetCaptureHandle(long long int handle);
 /// @param callback 回调函数
 /// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetCaptureHandleCallback(long long int (*callback)());
-/// @brief 设置使用本地图片截图模式
-/// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetUseLocalImageCaptureMode();
 /// @brief 设置视窗源回调函数
 /// @param callback 回调函数
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetScreenSourceCallback(void (*callback)(const char *image_encode_data, int image_data_size));
+extern "C" bool CVAUTOTRACK_API SetScreenSourceCallback(void (*callback)(const char *image_encode_data, int &image_data_size));
 /// @brief 设置视窗源回调函数扩展
 /// @param callback 回调函数
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const char *image_data, int image_width, int image_height, int image_channels));
+extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const char *image_data, int &image_width, int &image_height, int &image_channels));
 /// @brief 设置视窗源图片
 /// @param image_encode_data 图片文件二进制数据
 /// @param image_data_size 图片文件二进制数据大小
