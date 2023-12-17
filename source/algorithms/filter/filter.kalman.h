@@ -14,7 +14,7 @@ namespace tianli::algorithms::filter
         }
         void init(int DP, int MP, int CP = 0, int type = CV_32F) // init(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
         {
-            CP = std::max(CP, 0);
+            CP = (std::max)(CP, 0);
 
             statePre = cv::Mat::zeros(DP, 1, type);
             statePost = cv::Mat::zeros(DP, 1, type);
