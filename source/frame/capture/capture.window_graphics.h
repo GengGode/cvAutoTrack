@@ -23,7 +23,10 @@ namespace tianli::frame::capture
             this->type = source_type::window_graphics;
             auto init_global = utils::window_graphics::graphics_global::get_instance();
         }
-        ~capture_window_graphics() override = default;
+        ~capture_window_graphics() override
+        {
+            uninitialized();
+        }
 
     public:
         bool initialization() override
