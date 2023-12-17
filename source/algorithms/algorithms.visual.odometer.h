@@ -1,4 +1,5 @@
-#pragma once
+#pragma once 
+#include "global/global.genshin.h"
 #include "algorithms.include.h"
 #include "algorithms.solve.linear.h"
 
@@ -21,7 +22,7 @@ void set_mini_map(const cv::Mat &giMiniMapRef)
     inited = true;
 }
 
-bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &control, odometer_config &config)
+bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &control, tianli::global::odometer_config &config)
 {
     if (!inited) {
         // JUST INIT IT

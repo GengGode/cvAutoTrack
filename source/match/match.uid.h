@@ -1,15 +1,10 @@
 #pragma once
-#include "utils/Utils.h"
+#include "global/global.genshin.h"
+#include "utils/Utils.h" 
 #include "resources/Resources.h"
 
-struct uid_calculation_config 
-{
-	bool error = false;
-	error_info err = { 0,"" };
-	
-};
 
-void uid_calculation(cv::Mat& giUIDRef,int& uid, uid_calculation_config config)
+void uid_calculation(cv::Mat& giUIDRef,int& uid, tianli::global::uid_calculation_config config)
 {
 	Resources& res = Resources::getInstance();
 

@@ -347,7 +347,7 @@ bool AutoTrack::GetDirection(double& a)
         return false;
     }
 
-    direction_calculation_config config;
+    tianli::global::direction_calculation_config config;
     direction_calculation(genshin_minimap.img_avatar, a, config);
     if (config.error)
     {
@@ -370,7 +370,7 @@ bool AutoTrack::GetRotation(double& a)
         return false;
     }
 
-    rotation_calculation_config config;
+    tianli::global::rotation_calculation_config config;
     rotation_calculation(genshin_minimap.img_minimap, a, config);
     if (config.error)
     {
@@ -534,7 +534,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
     cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
         giStarRef, cv::COLOR_RGBA2GRAY);
 
-    star_calculation_config config;
+    tianli::global::star_calculation_config config;
     config.is_on_city = genshin_avatar_position.config.is_on_city;
     star_calculation(giStarRef, jsonBuff, config);
     if (config.error)
@@ -568,7 +568,7 @@ bool AutoTrack::GetUID(int& uid)
         giUIDRef = channels[3];
     }
 
-    uid_calculation_config config;
+    tianli::global::uid_calculation_config config;
     uid_calculation(giUIDRef, uid, config);
     if (config.error)
     {
@@ -613,7 +613,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 
     // a
     {
-        direction_calculation_config config;
+        tianli::global::direction_calculation_config config;
         direction_calculation(genshin_minimap.img_avatar, a, config);
         if (config.error)
         {
@@ -622,7 +622,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
     }
     // r
     {
-        rotation_calculation_config config;
+        tianli::global::rotation_calculation_config config;
         rotation_calculation(genshin_minimap.img_minimap, r, config);
         if (config.error)
         {
@@ -645,7 +645,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
             giUIDRef = channels[3];
         }
 
-        uid_calculation_config config;
+        tianli::global::uid_calculation_config config;
         uid_calculation(giUIDRef, uid, config);
         if (config.error)
         {
@@ -690,7 +690,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
             image = channels[3];
         }
 
-        uid_calculation_config config;
+        tianli::global::uid_calculation_config config;
         uid_calculation(image, uid, config);
         if (config.error)
         {

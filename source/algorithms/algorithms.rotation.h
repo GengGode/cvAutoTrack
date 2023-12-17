@@ -1,15 +1,16 @@
 #pragma once
+#include "global/global.genshin.h"
 #include "algorithms.include.h"
 #include "utils/Utils.h"
 
 
 double lastRotate = 0;
 
-void rotation_calculation(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);			//算法1，基于Alpha通道，高精度
-void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);	//算法2，基于屏幕空间，低精度
-void rotation_calculation_3nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config);	//算法3，YUV空间，低精度
+void rotation_calculation(cv::Mat& giMiniMapRef, double& a, tianli::global::rotation_calculation_config& config);			//算法1，基于Alpha通道，高精度
+void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, tianli::global::rotation_calculation_config& config);	//算法2，基于屏幕空间，低精度
+void rotation_calculation_3nd(cv::Mat& giMiniMapRef, double& a, tianli::global::rotation_calculation_config& config);	//算法3，YUV空间，低精度
 
-void rotation_calculation(cv::Mat& giMiniMapRef, double&a, rotation_calculation_config& config)
+void rotation_calculation(cv::Mat &giMiniMapRef, double &a, tianli::global::rotation_calculation_config &config)
 {
 	if (giMiniMapRef.channels() != 4)
 		return rotation_calculation_2nd(giMiniMapRef, a, config);
@@ -73,7 +74,7 @@ cv::Mat cvMatRoll(const cv::Mat& src,cv::Point2d shift)
 	return dst;
 }
 
-void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config)
+void rotation_calculation_2nd(cv::Mat &giMiniMapRef, double &a, tianli::global::rotation_calculation_config &config)
 {
 	cv::Point2i center(giMiniMapRef.size[1] / 2, giMiniMapRef.size[0] / 2);
 	cv::Size2i miniMap_size = giMiniMapRef.size();
@@ -140,7 +141,7 @@ void rotation_calculation_2nd(cv::Mat& giMiniMapRef, double& a, rotation_calcula
 }
 
 // TODO: 未完成
-void rotation_calculation_3nd(cv::Mat& giMiniMapRef, double& a, rotation_calculation_config& config)
+void rotation_calculation_3nd(cv::Mat &giMiniMapRef, double &a, tianli::global::rotation_calculation_config &config)
 {
 	cv::Mat yuv;
 	cv::cvtColor(giMiniMapRef, yuv, cv::COLOR_BGR2YUV);

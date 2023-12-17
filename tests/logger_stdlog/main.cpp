@@ -7,7 +7,7 @@
 int main()
 {
     auto logger = std::make_shared<tianli::global::record::std_logger>();
-    logger->log({1, "test", "test.cpp", nullptr});
+    logger->log({1, "test", "test"});
     logger->perl("test");
     logger->perl_end("test");
     logger->perl("test");
