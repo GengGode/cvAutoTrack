@@ -127,4 +127,7 @@ inline LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
 #else
 #define INSTALL_DUMP_()
 #endif // SUPPORT_WINDUMP
+#define INSTALL_DUMP(at_func) \
+    INSTALL_DUMP_();          \
+    return at_func
 #endif // PCH_H

@@ -7,11 +7,8 @@
 #include "AutoTrack.h"
 #include <atomic>
 
-#define INSTALL_DUMP(at_func) \
-	INSTALL_DUMP_();          \
-	return at_func
-#define UNINIT_RETURN()\
-    if(_inited.load()==false) return false;
+
+
     
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
@@ -98,53 +95,43 @@ bool __stdcall ImportMapBlockCenterScale(int x, int y, double scale)
 }
 bool __stdcall GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetTransformOfMap(x, y, a, mapId));
 }
 bool __stdcall GetPositionOfMap(double& x, double& y, int& mapId)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetPositionOfMap(x, y, mapId));
 }
 bool __stdcall GetDirection(double& a)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetDirection(a));
 }
 bool __stdcall GetRotation(double& a)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetRotation(a));
 }
 bool __stdcall GetStar(double& x, double& y, bool& isEnd)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetStar(x, y, isEnd));
 }
 bool __stdcall GetStarJson(char* json_buff, int buff_size)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetStarJson(json_buff));
 }
 bool __stdcall GetUID(int& uid)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetUID(uid));
 }
 bool __stdcall GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetAllInfo(x, y, mapId, a, r, uid));
     return _at.GetAllInfo(x, y, mapId, a, r, uid);
 }
 bool __stdcall GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetInfoLoadPicture(path, uid, x, y, a));
 }
 bool __stdcall GetInfoLoadVideo(const char* path, const char* out_path)
 {
-    UNINIT_RETURN();
     INSTALL_DUMP(_at.GetInfoLoadVideo(path, out_path));
 }
 int __stdcall GetLastErr()
