@@ -79,7 +79,7 @@ namespace tianli::frame::capture
             return true;
         }
 
-        bool set_handle(HWND handle = 0) override
+        bool set_capture_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
                 return false;
@@ -112,7 +112,7 @@ namespace tianli::frame::capture
             static ID3D11Texture2D *bufferTexture;
 
             if (this->is_callback)
-                set_handle(this->source_handle_callback());
+                set_capture_handle(this->source_handle_callback());
 
             if (m_framePool == nullptr)
             {
