@@ -35,7 +35,17 @@ struct features
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     features() = default;
-    features(const std::vector<cv::KeyPoint> &keypoints, const cv::Mat &descriptors);
+    inline features(const std::vector<cv::KeyPoint> &keypoints, const cv::Mat &descriptors):
+        keypoints(keypoints), descriptors(descriptors)
+    {
+        //之后搞明白index的作用后重新写一个构造函数
+        //indexs.resize(keypoints.size());
+        //for (int i = 0; i < keypoints.size(); i++)
+        //{
+        //    indexs[i] = i;
+        //}
+    }
+
     size_t size() const { return keypoints.size(); }
 };
 
