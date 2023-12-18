@@ -4,8 +4,8 @@
 
 namespace tianli::algorithms::feature::create
 {
-    // NEED_TEST: 构造均匀分布的特征点，基于网格划分，在每个网格内至少采样到目标密度的特征点
-    static features from_image(const cv::Mat &image, const int target_density = 100, const int grid_radius = 512, const cv::Mat &mask = cv::Mat())
+    // NEED_TEST: 构造均匀分布的特征点，基于网格划分，在每个网格内至少采样到目标密度的特征点   
+    static features from_image(const cv::Mat &image, const int target_density = 100, const int grid_radius = 512, const cv::Mat &mask = cv::Mat(),const double surf_begin_hessian_threshold=100,const int surf_octaves = 1,const int surf_octaveLayers = 3,const  bool surf_extended = true,const bool surf_upright = false)
     {
         const double target_density_rate = 1.0 / (grid_radius * grid_radius) * target_density;
         // 将图像根据尺寸划分为网格，以均分为原则，尽可能接近给定的半径
@@ -36,8 +36,8 @@ namespace tianli::algorithms::feature::create
         std::for_each(std::execution::par_unseq, grid_features.begin(), grid_features.end(), [&](std::pair<cv::Rect, features> &grid_feature)
             {
                 const int fixed_target_density = static_cast<int>(std::ceil(target_density_rate * grid_feature.first.area()));
-                const auto &detector = cv::xfeatures2d::SURF::create(100, 1, 3, true, false);
-                double threshold = 100.0;
+                const auto &detector = cv::xfeatures2d::SURF::create(surf_begin_hessian_threshold, surf_octaves, surf_octaveLayers, surf_extended, surf_upright);
+                double threshold = surf_begin_hessian_threshold;
                 features feature;
                 for (int i = 0; i < 10; i++)
                 {
