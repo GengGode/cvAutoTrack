@@ -337,7 +337,7 @@ cv::Point2d SurfMatch::match_all_map(Match &matcher, const cv::Mat &mini_map_mat
     
     // 绘制匹配结果
     auto translated_map_feature = feature::TransferAxes(map, cache_info->setting.roi, cv::Rect(cv::Point(), Resources::getInstance().DbgMap.size()));
-    draw_matched_keypoints(Resources::getInstance().DbgMap, translated_map_feature.keypoints, img_object, mini_map.keypoints, KNN_m[0]);
+    draw_matched_keypoints(Resources::getInstance().DbgMap, translated_map_feature.keypoints, img_object, mini_map.keypoints, KNN_m);
 
     std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
     std::vector<cv::DMatch> keypoint_list_dmatch;
@@ -416,12 +416,13 @@ bool SurfMatch::getIsContinuity()
     return isContinuity;
 }
 
-void SurfMatch::draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint>& keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint>& keypoint_object, const std::vector<cv::DMatch>&good_matches)
+void SurfMatch::draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint>& keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint>& keypoint_object, const std::vector<std::vector<cv::DMatch>>&d_matches)
 {
     cv::Mat img_matches, imgmap, imgminmap;
-    drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), std::vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+    drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1));
+    drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1));
+    drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, d_matches,img_matches,
+        cv::Scalar::all(-1),cv::Scalar::all(-1),std::vector<std::vector<char>>(),cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 }
 
 void SurfMatch::calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene,
@@ -451,13 +452,13 @@ void SurfMatch::calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyP
 Match::Match(double hessian_threshold, int octaves, int octave_layers, bool extended, bool upright)
 {
     detector = cv::xfeatures2d::SURF::create(hessian_threshold, octaves, octave_layers, extended, upright);
-    //matcher  = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+    matcher  = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
 }
 
 std::vector<std::vector<cv::DMatch>> Match::match(const cv::Mat &query_descriptors, const cv::Mat &train_descriptors)
 {
     std::vector<std::vector<cv::DMatch>> match_group;
-    matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE);
+    //matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE);
     matcher->knnMatch(query_descriptors, train_descriptors, match_group, 2);
     return match_group;
 }
