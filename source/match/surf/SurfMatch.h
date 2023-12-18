@@ -20,15 +20,13 @@ public:
     bool detect_and_compute(const cv::Mat &img, features &key_mat_point);
 };
 
-
-
 class SurfMatch
 {
     cv::Mat _mapMat;
     cv::Mat _miniMapMat;
 
     //缓存信息
-    trackCache::CacheInfo *cache_info;
+    std::shared_ptr<trackCache::CacheInfo> cache_info;
 
     cv::Point2d pos;
     cv::Point2d last_pos;		// 上一次匹配的地点，匹配失败，返回上一次的结果
@@ -72,6 +70,8 @@ public:
     bool getIsContinuity();
 
 
+
+   
 private:
     bool isMatchAllMap = true;
 
@@ -81,7 +81,15 @@ private:
         std::vector<TianLi::Utils::MatchKeyPoint> &matches_12
     );
 
-    static void draw_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch> &good_matches);
+    /**
+     * @brief 绘制匹配的特征点
+     * @param img_scene 大地图的图像
+     * @param keypoint_scene 大地图的特征点
+     * @param img_object 小地图的图像
+     * @param keypoint_object 小地图的特征点
+     * @param matches 匹配的点对
+    */
+    void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<cv::DMatch> &good_matches);
 
     static void calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>> &KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint> &good_keypoints, std::vector<cv::DMatch> &good_matches);
 
