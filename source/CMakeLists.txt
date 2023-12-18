@@ -32,6 +32,8 @@ set(PROJECT_VERSION_MINOR ${VERSION_MINOR})
 set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
 set(PROJECT_VERSION_BUILD ${VERSION_BUILD})
 
+# 划分为静态库模块
+#auto_subdirectory()
 
 # version.rc
 configure_file("${VerRcFile}.in" "${VerRcFile}")

@@ -20,7 +20,7 @@ int main()
     
     auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto local = std::make_shared<tianli::frame::local::local_picture>(logger);
-    local->set_current_file("test.png");
+    local->set_local_file("test.png");
     cv::Mat frame;
     local->get_frame(frame);
     if (frame.empty())

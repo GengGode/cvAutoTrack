@@ -13,8 +13,11 @@ namespace tianli::frame::capture
         }
         ~capture_source() override = default;
         bool set_source_frame_callback(std::function<cv::Mat()> callback) override { return false; }
-        
-        bool set_current_file(std::string file) override { return false; }
+
+        bool set_local_frame(cv::Mat frame) override { return false; }
+        bool set_local_file(std::string file) override { return false; }
+        // TODO: frame_source::set_source_frame_callback
+        bool set_frame_rect_callback(std::function<cv::Rect(cv::Rect)> callback) override { return false; }
 
     protected:
         std::function<HWND()> source_handle_callback;

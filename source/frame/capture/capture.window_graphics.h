@@ -23,7 +23,10 @@ namespace tianli::frame::capture
             this->type = source_type::window_graphics;
             auto init_global = utils::window_graphics::graphics_global::get_instance();
         }
-        ~capture_window_graphics() override = default;
+        ~capture_window_graphics() override
+        {
+            uninitialized();
+        }
 
     public:
         bool initialization() override
@@ -76,7 +79,7 @@ namespace tianli::frame::capture
             return true;
         }
 
-        bool set_handle(HWND handle = 0) override
+        bool set_capture_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
                 return false;
@@ -109,7 +112,7 @@ namespace tianli::frame::capture
             static ID3D11Texture2D *bufferTexture;
 
             if (this->is_callback)
-                set_handle(this->source_handle_callback());
+                set_capture_handle(this->source_handle_callback());
 
             if (m_framePool == nullptr)
             {

@@ -4,7 +4,7 @@ add_executable(${test_name} main.cpp ${SourceDir}/resources/binary/resources.bin
 
 add_definitions(-DUSED_BINARY_IMAGE)
 set_property(TARGET ${test_name} PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-target_compile_options(${test_name} PRIVATE "/W4")
+target_compile_options(${test_name} PRIVATE "/W2")
 
 string(REPLACE "_" ";" test_name_splits ${test_name})
 list(GET test_name_splits 1 test_group_name)

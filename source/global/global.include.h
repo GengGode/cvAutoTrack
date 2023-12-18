@@ -22,7 +22,6 @@ namespace tianli::global
         #else
         std::string location;
 #endif
-        std::shared_ptr<error_type> next;
     };
 
     class error_info
@@ -31,7 +30,18 @@ namespace tianli::global
             std::chrono::system_clock::time_point time;
             std::chrono::system_clock::time_point begin_time;
             std::chrono::system_clock::time_point end_time;
-            std::shared_ptr<error_type> error;
+            std::list<std::shared_ptr<error_type>> errors;
+
+        public:
+            error_info &operator=(const std::pair<int, std::string> &err_code_msg)
+            {
+                errors.emplace_back(std::make_shared<error_type>(error_type{err_code_msg.first, err_code_msg.second}));
+                return *this;
+            }
+            operator std::pair<int, std::string>()
+            {
+                return std::make_pair(errors.back()->code, errors.back()->msg);
+            }
     };
     class error_resigter
     {

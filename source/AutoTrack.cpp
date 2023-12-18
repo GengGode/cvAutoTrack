@@ -31,8 +31,8 @@ AutoTrack::AutoTrack()
     genshin_avatar_position.target_map_world_center = res.map_relative_center;
     genshin_avatar_position.target_map_world_scale = res.map_relative_scale;
 
-    genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    genshin_handle.config.source->initialization();
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
 }
 
@@ -64,34 +64,34 @@ bool AutoTrack::uninit()
 
 bool AutoTrack::SetUseBitbltCaptureMode()
 {
-    if (genshin_handle.config.source == nullptr)
+    if (genshin_handle.config.frame_source == nullptr)
     {
-        genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+        genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
         return true;
     }
-    if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::bitblt)
+    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
     {
         return true;
     }
-    genshin_handle.config.source.reset();
-    genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    genshin_handle.config.frame_source.reset();
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     return true;
 }
 
 bool AutoTrack::SetUseDx11CaptureMode()
 {
 #ifdef BUILD_CAPTURE_DXGI
-    if (genshin_handle.config.source == nullptr)
+    if (genshin_handle.config.frame_source == nullptr)
     {
-        genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
+        genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
         return true;
     }
-    if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
     {
         return true;
     }
-    genshin_handle.config.source.reset();
-    genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
+    genshin_handle.config.frame_source.reset();
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
     return true;
 #else
     return false;
@@ -209,7 +209,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
         return false;
     }
     cv::Mat out_info_img = genshin_screen.img_screen.clone();
-    switch (genshin_handle.config.source->type)
+    switch (genshin_handle.config.frame_source->type)
     {
     case tianli::frame::frame_source::source_type::bitblt:
     {
@@ -347,7 +347,7 @@ bool AutoTrack::GetDirection(double& a)
         return false;
     }
 
-    direction_calculation_config config;
+    tianli::global::direction_calculation_config config;
     direction_calculation(genshin_minimap.img_avatar, a, config);
     if (config.error)
     {
@@ -370,7 +370,7 @@ bool AutoTrack::GetRotation(double& a)
         return false;
     }
 
-    rotation_calculation_config config;
+    tianli::global::rotation_calculation_config config;
     rotation_calculation(genshin_minimap.img_minimap, a, config);
     if (config.error)
     {
@@ -534,7 +534,7 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
     cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
         giStarRef, cv::COLOR_RGBA2GRAY);
 
-    star_calculation_config config;
+    tianli::global::star_calculation_config config;
     config.is_on_city = genshin_avatar_position.config.is_on_city;
     star_calculation(giStarRef, jsonBuff, config);
     if (config.error)
@@ -559,7 +559,7 @@ bool AutoTrack::GetUID(int& uid)
 
     split(giUIDRef, channels);
 
-    if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
     {
         cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
     }
@@ -568,7 +568,7 @@ bool AutoTrack::GetUID(int& uid)
         giUIDRef = channels[3];
     }
 
-    uid_calculation_config config;
+    tianli::global::uid_calculation_config config;
     uid_calculation(giUIDRef, uid, config);
     if (config.error)
     {
@@ -613,7 +613,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 
     // a
     {
-        direction_calculation_config config;
+        tianli::global::direction_calculation_config config;
         direction_calculation(genshin_minimap.img_avatar, a, config);
         if (config.error)
         {
@@ -622,7 +622,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
     }
     // r
     {
-        rotation_calculation_config config;
+        tianli::global::rotation_calculation_config config;
         rotation_calculation(genshin_minimap.img_minimap, r, config);
         if (config.error)
         {
@@ -636,7 +636,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
 
         cv::split(giUIDRef, channels);
 
-        if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
         {
             cv::cvtColor(giUIDRef, giUIDRef, cv::COLOR_RGBA2GRAY);
         }
@@ -645,7 +645,7 @@ bool AutoTrack::GetAllInfo(double& x, double& y, int& mapId, double& a, double& 
             giUIDRef = channels[3];
         }
 
-        uid_calculation_config config;
+        tianli::global::uid_calculation_config config;
         uid_calculation(giUIDRef, uid, config);
         if (config.error)
         {
@@ -681,7 +681,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
 
         cv::split(image, channels);
 
-        if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
         {
             cv::cvtColor(image, image, cv::COLOR_RGBA2GRAY);
         }
@@ -690,7 +690,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
             image = channels[3];
         }
 
-        uid_calculation_config config;
+        tianli::global::uid_calculation_config config;
         uid_calculation(image, uid, config);
         if (config.error)
         {
@@ -783,7 +783,7 @@ bool AutoTrack::getGengshinImpactWnd()
         return false;
     }
 
-    genshin_handle.config.source->set_handle(genshin_handle.handle);
+    genshin_handle.config.frame_source->set_capture_handle(genshin_handle.handle);
 
     return true;
 }
@@ -803,7 +803,7 @@ bool AutoTrack::getMiniMapRefMat()
 {
     genshin_minimap.img_minimap = genshin_screen.img_screen(genshin_minimap.rect_minimap);
 
-    if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics || genshin_handle.config.is_force_used_no_alpha)
+    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics || genshin_handle.config.is_force_used_no_alpha)
     {
         genshin_screen.config.is_used_alpha = false;
     }
@@ -816,12 +816,12 @@ bool AutoTrack::getMiniMapRefMat()
 
     if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
     {
-        if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::bitblt)
+        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
         {
             // err = { 40101,"Bitblt模式下检测派蒙失败" };
             return false;
         }
-        else if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
         {
             // err = { 40201,"DirectX模式下检测派蒙失败" };
             return false;
@@ -829,12 +829,12 @@ bool AutoTrack::getMiniMapRefMat()
     }
     if (genshin_paimon.is_visial == false)
     {
-        if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::bitblt)
+        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
         {
             // err = { 40102,"Bitblt模式下没有检测到派蒙" };
             return false;
         }
-        else if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
         {
             // err = { 40202,"DirectX模式下没有检测到派蒙" };
             return false;
@@ -847,12 +847,12 @@ bool AutoTrack::getMiniMapRefMat()
 
     if (TianLi::Genshin::Cailb::cailb_minimap(genshin_screen, genshin_minimap) == false)
     {
-        if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::bitblt)
+        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
         {
             // err = { 40105,"Bitblt模式下计算小地图区域失败" };
             return false;
         }
-        else if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::window_graphics)
+        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
         {
 
             // err = { 40205,"DirectX模式下计算小地图区域失败" };

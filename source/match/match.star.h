@@ -1,15 +1,9 @@
 #pragma once
+#include "global/global.genshin.h"
 #include "utils/Utils.h"
 #include "resources/Resources.h"
 
-struct star_calculation_config
-{
-	bool is_on_city = false;
-	bool error = false;
-	error_info err = { 0,"" };
-};
-
-void star_calculation(cv::Mat& giStarRef,char* jsonBuff, star_calculation_config& config)
+void star_calculation(cv::Mat &giStarRef, char *jsonBuff, tianli::global::star_calculation_config &config)
 {
 	Resources& res = Resources::getInstance();
 

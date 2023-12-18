@@ -1,4 +1,5 @@
 #pragma once
+#include <opencv2/xfeatures2d.hpp>
 #include "utils/Utils.h"
 #include "algorithms/algorithms.include.h"
 #include "resources/trackCache.h"

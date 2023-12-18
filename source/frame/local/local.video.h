@@ -37,7 +37,16 @@ namespace tianli::frame::local
             this->cache_frame_current = 0;
             return true;
         }
-        bool set_current_file(std::string file) override
+        bool set_local_frame(cv::Mat frame) override
+        {
+            if (frame.empty())
+                return false;
+            this->source_frame = frame;
+            this->is_callback = false;
+            this->cache_frame_current = 0;
+            return true;
+        }
+        bool set_local_file(std::string file) override
         {
             if (std::filesystem::exists(file) == false)
                 return false;

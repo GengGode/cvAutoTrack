@@ -1,12 +1,12 @@
 #pragma once
+#include "global/global.genshin.h"
 #include "algorithms.include.h"
 
-
 double last_direction = 0;
-void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config);
-void direction_calculation_2nd(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config);
+void direction_calculation(cv::Mat& giAvatarRef, double& a, tianli::global::direction_calculation_config& config);
+void direction_calculation_2nd(cv::Mat& giAvatarRef, double& a, tianli::global::direction_calculation_config& config);
 
-void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config)
+void direction_calculation(cv::Mat& giAvatarRef, double& a, tianli::global::direction_calculation_config& config)
 {
 	cv::resize(giAvatarRef, giAvatarRef, cv::Size(), 2, 2);
 	std::vector<cv::Mat> lis;
@@ -100,7 +100,7 @@ void direction_calculation(cv::Mat& giAvatarRef, double& a, direction_calculatio
 	last_direction = a;
 }
 
-void direction_calculation_2nd(cv::Mat& giAvatarRef, double& a, direction_calculation_config& config)
+void direction_calculation_2nd(cv::Mat &giAvatarRef, double &a, tianli::global::direction_calculation_config &config)
 {
 	
 }

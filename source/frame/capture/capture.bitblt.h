@@ -27,7 +27,7 @@ namespace tianli::frame::capture
         {
             return true;
         }
-        bool set_handle(HWND handle = 0) override
+        bool set_capture_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
                 return false;

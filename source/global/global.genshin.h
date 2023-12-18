@@ -9,6 +9,44 @@
 
 namespace tianli::global
 {
+
+    struct direction_calculation_config
+    {
+        bool error = false;
+        error_info err;
+    };
+
+    struct rotation_calculation_config
+    {
+        bool error = false;
+        error_info err;
+    };
+
+    struct position_calculation_config
+    {
+        bool error = false;
+        error_info err;
+    };
+
+    struct odometer_config
+    {
+        bool error = false;
+        error_info err;
+        double scale = 1.0;
+    };
+
+    struct star_calculation_config
+    {
+        bool is_on_city = false;
+        bool error = false;
+        error_info err;
+    };
+    struct uid_calculation_config
+    {
+        bool error = false;
+        error_info err;
+    };
+
     enum GenshinWindowClass
     {
         None,
@@ -67,7 +105,7 @@ namespace tianli::global
         bool is_auto_find_genshin = true;
         bool is_force_used_no_alpha = false;
         HWND genshin_handle = nullptr;
-        std::shared_ptr<tianli::frame::frame_source> source;
+        std::shared_ptr<tianli::frame::frame_source> frame_source;
 
         std::vector<std::pair<std::wstring, GenshinWindowClass>> genshin_window_name_list = GenshinWindowNameList;
     };

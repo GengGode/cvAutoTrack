@@ -25,7 +25,7 @@ int main()
 
     auto logger = std::make_shared<tianli::global::record::std_logger>();
     auto local = std::make_shared<tianli::frame::local::local_video>(logger);
-    local->set_current_file("test.mp4");
+    local->set_local_file("test.mp4");
     cv::Mat frame;
     local->get_frame(frame);
     if (frame.empty())
