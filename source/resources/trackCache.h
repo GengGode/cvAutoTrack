@@ -131,6 +131,7 @@ namespace trackCache
                 cv::KeyPoint kp;
                 kp.pt.x = sample_kp.x;
                 kp.pt.y = sample_kp.y;
+                kp.size = 16.0;
                 kp.response = sample_kp.response;
                 kp.angle = 270.0;
                 kp.octave = 0;
