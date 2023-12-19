@@ -3,8 +3,14 @@ name: dev-window-dynamic
 on:
   push:
     branches: [ "dev" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/dev-window-dynamic.yml'
   pull_request:
     branches: [ "dev" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/dev-window-dynamic.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)

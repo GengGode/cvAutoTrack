@@ -3,9 +3,17 @@ name: test-window-dynamic
 on:
   push:
     branches: [ "*" ]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - '.github/workflows/test-window-dynamic.yml'
   pull_request:
     # 除了master分支，其他分支都不触发
     branches: [ master ]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - '.github/workflows/test-window-dynamic.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
