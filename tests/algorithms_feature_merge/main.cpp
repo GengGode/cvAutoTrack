@@ -4,9 +4,9 @@
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include "resources/binary/resources.binary.h"
 #include <fmt/format.h>
-#include "algorithms/algorithms.feature.h"
+#include "algorithms/features/features.operate.h"
 
-using namespace tianli::algorithms::feature;
+using namespace tianli::algorithms::features_operate;
 
 cv::Mat get(int i)
 {
