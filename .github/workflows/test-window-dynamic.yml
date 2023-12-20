@@ -3,9 +3,17 @@ name: test-window-dynamic
 on:
   push:
     branches: [ "*" ]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - '.github/workflows/test-window-dynamic.yml'
   pull_request:
     # 除了master分支，其他分支都不触发
     branches: [ master ]
+    paths:
+      - 'source/**'
+      - 'tests/**'
+      - '.github/workflows/test-window-dynamic.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -13,6 +21,8 @@ env:
 
 jobs:
   build:
+    # 跳过提交信息开头为doc:或者docs:的提交
+    if: "!startsWith(github.event.head_commit.message, 'doc:') && !startsWith(github.event.head_commit.message, 'docs:')"
     runs-on: windows-latest
 
     steps:

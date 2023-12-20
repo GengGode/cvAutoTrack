@@ -3,8 +3,14 @@ name: dev-window-dynamic
 on:
   push:
     branches: [ "dev" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/dev-window-dynamic.yml'
   pull_request:
     branches: [ "dev" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/dev-window-dynamic.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -12,6 +18,8 @@ env:
 
 jobs:
   build:
+    # 跳过提交信息开头为doc:或者docs:的提交
+    if: "!startsWith(github.event.head_commit.message, 'doc:') && !startsWith(github.event.head_commit.message, 'docs:')"
     runs-on: windows-latest
     outputs:
       version: ${{ steps.get_version.outputs._version }}
