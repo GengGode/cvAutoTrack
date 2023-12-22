@@ -34,6 +34,13 @@ class SurfMatch
 public:
     SurfMatch() = default;
     ~SurfMatch() = default;
+    //匹配时使用到的点对结构体
+    struct MatchKeyPoint
+    {
+        cv::KeyPoint query;
+        cv::KeyPoint train;
+    };
+
 
 public:
     Match matcher;
@@ -55,6 +62,7 @@ public:
     void UnInit();
     bool GetNextPosition(cv::Mat mini_map, cv::Point2d &position);
 
+
     /**
      * @brief 使用自行实现的ransac算法进行匹配
      * @param calc_is_faile 是否计算失败
@@ -62,9 +70,10 @@ public:
      * @param max_iter_num 最大迭代次数
      * @return 匹配的位置
     */
+    /*
     cv::Point2d match_ransac(bool &calc_is_faile, cv::Mat &affine_mat_out,
         int max_iter_num);
-
+    */
     cv::Point2d match_all_map(Match &matcher, const cv::Mat &mini_map_mat, features &mini_map, features &map, bool &calc_is_faile);
 
     cv::Point2d getLocalPos();
@@ -75,12 +84,13 @@ public:
    
 private:
     bool isMatchAllMap = true;
-
+    /*
     double check_inliers(
         cv::Mat &H_21, std::vector<bool> &is_inlier_match,
         std::vector<cv::KeyPoint> &undist_keypts_1, std::vector<cv::KeyPoint> &undist_keypts_2,
         std::vector<TianLi::Utils::MatchKeyPoint> &matches_12
     );
+    */
 
     /**
      * @brief 绘制匹配的特征点
@@ -90,8 +100,12 @@ private:
      * @param keypoint_object 小地图的特征点
      * @param matches 匹配的点对
     */
-    void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &good_matches);
+    static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &good_matches);
 
-    static void calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>> &KNN_m, double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint> &good_keypoints, std::vector<cv::DMatch> &good_matches);
+    static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<cv::DMatch> &d_matches);
+
+    static void calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &KNN_m, std::vector<MatchKeyPoint> &out_good_keypoints, std::vector<cv::DMatch> &out_good_matches);
+
+    static void RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double> &x_list, std::vector<double> &y_list);
 
 };

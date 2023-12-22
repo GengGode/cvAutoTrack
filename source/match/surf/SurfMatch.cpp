@@ -20,9 +20,11 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
         _mapMat = Resources::getInstance().DbgMap;
     }
 
-    double hessian_threshold = cache_info->setting.hessian_threshold;
+    //double hessian_threshold = cache_info->setting.hessian_threshold;
+    double hessian_threshold = 1.0;
     int octave = cache_info->setting.octaves;
-    int octave_layers = cache_info->setting.octave_layers;
+    //int octave_layers = cache_info->setting.octave_layers;
+    int octave_layers = 1;
     bool extended = cache_info->setting.extended;
     bool upright = cache_info->setting.up_right;
     matcher = Match(hessian_threshold, octave, octave_layers, extended, upright);
@@ -43,12 +45,12 @@ bool SurfMatch::GetNextPosition(cv::Mat mini_map, cv::Point2d& position)
     bool calc_is_faile = false;
     is_success_match = false;
     pos = match_all_map(matcher, mini_map,mini_map_features,all_map_features,calc_is_faile);
-    pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
+    //pos = match_ransac(calc_is_faile, cv::Mat(), 1000);
     is_success_match = !calc_is_faile;
     return calc_is_faile;
 }
 
-
+/*
 
 cv::Point2d SurfMatch::match_ransac(bool &calc_is_faile, cv::Mat &affine_mat_out,
     int max_iter_num)
@@ -301,7 +303,7 @@ double SurfMatch::check_inliers(
 
     return score;
 }
-
+*/
 
 /// <summary>
 /// 非连续匹配，从大地图中确定角色位置
@@ -335,13 +337,14 @@ cv::Point2d SurfMatch::match_all_map(Match &matcher, const cv::Mat &mini_map_mat
     cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
     // std::cout << "match time cost: " << cost_time << " ms" << std::endl;
     
-    // 绘制匹配结果
-    auto translated_map_feature = feature::TransferAxes(map, cache_info->setting.roi, cv::Rect(cv::Point(), Resources::getInstance().DbgMap.size()));
-    draw_matched_keypoints(Resources::getInstance().DbgMap, translated_map_feature.keypoints, img_object, mini_map.keypoints, KNN_m);
-
-    std::vector<TianLi::Utils::MatchKeyPoint> keypoint_list;
+    // 获取最佳匹配点，尽量一次就筛选出正确的匹配点对
+    std::vector<MatchKeyPoint> keypoint_list;
     std::vector<cv::DMatch> keypoint_list_dmatch;
-    calc_good_matches(Resources::getInstance().DbgMap, map.keypoints, img_object, mini_map.keypoints, KNN_m, 1.0, keypoint_list, keypoint_list_dmatch);
+    calc_good_matches(map.keypoints, mini_map.keypoints, KNN_m, keypoint_list, keypoint_list_dmatch);
+
+    // 绘制匹配结果
+    features translated_map_feature = feature::TransferAxes(map, cache_info->setting.roi, cv::Rect(cv::Point(), Resources::getInstance().DbgMap.size()));
+    draw_matched_keypoints(Resources::getInstance().DbgMap, translated_map_feature.keypoints, img_object, mini_map.keypoints, keypoint_list_dmatch);
 
     if (keypoint_list.size() < 2)
     {
@@ -349,27 +352,10 @@ cv::Point2d SurfMatch::match_all_map(Match &matcher, const cv::Mat &mini_map_mat
         return map_pos;
     }
 
-    // 添加通过求解线性方程组的方法求解缩放+平移
-    // 通过缩放判断是否在城镇内
-    double scale_mini2map, dx_mini2map, dy_mini2map;
-    // make two point set
-    std::vector<cv::Point2d> mini_map_points;
-    std::vector<cv::Point2d> map_points;
-    for (auto &point : keypoint_list)
-    {
-        mini_map_points.push_back(point.query);
-        map_points.push_back(point.train);
-    }
-    solve_linear_s_dx_dy(mini_map_points, map_points, scale_mini2map, dx_mini2map, dy_mini2map);
-
-    // 难绷，小地图坐标系是反的
-    scale_mini2map = -scale_mini2map;
-    dx_mini2map = -dx_mini2map;
-    dy_mini2map = -dy_mini2map;
 
     std::vector<double> lisx;
     std::vector<double> lisy;
-    TianLi::Utils::RemoveKeypointOffset(keypoint_list, 1.3 / 1.0, lisx, lisy);
+    //TianLi::Utils::RemoveKeypointOffset(keypoint_list, 1.3 / 1.0, lisx, lisy);
 
     std::vector<cv::Point2d> list_point;
     for (int i = 0; i < keypoint_list.size(); i++)
@@ -425,27 +411,62 @@ void SurfMatch::draw_matched_keypoints(const cv::Mat &img_scene, const std::vect
         cv::Scalar::all(-1),cv::Scalar::all(-1),std::vector<std::vector<char>>(),cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 }
 
-void SurfMatch::calc_good_matches(const cv::Mat &img_scene, std::vector<cv::KeyPoint> keypoint_scene,
-    cv::Mat &img_object, std::vector<cv::KeyPoint> keypoint_object,
-    std::vector<std::vector<cv::DMatch>> &KNN_m,
-    double ratio_thresh, std::vector<TianLi::Utils::MatchKeyPoint> &good_keypoints,
-    std::vector<cv::DMatch> &good_matches)
+void SurfMatch::draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<cv::DMatch> &d_matches)
 {
-    for (size_t i = 0; i < KNN_m.size(); i++)
+    cv::Mat img_matches, imgmap, imgminmap;
+    drawKeypoints(img_scene, keypoint_scene, imgmap, cv::Scalar::all(-1));
+    drawKeypoints(img_object, keypoint_object, imgminmap, cv::Scalar::all(-1));
+    drawMatches(img_object, keypoint_object, img_scene, keypoint_scene, d_matches, img_matches, cv::Scalar::all(-1),cv::Scalar::all(-1),std::vector<char>(),cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+}
+
+void SurfMatch::calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object,
+    const std::vector<std::vector<cv::DMatch>> &KNN_m, std::vector<MatchKeyPoint> &out_good_keypoints,
+    std::vector<cv::DMatch> &out_good_matches)
+{
+    std::map<int,std::set<int>> good_quary_vecs_1st;
+    for (const auto &dmatch : KNN_m)
     {
-        if (KNN_m[i][0].distance < ratio_thresh * KNN_m[i][1].distance)
-        {
-            if (KNN_m[i][0].queryIdx >= keypoint_object.size())
-            {
-                continue;
-            }
-            good_matches.push_back(KNN_m[i][0]);
-            good_keypoints.push_back({ {img_object.cols / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.x,
-                                       img_object.rows / 2.0 - keypoint_object[KNN_m[i][0].queryIdx].pt.y},
-                                      {keypoint_scene[KNN_m[i][0].trainIdx].pt.x, keypoint_scene[KNN_m[i][0].trainIdx].pt.y} });
-        }
+        good_quary_vecs_1st[dmatch[0].queryIdx] = std::set<int>();
     }
 
+    //1st 计算向量的方向，保留向量近似的结果
+    std::for_each(KNN_m.begin(), KNN_m.end(), [&](const std::vector<cv::DMatch> &m1) {
+        std::for_each(KNN_m.begin(), KNN_m.end(), [&](const std::vector<cv::DMatch> &m2) {
+            auto scene_vec = keypoint_scene[m1[0].trainIdx].pt - keypoint_scene[m2[0].trainIdx].pt;
+            auto object_vec = keypoint_object[m1[0].queryIdx].pt - keypoint_object[m2[0].queryIdx].pt;
+            //向量单位化
+            auto scene_vec_length = std::sqrt(scene_vec.dot(scene_vec));
+            auto object_vec_length = std::sqrt(object_vec.dot(object_vec));
+            //计算点乘结果
+            auto dot_res = (scene_vec / scene_vec_length).dot(object_vec / object_vec_length);
+            //排除nan
+            if (std::isnan(dot_res))
+            {
+                return;
+            }
+            //保留点乘结果大于于阈值的点
+            if (dot_res > 0.9)
+            {
+                good_quary_vecs_1st[m1[0].queryIdx].emplace(m2[0].queryIdx);
+            }
+        });
+    });
+
+    //2nd 计算每一组向量中query和train的比值，以此作为参考，剔除比值差异过大的点
+}
+
+void SurfMatch::RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double> &x_list, std::vector<double> &y_list)
+{
+    for (int i = 0; i < keypoints.size(); i++)
+    {
+        auto mini_keypoint = keypoints[i].query;
+        auto map_keypoint = keypoints[i].train;
+
+        auto diff_pos = mini_keypoint.pt * scale + map_keypoint.pt;
+
+        x_list.push_back(diff_pos.x);
+        y_list.push_back(diff_pos.y);
+    }
 }
 
 
@@ -459,7 +480,7 @@ std::vector<std::vector<cv::DMatch>> Match::match(const cv::Mat &query_descripto
 {
     std::vector<std::vector<cv::DMatch>> match_group;
     //matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::BRUTEFORCE);
-    matcher->knnMatch(query_descriptors, train_descriptors, match_group, 2);
+    matcher->knnMatch(query_descriptors, train_descriptors, match_group, 1);
     return match_group;
 }
 
