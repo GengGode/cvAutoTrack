@@ -7,12 +7,6 @@
 
 namespace TianLi::Utils
 {
-    struct MatchKeyPoint
-    {
-        cv::Point2d query;
-        cv::Point2d train;
-    };
-
     //从大图中裁剪小图，并保证小图不超出大图范围
     //@param map大图
     //@param map小图左上角坐标
@@ -34,13 +28,6 @@ namespace TianLi::Utils
     std::vector<double> extract_valid(std::vector<double> list);
     //按照标准差剔除列表的异常点
     std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
-
-    //消除特征点的漂移，有利于获取到特征点的统计特征【待重写】
-    //@param keypoints 特征点对
-    //@param scale 小地图缩放
-    //@param x_list 横坐标
-    //@param y_list 纵坐标
-    void RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list);
 
     //获取列表的最大值
     int getMaxID(double lis[], int len);

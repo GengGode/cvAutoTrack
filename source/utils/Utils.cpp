@@ -155,20 +155,6 @@ namespace TianLi::Utils
         return valid_list;
     }
 
-    void RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list)
-    {
-        for (int i = 0; i < keypoints.size(); i++)
-        {
-            auto mini_keypoint = keypoints[i].query;
-            auto map_keypoint = keypoints[i].train;
-
-            auto diff_pos = mini_keypoint * scale + map_keypoint;
-
-            x_list.push_back(diff_pos.x);
-            y_list.push_back(diff_pos.y);
-        }
-    }
-
     bool SPC(std::vector<double> lisx, std::vector<double> lisy, cv::Point2d& out)
     {
         // 计算均值，并将均值作为期望坐标
