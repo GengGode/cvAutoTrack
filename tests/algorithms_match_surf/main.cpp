@@ -3,12 +3,12 @@
 #include <iostream>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include <fmt/format.h>
-#include "algorithms/algorithms.feature.h"
+#include "algorithms/features/features.operate.h"
 #include "algorithms/container/container.set.h"
 #include "algorithms/match/match.surf.h"
 #include "resources/Resources.h"
 
-using namespace tianli::algorithms::feature;
+using namespace tianli::algorithms::features_operate;
 
 int main(int v, char *s[])
 {

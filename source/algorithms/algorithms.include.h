@@ -8,18 +8,15 @@ struct features
     std::vector<cv::KeyPoint> keypoints;
     cv::Mat descriptors;
     features() = default;
-    inline features(const std::vector<cv::KeyPoint> &keypoints, const cv::Mat &descriptors):
-        keypoints(keypoints), descriptors(descriptors)
-    {
-        //之后搞明白index的作用后重新写一个构造函数
-        //indexs.resize(keypoints.size());
-        //for (int i = 0; i < keypoints.size(); i++)
-        //{
-        //    indexs[i] = i;
-        //}
-    }
+    features(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) : keypoints(keypoints), descriptors(descriptors) {}
+    features(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors, const std::vector<size_t>& indexs) : keypoints(keypoints), descriptors(descriptors), indexs(indexs) {}
+    ~features() = default;
 
+    size_t group_count() const { return indexs.size(); }
     size_t size() const { return keypoints.size(); }
+    size_t rows() const { return descriptors.rows; }
+    size_t cols() const { return descriptors.cols; }
+    bool empty() const { return keypoints.empty(); }
 };
 
 class point_index
