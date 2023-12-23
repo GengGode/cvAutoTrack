@@ -85,10 +85,16 @@ namespace TianLi::Genshin
 		GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY);
 		genshin_handle.scale = dpiX / 96.0;
 
+		GetUiRects(genshin_handle);
+	}
+
+	// TODO: 需要将获取UI布局的方法分离出来
+	void GetUiRects(tianli::global::GenshinHandle &genshin_handle)
+	{
 		{
 			int x = genshin_handle.rect_client.right - genshin_handle.rect_client.left;
 			int y = genshin_handle.rect_client.bottom - genshin_handle.rect_client.top;
-			
+
 			double f = 1, fx = 1, fy = 1;
 
 			if (static_cast<double>(x) / static_cast<double>(y) == 16.0 / 9.0)
@@ -173,7 +179,7 @@ namespace TianLi::Genshin
 				UID_mayArea_width,
 				UID_mayArea_height);
 			genshin_handle.rect_uid_maybe = Area_UID_mayArea;
-			
+
 			int UID_Rect_x = cvCeil(x - x * (1.0 - 0.865));
 			int UID_Rect_y = cvCeil(y - 1080.0 * (1.0 - 0.9755));
 			int UID_Rect_w = cvCeil(1920 * 0.11);
