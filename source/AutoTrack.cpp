@@ -777,6 +777,10 @@ bool AutoTrack::try_get_genshin_windows()
 bool AutoTrack::getGengshinImpactWnd()
 {
     TianLi::Genshin::get_genshin_handle(genshin_handle);
+    if (genshin_handle.config.frame_source->mode != tianli::frame::frame_source::source_mode::handle)
+    {
+        return true;
+    }
     if (genshin_handle.handle == NULL)
     {
         err = { 10, "无效句柄或指定句柄所指向窗口不存在" };

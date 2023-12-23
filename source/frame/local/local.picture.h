@@ -63,7 +63,7 @@ namespace tianli::frame::local
                 return true;
             }
             this->cache_local_file = this->source_local;
-            frame = cv::imread(this->cache_local_file);
+            frame = this->source_frame;
             this->cache_source_frame = frame;
             return true;
         }
