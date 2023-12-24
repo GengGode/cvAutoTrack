@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <iostream>
 #include "frame/capture/capture.bitblt.h"
+#include "frame/local/local.picture.h"
 #include "algorithms/filter/filter.kalman.h"
 #include "global/global.include.h"
 #include "global/global.genshin.h"
@@ -133,13 +134,15 @@ bool test()
 
     genshin_minimap.img_minimap = genshin_screen.img_screen(genshin_minimap.rect_minimap);
 
-    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics || genshin_handle.config.is_force_used_no_alpha)
+    // TODO: 这里应该让frame_source自己管理alpha类型，而不是依赖frame_source::source_type判断有没有alpha
+    // 目前只考虑bitblt截图有alpha通道
+    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
     {
-        genshin_screen.config.is_used_alpha = false;
+        genshin_screen.config.is_used_alpha = true;
     }
     else
     {
-        genshin_screen.config.is_used_alpha = true;
+        genshin_screen.config.is_used_alpha = false;
     }
 
     // 检测派蒙 -> 直接计算小地图坐标
@@ -154,6 +157,7 @@ bool test()
         return false;
     }
 
+    //TODO: 在传图模式下，这里的is_handle_mode也是错的
     genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
     genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
     genshin_screen.config.is_search_mode = genshin_paimon.is_search_mode;
@@ -180,7 +184,11 @@ int main()
 {
     fmt::print("Hello, world!\n");
 
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::local::local_picture>();
+
+    genshin_handle.config.frame_source->set_local_file("./test_scene.png");
+
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
 
