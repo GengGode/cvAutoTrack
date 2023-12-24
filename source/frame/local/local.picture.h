@@ -48,6 +48,7 @@ namespace tianli::frame::local
             if (std::filesystem::exists(file) == false)
                 return false;
             this->source_local = file;
+            this->source_frame = cv::imread(file);
             return true;
         }
         bool get_frame(cv::Mat &frame) override
