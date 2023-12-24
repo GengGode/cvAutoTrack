@@ -76,7 +76,7 @@ public:
     */
     cv::Point2d match_all_map(Match &matcher, const cv::Mat &mini_map_mat, features &mini_map, features &map, bool &calc_is_faile);
 
-    cv::Point2d getLocalPos();
+    cv::Point2d getCurrentPosition();
     bool getIsContinuity();
 
 

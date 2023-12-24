@@ -191,10 +191,9 @@ namespace tianli::algorithms::features_operate
             result_features = merge(result_features, grid_features[i].second, cv::Point2d(grid_features[i].first.x, grid_features[i].first.y));
         return result_features;
     }
-}
 
     //转换features的坐标系，先平移，再缩放
-    static features TransferAxes(const features& feature, const cv::Point2f& origin, const double scale)
+    static features TransferAxes(const features &feature, const cv::Point2f &origin, const double scale)
     {
         features out_features = feature;
         for (auto &keypoint : out_features.keypoints)
@@ -217,9 +216,11 @@ namespace tianli::algorithms::features_operate
                 inRect.width * scale.x, inRect.height * scale.y);
             auto translate = cv::Point2d(outRect.x - scaled_inRect.x, outRect.y - scaled_inRect.y);
             //坐标换算
-            keypoint.pt =  cv::Point2d(keypoint.pt.x * scale.x, keypoint.pt.y * scale.y) + translate;
+            keypoint.pt = cv::Point2d(keypoint.pt.x * scale.x, keypoint.pt.y * scale.y) + translate;
         }
         return out_features;
     }
+}
 
-} // namespace tianli::algorithms
+
+

@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 #include <Windows.h>
 #include <vector>
+#include <fstream>
 #ifdef _DEBUG
 #include <filesystem>
 #endif // _DEBUG
@@ -90,6 +91,23 @@ void Run_GetTrans()
     int map_id = 0;
     if (GetTransformOfMap(x, y, a, map_id))
         fmt::print("坐标和角度   : {} {} {} {}\n", x, y, a, map_id);
+    else
+        fmt::print("错误码       : {}\n", GetLastErr());
+}
+
+void Run_SetUseLocalPictureMode()
+{
+    if (SetUseLocalPictureMode())
+    {
+        auto imgFs = std::fstream("test_scene.png", std::ios::in|std::ios::binary);
+        size_t size = imgFs.seekg(0, std::ios::end).tellg();
+        char *data = new char[size];
+        imgFs.seekg(0, std::ios::beg);
+        imgFs.read(data, size);
+        SetScreenSourceImage(data, size);
+        delete[] data;
+        fmt::print("设置本地图片模式成功\n");
+    }
     else
         fmt::print("错误码       : {}\n", GetLastErr());
 }
@@ -234,6 +252,7 @@ int Run()
 9. 截图
 10.获取全部
 11.初始化
+12.设置从图片源传入
 =====================
 -1. 获取版本号
 0. 退出
@@ -295,6 +314,10 @@ int Run()
                 Sleep(100);
                 Run_GetAll();
             }
+            break;
+        case 12:
+            Run_SetUseLocalPictureMode();
+            system("pause");
             break;
         case -1:
             Run_GetVersion();

@@ -62,14 +62,10 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
         return;
     }
 
-    surf_match.setMiniMap(genshin_minimap.img_minimap);
-
-    logger->perl("match");
-
-    surf_match.match();
+    surf_match.GetNextPosition(genshin_minimap.img_minimap,out_genshin_position.position);
     logger->perl_end("match");
 
-    out_genshin_position.position = surf_match.getLocalPos();
+    out_genshin_position.position = surf_match.getCurrentPosition();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
     out_genshin_position.config.is_coveying = surf_match.isCoveying;
 
@@ -184,11 +180,8 @@ int main()
 {
     fmt::print("Hello, world!\n");
 
-    //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     genshin_handle.config.frame_source = std::make_shared<tianli::frame::local::local_picture>();
-
-    genshin_handle.config.frame_source->set_local_file("./test_scene.png");
-
+    genshin_handle.config.frame_source->set_local_file(R"(E:\Users\Sallee\Documents\code\Cpp\cvAutoTrack\build\bin\Debug\test_scene.png)");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
 

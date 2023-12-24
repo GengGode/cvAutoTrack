@@ -4,7 +4,7 @@
 #include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "algorithms/algorithms.solve.linear.h"
-#include "algorithms/algorithms.feature.h"
+#include "algorithms/features/features.operate.h"
 
 using namespace tianli::algorithms;
 
@@ -343,7 +343,7 @@ cv::Point2d SurfMatch::match_all_map(Match &matcher, const cv::Mat &mini_map_mat
     calc_good_matches(map.keypoints, mini_map.keypoints, KNN_m, keypoint_list, keypoint_list_dmatch);
 
     // 绘制匹配结果
-    features translated_map_feature = feature::TransferAxes(map, cache_info->setting.roi, cv::Rect(cv::Point(), Resources::getInstance().DbgMap.size()));
+    features translated_map_feature = features_operate::TransferAxes(map, cache_info->setting.roi, cv::Rect(cv::Point(), Resources::getInstance().DbgMap.size()));
     draw_matched_keypoints(Resources::getInstance().DbgMap, translated_map_feature.keypoints, img_object, mini_map.keypoints, keypoint_list_dmatch);
 
     if (keypoint_list.size() < 2)
@@ -392,7 +392,7 @@ cv::Point2d SurfMatch::match_all_map(Match &matcher, const cv::Mat &mini_map_mat
     return map_pos;
 }
 
-cv::Point2d SurfMatch::getLocalPos()
+cv::Point2d SurfMatch::getCurrentPosition()
 {
     return pos;
 }
@@ -453,6 +453,17 @@ void SurfMatch::calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scen
     });
 
     //2nd 计算每一组向量中query和train的比值，以此作为参考，剔除比值差异过大的点
+
+    //合并特征点
+    std::set<int> good_query_index;
+    std::for_each(good_quary_vecs_1st.begin(), good_quary_vecs_1st.end(), [&](const std::pair<int, std::set<int>> &p) {
+        good_query_index.insert(p.second.begin(), p.second.end());
+     });
+
+    std::for_each(good_query_index.begin(), good_query_index.end(), [&](const int &idx) {
+        out_good_matches.emplace_back(KNN_m[idx][0]);
+        out_good_keypoints.emplace_back(MatchKeyPoint{ keypoint_object[KNN_m[idx][0].queryIdx], keypoint_scene[KNN_m[idx][0].trainIdx] });
+        });
 }
 
 void SurfMatch::RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double> &x_list, std::vector<double> &y_list)
