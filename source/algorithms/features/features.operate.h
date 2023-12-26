@@ -79,7 +79,8 @@ namespace tianli::algorithms::features_operate
         cv::Mat border;
         cv::Mat border_mask;
         cv::copyMakeBorder(image, border, border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
-        cv::copyMakeBorder(mask, border_mask, border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
+        if (mask.empty() == false)
+            cv::copyMakeBorder(mask, border_mask, border_size, border_size, border_size, border_size, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
 
         detector->detectAndCompute(border, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
