@@ -16,9 +16,9 @@ namespace tianli::algorithms::features_operate
         kps = features_upper.keypoints;
         std::for_each(features_lower.keypoints.begin(), features_lower.keypoints.end(), [&](const auto &kp)
             { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
-        des = cv::Mat(features_upper.size() + features_lower.size(), 64, CV_16FC4);
-        des(cv::Rect(0, 0, 64, features_upper.size())) = features_upper.descriptors.clone();
-        des(cv::Rect(0, features_upper.size(), 64, features_lower.size())) = features_lower.descriptors.clone();
+        des = cv::Mat(features_upper.size() + features_lower.size(), 64, features_upper.descriptors.type());
+        features_upper.descriptors.copyTo(des(cv::Rect(0, 0, 64, features_upper.size())));
+        features_lower.descriptors.copyTo(des(cv::Rect(0, features_upper.size(), 64, features_lower.size())));
         return features_merge;
     }
 
