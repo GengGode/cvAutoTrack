@@ -7,11 +7,10 @@ namespace tianli::algorithms::features_operate
 {    
     static features merge(const features &features_upper, const features &features_lower, const cv::Point2f diff_offset = cv::Point2f(0, 0))
     {
-        if (features_upper.size() == 0)
+        if(features_upper.size() == 0)
             return features_lower;
-        if (features_lower.size() == 0)
+        if(features_lower.size() == 0)
             return features_upper;
-
         features features_merge;
         auto &[ids, kps, des] = features_merge;
         ids = features_upper.indexs;
