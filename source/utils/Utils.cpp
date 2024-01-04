@@ -276,7 +276,7 @@ namespace TianLi::Utils
         //输入>输出的缩放
         cv::Point2d scale = cv::Point2d(outRect.width / inRect.width, outRect.height / inRect.height);
         //输入>输出的平移
-        cv::Rect2d scaled_rect = cv::Rect(inRect.x * scale.x, inRect.y * scale.y, inRect.width * scale.x, inRect.height * scale.y);
+        cv::Rect2d scaled_rect = cv::Rect2d(inRect.x * scale.x, inRect.y * scale.y, inRect.width * scale.x, inRect.height * scale.y);
         cv::Point2d translate = cv::Point2d(outRect.x - scaled_rect.x, outRect.y - scaled_rect.y);
         //坐标换算
         return cv::Point2d(pos.x * scale.x, pos.y * scale.y) + translate;

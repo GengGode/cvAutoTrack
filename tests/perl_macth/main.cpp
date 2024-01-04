@@ -75,7 +75,8 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
         cv::Point2d filt_pos;
         // u_k: 视觉里程计控制量；od_valid: 视觉里程计是否有效；ms_valid: 全局匹配是否有效
         auto u_k = cv::Point2d(0, 0);
-        auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, tianli::global::odometer_config());
+        auto odometer_config = tianli::global::odometer_config();
+        auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config);
         auto ms_valid = surf_match.is_success_match;
 
         // 里程计能更就更；全局匹配能配就配
