@@ -243,7 +243,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
         cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
     }
     }
-#if __cplusplus > 201703L
+#if __cplusplus <= 201703L
     std::string last_time_str = fmt::format("{:%Y-%m-%d :%H:%M:%S}", std::chrono::system_clock::to_time_t(genshin_screen.last_time));
 #else
     std::string last_time_str = fmt::format("{:%Y-%m-%d :%H:%M:%S}", genshin_screen.last_time);
