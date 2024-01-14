@@ -104,8 +104,8 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
         //打印结果：
         fmt::print(R"(
 当前匹配结果：
-    位置：[{},{}]
-    缩放：{},
+    位置：[{:.2f},{:.2f}]
+    缩放：{:.2f},
     地区名：{}
 )", 
         genshin_avatar_position.position.x, genshin_avatar_position.position.y,
@@ -194,8 +194,8 @@ bool test()
 int main()
 {
     //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::local::local_picture>();
-    genshin_handle.config.frame_source->set_local_file("./test_scene.png");
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    //genshin_handle.config.frame_source->set_local_file("./test_scene.png");
     Resources::getInstance().DbgMap = cv::imread("map.jpg");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
