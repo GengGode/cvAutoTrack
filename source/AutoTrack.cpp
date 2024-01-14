@@ -539,7 +539,6 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
         giStarRef, cv::COLOR_RGBA2GRAY);
 
     tianli::global::star_calculation_config config;
-    config.is_on_city = genshin_avatar_position.config.is_on_city;
     star_calculation(giStarRef, jsonBuff, config);
     if (config.error)
     {
