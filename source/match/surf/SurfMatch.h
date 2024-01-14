@@ -32,7 +32,6 @@ class SurfMatch
     cv::Point2d pos;
     float zoom;         //小地图的缩放
     int area_id;        //当前地区的id
-    int sub_area_id;    //当前子地区的id
 public:
     SurfMatch() = default;
     ~SurfMatch() = default;
@@ -54,7 +53,6 @@ public:
 
     cv::Point2d CurrentPosition();
     int CurrentAreaId();
-    int CurrentSubAreaId();
     float CurrentZoom();
     bool IsContinuity();
    

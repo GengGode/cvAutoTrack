@@ -91,11 +91,6 @@ int SurfMatch::CurrentAreaId()
     return area_id;
 }
 
-int SurfMatch::CurrentSubAreaId()
-{
-    return sub_area_id;
-}
-
 float SurfMatch::CurrentZoom()
 {
     return zoom;
@@ -133,8 +128,7 @@ void SurfMatch::GetInfo(const std::vector<cv::DMatch> dmatchs, std::vector<cv::K
             max_id = pair.first;
         }
     });
-    sub_area_id = max_id;
-    area_id = cache_info->tag_info_map[sub_area_id].parent;
+    area_id = max_id;
 }
 
 #ifdef _DEBUG
