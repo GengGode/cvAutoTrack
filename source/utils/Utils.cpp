@@ -93,130 +93,6 @@ namespace TianLi::Utils
         return accum / (list.size() - 1);
     }
 
-    std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list)
-    {
-        std::vector<cv::Point2d> valid_list;
-        //点少于3个，直接返回
-        if (list.size() <= 3)
-        {
-            return list;
-        }
-
-        std::vector<double> x_list;
-        std::vector<double> y_list;
-        for (auto point : list)
-        {
-            x_list.push_back(point.x);
-            y_list.push_back(point.y);
-        }
-
-        std::vector<double> x_valid_list;
-        std::vector<double> y_valid_list;
-        //计算均值和标准差
-        // double mean = std::accumulate(list.begin(), list.end(), 0.0) / list.size_r();
-        double x_mean = std::accumulate(x_list.begin(), x_list.end(), 0.0) / x_list.size();
-        double y_mean = std::accumulate(y_list.begin(), y_list.end(), 0.0) / y_list.size();
-
-        double x_accum = 0.0;
-        std::for_each(x_list.begin(), x_list.end(), [&](const double d)
-            { x_accum += (d - x_mean) * (d - x_mean); });
-        double y_accum = 0.0;
-        std::for_each(y_list.begin(), y_list.end(), [&](const double d)
-            { y_accum += (d - y_mean) * (d - y_mean); });
-
-        double x_stdev = sqrt(x_accum / (x_list.size() - 1));
-        double y_stdev = sqrt(y_accum / (y_list.size() - 1));
-
-        double param = 1.0;
-        if (list.size() > 100)
-        {
-            param = 0.382;
-        }
-        else if (list.size() > 50)
-        {
-            param = 0.618;
-        }
-        //剔除异常值
-        int valid_count = 0;
-        for (auto& point : list)
-        {
-            if (abs(point.x - x_mean) < param * x_stdev && abs(point.y - y_mean) < param * y_stdev)
-            {
-                x_valid_list.push_back(point.x);
-                y_valid_list.push_back(point.y);
-                valid_count = valid_count + 1;
-            }
-        }
-
-        for (int i = 0; i < valid_count; i++)
-        {
-            valid_list.push_back(cv::Point2d(x_valid_list[i], y_valid_list[i]));
-        }
-        return valid_list;
-    }
-
-    bool SPC(std::vector<double> lisx, std::vector<double> lisy, cv::Point2d& out)
-    {
-        // 计算均值，并将均值作为期望坐标
-        double meanx = std::accumulate(lisx.begin(), lisx.end(), 0.0) / lisx.size();
-        double meany = std::accumulate(lisy.begin(), lisy.end(), 0.0) / lisy.size();
-        double x = meanx;
-        double y = meany;
-        // 如果x坐标大于3个，y坐标大于3个，则表示坐标可信任
-        if (lisx.size() > 3 && lisy.size() > 3)
-        {
-            // 计算标准差
-            double accumx = 0.0;
-            double accumy = 0.0;
-            for (int i = 0; i < (lisx.size() > lisy.size() ? lisy.size() : lisx.size()); i++)
-            {
-                accumx += (lisx[i] - meanx) * (lisx[i] - meanx);
-                accumy += (lisy[i] - meany) * (lisy[i] - meany);
-            }
-
-            double stdevx = sqrt(accumx / (lisx.size() - 1));
-            double stdevy = sqrt(accumy / (lisy.size() - 1));
-
-            double sumx = 0;
-            double sumy = 0;
-            double numx = 0;
-            double numy = 0;
-
-            // 遍历lisx和lisy，剔除离群值
-            for (int i = 0; i < (lisx.size() > lisy.size() ? lisy.size() : lisx.size()); i++)
-            {
-                if (abs(lisx[i] - meanx) < 1 * stdevx)
-                {
-                    sumx += lisx[i];
-                    numx++;
-                }
-
-                if (abs(lisy[i] - meany) < 1 * stdevy)
-                {
-                    sumy += lisy[i];
-                    numy++;
-                }
-            }
-            // 计算清洗后的坐标
-            x = sumx / numx;
-            y = sumy / numy;
-            out = cv::Point2d(x, y);
-            return true;
-        }
-        else if (lisx.size() != 0)
-        {
-            // 计算标准差
-            out = cv::Point2d(meanx, meany);
-            return true;
-        }
-        else
-        {
-            // 如果x坐标或y坐标为空，则设置x和y坐标为空
-            out = cv::Point2d();
-            return false;
-        }
-        return false;
-    }
 
     int getMaxID(double lis[], int len)
     {
@@ -266,12 +142,12 @@ namespace TianLi::Utils
         return res;
     }
 
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale)
+    cv::Point2d transform(cv::Point2d pos, cv::Point2d origin, double scale)
     {
         return cv::Point2d((pos - origin) * scale);
     }
 
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect)
+    cv::Point2d transform(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect)
     {
         //输入>输出的缩放
         cv::Point2d scale = cv::Point2d(outRect.width / inRect.width, outRect.height / inRect.height);
@@ -281,18 +157,11 @@ namespace TianLi::Utils
         //坐标换算
         return cv::Point2d(pos.x * scale.x, pos.y * scale.y) + translate;
     }
-
-    cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale)
-    {
-        return cv::Point2d(pos / scale + origin);
+    cv::Point2d transform(const cv::Point2d &pos, const cv::Mat &m) {
+        cv::Mat p = (cv::Mat_<double>(3, 1) << pos.x, pos.y, 1);
+        cv::Mat res = m * p;
+        return cv::Point2d(res.at<double>(0, 0) / res.at<double>(2, 0), res.at<double>(1, 0) / res.at<double>(2, 0));
     }
-
-    std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y)
-    {
-        return std::make_pair(cv::Point2d(x, y), 0);
-    }
-
-
 
     // 注册表读取
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length)

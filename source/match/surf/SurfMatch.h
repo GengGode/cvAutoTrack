@@ -4,11 +4,11 @@
 #include "algorithms/algorithms.include.h"
 #include "resources/trackCache.h"
 
-class Match
+class Matcher
 {
 public:
-    Match(double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = true);
-    ~Match() = default;
+    Matcher(double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = true);
+    ~Matcher() = default;
 public:
     cv::Ptr<cv::xfeatures2d::SURF> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
@@ -30,28 +30,18 @@ class SurfMatch
     std::shared_ptr<trackCache::CacheInfo> cache_info;
 
     cv::Point2d pos;
-    cv::Point2d last_pos;		// 上一次匹配的地点，匹配失败，返回上一次的结果
+    float zoom;         //小地图的缩放
+    int area_id;        //当前地区的id
+    int sub_area_id;    //当前子地区的id
 public:
     SurfMatch() = default;
     ~SurfMatch() = default;
-    //匹配时使用到的点对结构体
-    struct MatchKeyPoint
-    {
-        cv::KeyPoint query;
-        cv::KeyPoint train;
-    };
-
-
-public:
-    Match matcher;
+    Matcher matcher;
 
     features all_map_features;
-    features some_map_features;
-    features mini_map_features;
 
     bool isInit = false;
     bool isContinuity = false;
-    bool isCoveying = false;
 
     int continuity_retry = 0;		//局部匹配重试次数
     const int max_continuity_retry = 3;		//最大重试次数
@@ -60,40 +50,23 @@ public:
 
     void Init(std::shared_ptr<trackCache::CacheInfo> cache_info);
     void UnInit();
-    bool GetNextPosition(cv::Mat mini_map, cv::Point2d &position);
+    bool UpdateMatch(cv::Mat mini_map);
 
-
-    /**
-     * @brief 使用自行实现的ransac算法进行匹配
-     * @param calc_is_faile 是否计算失败
-     * @param affine_mat_out 输出的仿射矩阵
-     * @param max_iter_num 最大迭代次数
-     * @return 匹配的位置
-    */
-    /*
-    cv::Point2d match_ransac(bool &calc_is_faile, cv::Mat &affine_mat_out,
-        int max_iter_num);
-    */
-    cv::Point2d match_all_map(Match &matcher, const cv::Mat &mini_map_mat, features &mini_map, features &map, bool &calc_is_faile);
-
-    cv::Point2d getCurrentPosition();
-    bool getIsContinuity();
-
-
-
+    cv::Point2d CurrentPosition();
+    int CurrentAreaId();
+    int CurrentSubAreaId();
+    float CurrentZoom();
+    bool IsContinuity();
    
 private:
     bool isMatchAllMap = true;
-    /*
-    double check_inliers(
-        cv::Mat &H_21, std::vector<bool> &is_inlier_match,
-        std::vector<cv::KeyPoint> &undist_keypts_1, std::vector<cv::KeyPoint> &undist_keypts_2,
-        std::vector<TianLi::Utils::MatchKeyPoint> &matches_12
-    );
-    */
 
+    void GetInfo(const std::vector<cv::DMatch> dmatchs, std::vector<cv::KeyPoint> keypoints_scene, cv::Mat mat);
+
+
+#ifdef _DEBUG
     /**
-     * @brief 绘制匹配的特征点
+     * @brief 绘制匹配的特征点，分组DMatch版本
      * @param img_scene 大地图的图像
      * @param keypoint_scene 大地图的特征点
      * @param img_object 小地图的图像
@@ -102,10 +75,65 @@ private:
     */
     static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &good_matches);
 
+    /**
+     * @brief 绘制匹配的特征点，单DMatch版本
+     * @param img_scene 大地图的图像
+     * @param keypoint_scene 大地图的特征点
+     * @param img_object 小地图的图像
+     * @param keypoint_object 小地图的特征点
+     * @param matches 匹配的点对
+    */
     static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<cv::DMatch> &d_matches);
 
-    static void calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &KNN_m, std::vector<MatchKeyPoint> &out_good_keypoints, std::vector<cv::DMatch> &out_good_matches);
+    /**
+     * @brief 绘制匹配的特征点，无DMatch版本，注意点对需要匹配
+     * @param img_scene 大地图的图像
+     * @param keypoint_scene 大地图的特征点
+     * @param img_object 小地图的图像
+     * @param keypoint_object 小地图的特征点
+    */
+    void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object);
+#endif // _DEBUG
 
-    static void RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double> &x_list, std::vector<double> &y_list);
+    /**
+     * @brief 匹配小地图，获取坐标，匹配点和变换
+     * @param matcher 匹配器
+     * @param mini_map_mat 小地图图像
+     * @param map 大地图特征点
+     * @param out_pos 匹配到的坐标
+     * @param d_matchs 匹配到的点对
+     * @param mat 变换矩阵
+     * @return 是否匹配成功
+    */
+    static bool MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_mat, features &map_feature, cv::Point2d &out_pos, std::vector<cv::DMatch> &out_d_matchs, cv::Mat &out_mat);
+
+
+    /**
+     * @brief 1st 粗筛，使用最佳比次佳移除质量较差的点
+     * @param keypoint_scene 大地图的特征点
+     * @param keypoint_object 小地图的特征点
+     * @param KNN_m 包含至少两条匹配结果的特征点对
+     * @param out_good_matches 返回好的特征点对
+     * @param ratio_thresh 最佳比次佳的差异，越小越严格
+    */
+    static void calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &KNN_m, std::vector<cv::DMatch> &out_good_matches, float ratio_thresh = 0.8);
+
+    /**
+     * @brief 2nd 移除离群点，需要至少3个匹配点
+     * @param ref_dmatchs 需要处理的特征点对
+     * @param keypoint_scene 大地图的特征点
+     * @param keypoint_object 小地图的特征点
+     * @param max_destance 距离中心的最大距离，越小越严格
+    */
+    static void RemoveOutliers(std::vector<cv::DMatch> &ref_dmatchs, const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, float max_destance = 512);
+    
+    /**
+     * @brief 配准给定的特征点
+     * @param ref_dmatch 匹配点对，如果配准后有误差过大的点，则执行完成后该点对会被删除
+     * @param keypoint_scene 大地图特征点
+     * @param keypoint_object 小地图特征点
+     * @return 变换矩阵
+    */
+    static cv::Mat KeyPoint_Registration(std::vector<cv::DMatch> &ref_dmatchs, const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object);
 
 };

@@ -41,24 +41,19 @@ namespace TianLi::Utils
     //@param pos 输入坐标
     //@param origin 目标坐标的原点
     //@param scale 目标坐标的缩放
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale);
+    cv::Point2d transform(cv::Point2d pos, cv::Point2d origin, double scale);
 
     //输入两个矩形，变换坐标
     //@param pos 输入坐标
     //@param inRect 原始坐标的矩形区域
     //@param outRect 新坐标的矩形区域
     //@return 变换后的坐标
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect);
+    cv::Point2d transform(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect);
 
-    //反向变换坐标
+    //使用变换矩阵变换坐标
     //@param pos 输入坐标
-    //@param origin 原始坐标的原点
-    //@param scale 原始坐标的缩放
-    cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale);
-
-    //变换特殊地区的坐标
-    //！！！即将弃用
-    std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y);
+    //@param m 变换矩阵
+    cv::Point2d transform(const cv::Point2d &pos, const cv::Mat &m);
 
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
@@ -68,6 +63,7 @@ namespace TianLi::Utils
     std::mt19937 create_random_engine();
     std::vector<unsigned int> create_random_array(const size_t size, const unsigned int rand_min, const unsigned int rand_max);
     void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2d>& normalized_pts, cv::Mat& transform);
+
 
     template<typename T>
     static cv::Mat to_homogeneous(T& pt) {
