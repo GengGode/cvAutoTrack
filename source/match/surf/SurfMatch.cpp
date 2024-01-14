@@ -71,6 +71,11 @@ bool SurfMatch::MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_mat, feat
     calc_good_matches(map_feature.keypoints, mini_map_feature.keypoints, KNN_m, d_matchs);
     //02 移除外点
     RemoveOutliers(d_matchs, map_feature.keypoints, mini_map_feature.keypoints, 500);
+    //少于4个点无法配准
+    if (d_matchs.size() < 4) {
+        return false;
+    }
+
     //03 使用中心配准的方法精筛特征点
     auto trans_mat = KeyPoint_Registration(d_matchs, map_feature.keypoints, mini_map_feature.keypoints);
     //04 计算坐标
