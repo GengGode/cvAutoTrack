@@ -153,7 +153,7 @@ std::string TianLi::Utils::Logger::get_sys_version()
         CurrentBuildNumber = "null";
     if (!TianLi::Utils::getRegValue_DWORD(HKEY_LOCAL_MACHINE, LR"(SOFTWARE\Microsoft\Windows NT\CurrentVersion)", LR"(UBR)", UBR))
         UBR = 0;
-    result = fmt::format("{0}-{1}-{2}.{3}", ProductName, DisplayVersion, CurrentBuildNumber, UBR);
+    result = global::format("{0}-{1}-{2}.{3}", ProductName, DisplayVersion, CurrentBuildNumber, UBR);
     return result;
 }
 
