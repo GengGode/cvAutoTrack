@@ -7,13 +7,6 @@
 #define CVAUTOTRACK_CALL __stdcall
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
-/// @brief 【即将删除】旧版兼容，请使用InitResource代替
-/// @return 初始化状态
-extern "C" bool CVAUTOTRACK_API init();
-
-/// @brief 【即将删除】旧版接口兼容，请使用UnInitResource代替
-/// @return 是否卸载成功
-extern "C" bool CVAUTOTRACK_API uninit();
 
 #ifdef _DEBUG
 /// @brief 【开发保留】加载调试使用的地图图片，以用于可视化点位
