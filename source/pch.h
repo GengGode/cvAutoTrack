@@ -42,7 +42,6 @@
 #include <atomic>
 #include <memory>
 #include <chrono>
-//#include <format>
 #include <random>
 #include <string>
 #include <algorithm>
@@ -53,13 +52,28 @@
 #include <functional>
 #include <filesystem>
 
+#if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
+#include <fmt/format.h>
+#else
+#include <format>
+#endif
+
+namespace global
+{
+    template <typename... Args>
+#if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
+    std::string format(fmt::format_string<Args...> fmt, Args&&... args) {
+        return fmt::format(fmt, std::forward<Args>(args)...);
+#else
+    std::string format(std::format_string<Args...> fmt, Args&&... args) {
+        return std::format(fmt, std::forward<Args>(args)...);
+#endif
+    }
+}
+
 // opencv
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d.hpp>
-
-// fmt
-#include <fmt/format.h>
-
 
 #ifdef SUPPORT_WINDUMP
 // DUMP部分
