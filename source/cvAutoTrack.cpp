@@ -13,17 +13,6 @@
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
 
-
-bool CVAUTOTRACK_API init()
-{
-    return InitResource();
-}
-
-bool CVAUTOTRACK_API uninit()
-{
-    return UnInitResource();
-}
-
 #ifdef _DEBUG
 bool CVAUTOTRACK_API LoadDbgMapImg(const char* path)
 {
