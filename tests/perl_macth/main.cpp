@@ -62,12 +62,12 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
         return;
     }
 
-    surf_match.GetNextPosition(genshin_minimap.img_minimap,out_genshin_position.position);
+    surf_match.UpdateMatch(genshin_minimap.img_minimap);
+    out_genshin_position.position = surf_match.CurrentPosition();
     logger->perl_end("match");
 
-    out_genshin_position.position = surf_match.getCurrentPosition();
+    out_genshin_position.position = surf_match.CurrentPosition();
     out_genshin_position.config.is_continuity = surf_match.isContinuity;
-    out_genshin_position.config.is_coveying = surf_match.isCoveying;
 
     if (out_genshin_position.config.is_use_filter)
     {
