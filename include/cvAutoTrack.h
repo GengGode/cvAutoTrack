@@ -36,7 +36,7 @@ extern "C" bool CVAUTOTRACK_API SetServerInterval(int interval_ms);
 /// @brief 设置循环调用回调函数
 /// @param callback 回调函数
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetServerCallback(void (*callback)(const char* json_buff, int buff_size));
+extern "C" bool CVAUTOTRACK_API SetServerCallback(void (*callback)(const char *json_buff, int buff_size));
 
 /// @brief 设置禁用日志文件
 /// @return 设置成功
@@ -47,11 +47,11 @@ extern "C" bool CVAUTOTRACK_API SetEnableFileLog();
 /// @brief 设置日志文件路径
 /// @param path 路径，如果路径不存在会自动创建，默认为当前目录
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetLogFilePath(const char* path);
+extern "C" bool CVAUTOTRACK_API SetLogFilePath(const char *path);
 /// @brief 设置日志文件名
 /// @param name 文件名，默认为cvAutoTrack.log
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetLogFileName(const char* name);
+extern "C" bool CVAUTOTRACK_API SetLogFileName(const char *name);
 /// @brief 设置使用Bitblt截图模式
 /// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetUseBitbltCaptureMode();
@@ -87,27 +87,27 @@ extern "C" bool CVAUTOTRACK_API SetScreenSourceCallbackEx(void (*callback)(const
 /// @param image_encode_data 图片文件二进制数据
 /// @param image_data_size 图片文件二进制数据大小
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetScreenSourceImage(const char* image_encode_data, int image_data_size);
+extern "C" bool CVAUTOTRACK_API SetScreenSourceImage(const char *image_encode_data, int image_data_size);
 /// @brief 设置视窗源图片扩展
 /// @param image_data 图片数据指针
 /// @param image_width 图片宽度
 /// @param image_height 图片高度
 /// @param image_channels 图片通道数
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetScreenSourceImageEx(const char* image_data, int image_width, int image_height, int image_channels);
+extern "C" bool CVAUTOTRACK_API SetScreenSourceImageEx(const char *image_data, int image_width, int image_height, int image_channels);
 /// @brief 设置视窗客户区位置回调函数，用于裁剪处理视窗源
 /// @param callback 回调函数
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetScreenClientRectCallback(void (*callback)(int& x, int& y, int& width, int& height));
+extern "C" bool CVAUTOTRACK_API SetScreenClientRectCallback(void (*callback)(int &x, int &y, int &width, int &height));
 
 /// @brief 设置缓存路径
 /// @param path 现有路径，默认为当前目录
 /// @return 设置成功
-extern "C" bool CVAUTOTRACK_API SetTrackCachePath(const char* path);
+extern "C" bool CVAUTOTRACK_API SetTrackCachePath(const char *path);
 /// @brief 设置缓存文件名
 /// @param name 文件名，默认为cvAutoTrack.Cache
 /// @return 找到缓存文件
-extern "C" bool CVAUTOTRACK_API SetTrackCacheName(const char* name);
+extern "C" bool CVAUTOTRACK_API SetTrackCacheName(const char *name);
 /// @brief 设置世界坐标原点
 /// @param x 原点x坐标
 /// @param y 原点y坐标
@@ -118,38 +118,38 @@ extern "C" bool CVAUTOTRACK_API SetWorldCenter(double x, double y);
 /// @return 设置成功
 extern "C" bool CVAUTOTRACK_API SetWorldScale(double scale);
 
-extern "C" bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char* image_encode_data, int image_data_size);
-extern "C" bool CVAUTOTRACK_API ImportMapBlockData(int uuid, const char* image_data, int image_width, int image_height, int image_channels);
+extern "C" bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char *image_encode_data, int image_data_size);
+extern "C" bool CVAUTOTRACK_API ImportMapBlockData(int uuid, const char *image_data, int image_width, int image_height, int image_channels);
 extern "C" bool CVAUTOTRACK_API ImportMapBlockCenter(int uuid, int x, int y);
 extern "C" bool CVAUTOTRACK_API ImportMapBlockRelativeCenter(int uuid, int parent_uuid, int x, int y);
 extern "C" bool CVAUTOTRACK_API ImportMapBlockCenterScale(int uuid, int x, int y, double scale);
 extern "C" bool CVAUTOTRACK_API ImportMapBlockRelativeCenterScale(int uuid, int parent_uuid, int x, int y, double scale);
 
-extern "C" bool CVAUTOTRACK_API GetTransformOfMap(double& x, double& y, double& a, int& mapId);
-extern "C" bool CVAUTOTRACK_API GetPositionOfMap(double& x, double& y, int& mapId);
-extern "C" bool CVAUTOTRACK_API GetDirection(double& a);
-extern "C" bool CVAUTOTRACK_API GetRotation(double& a);
-extern "C" bool CVAUTOTRACK_API GetStar(double& x, double& y, bool& isEnd);
-extern "C" bool CVAUTOTRACK_API GetStarJson(char* json_buff, int buff_size);
-extern "C" bool CVAUTOTRACK_API GetUID(int& uid);
-extern "C" bool CVAUTOTRACK_API GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
+extern "C" bool CVAUTOTRACK_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
+extern "C" bool CVAUTOTRACK_API GetPositionOfMap(double &x, double &y, int &mapId);
+extern "C" bool CVAUTOTRACK_API GetDirection(double &a);
+extern "C" bool CVAUTOTRACK_API GetRotation(double &a);
+extern "C" bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
+extern "C" bool CVAUTOTRACK_API GetStarJson(char *json_buff, int buff_size);
+extern "C" bool CVAUTOTRACK_API GetUID(int &uid);
+extern "C" bool CVAUTOTRACK_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
 
-extern "C" bool CVAUTOTRACK_API GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a);
-extern "C" bool CVAUTOTRACK_API GetInfoLoadVideo(const char* path, const char* out_path);
+extern "C" bool CVAUTOTRACK_API GetInfoLoadPicture(const char *path, int &uid, double &x, double &y, double &a);
+extern "C" bool CVAUTOTRACK_API GetInfoLoadVideo(const char *path, const char *out_path);
 
 extern "C" bool CVAUTOTRACK_API DebugCapture();
-extern "C" bool CVAUTOTRACK_API DebugCapturePath(const char* path);
+extern "C" bool CVAUTOTRACK_API DebugCapturePath(const char *path);
 
 extern "C" int CVAUTOTRACK_API GetLastErr();
-extern "C" int CVAUTOTRACK_API GetLastErrMsg(char* msg_buff, int buff_size);
-extern "C" int CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size);
+extern "C" int CVAUTOTRACK_API GetLastErrMsg(char *msg_buff, int buff_size);
+extern "C" int CVAUTOTRACK_API GetLastErrJson(char *json_buff, int buff_size);
 
 extern "C" bool CVAUTOTRACK_API GetMapIsEmbedded();
-extern "C" bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
-extern "C" bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
+extern "C" bool CVAUTOTRACK_API GetCompileVersion(char *version_buff, int buff_size);
+extern "C" bool CVAUTOTRACK_API GetCompileTime(char *time_buff, int buff_size);
 
 /// @brief 
 /// @param doc_buff 
 /// @param buff_size 
 /// @return 
-extern "C" bool CVAUTOTRACK_API GetHelpDoc(char* doc_buff, int buff_size);
+extern "C" bool CVAUTOTRACK_API GetHelpDoc(char *doc_buff, int buff_size);

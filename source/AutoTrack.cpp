@@ -21,10 +21,10 @@
 #include "resource/version.h"
 #include "utils/convect.string.h"
 
-ErrorCode& err = ErrorCode::getInstance();
-Resources& res = Resources::getInstance();
+ErrorCode &err = ErrorCode::getInstance();
+Resources &res = Resources::getInstance();
 
-AutoTrack::AutoTrack()
+AutoTrack::AutoTrack() 
 {
     err.enableWirteFile();
 
@@ -708,7 +708,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
     return false;
 }
 
-bool AutoTrack::GetInfoLoadVideo(const char* path, const  char* pathOutFile)
+bool AutoTrack::GetInfoLoadVideo(const char* path,const  char* pathOutFile)
 {
     UNREFERENCED_PARAMETER(path);
     UNREFERENCED_PARAMETER(pathOutFile);

@@ -37,8 +37,6 @@
 #endif // SUPPORT_WINRT
 
 // STL
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include <atomic>
 #include <memory>
 #include <chrono>
