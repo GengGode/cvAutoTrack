@@ -19,7 +19,7 @@ void TianLi::Genshin::get_genshin_screen(const tianli::global::GenshinHandle &ge
 	if (now_time - out_genshin_screen.last_time > 20ms || giFrame.empty())
 	{
 		out_genshin_screen.last_time = now_time;
-		genshin_handle.config.frame_source->get_frame(giFrame);
+		genshin_handle.config.source->get_frame(giFrame);
 	}
 
 

@@ -121,18 +121,18 @@ bool test()
 {
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_SILENT);
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
-    if (genshin_handle.config.frame_source->mode == tianli::frame::frame_source::source_mode::handle)
+    if (genshin_handle.config.source->mode == tianli::frame::frame_source::source_mode::handle)
     {
         TianLi::Genshin::get_genshin_handle(genshin_handle);
         if (genshin_handle.handle == NULL) return false;
-        genshin_handle.config.frame_source->set_capture_handle(genshin_handle.handle);
+        genshin_handle.config.source->set_capture_handle(genshin_handle.handle);
     }
-    else if (genshin_handle.config.frame_source->mode == tianli::frame::frame_source::source_mode::frame)
+    else if (genshin_handle.config.source->mode == tianli::frame::frame_source::source_mode::frame)
     {
         // TODO: 能否想办法直接获取到frame的宽高，而不是读取帧缓存来判断
         // TODO: 考虑一下重构GetUiRects
         cv::Mat frame;
-        genshin_handle.config.frame_source->get_frame(frame);
+        genshin_handle.config.source->get_frame(frame);
         genshin_handle.rect_client = { 0,0, frame.cols,frame.rows };
         TianLi::Genshin::GetUiRects(genshin_handle);
     }
@@ -147,7 +147,7 @@ bool test()
 
     // TODO: 这里应该让frame_source自己管理alpha类型，而不是依赖frame_source::source_type判断有没有alpha
     // 目前只考虑bitblt截图有alpha通道
-    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
+    if (genshin_handle.config.source->type == tianli::frame::frame_source::source_type::bitblt)
     {
         genshin_screen.config.is_used_alpha = true;
     }
@@ -193,11 +193,11 @@ bool test()
 
 int main()
 {
-    //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    //genshin_handle.config.frame_source->set_local_file("./test_scene.png");
+    //genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    genshin_handle.config.source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    //genshin_handle.config.source->set_local_file("./test_scene.png");
     Resources::getInstance().DbgMap = cv::imread("map.jpg");
-    genshin_handle.config.frame_source->initialization();
+    genshin_handle.config.source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
     load_cache(cache_info);
     // 实现30fps call test
