@@ -870,7 +870,6 @@ bool AutoTrack::getMiniMapRefMat()
     return true;
 }
 
-#ifdef _DEBUG
 bool AutoTrack::LoadDbgMapImg(const char* path)
 {
     // 读取调试地图
