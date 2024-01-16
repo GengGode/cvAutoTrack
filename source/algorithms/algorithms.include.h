@@ -19,7 +19,7 @@ struct features
     bool empty() const { return keypoints.empty(); }
 
     //转换features的坐标系，先平移，再缩放
-    inline void TransferAxes(const cv::Point2f &origin, const double scale)
+    inline void TransformAxes(const cv::Point2f &origin, const double scale)
     {
         for (auto &keypoint : keypoints)
         {
@@ -28,7 +28,7 @@ struct features
     }
 
     //转换features的坐标系，使用两个Rect表示前后的坐标系
-    inline void TransferAxes(const cv::Rect2d &inRect, const cv::Rect2d &outRect)
+    inline void TransformAxes(const cv::Rect2d &inRect, const cv::Rect2d &outRect)
     {
         for (auto &keypoint : keypoints)
         {
