@@ -15,9 +15,9 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     all_map_features = features(cache_info->key_points, cache_info->descriptors);
 
     //如果图像非空，则设定调试图像
-    if (Resources::getInstance().DbgMap.empty())
+    if (Resources::getInstance().debug_map_image.empty())
     {
-        _mapMat = Resources::getInstance().DbgMap;
+        _mapMat = Resources::getInstance().debug_map_image;
     }
 
     double hessian_threshold = cache_info->setting.hessian_threshold;

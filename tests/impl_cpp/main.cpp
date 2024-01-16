@@ -226,7 +226,7 @@ int Run()
 
     if (std::filesystem::exists("map.jpg"))
     {
-        LoadDbgMapImg("map.jpg");
+        DebugLoadMapImagePath("map.jpg");
     }
     else
     {

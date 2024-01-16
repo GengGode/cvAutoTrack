@@ -6,7 +6,7 @@ namespace tianli::debug {
     bool LoadDbgMapImg(const char *path)
     {
 #ifdef _DEBUG
-        Resources::getInstance().DbgMap = cv::imread(path);
+        Resources::getInstance().debug_map_image = cv::imread(path);
         return true;
 #else
         return false;

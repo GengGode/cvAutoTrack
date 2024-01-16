@@ -196,7 +196,7 @@ int main()
     //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     //genshin_handle.config.frame_source->set_local_file("./test_scene.png");
-    Resources::getInstance().DbgMap = cv::imread("map.jpg");
+    Resources::getInstance().debug_map_image = cv::imread("map.jpg");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
     load_cache(cache_info);
