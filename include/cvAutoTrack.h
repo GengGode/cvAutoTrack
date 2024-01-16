@@ -8,7 +8,6 @@
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
 
 
-#ifdef _DEBUG
 /// @brief 【开发保留】加载调试使用的地图图片，以用于可视化点位
 /// @brief 正式版本请移除此借口
 /// @param path 调试用的地图图片路径
