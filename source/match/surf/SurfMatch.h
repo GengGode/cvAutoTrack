@@ -60,9 +60,6 @@ private:
     bool isMatchAllMap = true;
 
     void GetInfo(const std::vector<cv::DMatch> dmatchs, std::vector<cv::KeyPoint> keypoints_scene, cv::Mat mat);
-
-
-#ifdef _DEBUG
     /**
      * @brief 绘制匹配的特征点，分组DMatch版本
      * @param img_scene 大地图的图像
@@ -91,7 +88,6 @@ private:
      * @param keypoint_object 小地图的特征点
     */
     void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object);
-#endif // _DEBUG
 
     /**
      * @brief 匹配小地图，获取坐标，匹配点和变换
@@ -103,7 +99,9 @@ private:
      * @param mat 变换矩阵
      * @return 是否匹配成功
     */
-    static bool MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_mat, features &map_feature, cv::Point2d &out_pos, std::vector<cv::DMatch> &out_d_matchs, cv::Mat &out_mat);
+    bool MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_img, features &map_feature, cv::Point2d &out_pos, std::vector<cv::DMatch> &out_d_matchs, cv::Mat &out_transform_mat);
+
+    void debug_draw_match_keypoints_wrapper(features &map_feature, const cv::Mat & mini_map_image, features &mini_map_feature, std::vector<cv::DMatch> &d_matchs);
 
 
     /**
