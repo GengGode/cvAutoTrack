@@ -1,25 +1,42 @@
 #pragma once
 #include <opencv2/xfeatures2d.hpp>
 #include "utils/Utils.h"
-#include "algorithms/algorithms.include.h"
 #include "resources/trackCache.h"
 
-class Matcher
+bool judgesIsOnCity(std::vector<TianLi::Utils::MatchKeyPoint> goodMatches, double minimap_scale);
+std::pair<std::vector<cv::Point2d>, double> judges_scale(std::vector<TianLi::Utils::MatchKeyPoint> match_points, double scale_a, double scale_b);
+
+// 特征点匹配的剔除因子，越大越严格
+constexpr double SURF_MATCH_RATIO_THRESH = 0.66;
+// 地图中取小部分区域的半径，目前为小地图标准半径
+constexpr int DEFAULT_SOME_MAP_SIZE_R = 106;
+
+class Match
 {
 public:
-    Matcher(double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = true);
-    ~Matcher() = default;
+    struct KeyMatPoint
+    {
+        std::vector<cv::KeyPoint> keypoints;
+        cv::Mat descriptors;
+        bool empty() { return keypoints.size() == 0; }
+        auto size() { return keypoints.size(); }
+    };
+public:
+    Match(double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = true);
+    ~Match() = default;
 public:
     cv::Ptr<cv::xfeatures2d::SURF> detector;
     cv::Ptr<cv::DescriptorMatcher> matcher;
-    features query;
-    features train;
+    KeyMatPoint query;
+    KeyMatPoint train;
 public:
-    std::vector<std::vector<cv::DMatch>> match(const cv::Mat &query_descriptors, const cv::Mat &train_descriptors);
-    std::vector<std::vector<cv::DMatch>> match(features &query_key_mat_point, features &train_key_mat_point);
-    bool detect_and_compute(const cv::Mat &img, std::vector<cv::KeyPoint> &keypoints, cv::Mat &descriptors);
-    bool detect_and_compute(const cv::Mat &img, features &key_mat_point);
+    std::vector<std::vector<cv::DMatch>> match(const cv::Mat& query_descriptors, const cv::Mat& train_descriptors);
+    std::vector<std::vector<cv::DMatch>> match(KeyMatPoint& query_key_mat_point, KeyMatPoint& train_key_mat_point);
+    bool detect_and_compute(const cv::Mat& img, std::vector<cv::KeyPoint>& keypoints, cv::Mat& descriptors);
+    bool detect_and_compute(const cv::Mat& img, KeyMatPoint& key_mat_point);
 };
+
+
 
 class SurfMatch
 {
@@ -27,111 +44,70 @@ class SurfMatch
     cv::Mat _miniMapMat;
 
     //缓存信息
-    std::shared_ptr<trackCache::CacheInfo> cache_info;
+    trackCache::CacheInfo* cache_info;
 
     cv::Point2d pos;
-    float zoom;         //小地图的缩放
-    int area_id;        //当前地区的id
+    cv::Point2d last_pos;		// 上一次匹配的地点，匹配失败，返回上一次的结果
 public:
     SurfMatch() = default;
     ~SurfMatch() = default;
-    Matcher matcher;
 
-    features all_map_features;
+public:
+    Match matcher;
+
+    Match::KeyMatPoint map;
+    Match::KeyMatPoint some_map;
+    Match::KeyMatPoint mini_map;
 
     bool isInit = false;
     bool isContinuity = false;
+    bool isCoveying = false;
 
     int continuity_retry = 0;		//局部匹配重试次数
     const int max_continuity_retry = 3;		//最大重试次数
 
     bool is_success_match = false;
 
+    /**
+     * @brief 新算法不再硬性需求匹配图，为了保持兼容性，保留设置图像的接口
+     * @brief 请仅在调试时使用，以显示特征点的生成情况
+     * @brief 请勿在发行版中使用，否则程序效率会受到影响
+     * @param gi_map 调试使用的匹配图
+    */
+    void setMap_Dbg(cv::Mat gi_map);
+    void setMiniMap(cv::Mat miniMapMat);
     void Init(std::shared_ptr<trackCache::CacheInfo> cache_info);
     void UnInit();
-    bool UpdateMatch(cv::Mat mini_map);
+    void match();
 
-    cv::Point2d CurrentPosition();
-    int CurrentAreaId();
-    float CurrentZoom();
-    bool IsContinuity();
-   
+    /**
+     * @brief 使用自行实现的ransac算法进行匹配
+     * @param calc_is_faile 是否计算失败
+     * @param affine_mat_out 输出的仿射矩阵
+     * @param max_iter_num 最大迭代次数
+     * @return 匹配的位置
+    */
+    cv::Point2d match_ransac(bool& calc_is_faile, cv::Mat& affine_mat_out, 
+                             int max_iter_num);
+
+    cv::Point2d match_continuity(bool& calc_continuity_is_faile);
+    cv::Point2d match_continuity_on_city(bool& calc_continuity_is_faile);
+    cv::Point2d match_continuity_not_on_city(bool& calc_continuity_is_faile);
+
+    cv::Point2d match_no_continuity(bool& calc_is_faile);
+    cv::Point2d match_no_continuity_1st(bool& calc_is_faile);
+
+    cv::Point2d getLocalPos();
+    bool getIsContinuity();
+
 private:
     bool isMatchAllMap = true;
 
-    void GetInfo(const std::vector<cv::DMatch> dmatchs, std::vector<cv::KeyPoint> keypoints_scene, cv::Mat mat);
-
-
-#ifdef _DEBUG
-    /**
-     * @brief 绘制匹配的特征点，分组DMatch版本
-     * @param img_scene 大地图的图像
-     * @param keypoint_scene 大地图的特征点
-     * @param img_object 小地图的图像
-     * @param keypoint_object 小地图的特征点
-     * @param matches 匹配的点对
-    */
-    static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &good_matches);
-
-    /**
-     * @brief 绘制匹配的特征点，单DMatch版本
-     * @param img_scene 大地图的图像
-     * @param keypoint_scene 大地图的特征点
-     * @param img_object 小地图的图像
-     * @param keypoint_object 小地图的特征点
-     * @param matches 匹配的点对
-    */
-    static void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<cv::DMatch> &d_matches);
-
-    /**
-     * @brief 绘制匹配的特征点，无DMatch版本，注意点对需要匹配
-     * @param img_scene 大地图的图像
-     * @param keypoint_scene 大地图的特征点
-     * @param img_object 小地图的图像
-     * @param keypoint_object 小地图的特征点
-    */
-    void draw_matched_keypoints(const cv::Mat &img_scene, const std::vector<cv::KeyPoint> &keypoint_scene, const cv::Mat &img_object, const std::vector<cv::KeyPoint> &keypoint_object);
-#endif // _DEBUG
-
-    /**
-     * @brief 匹配小地图，获取坐标，匹配点和变换
-     * @param matcher 匹配器
-     * @param mini_map_mat 小地图图像
-     * @param map 大地图特征点
-     * @param out_pos 匹配到的坐标
-     * @param d_matchs 匹配到的点对
-     * @param mat 变换矩阵
-     * @return 是否匹配成功
-    */
-    static bool MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_mat, features &map_feature, cv::Point2d &out_pos, std::vector<cv::DMatch> &out_d_matchs, cv::Mat &out_mat);
-
-
-    /**
-     * @brief 1st 粗筛，使用最佳比次佳移除质量较差的点
-     * @param keypoint_scene 大地图的特征点
-     * @param keypoint_object 小地图的特征点
-     * @param KNN_m 包含至少两条匹配结果的特征点对
-     * @param out_good_matches 返回好的特征点对
-     * @param ratio_thresh 最佳比次佳的差异，越小越严格
-    */
-    static void calc_good_matches(const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, const std::vector<std::vector<cv::DMatch>> &KNN_m, std::vector<cv::DMatch> &out_good_matches, float ratio_thresh = 0.8);
-
-    /**
-     * @brief 2nd 移除离群点，需要至少3个匹配点
-     * @param ref_dmatchs 需要处理的特征点对
-     * @param keypoint_scene 大地图的特征点
-     * @param keypoint_object 小地图的特征点
-     * @param max_destance 距离中心的最大距离，越小越严格
-    */
-    static void RemoveOutliers(std::vector<cv::DMatch> &ref_dmatchs, const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object, float max_destance = 512);
-    
-    /**
-     * @brief 配准给定的特征点
-     * @param ref_dmatch 匹配点对，如果配准后有误差过大的点，则执行完成后该点对会被删除
-     * @param keypoint_scene 大地图特征点
-     * @param keypoint_object 小地图特征点
-     * @return 变换矩阵
-    */
-    static cv::Mat KeyPoint_Registration(std::vector<cv::DMatch> &ref_dmatchs, const std::vector<cv::KeyPoint> &keypoint_scene, const std::vector<cv::KeyPoint> &keypoint_object);
+    double check_inliers(
+        cv::Mat& H_21, std::vector<bool>& is_inlier_match,
+        std::vector<cv::KeyPoint>& undist_keypts_1, std::vector<cv::KeyPoint>& undist_keypts_2,
+        std::vector<TianLi::Utils::MatchKeyPoint>& matches_12
+    );
 
 };
+

@@ -44,7 +44,7 @@ public:
 
     bool SetDisableFileLog();
     bool SetEnableFileLog();
-
+    
     bool GetMapIsEmbedded();
 
     bool DebugCapture();
@@ -67,8 +67,6 @@ private:
     bool getMiniMapRefMat();
 
 #ifdef _DEBUG
-public:
-    //void showMatchResult(float x, float y, int mapId, float angle, float rotate);
-    bool LoadDbgMapImg(const char* path);
+    void showMatchResult(float x, float y, int mapId, float angle, float rotate);
 #endif // DEBUG
 };
