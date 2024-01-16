@@ -65,7 +65,4 @@ private:
     bool getGengshinImpactWnd();
     bool getGengshinImpactScreen();
     bool getMiniMapRefMat();
-
-public:
-    bool LoadDbgMapImg(const char* path);
 };

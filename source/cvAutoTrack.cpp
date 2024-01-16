@@ -5,6 +5,7 @@
 #include <cvAutoTrack.h>
 #include "ErrorCode.h"
 #include "AutoTrack.h"
+#include "module.debug.h"
 #include <atomic>
 
 
@@ -16,7 +17,7 @@ static std::atomic<bool> _inited = true;
 #ifdef _DEBUG
 bool CVAUTOTRACK_API LoadDbgMapImg(const char* path)
 {
-    return _at.LoadDbgMapImg(path);
+    return tianli::debug::LoadDbgMapImg(path);
 }
 #endif // _DEBUG
 
