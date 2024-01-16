@@ -19,11 +19,12 @@ struct features
     bool empty() const { return keypoints.empty(); }
 
     //转换features的坐标系，先平移，再缩放
-    inline void TransformAxes(const cv::Point2f &origin, const double scale)
+    inline void TransformAxes(const cv::Point2f &origin, const cv::Size2f& scale)
     {
         for (auto &keypoint : keypoints)
         {
-            keypoint.pt = cv::Point2d((keypoint.pt - origin) * scale);
+            keypoint.pt = cv::Point2d(keypoint.pt - origin);
+            keypoint.pt = cv::Point2d(keypoint.pt.x * scale.width, keypoint.pt.y * scale.height);
         }
     }
 
