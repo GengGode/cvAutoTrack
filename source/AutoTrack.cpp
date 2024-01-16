@@ -872,8 +872,11 @@ bool AutoTrack::getMiniMapRefMat()
 
 bool AutoTrack::LoadDbgMapImg(const char* path)
 {
-    // 读取调试地图
+#ifdef _DEBUG
     res.DbgMap = cv::imread(path);
     return true;
+#else
+    return false;
+#endif
 }
 
