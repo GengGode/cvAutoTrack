@@ -14,9 +14,9 @@
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
 
-bool CVAUTOTRACK_API LoadDbgMapImg(const char* path)
+bool __stdcall LoadDebugMapImage(const char* path)
 {
-    INSTALL_DUMP(tianli::debug::LoadDbgMapImg(path));
+    INSTALL_DUMP(tianli::debug::LoadDebugMapImage(path));
 }
 
 bool __stdcall InitResource()
