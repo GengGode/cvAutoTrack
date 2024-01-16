@@ -17,6 +17,15 @@ struct features
     size_t rows() const { return descriptors.rows; }
     size_t cols() const { return descriptors.cols; }
     bool empty() const { return keypoints.empty(); }
+
+    //转换features的坐标系，先平移，再缩放
+    void TransferAxes(const cv::Point2f &origin, const double scale);
+
+    //转换features的坐标系，使用两个Rect表示前后的坐标系
+    void TransferAxes(const cv::Rect2d &inRect, const cv::Rect2d& outRect);
+
+    //转换features的坐标系，使用矩阵
+    void TransformAxes(const cv::Mat& trans_mat);
 };
 
 class point_index
