@@ -12,7 +12,7 @@
 /// @brief 正式版本请移除此借口
 /// @param path 调试用的地图图片路径
 /// @return 
-extern "C" bool CVAUTOTRACK_API LoadDbgMapImg(const char* path);
+extern "C" bool CVAUTOTRACK_API DebugLoadMapImagePath(const char* path);
 
 /// @brief 资源初始化
 /// @return 初始化状态
