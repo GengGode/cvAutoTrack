@@ -876,5 +876,4 @@ bool AutoTrack::LoadDbgMapImg(const char* path)
     res.DbgMap = cv::imread(path);
     return true;
 }
-#endif // _DEBUG
 
