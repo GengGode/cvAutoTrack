@@ -262,8 +262,6 @@ namespace tianli::global
         bool is_lock_minimap_rotation = true;
         double minimap_rotation = 0;
         bool is_continuity = false;
-        bool is_coveying = false;
-        bool is_on_city = false;
         bool is_exist_last_match_minimap = false;
         cv::Mat img_last_match_minimap;
         bool is_use_filter = true;

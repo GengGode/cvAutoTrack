@@ -24,6 +24,7 @@ tianli::global::GenshinScreen genshin_screen;
 tianli::global::GenshinPaimon genshin_paimon;
 tianli::global::GenshinMinimap genshin_minimap;
 tianli::global::GenshinAvatarPosition genshin_avatar_position;
+std::shared_ptr<trackCache::CacheInfo> cache_info;
 
 auto logger = std::make_shared<tianli::global::record::std_logger>();
 void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, tianli::global::GenshinAvatarPosition &out_genshin_position)
@@ -37,8 +38,6 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
 
         std::vector<cv::KeyPoint> gi_map_keypoints;
         cv::Mat gi_map_descriptors;
-        std::shared_ptr<trackCache::CacheInfo> cache_info;
-        load_cache(cache_info);
         surf_match.Init(cache_info);
 
         is_init = true;
@@ -62,16 +61,9 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
         return;
     }
 
-    surf_match.setMiniMap(genshin_minimap.img_minimap);
-
-    logger->perl("match");
-
-    surf_match.match();
+    surf_match.UpdateMatch(genshin_minimap.img_minimap);
+    out_genshin_position.position = surf_match.CurrentPosition();
     logger->perl_end("match");
-
-    out_genshin_position.position = surf_match.getLocalPos();
-    out_genshin_position.config.is_continuity = surf_match.isContinuity;
-    out_genshin_position.config.is_coveying = surf_match.isCoveying;
 
     if (out_genshin_position.config.is_use_filter)
     {
@@ -106,6 +98,18 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
     {
         out_genshin_position.config.img_last_match_minimap = genshin_minimap.img_minimap.clone();
         out_genshin_position.config.is_exist_last_match_minimap = true;
+
+        std::string area_name = cache_info->tag_info_map[surf_match.CurrentAreaId()].name;
+
+        //打印结果：
+        fmt::print(R"(
+当前匹配结果：
+    位置：[{:.2f},{:.2f}]
+    缩放：{:.2f},
+    地区名：{}
+)", 
+        genshin_avatar_position.position.x, genshin_avatar_position.position.y,
+        surf_match.CurrentZoom(),area_name);
     }
     else
     {
@@ -189,16 +193,13 @@ bool test()
 
 int main()
 {
-    fmt::print("Hello, world!\n");
-
     //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::local::local_picture>();
-
-    genshin_handle.config.frame_source->set_local_file("./test_scene.png");
-
+    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    //genshin_handle.config.frame_source->set_local_file("./test_scene.png");
+    Resources::getInstance().DbgMap = cv::imread("map.jpg");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
-
+    load_cache(cache_info);
     // 实现30fps call test
     auto beg_time = std::chrono::steady_clock::now();
     auto end_time = std::chrono::steady_clock::now();

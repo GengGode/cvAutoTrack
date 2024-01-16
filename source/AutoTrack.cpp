@@ -255,7 +255,7 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
     cv::putText(out_info_img, err_msg_str, cv::Point(0, out_info_img.rows / 2 - 100), 1, 1, cv::Scalar(128, 128, 128, 128), 1, 16, 0);
 
     auto path = utils::to_utf8(path_buff);
-    
+
     bool rel = cv::imwrite(path_buff, out_info_img);
 
     if (!rel)
@@ -539,7 +539,6 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
         giStarRef, cv::COLOR_RGBA2GRAY);
 
     tianli::global::star_calculation_config config;
-    config.is_on_city = genshin_avatar_position.config.is_on_city;
     star_calculation(giStarRef, jsonBuff, config);
     if (config.error)
     {
@@ -870,3 +869,13 @@ bool AutoTrack::getMiniMapRefMat()
 
     return true;
 }
+
+#ifdef _DEBUG
+bool AutoTrack::LoadDbgMapImg(const char* path)
+{
+    // 读取调试地图
+    res.DbgMap = cv::imread(path);
+    return true;
+}
+#endif // _DEBUG
+

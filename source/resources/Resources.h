@@ -23,7 +23,7 @@ public:
     cv::Mat UID;
     cv::Mat UIDnumber[10];
 
-
+    cv::Mat DbgMap;    //调试用大地图
 
     // 天理坐标映射关系参数 地图中心
     // 地图中天理坐标中心的像素坐标
