@@ -16,7 +16,7 @@ static std::atomic<bool> _inited = true;
 
 bool __stdcall LoadDebugMapImage(const char* path)
 {
-    INSTALL_DUMP(tianli::debug::LoadDebugMapImage(path));
+    INSTALL_DUMP(LoadDebugMapImpl(path));
 }
 
 bool __stdcall InitResource()
