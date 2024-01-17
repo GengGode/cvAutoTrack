@@ -63,7 +63,7 @@ bool SurfMatch::MatchMiniMap(Matcher &matcher, const cv::Mat &mini_map_img, feat
     matcher.detect_and_compute(mini_map_img, mini_map_feature);
 
     // 预变换地图，统一为原点在中心，尺寸为200*200的地图
-    mini_map_feature.TransformAxes(
+    mini_map_feature.transform(
         cv::Point2d(mini_map_pixel_size / 2),
         cv::Size2d(200.0 / mini_map_pixel_size.width, 200.0 / mini_map_pixel_size.height));
 
@@ -180,10 +180,10 @@ void SurfMatch::debug_draw_match_keypoints_wrapper(features &map_feature, const 
 {
     cv::Size2i mini_map_pixel_size = mini_map_image.size();
     features translated_map_feature = map_feature;
-    translated_map_feature.TransformAxes(cache_info->setting.roi, cv::Rect(cv::Point2i(), Resources::getInstance().debug_map_image.size()));
+    translated_map_feature.transform(cache_info->setting.roi, cv::Rect(cv::Point2i(), Resources::getInstance().debug_map_image.size()));
 
     features translated_minimap_feature = mini_map_feature;
-    translated_minimap_feature.TransformAxes(cv::Point2d(-100, -100),
+    translated_minimap_feature.transform(cv::Point2d(-100, -100),
         cv::Size2d(mini_map_pixel_size.width / 200.0, mini_map_pixel_size.height / 200.0));
 
     draw_matched_keypoints(Resources::getInstance().debug_map_image, translated_map_feature.keypoints, mini_map_image, translated_minimap_feature.keypoints, d_matchs);
