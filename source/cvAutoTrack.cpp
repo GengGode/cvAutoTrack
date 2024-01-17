@@ -5,6 +5,7 @@
 #include <cvAutoTrack.h>
 #include "ErrorCode.h"
 #include "AutoTrack.h"
+#include "module.debug.h"
 #include <atomic>
 
 
@@ -12,6 +13,11 @@
     
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
+
+bool __stdcall LoadDebugMapImage(const char* path)
+{
+    INSTALL_DUMP(LoadDebugMapImpl(path));
+}
 
 bool __stdcall InitResource()
 {
