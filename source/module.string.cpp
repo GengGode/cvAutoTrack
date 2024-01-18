@@ -4,7 +4,7 @@
 struct cvat_string
 {
     std::string context;
-}
+};
 
 cvat_string_ptr alloc_string()
 {
