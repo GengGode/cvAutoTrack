@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "module.frame.h"
 #include "frame/capture/capture.bitblt.h"
-
-
 // #include "frame/capture/capture.graphics.h"
 // #include "frame/capture/capture.dwm.h"
 #include "frame/local/local.picture.h"

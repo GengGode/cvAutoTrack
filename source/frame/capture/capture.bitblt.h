@@ -8,10 +8,7 @@ namespace tianli::frame::capture
     class capture_bitblt : public capture_source
     {
     public:
-        capture_bitblt(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger)
-        {
-            this->type = source_type::bitblt;
-        }
+        capture_bitblt(std::shared_ptr<global::logger> logger = nullptr) : capture_source(logger) { this->type = source_type::bitblt; }
         ~capture_bitblt() override = default;
 
     public:
@@ -59,14 +56,14 @@ namespace tianli::frame::capture
                 return false;
             if (IsWindow(handle) == false)
                 return false;
-            RECT rect = {0, 0, 0, 0};
+            RECT rect = { 0, 0, 0, 0 };
             if (GetWindowRect(handle, &rect) == false)
                 return false;
-            RECT client_rect = {0, 0, 0, 0};
+            RECT client_rect = { 0, 0, 0, 0 };
             if (GetClientRect(handle, &client_rect) == false)
                 return false;
             double screen_scale = utils::window_scale::get_screen_scale(handle);
-            cv::Size client_size = {0, 0};
+            cv::Size client_size = { 0, 0 };
             client_size.width = (int)(screen_scale * (client_rect.right - client_rect.left));
             client_size.height = (int)(screen_scale * (client_rect.bottom - client_rect.top));
             HDC hdc = GetDC(handle);
@@ -79,11 +76,9 @@ namespace tianli::frame::capture
             BITMAP source_bitmap;
             GetObject(hbitmap, sizeof(BITMAP), &source_bitmap);
             int nChannels = source_bitmap.bmBitsPixel == 1 ? 1 : source_bitmap.bmBitsPixel / 8;
-            this->source_frame.create(cv::Size(source_bitmap.bmWidth, source_bitmap.bmHeight),
-                                      CV_MAKETYPE(CV_8U, nChannels));
+            this->source_frame.create(cv::Size(source_bitmap.bmWidth, source_bitmap.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
             GetBitmapBits(hbitmap, source_bitmap.bmHeight * source_bitmap.bmWidth * nChannels, this->source_frame.data);
-            this->source_frame =
-                this->source_frame(cv::Rect(client_rect.left, client_rect.top, client_size.width, client_size.height));
+            this->source_frame = this->source_frame(cv::Rect(client_rect.left, client_rect.top, client_size.width, client_size.height));
             if (this->source_frame.empty())
                 return false;
             if (this->source_frame.cols < 480 || this->source_frame.rows < 360)
@@ -93,8 +88,8 @@ namespace tianli::frame::capture
         }
 
     private:
-        RECT source_rect = {0, 0, 0, 0};
-        RECT source_client_rect = {0, 0, 0, 0};
+        RECT source_rect = { 0, 0, 0, 0 };
+        RECT source_client_rect = { 0, 0, 0, 0 };
         cv::Size source_client_size;
     };
 
