@@ -2,24 +2,29 @@
 #include "AutoTrack.h"
 
 #include "ErrorCode.h"
-#include "genshin/genshin.h"
-#include "match/match.star.h"
-#include "match/match.uid.h"
 #include "resources/Resources.h"
-#include "utils/Utils.h"
-#include "utils/convect.string.h"
-#include "algorithms/algorithms.direction.h"
-#include "algorithms/algorithms.rotation.h"
-#include "algorithms/filter/filter.kalman.h"
+
 #include "frame/capture/capture.bitblt.h"
 #include "frame/capture/capture.window_graphics.h"
+
+#include "algorithms/filter/filter.kalman.h"
+#include "utils/Utils.h"
+
+#include "algorithms/algorithms.direction.h"
+#include "algorithms/algorithms.rotation.h"
+
+#include "match/match.star.h"
+#include "match/match.uid.h"
+
+#include "genshin/genshin.h"
+
 #include "resource/version.h"
+#include "utils/convect.string.h"
 
+ErrorCode &err = ErrorCode::getInstance();
+Resources &res = Resources::getInstance();
 
-ErrorCode& err = ErrorCode::getInstance();
-Resources& res = Resources::getInstance();
-
-AutoTrack::AutoTrack()
+AutoTrack::AutoTrack() 
 {
     err.enableWirteFile();
 
@@ -91,6 +96,7 @@ bool AutoTrack::SetUseDx11CaptureMode()
 #else
     return false;
 #endif // BUILD_CAPTURE_DXGI
+
 }
 
 bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
@@ -178,6 +184,7 @@ bool AutoTrack::SetEnableFileLog()
     return true;
 }
 
+
 bool AutoTrack::GetMapIsEmbedded()
 {
     return res.map_is_embedded();
@@ -204,39 +211,39 @@ bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
     cv::Mat out_info_img = genshin_screen.img_screen.clone();
     switch (genshin_handle.config.frame_source->type)
     {
-        case tianli::frame::frame_source::source_type::bitblt:
-            {
-                // 绘制paimon Rect
-                cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-                // 绘制miniMap Rect
-                cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-                cv::Rect Avatar = genshin_minimap.rect_avatar;
-                Avatar.x += genshin_minimap.rect_minimap.x;
-                Avatar.y += genshin_minimap.rect_minimap.y;
+    case tianli::frame::frame_source::source_type::bitblt:
+    {
+        // 绘制paimon Rect
+        cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
+        // 绘制miniMap Rect
+        cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+        cv::Rect Avatar = genshin_minimap.rect_avatar;
+        Avatar.x += genshin_minimap.rect_minimap.x;
+        Avatar.y += genshin_minimap.rect_minimap.y;
 
-                // 绘制avatar Rect
-                cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-                // 绘制UID Rect
-                cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
-                break;
-            }
-        case tianli::frame::frame_source::source_type::window_graphics:
-            {
-                // 绘制paimon Rect
-                cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-                // 绘制miniMap Rect
-                cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-                cv::Rect Avatar = genshin_minimap.rect_avatar;
-                Avatar.x += genshin_minimap.rect_minimap.x;
-                Avatar.y += genshin_minimap.rect_minimap.y;
-
-                // 绘制avatar Rect
-                cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-                // 绘制UID Rect
-                cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
-            }
+        // 绘制avatar Rect
+        cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+        // 绘制UID Rect
+        cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
+        break;
     }
+    case tianli::frame::frame_source::source_type::window_graphics:
+    {
+        // 绘制paimon Rect
+        cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
+        // 绘制miniMap Rect
+        cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+        cv::Rect Avatar = genshin_minimap.rect_avatar;
+        Avatar.x += genshin_minimap.rect_minimap.x;
+        Avatar.y += genshin_minimap.rect_minimap.y;
 
+        // 绘制avatar Rect
+        cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+        // 绘制UID Rect
+        cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
+    }
+    }
+    
 #if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
     std::string last_time_str = global::format("{:%Y-%m-%d :%H:%M:%S}", std::chrono::system_clock::to_time_t(genshin_screen.last_time));
 #else
@@ -437,7 +444,8 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
         }
         cv::Mat giStarRef;
 
-        cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)), giStarRef, cv::COLOR_RGBA2GRAY);
+        cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
+            giStarRef, cv::COLOR_RGBA2GRAY);
 
         matchTemplate(res.StarTemplate, giStarRef, tmp, cv::TM_CCOEFF_NORMED);
         minMaxLoc(tmp, &minVal, &maxVal, &minLoc, &maxLoc);
@@ -452,7 +460,9 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
         {
             isLoopMatch = true;
             isStarVisible = true;
-            pos.emplace_back(cv::Point2d(maxLoc) - cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) + cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
+            pos.emplace_back(cv::Point2d(maxLoc) -
+                cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
+                cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
         }
 
         while (isLoopMatch)
@@ -470,7 +480,9 @@ bool AutoTrack::GetStar(double& x, double& y, bool& isEnd)
             }
             else
             {
-                pos.emplace_back(cv::Point2d(maxLoc) - cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) + cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
+                pos.emplace_back(cv::Point2d(maxLoc) -
+                    cv::Point2d(giStarRef.cols / 2, giStarRef.rows / 2) +
+                    cv::Point2d(res.StarTemplate.cols / 2, res.StarTemplate.rows / 2));
             }
 
             MAXLOOP > 10 ? isLoopMatch = false : MAXLOOP++;
@@ -523,7 +535,8 @@ bool AutoTrack::GetStarJson(char* jsonBuff)
     cv::Mat giStarRef;
 
     // 一个bug 未开游戏而先开应用，开游戏时触发
-    cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)), giStarRef, cv::COLOR_RGBA2GRAY);
+    cv::cvtColor(genshin_minimap.img_minimap(cv::Rect(36, 36, genshin_minimap.img_minimap.cols - 72, genshin_minimap.img_minimap.rows - 72)),
+        giStarRef, cv::COLOR_RGBA2GRAY);
 
     tianli::global::star_calculation_config config;
     star_calculation(giStarRef, jsonBuff, config);
@@ -695,7 +708,7 @@ bool AutoTrack::GetInfoLoadPicture(const char* path, int& uid, double& x, double
     return false;
 }
 
-bool AutoTrack::GetInfoLoadVideo(const char* path, const char* pathOutFile)
+bool AutoTrack::GetInfoLoadVideo(const char* path,const  char* pathOutFile)
 {
     UNREFERENCED_PARAMETER(path);
     UNREFERENCED_PARAMETER(pathOutFile);
@@ -856,3 +869,4 @@ bool AutoTrack::getMiniMapRefMat()
 
     return true;
 }
+
