@@ -7,8 +7,7 @@
 #else
 #define CVAUTOTRACK_PORT __declspec(dllimport)
 #endif
-#define CVAUTOTRACK_CALL __stdcall
-#define CVAUTOTRACK_API CVAUTOTRACK_PORT CVAUTOTRACK_CALL
+#define CVAUTOTRACK_API CVAUTOTRACK_PORT
 #elif __GNUC__ >= 4
 #define CVAUTOTRACK_API __attribute__((visibility("default")))
 #else
