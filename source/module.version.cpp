@@ -1,4 +1,6 @@
-#pragma once
+#include "pch.h"
+#include "cvAutoTrack.h"
+
 #include "utils/convect.string.h"
 #include "resource/version.h"
 #include "ErrorCode.h"
@@ -6,8 +8,9 @@
 #define err ErrorCode::getInstance()
 #endif
 
-inline bool GetCoreCompileVersion(char *version_buff, int buff_size)
+bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
 {
+    INSTALL_DUMP_();
 	if (version_buff == nullptr || buff_size < 1)
 	{
 		err = {291, utils::to_gbk("缓存区为空指针或是缓存区大小为小于1")};
@@ -21,9 +24,9 @@ inline bool GetCoreCompileVersion(char *version_buff, int buff_size)
 	strcpy_s(version_buff, buff_size, TianLi::Version::build_version.c_str());
 	return true;
 }
-
-inline bool GetCoreCompileTime(char *time_buff, int buff_size)
+bool __stdcall GetCompileTime(char* time_buff, int buff_size)
 {
+    INSTALL_DUMP_();
 	if (time_buff == nullptr || buff_size < 1)
 	{
 		err = {291, utils::to_gbk("缓存区为空指针或是缓存区大小为小于1")};

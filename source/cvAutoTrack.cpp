@@ -155,15 +155,6 @@ bool __stdcall SetEnableFileLog()
     INSTALL_DUMP(_at.SetEnableFileLog());
 }
 
-#include "module.version.h"
-bool __stdcall GetCompileVersion(char* version_buff, int buff_size)
-{
-    INSTALL_DUMP(GetCoreCompileVersion(version_buff, buff_size));
-}
-bool __stdcall GetCompileTime(char* time_buff, int buff_size)
-{
-    INSTALL_DUMP(GetCoreCompileTime(time_buff, buff_size));
-}
 bool __stdcall GetMapIsEmbedded()
 {
     INSTALL_DUMP(_at.GetMapIsEmbedded());
