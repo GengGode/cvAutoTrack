@@ -1,0 +1,11 @@
+function(find_static_library library_name library_root_dir)
+    file(GLOB_RECURSE library_files ${library_root_dir}/lib/*.lib)
+    set(include_dir ${library_root_dir}/include)
+    set(library_dir ${library_root_dir}/lib)
+    # output
+    set(${library_name}_INCLUDE_DIR ${include_dir} PARENT_SCOPE)
+    set(${library_name}_LIBRARY_DIR ${library_dir} PARENT_SCOPE)
+    set(${library_name}_LIBRARYS ${library_files} PARENT_SCOPE)
+    # message(STATUS "find static library ${library_name} in ${library_root_dir}")
+    # message(STATUS "librarys ${library_files}")
+endfunction()

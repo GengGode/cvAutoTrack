@@ -10,84 +10,77 @@
 // Opencv
 // 如果使用了c++14以上版本，关闭以下警告
 #ifdef _HAS_CXX17
-#pragma warning(disable : 4828)
-#pragma warning(disable : 5054)
-#pragma warning(disable : 6201)
-#pragma warning(disable : 6294)
-#pragma warning(disable : 26451)
-#pragma warning(disable : 26495)
+    #pragma warning(disable : 4828)
+    #pragma warning(disable : 5054)
+    #pragma warning(disable : 6201)
+    #pragma warning(disable : 6294)
+    #pragma warning(disable : 26451)
+    #pragma warning(disable : 26495)
 #endif
 
-
 #ifdef SUPPORT_WINRT
-#define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
-// Windows 头文件
-#include <windows.h>
-#include <Unknwn.h>
-#include <inspectable.h>
+    #define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
+    // Windows 头文件
+    #include <Unknwn.h>
+    #include <inspectable.h>
+    #include <windows.h>
 
-// WinRT
-#include <winrt/Windows.Foundation.h>
-#include <winrt/Windows.Graphics.DirectX.h>
-#include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
-#include <winrt/windows.foundation.metadata.h>
+    // WinRT
+    #include <winrt/Windows.Foundation.h>
+    #include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
+    #include <winrt/Windows.Graphics.DirectX.h>
+    #include <winrt/windows.foundation.metadata.h>
 
-#include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
+    #include <dwmapi.h>
+    #pragma comment(lib, "dwmapi.lib")
 #endif // SUPPORT_WINRT
 
 // STL
-#include <atomic>
-#include <memory>
-#include <chrono>
-#include <random>
-#include <string>
 #include <algorithm>
-#include <numeric>
-#include <future>
-#include <mutex>
+#include <atomic>
+#include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <functional>
-#include <filesystem>
+#include <future>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <random>
+#include <string>
 
 #if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
-#include <fmt/format.h>
+    #include <fmt/format.h>
 #else
-#include <format>
+    #include <format>
 #endif
 
 namespace global
 {
-    template <typename... Args>
 #if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
-    std::string format(fmt::format_string<Args...> fmt, Args&&... args) {
-        return fmt::format(fmt, std::forward<Args>(args)...);
+    #define fmt_namespace_ fmt
 #else
-    std::string format(std::format_string<Args...> fmt, Args&&... args) {
-        return std::format(fmt, std::forward<Args>(args)...);
+    #define fmt_namespace_ std
 #endif
+
+    template <typename... Args> std::string format(fmt_namespace_::format_string<Args...> fmt, Args&&... args)
+    {
+        return fmt_namespace_::format(fmt, std::forward<Args>(args)...);
     }
-}
+} // namespace global
 
 // opencv
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d.hpp>
 
 #ifdef SUPPORT_WINDUMP
-// DUMP部分
-#include "DbgHelp.h"
-#include "tchar.h"
+  // DUMP部分
+    #include "DbgHelp.h"
+    #include "tchar.h"
 inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
 {
     // 定义函数指针
-    typedef BOOL(WINAPI* MiniDumpWriteDumpT)(
-        HANDLE,
-        DWORD,
-        HANDLE,
-        MINIDUMP_TYPE,
-        PMINIDUMP_EXCEPTION_INFORMATION,
-        PMINIDUMP_USER_STREAM_INFORMATION,
-        PMINIDUMP_CALLBACK_INFORMATION);
+    typedef BOOL(WINAPI * MiniDumpWriteDumpT)(HANDLE, DWORD, HANDLE, MINIDUMP_TYPE, PMINIDUMP_EXCEPTION_INFORMATION, PMINIDUMP_USER_STREAM_INFORMATION, PMINIDUMP_CALLBACK_INFORMATION);
     // 从 "DbgHelp.dll" 库中获取 "MiniDumpWriteDump" 函数
     MiniDumpWriteDumpT pfnMiniDumpWriteDump = NULL;
     HMODULE hDbgHelp = LoadLibrary(_T("DbgHelp.dll"));
@@ -107,11 +100,8 @@ inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
     TCHAR szVersion[] = TEXT("cvAutoTrack");
     SYSTEMTIME stLocalTime;
     GetLocalTime(&stLocalTime);
-    wsprintfW(szFileName, L"%s-%04d%02d%02d-%02d%02d%02d.dmp",
-        szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay,
-        stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
-    HANDLE hDumpFile = CreateFile(szFileName, GENERIC_READ | GENERIC_WRITE,
-        FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
+    wsprintfW(szFileName, L"%s-%04d%02d%02d-%02d%02d%02d.dmp", szVersion, stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay, stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
+    HANDLE hDumpFile = CreateFile(szFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
     if (INVALID_HANDLE_VALUE == hDumpFile)
     {
         FreeLibrary(hDbgHelp);
@@ -122,8 +112,7 @@ inline int GenerateMiniDump(PEXCEPTION_POINTERS pExceptionPointers)
     expParam.ThreadId = GetCurrentThreadId();
     expParam.ExceptionPointers = pExceptionPointers;
     expParam.ClientPointers = FALSE;
-    pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
-        hDumpFile, MiniDumpWithDataSegs, (pExceptionPointers ? &expParam : NULL), NULL, NULL);
+    pfnMiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hDumpFile, MiniDumpWithDataSegs, (pExceptionPointers ? &expParam : NULL), NULL, NULL);
     // 释放文件
     CloseHandle(hDumpFile);
     FreeLibrary(hDbgHelp);
@@ -137,9 +126,9 @@ inline LONG WINAPI ExceptionFilter(LPEXCEPTION_POINTERS lpExceptionInfo)
     }
     return GenerateMiniDump(lpExceptionInfo);
 }
-#define INSTALL_DUMP_() SetUnhandledExceptionFilter(ExceptionFilter)
+    #define INSTALL_DUMP_() SetUnhandledExceptionFilter(ExceptionFilter)
 #else
-#define INSTALL_DUMP_()
+    #define INSTALL_DUMP_()
 #endif // SUPPORT_WINDUMP
 #define INSTALL_DUMP(at_func) \
     INSTALL_DUMP_();          \
