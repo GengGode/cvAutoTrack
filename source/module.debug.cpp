@@ -2,7 +2,6 @@
 #include "module.debug.h"
 #include <resources/Resources.h>
 
-
 bool LoadDebugMapImpl(const char* path)
 {
 #ifdef _DEBUG

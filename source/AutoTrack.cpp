@@ -15,7 +15,6 @@
 #include "frame/capture/capture.window_graphics.h"
 #include "resource/version.h"
 
-
 ErrorCode& err = ErrorCode::getInstance();
 Resources& res = Resources::getInstance();
 

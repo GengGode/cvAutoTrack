@@ -1,16 +1,13 @@
 #pragma once
-#include "global/global.include.h"
 #include "../frame.include.h"
+#include "global/global.include.h"
 
 namespace tianli::frame::capture
 {
     class capture_source : public frame_source
     {
     public:
-        capture_source(std::shared_ptr<global::logger> logger = nullptr) : frame_source(logger)
-        {
-            this->mode = source_mode::handle;
-        }
+        capture_source(std::shared_ptr<global::logger> logger = nullptr) : frame_source(logger) { this->mode = source_mode::handle; }
         ~capture_source() override = default;
         bool set_source_frame_callback(std::function<cv::Mat()> callback) override { return false; }
 
@@ -25,4 +22,4 @@ namespace tianli::frame::capture
         cv::Mat source_frame;
     };
 
-} // namespace tianli::frame
+} // namespace tianli::frame::capture

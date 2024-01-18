@@ -4,4 +4,3 @@
 #pragma comment(lib, "Shcore.lib")
 
 #include <opencv2/opencv.hpp>
-

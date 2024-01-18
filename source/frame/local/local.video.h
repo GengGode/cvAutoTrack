@@ -1,6 +1,6 @@
 #pragma once
-#include "global/global.include.h"
 #include "local.include.h"
+#include "global/global.include.h"
 #include <filesystem>
 
 namespace tianli::frame::local
@@ -8,10 +8,7 @@ namespace tianli::frame::local
     class local_video : public local_source
     {
     public:
-        local_video(std::shared_ptr<global::logger> logger = nullptr) : local_source(logger)
-        {         
-            this->type = source_type::video;
-        }
+        local_video(std::shared_ptr<global::logger> logger = nullptr) : local_source(logger) { this->type = source_type::video; }
         ~local_video() override = default;
 
     public:
@@ -24,10 +21,7 @@ namespace tianli::frame::local
             this->cache_frame_current = 0;
             return true;
         }
-        bool uninitialized() override
-        {
-            return true;
-        }
+        bool uninitialized() override { return true; }
         bool set_source_frame_callback(std::function<cv::Mat()> callback) override
         {
             if (callback == nullptr)
@@ -54,7 +48,7 @@ namespace tianli::frame::local
             this->cache_frame_current = 0;
             return true;
         }
-        bool get_frame(cv::Mat &frame) override
+        bool get_frame(cv::Mat& frame) override
         {
             if (this->is_callback)
             {

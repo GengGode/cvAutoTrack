@@ -1,7 +1,7 @@
-#pragma once 
-#include "global/global.genshin.h"
+#pragma once
 #include "algorithms.include.h"
 #include "algorithms.solve.linear.h"
+#include "global/global.genshin.h"
 
 // 视觉里程计
 // 每次小地图更新时调用
@@ -14,33 +14,37 @@
 cv::Mat last_mini_map;
 bool inited = false;
 
-bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset);
+bool orb_match(cv::Mat& img1, cv::Mat& img2, cv::Point2f& offset);
 
-void set_mini_map(const cv::Mat &giMiniMapRef)
+void set_mini_map(const cv::Mat& giMiniMapRef)
 {
     last_mini_map = giMiniMapRef.clone();
     inited = true;
 }
 
-bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &control, tianli::global::odometer_config &config)
+bool control_odometer_calculation(const cv::Mat& giMiniMapRef, cv::Point2d& control, tianli::global::odometer_config& config)
 {
-    if (!inited) {
+    if (!inited)
+    {
         // JUST INIT IT
         last_mini_map = giMiniMapRef.clone();
         inited = true;
         control = cv::Point2d(0, 0);
         return false;
     }
-    else {
+    else
+    {
         auto curr_mini_map = giMiniMapRef.clone();
         // use orb match to get the u, aka offset
         cv::Point2f offset;
-        if (orb_match(last_mini_map, curr_mini_map, offset)) {
-            control = cv::Point2d(- offset.x * config.scale, -offset.y * config.scale);
+        if (orb_match(last_mini_map, curr_mini_map, offset))
+        {
+            control = cv::Point2d(-offset.x * config.scale, -offset.y * config.scale);
             last_mini_map = curr_mini_map.clone();
             return true;
         }
-        else {
+        else
+        {
             control = cv::Point2d(0, 0);
             return false;
         }
@@ -50,7 +54,7 @@ bool control_odometer_calculation(const cv::Mat &giMiniMapRef, cv::Point2d &cont
 // 草，surfmatch跟定位功能耦合有、严重
 // 这里再造一个orb match + 最优比次优
 // 几乎必然是同比例的，返回偏移量
-bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
+bool orb_match(cv::Mat& img1, cv::Mat& img2, cv::Point2f& offset)
 {
     auto beg_time = std::chrono::steady_clock::now();
 
@@ -65,27 +69,32 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
     cv::Mat desp1, desp2;
     orb->detectAndCompute(img1_cp, cv::Mat(), kp1, desp1);
     orb->detectAndCompute(img2_cp, cv::Mat(), kp2, desp2);
-    
-    if (desp1.empty() || desp2.empty()) {
+
+    if (desp1.empty() || desp2.empty())
+    {
         return false;
     }
-    
+
     // 首先采用knnMatch剔除最近匹配点距离与次近匹配点距离比率大于0.6的舍去
     cv::BFMatcher matcher(cv::NORM_HAMMING);
     std::vector<std::vector<cv::DMatch>> matches;
     matcher.knnMatch(desp1, desp2, matches, 2);
     // 解决没有匹配点的情况
-    if (matches.size() == 0) {
+    if (matches.size() == 0)
+    {
         return false;
     }
     std::vector<cv::DMatch> good_matches;
-    for (int i = 0; i < matches.size(); i++) {
-        if (matches[i][0].distance < 0.6 * matches[i][1].distance) {
+    for (int i = 0; i < matches.size(); i++)
+    {
+        if (matches[i][0].distance < 0.6 * matches[i][1].distance)
+        {
             good_matches.push_back(matches[i][0]);
         }
     }
 
-    if (good_matches.size() == 0) {
+    if (good_matches.size() == 0)
+    {
         return false;
     }
 
@@ -97,7 +106,8 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
     // 通过solve linear 获得缩放、dx、dy
     // make good matches to src and dst
     std::vector<cv::Point2f> src, dst;
-    for (int i = 0; i < good_matches.size(); i++) {
+    for (int i = 0; i < good_matches.size(); i++)
+    {
         src.push_back(kp1[good_matches[i].queryIdx].pt);
         dst.push_back(kp2[good_matches[i].trainIdx].pt);
     }
@@ -106,10 +116,10 @@ bool orb_match(cv::Mat &img1, cv::Mat &img2, cv::Point2f &offset)
 
     // cout<<"s: "<<s<<" dx: "<<dx<<" dy: "<<dy<<endl;
 
-
     // 计算偏移量，直接取平均
     cv::Point2f sum_offset(0, 0);
-    for (int i = 0; i < good_matches.size(); i++) {
+    for (int i = 0; i < good_matches.size(); i++)
+    {
         sum_offset += kp2[good_matches[i].trainIdx].pt - kp1[good_matches[i].queryIdx].pt;
     }
     offset = cv::Point2f(sum_offset.x / good_matches.size(), sum_offset.y / good_matches.size());
