@@ -2,7 +2,7 @@
 #include "cvAutoTrack.h"
 #include "global/global.include.h"
 
-struct tianli::global::cvat_resource
+struct cvat_resource
 {
     void *data;
     cvat_error begin_load();
@@ -10,8 +10,14 @@ struct tianli::global::cvat_resource
     cvat_error load_serialize_features(const char *path);
     cvat_error load_serialize_config(const char *path);
 
-    static cvat_resource_t create();
-    static void destroy(cvat_resource_t resource);
+    static cvat_resource_t create()
+    {
+        return new cvat_resource();
+    }
+    static void destroy(cvat_resource_t resource)
+    {
+        delete resource;
+    }
 };
 
 /// @brief 创建资源
