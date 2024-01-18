@@ -1,10 +1,11 @@
-#include <pch.h>
+#include "pch.h"
 #include "module.debug.h"
 #include <resources/Resources.h>
 
-bool LoadDebugMapImpl(const char *path)
+bool __stdcall DebugLoadMapImagePath(const char* path)
 {
 #ifdef _DEBUG
+    INSTALL_DUMP_();
     Resources::getInstance().debug_map_image = cv::imread(path);
     return true;
 #else
