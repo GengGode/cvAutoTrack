@@ -1,0 +1,39 @@
+---
+Language:        Cpp
+BasedOnStyle:  Microsoft
+AccessModifierOffset: -4
+AlignEscapedNewlines: Left
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+Cpp11BracedListStyle: false
+ColumnLimit:     200
+IncludeCategories:
+  - Regex:           '"pch\.h"'
+    Priority:        -1
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^"(opencv|fmt|cereal)/'
+    Priority:        2
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^(<|"(global|algorithms|frame|resource)/)'
+    Priority:        3
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '^(<|"(module)/)'
+    Priority:        4
+    SortPriority:    0
+    CaseSensitive:   false
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0
+    CaseSensitive:   false
+IndentCaseBlocks: true
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+NamespaceIndentation: All
+PointerAlignment: Left
+SeparateDefinitionBlocks: Leave
