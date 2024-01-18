@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 set(BUILD_CVAUTOTRACK_TESTS OFF CACHE BOOL "build cvAutoTrack tests")
 set(BUILD_DOC OFF CACHE BOOL "build cvAutoTrack doc")
-set(BUILD_CVAUTOTRACK_TESTS ON)
 
 include(cmake/parse_version.cmake)
 include(cmake/auto_subdirectory.cmake)
