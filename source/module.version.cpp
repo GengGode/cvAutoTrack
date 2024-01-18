@@ -8,7 +8,12 @@
 #define err ErrorCode::getInstance()
 #endif
 #include <global/global.include.h>
+
+#if cplusplus >= 202002L
 #define regerr(msg) err = {error(msg),utils::to_gbk(msg)}
+#else
+#define regerr(msg) err = {-1,utils::to_gbk(msg)}
+#endif
 
 
 bool __stdcall GetCompileVersion(char* version_buff, int buff_size)

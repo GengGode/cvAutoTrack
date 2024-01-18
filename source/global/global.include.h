@@ -11,6 +11,8 @@
 
 namespace tianli::global
 {
+
+#if cplusplus >= 202002L
     template<size_t n>
     struct source_location
     {
@@ -76,6 +78,10 @@ namespace tianli::global
     }
 
 #define error(msg) tianli::global::error_proxy<tianli::global::error_invoker, tianli::global::source_location(__FILE__, std::source_location::current().line(), std::source_location::current().column()), tianli::global::error_message(msg)>::callback(tianli::global::error_impl, msg)
+#else
+#define error(msg) 
+#endif
+
 
     class error_type
     {
@@ -129,7 +135,7 @@ namespace tianli::global
         };
         logger() = default;
         virtual void write(level lv, const char *msg) { return; }
-        virtual void log(error_type err) { return; }
+        virtual void log(error_type error) { return; }
         // 用于启用一次计时测量
         virtual void perl(std::string perl_label) { return; }
         virtual void perl_end(std::string perl_label = "") { return; }
