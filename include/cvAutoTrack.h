@@ -2,9 +2,9 @@
 #define CVAUTOTRACE_H
 
 #ifdef CVAUTOTRACK_EXPORTS
-#define CVAUTOTRACK_PORT __declspec(dllexport)
+    #define CVAUTOTRACK_PORT __declspec(dllexport)
 #else
-#define CVAUTOTRACK_PORT __declspec(dllimport)
+    #define CVAUTOTRACK_PORT __declspec(dllimport)
 #endif
 #define CVAUTOTRACK_API CVAUTOTRACK_PORT
 
