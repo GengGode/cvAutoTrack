@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 set(BUILD_CVAUTOTRACK_TESTS OFF CACHE BOOL "build cvAutoTrack tests")
 set(BUILD_DOC OFF CACHE BOOL "build cvAutoTrack doc")
+set(BUILD_CVAUTOTRACK_TESTS ON)
 
 include(cmake/parse_version.cmake)
 include(cmake/auto_subdirectory.cmake)
@@ -22,9 +23,9 @@ include_directories(${DependentPatryDir})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # 设置编译选项
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 if(MSVC)
-    add_compile_options(/std:c++17)
+    add_compile_options(/std:c++20)
     # Unicode
     add_definitions(-DUNICODE -D_UNICODE)
 endif()
