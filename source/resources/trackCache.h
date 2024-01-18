@@ -13,6 +13,8 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/map.hpp>
 
+//#define _FP16
+
 namespace trackCache
 {
     //基础设置结构体
@@ -103,11 +105,15 @@ namespace trackCache
                 sample_key_points.emplace_back(sample_kp);
             }
 
+#ifdef _FP16
             //优化特征矩阵数据，转换为半精度，并使用char数组保存
             cv::Mat descriptors_half;
             descriptors.convertTo(descriptors_half, CV_16F);
             std::vector<char> descriptors_vector(descriptors_half.data,
                 descriptors_half.data + descriptors_half.total() * 2);
+#else
+            std::vector<char> descriptors_vector(descriptors.data, descriptors.data + descriptors.total() * 4);
+#endif // _FP16
             //矩阵shape
             int descriptor_shape[2] = { descriptors.rows, descriptors.cols };
             //序列化数据
@@ -131,16 +137,22 @@ namespace trackCache
                 cv::KeyPoint kp;
                 kp.pt.x = sample_kp.x;
                 kp.pt.y = sample_kp.y;
+                kp.size = 16.0;
                 kp.response = sample_kp.response;
                 kp.angle = 270.0;
                 kp.octave = 0;
                 kp.class_id = sample_kp.class_id;
                 key_points.emplace_back(kp);
             }
+#ifdef _FP16
             //解压特征矩阵
             auto descriptors_half = cv::Mat(descriptor_shape[0], descriptor_shape[1], CV_16F);
             memcpy(descriptors_half.data, descriptors_vector.data(), descriptors_vector.size());
             descriptors_half.convertTo(descriptors, CV_32F);
+#else
+            descriptors = cv::Mat(descriptor_shape[0], descriptor_shape[1], CV_32F);
+            memcpy(descriptors.data, descriptors_vector.data(), descriptors_vector.size());
+#endif // _FP16
         }
     };
 

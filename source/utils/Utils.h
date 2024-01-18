@@ -7,12 +7,6 @@
 
 namespace TianLi::Utils
 {
-    struct MatchKeyPoint
-    {
-        cv::Point2d query;
-        cv::Point2d train;
-    };
-
     //从大图中裁剪小图，并保证小图不超出大图范围
     //@param map大图
     //@param map小图左上角坐标
@@ -35,13 +29,6 @@ namespace TianLi::Utils
     //按照标准差剔除列表的异常点
     std::vector<cv::Point2d> extract_valid(std::vector<cv::Point2d> list);
 
-    //消除特征点的漂移，有利于获取到特征点的统计特征【待重写】
-    //@param keypoints 特征点对
-    //@param scale 小地图缩放
-    //@param x_list 横坐标
-    //@param y_list 纵坐标
-    void RemoveKeypointOffset(std::vector<MatchKeyPoint> keypoints, double scale, std::vector<double>& x_list, std::vector<double>& y_list);
-
     //获取列表的最大值
     int getMaxID(double lis[], int len);
     //获取列表的最小值
@@ -54,32 +41,19 @@ namespace TianLi::Utils
     //@param pos 输入坐标
     //@param origin 目标坐标的原点
     //@param scale 目标坐标的缩放
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Point2d origin, double scale);
+    cv::Point2d transform(cv::Point2d pos, cv::Point2d origin, double scale);
 
     //输入两个矩形，变换坐标
     //@param pos 输入坐标
     //@param inRect 原始坐标的矩形区域
     //@param outRect 新坐标的矩形区域
     //@return 变换后的坐标
-    cv::Point2d TransferAxes(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect);
+    cv::Point2d transform(cv::Point2d pos, cv::Rect2d inRect, cv::Rect2d outRect);
 
-    //反向变换坐标
+    //使用变换矩阵变换坐标
     //@param pos 输入坐标
-    //@param origin 原始坐标的原点
-    //@param scale 原始坐标的缩放
-    cv::Point2d TransferAxes_inv(cv::Point2d pos, cv::Point2d origin, double scale);
-
-    //变换特殊地区的坐标
-    //！！！即将弃用
-    std::pair<cv::Point2d, int> ConvertSpecialMapsPosition(double x, double y);
-
-    //绘制好的特征点
-    void draw_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, std::vector<cv::KeyPoint> keypoint_object, std::vector<cv::DMatch>& good_matches);
-    //计算好的特征点
-    void calc_good_matches(const cv::Mat& img_scene, std::vector<cv::KeyPoint> keypoint_scene, cv::Mat& img_object, 
-                           std::vector<cv::KeyPoint> keypoint_object, std::vector<std::vector<cv::DMatch>>& KNN_m, 
-                           double ratio_thresh, std::vector<MatchKeyPoint>& good_keypoints,
-                           std::vector<cv::DMatch>& good_matches);
+    //@param m 变换矩阵
+    cv::Point2d transform(const cv::Point2d &pos, const cv::Mat &m);
 
     bool getRegValue_REG_SZ(HKEY root, std::wstring item, std::wstring key, std::string& ret, int max_length);
 
@@ -89,6 +63,7 @@ namespace TianLi::Utils
     std::mt19937 create_random_engine();
     std::vector<unsigned int> create_random_array(const size_t size, const unsigned int rand_min, const unsigned int rand_max);
     void normalize(const std::vector<cv::KeyPoint>& keypts, std::vector<cv::Point2d>& normalized_pts, cv::Mat& transform);
+
 
     template<typename T>
     static cv::Mat to_homogeneous(T& pt) {

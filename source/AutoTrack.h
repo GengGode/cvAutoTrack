@@ -44,7 +44,7 @@ public:
 
     bool SetDisableFileLog();
     bool SetEnableFileLog();
-    
+
     bool GetMapIsEmbedded();
 
     bool DebugCapture();
@@ -65,8 +65,4 @@ private:
     bool getGengshinImpactWnd();
     bool getGengshinImpactScreen();
     bool getMiniMapRefMat();
-
-#ifdef _DEBUG
-    void showMatchResult(float x, float y, int mapId, float angle, float rotate);
-#endif // DEBUG
 };

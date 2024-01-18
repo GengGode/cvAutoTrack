@@ -3,6 +3,10 @@
 #include <fmt/format.h>
 #include <Windows.h>
 #include <vector>
+#include <fstream>
+#ifdef _DEBUG
+#include <filesystem>
+#endif // _DEBUG
 
 int TEST()
 {
@@ -89,6 +93,23 @@ void Run_GetTrans()
 		fmt::print("坐标和角度   : {} {} {} {}\n", x, y, a, map_id);
 	else
 		fmt::print("错误码       : {}\n", GetLastErr());
+}
+
+void Run_SetUseLocalPictureMode()
+{
+    if (SetUseLocalPictureMode())
+    {
+        auto imgFs = std::fstream("test_scene.png", std::ios::in|std::ios::binary);
+        size_t size = imgFs.seekg(0, std::ios::end).tellg();
+        char *data = new char[size];
+        imgFs.seekg(0, std::ios::beg);
+        imgFs.read(data, size);
+        SetScreenSourceImage(data, size);
+        delete[] data;
+        fmt::print("设置本地图片模式成功\n");
+    }
+    else
+        fmt::print("错误码       : {}\n", GetLastErr());
 }
 
 void Run_GetDir()
@@ -200,12 +221,26 @@ int Run()
 	std::ios::sync_with_stdio(false);
 	system("chcp 65001");
 
-	// 调用循环
-	while (1)
-	{
-		// 显示菜单
-		std::cout <<
-			R"(
+#ifdef _DEBUG
+    //如果图像存在，则传入测试图
+
+    if (std::filesystem::exists("map.jpg"))
+    {
+        DebugLoadMapImagePath("map.jpg");
+    }
+    else
+    {
+        std::cout << "载入测试图像\"map.jpg\"失败，将无法可视化特征点" << std::endl;
+    }
+#endif // _DEBUG
+
+
+    // 调用循环
+    while (1)
+    {
+        // 显示菜单
+        std::cout <<
+            R"(
 1. 设置Dx截图
 2. 设置Bitblt截图
 3. 获取坐标和角度
@@ -217,6 +252,7 @@ int Run()
 9. 截图
 10.可视化调试【Debug模式】
 11. 初始化
+12.设置从图片源传入
 =====================
 -1. 获取版本号
 0. 退出
