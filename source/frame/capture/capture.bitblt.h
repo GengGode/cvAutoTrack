@@ -1,7 +1,7 @@
 #pragma once
-#include "global/global.include.h"
 #include "capture.include.h"
 #include "utils/utils.window_scale.h"
+#include "global/global.include.h"
 
 namespace tianli::frame::capture
 {
@@ -23,10 +23,7 @@ namespace tianli::frame::capture
                 return false;
             return true;
         }
-        bool uninitialized() override
-        {
-            return true;
-        }
+        bool uninitialized() override { return true; }
         bool set_capture_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
@@ -53,7 +50,7 @@ namespace tianli::frame::capture
             this->is_callback = true;
             return true;
         }
-        bool get_frame(cv::Mat &frame) override
+        bool get_frame(cv::Mat& frame) override
         {
             auto handle = this->source_handle;
             if (this->is_callback)
@@ -82,9 +79,11 @@ namespace tianli::frame::capture
             BITMAP source_bitmap;
             GetObject(hbitmap, sizeof(BITMAP), &source_bitmap);
             int nChannels = source_bitmap.bmBitsPixel == 1 ? 1 : source_bitmap.bmBitsPixel / 8;
-            this->source_frame.create(cv::Size(source_bitmap.bmWidth, source_bitmap.bmHeight), CV_MAKETYPE(CV_8U, nChannels));
+            this->source_frame.create(cv::Size(source_bitmap.bmWidth, source_bitmap.bmHeight),
+                                      CV_MAKETYPE(CV_8U, nChannels));
             GetBitmapBits(hbitmap, source_bitmap.bmHeight * source_bitmap.bmWidth * nChannels, this->source_frame.data);
-            this->source_frame = this->source_frame(cv::Rect(client_rect.left, client_rect.top, client_size.width, client_size.height));
+            this->source_frame =
+                this->source_frame(cv::Rect(client_rect.left, client_rect.top, client_size.width, client_size.height));
             if (this->source_frame.empty())
                 return false;
             if (this->source_frame.cols < 480 || this->source_frame.rows < 360)
@@ -99,4 +98,4 @@ namespace tianli::frame::capture
         cv::Size source_client_size;
     };
 
-} // namespace tianli::capture
+} // namespace tianli::frame::capture
