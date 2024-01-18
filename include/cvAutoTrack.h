@@ -13,6 +13,25 @@
 extern "C"
 {
 #endif
+    // string alloc
+    struct CVAUTOTRACK_API cvat_string;
+    typedef struct cvat_string *cvat_string_ptr;
+
+    // string alloc and free
+    CVAUTOTRACK_API cvat_string_ptr alloc_string();
+    CVAUTOTRACK_API int get_string_length(cvat_string_ptr str);
+    CVAUTOTRACK_API int get_string_context(cvat_string_ptr str, char *buffer, int buffer_size);
+    CVAUTOTRACK_API void free_string(cvat_string_ptr str);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 
 /// @brief 【开发保留】加载调试使用的地图图片，以用于可视化点位
