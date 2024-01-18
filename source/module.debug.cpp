@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "module.debug.h"
 #include <resources/Resources.h>
 
 bool __stdcall DebugLoadMapImagePath(const char* path)
