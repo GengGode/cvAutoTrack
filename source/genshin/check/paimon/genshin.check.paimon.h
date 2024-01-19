@@ -3,5 +3,5 @@
 
 namespace TianLi::Genshin::Check
 {
-	bool check_paimon(const tianli::global::GenshinScreen &genshin_screen, tianli::global::GenshinPaimon &out_genshin_paimon);
+    bool check_paimon(const tianli::global::GenshinScreen& genshin_screen, tianli::global::GenshinPaimon& out_genshin_paimon);
 }

@@ -1,16 +1,15 @@
-#include <opencv2/opencv.hpp>
-#include <Windows.h>
-#include <iostream>
-#include <opencv2/xfeatures2d/nonfree.hpp>
-#include <fmt/format.h>
-#include "algorithms/algorithms.include.h"
-#include "algorithms/features/features.operate.h"
-#include "algorithms/container/container.set.h"
 #include "resources/Resources.h"
+#include "algorithms/algorithms.include.h"
+#include "algorithms/container/container.set.h"
+#include "algorithms/features/features.operate.h"
+#include <Windows.h>
+#include <fmt/format.h>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
 using namespace tianli::algorithms::features_operate;
 #include <psapi.h>
-
 
 double test_time(int max_width, int max_height, std::vector<std::shared_ptr<point_index>> key_point_objects)
 {
@@ -47,7 +46,7 @@ double test_time(int max_width, int max_height, std::vector<std::shared_ptr<poin
     auto end = std::chrono::high_resolution_clock::now();
     return std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count() / 1000000.0 / 100.0;
 }
-int main(int v, char *s[])
+int main(int v, char* s[])
 {
     features fts;
     std::shared_ptr<trackCache::CacheInfo> cache_info;
@@ -59,19 +58,19 @@ int main(int v, char *s[])
 
     int max_width = 0;
     int max_height = 0;
-    std::for_each(fts.keypoints.begin(), fts.keypoints.end(), [&](auto &kp)
-                  {
-                    kp.size = 100;
-                    kp.octave = 10;
+    std::for_each(fts.keypoints.begin(), fts.keypoints.end(), [&](auto& kp) {
+        kp.size = 100;
+        kp.octave = 10;
         max_width = (std::max)(max_width, (int)kp.pt.x);
-        max_height = (std::max)(max_height, (int)kp.pt.y); });
+        max_height = (std::max)(max_height, (int)kp.pt.y);
+    });
 
     cv::Mat mat = cv::Mat(max_height, max_width, CV_8UC3, cv::Scalar(128, 128, 128));
     drawKeypoints(mat, fts.keypoints, mat, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     cv::imwrite(fmt::format("out_key_.png"), mat);
 
     std::vector<std::shared_ptr<point_index>> key_point_objects;
-    for (auto &kp : cache_info->key_points)
+    for (auto& kp : cache_info->key_points)
     {
         key_point_objects.push_back(std::make_shared<keypoint_index>(kp, 1));
     }

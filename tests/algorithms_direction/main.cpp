@@ -1,12 +1,9 @@
-#include <opencv2/opencv.hpp>
 #include <Windows.h>
-#include <iostream>
-#include <opencv2/xfeatures2d/nonfree.hpp>
 #include <fmt/format.h>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
 #include "algorithms/algorithms.rotation.h"
 
-
-int main()
-{
-}
+int main() {}

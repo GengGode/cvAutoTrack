@@ -1,12 +1,12 @@
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/utils/logger.hpp>
 #include <Windows.h>
-#include <iostream>
 #include <frame/frame.include.h>
 #include <frame/local/local.include.h>
 #include <frame/local/local.video.h>
-#include <utils/convect.string.h>
 #include <global/record/record.stdlog.h>
+#include <iostream>
+#include <opencv2/core/utils/logger.hpp>
+#include <opencv2/opencv.hpp>
+#include <utils/convect.string.h>
 
 int main()
 {

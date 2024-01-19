@@ -1,34 +1,34 @@
 #pragma once
 #include "algorithms/algorithms.include.h"
-#include <opencv2/xfeatures2d/nonfree.hpp>
 #include <execution>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
 namespace tianli::algorithms::features_operate
-{    
-    static features merge(const features &features_upper, const features &features_lower, const cv::Point2f diff_offset = cv::Point2f(0, 0))
+{
+    static features merge(const features& features_upper, const features& features_lower, const cv::Point2f diff_offset = cv::Point2f(0, 0))
     {
-        if(features_upper.size() == 0)
+        if (features_upper.size() == 0)
             return features_lower;
-        if(features_lower.size() == 0)
+        if (features_lower.size() == 0)
             return features_upper;
         features features_merge;
-        auto &[ids, kps, des] = features_merge;
+        auto& [ids, kps, des] = features_merge;
         ids = features_upper.indexs;
         ids.push_back(features_upper.size());
         for (auto i : features_lower.indexs)
             ids.push_back(features_upper.size() + i);
         kps = features_upper.keypoints;
-        std::for_each(features_lower.keypoints.begin(), features_lower.keypoints.end(), [&](const auto &kp)
-            { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
+        std::for_each(features_lower.keypoints.begin(), features_lower.keypoints.end(),
+                      [&](const auto& kp) { kps.emplace_back(kp.pt + diff_offset, kp.size, kp.angle, kp.response, kp.octave, kp.class_id); });
         cv::vconcat(features_upper.descriptors, features_lower.descriptors, des);
         return features_merge;
     }
 
-    static std::vector<features> split(const features &featuress)
+    static std::vector<features> split(const features& featuress)
     {
         if (featuress.indexs.size() == 0)
             return { featuress };
-        auto &[ids, kps, des] = featuress;
+        auto& [ids, kps, des] = featuress;
         std::vector<features> features_vec;
         auto iter_size = featuress.size();
         for (int rec_i = ids.size() - 1; rec_i >= 0; rec_i--)
@@ -55,13 +55,13 @@ namespace tianli::algorithms::features_operate
         return features_vec;
     }
 
-    static features join(const features &fts, std::vector<std::shared_ptr<point_index>> result)
+    static features join(const features& fts, std::vector<std::shared_ptr<point_index>> result)
     {
         features res;
         res.keypoints = std::vector<cv::KeyPoint>(result.size());
         res.descriptors = cv::Mat(result.size(), 64, CV_32F);
         int index = 0;
-        for (const auto &item : result)
+        for (const auto& item : result)
         {
             auto keypoint_ptr = std::dynamic_pointer_cast<keypoint_index>(item);
             // 组合关键点
@@ -74,7 +74,7 @@ namespace tianli::algorithms::features_operate
         return res;
     }
 
-    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Mat &mask = cv::Mat())
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF>& detector, const cv::Mat& image, const cv::Mat& mask = cv::Mat())
     {
         const int border_size = 100;
         features border_fts;
@@ -89,7 +89,7 @@ namespace tianli::algorithms::features_operate
         std::vector<int> selected_row_indexs;
         for (int i = 0; i < border_fts.keypoints.size(); i++)
         {
-            auto &kp = border_fts.keypoints[i];
+            auto& kp = border_fts.keypoints[i];
             if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
                 continue;
             keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
@@ -103,8 +103,8 @@ namespace tianli::algorithms::features_operate
             border_fts.descriptors.row(selected_row_indexs[i]).copyTo(fts.descriptors.row(i));
         return fts;
     }
-    
-    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF> &detector, const cv::Mat &image, const cv::Rect &roi, const cv::Mat &mask = cv::Mat())
+
+    static features from_image(const cv::Ptr<cv::xfeatures2d::SURF>& detector, const cv::Mat& image, const cv::Rect& roi, const cv::Mat& mask = cv::Mat())
     {
         const int border_size = 100;
         features border_fts;
@@ -115,21 +115,22 @@ namespace tianli::algorithms::features_operate
         cv::Mat border_img = image(border_rect);
         cv::Mat border_mask = mask.empty() ? cv::Mat() : mask(border_mask_rect);
 
-        //获取图像四边需要填充的像素数
+        // 获取图像四边需要填充的像素数
         int pt = -(std::min)(0, roi.y - border_size);
         int pd = (std::max)(0, roi.y + roi.height + border_size - image.rows);
         int pl = -(std::min)(0, roi.x - border_size);
         int pr = (std::max)(0, roi.x + roi.width + border_size - image.cols);
-        //填充图像
+        // 填充图像
         cv::copyMakeBorder(border_img, border_img, pt, pd, pl, pr, cv::BORDER_REPLICATE);
-        if (mask.empty() == false) cv::copyMakeBorder(border_mask, border_mask, pt, pd, pl, pr, cv::BORDER_REPLICATE);
+        if (mask.empty() == false)
+            cv::copyMakeBorder(border_mask, border_mask, pt, pd, pl, pr, cv::BORDER_REPLICATE);
 
         detector->detectAndCompute(border_img, border_mask.empty() ? cv::noArray() : border_mask, border_fts.keypoints, border_fts.descriptors);
         std::vector<cv::KeyPoint> keypoints;
         std::vector<int> selected_row_indexs;
         for (int i = 0; i < border_fts.keypoints.size(); i++)
         {
-            auto &kp = border_fts.keypoints[i];
+            auto& kp = border_fts.keypoints[i];
             if (kp.pt.x < border_size || kp.pt.y < border_size || kp.pt.x > image.cols + border_size || kp.pt.y > image.rows + border_size)
                 continue;
             keypoints.emplace_back(kp.pt - cv::Point2f(border_size, border_size), kp.size, kp.angle, kp.response, kp.octave, kp.class_id);
@@ -144,14 +145,15 @@ namespace tianli::algorithms::features_operate
         return fts;
     }
 
-    // NEED_TEST: 构造均匀分布的特征点，基于网格划分，在每个网格内至少采样到目标密度的特征点   
-    static features from_image(const cv::Mat &image, const int target_density = 100, const int grid_radius = 512, const cv::Mat &mask = cv::Mat(),const double surf_begin_hessian_threshold=100,const int surf_octaves = 1,const int surf_octaveLayers = 3,const  bool surf_extended = true,const bool surf_upright = false)
+    // NEED_TEST: 构造均匀分布的特征点，基于网格划分，在每个网格内至少采样到目标密度的特征点
+    static features from_image(const cv::Mat& image, const int target_density = 100, const int grid_radius = 512, const cv::Mat& mask = cv::Mat(), const double surf_begin_hessian_threshold = 100,
+                               const int surf_octaves = 1, const int surf_octaveLayers = 3, const bool surf_extended = true, const bool surf_upright = false)
     {
         const double target_density_rate = 1.0 / (grid_radius * grid_radius) * target_density;
         // 将图像根据尺寸划分为网格，以均分为原则，尽可能接近给定的半径
         const size_t grids_row_count = static_cast<int>(std::ceil(1.0 * image.rows / grid_radius));
         const size_t grids_col_count = static_cast<int>(std::ceil(1.0 * image.cols / grid_radius));
-        const cv::Size2d grid_size(image.cols*1.0 / grids_col_count, image.rows*1.0 / grids_row_count);
+        const cv::Size2d grid_size(image.cols * 1.0 / grids_col_count, image.rows * 1.0 / grids_row_count);
         const size_t grid_count = grids_row_count * grids_col_count;
 
         std::vector<std::pair<cv::Rect, features>> grid_features(grid_count);
@@ -173,28 +175,24 @@ namespace tianli::algorithms::features_operate
             }
         }
 
-        std::for_each(std::execution::par_unseq, grid_features.begin(), grid_features.end(), [&](std::pair<cv::Rect, features> &grid_feature)
+        std::for_each(std::execution::par_unseq, grid_features.begin(), grid_features.end(), [&](std::pair<cv::Rect, features>& grid_feature) {
+            const int fixed_target_density = static_cast<int>(std::ceil(target_density_rate * grid_feature.first.area()));
+            const auto& detector = cv::xfeatures2d::SURF::create(surf_begin_hessian_threshold, surf_octaves, surf_octaveLayers, surf_extended, surf_upright);
+            double threshold = surf_begin_hessian_threshold;
+            features feature;
+            for (int i = 0; i < 10; i++)
             {
-                const int fixed_target_density = static_cast<int>(std::ceil(target_density_rate * grid_feature.first.area()));
-                const auto &detector = cv::xfeatures2d::SURF::create(surf_begin_hessian_threshold, surf_octaves, surf_octaveLayers, surf_extended, surf_upright);
-                double threshold = surf_begin_hessian_threshold;
-                features feature;
-                for (int i = 0; i < 10; i++)
-                {
-                    if (threshold < 1 || feature.keypoints.size() > fixed_target_density)
-                        break;
-                    detector->setHessianThreshold(threshold);
-                    feature = from_image(detector, image, grid_feature.first, mask);
-                    threshold /= 2.0;
-                }
-                grid_feature.second = feature;
-            });
+                if (threshold < 1 || feature.keypoints.size() > fixed_target_density)
+                    break;
+                detector->setHessianThreshold(threshold);
+                feature = from_image(detector, image, grid_feature.first, mask);
+                threshold /= 2.0;
+            }
+            grid_feature.second = feature;
+        });
 
         for (int i = 0; i < grid_count; i++)
             result_features = merge(result_features, grid_features[i].second, cv::Point2d(grid_features[i].first.x, grid_features[i].first.y));
         return result_features;
     }
-}
-
-
-
+} // namespace tianli::algorithms::features_operate

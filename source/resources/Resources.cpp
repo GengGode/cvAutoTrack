@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "Resources.h"
-#include "resources/import/resources.import.h"
-#include "utils/convect.string.h"
-#include "resources/trackCache.h"
-#include "resource/version.h"
 #include "resources.load.h"
+#include "resources/import/resources.import.h"
+#include "resources/trackCache.h"
+#include "utils/convect.string.h"
+#include "resource/version.h"
 
 Resources::Resources()
 {
@@ -22,7 +22,6 @@ Resources::Resources()
     UIDnumber[7] = TianLi::Resources::Load::load_image("uid7");
     UIDnumber[8] = TianLi::Resources::Load::load_image("uid8");
     UIDnumber[9] = TianLi::Resources::Load::load_image("uid9");
-
 
     cv::cvtColor(StarTemplate, StarTemplate, cv::COLOR_RGB2GRAY);
     cv::cvtColor(UID, UID, cv::COLOR_RGB2GRAY);

@@ -1,12 +1,12 @@
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/utils/logger.hpp>
 #include <Windows.h>
-#include <iostream>
-#include <frame/frame.include.h>
 #include <frame/capture/capture.include.h>
 #include <frame/capture/capture.window_graphics.h>
-#include <utils/convect.string.h>
+#include <frame/frame.include.h>
 #include <global/record/record.stdlog.h>
+#include <iostream>
+#include <opencv2/core/utils/logger.hpp>
+#include <opencv2/opencv.hpp>
+#include <utils/convect.string.h>
 
 int main()
 {
@@ -40,8 +40,7 @@ int main()
     }
     std::cout << frame.size() << std::endl;
 
-    capture->set_source_handle_callback([]()
-                                        { return FindWindowW(NULL, utils::to_wstring("原神").c_str()); });
+    capture->set_source_handle_callback([]() { return FindWindowW(NULL, utils::to_wstring("原神").c_str()); });
     std::this_thread::sleep_for(std::chrono::milliseconds(18));
     capture->get_frame(frame);
     if (frame.empty())
