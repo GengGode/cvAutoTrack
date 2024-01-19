@@ -1,7 +1,7 @@
 #pragma once
-#include "global/global.include.h"
 #include "capture.include.h"
 #include "utils/utils.window_scale.h"
+#include "global/global.include.h"
 
 namespace tianli::frame::capture
 {
@@ -24,10 +24,7 @@ namespace tianli::frame::capture
                 return false;
             return true;
         }
-        bool uninitialized() override
-        {
-            return true;
-        }
+        bool uninitialized() override { return true; }
         bool set_capture_handle(HWND handle = 0) override
         {
             if (handle == nullptr)
@@ -54,7 +51,7 @@ namespace tianli::frame::capture
             this->is_callback = true;
             return true;
         }
-        bool get_frame(cv::Mat &frame) override
+        bool get_frame(cv::Mat& frame) override
         {
             auto handle = this->source_handle;
             if (this->is_callback)
@@ -63,14 +60,14 @@ namespace tianli::frame::capture
                 return false;
             if (IsWindow(handle) == false)
                 return false;
-            RECT rect = {0, 0, 0, 0};
+            RECT rect = { 0, 0, 0, 0 };
             if (GetWindowRect(handle, &rect) == false)
                 return false;
-            RECT client_rect = {0, 0, 0, 0};
+            RECT client_rect = { 0, 0, 0, 0 };
             if (GetClientRect(handle, &client_rect) == false)
                 return false;
             double screen_scale = utils::window_scale::get_screen_scale(handle);
-            cv::Size client_size = {0, 0};
+            cv::Size client_size = { 0, 0 };
             client_size.width = (int)(screen_scale * (client_rect.right - client_rect.left));
             client_size.height = (int)(screen_scale * (client_rect.bottom - client_rect.top));
             HDC hdc = GetDC(handle);
@@ -95,9 +92,9 @@ namespace tianli::frame::capture
         }
 
     private:
-        RECT source_rect = {0, 0, 0, 0};
-        RECT source_client_rect = {0, 0, 0, 0};
+        RECT source_rect = { 0, 0, 0, 0 };
+        RECT source_client_rect = { 0, 0, 0, 0 };
         cv::Size source_client_size;
     };
 
-} // namespace tianli::capture
+} // namespace tianli::frame::capture

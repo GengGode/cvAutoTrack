@@ -1,24 +1,24 @@
-#include <opencv2/opencv.hpp>
-#include <Windows.h>
-#include <iostream>
-#include "frame/capture/capture.bitblt.h"
-#include "frame/local/local.picture.h"
-#include "algorithms/filter/filter.kalman.h"
-#include "global/global.include.h"
-#include "global/global.genshin.h"
-#include "global/record/record.stdlog.h"
-#include "resources/trackCache.h"
-#include "match/surf/SurfMatch.h"
-#include "utils/convect.string.h"
 #include "genshin/genshin.handle.h"
 #include "genshin/genshin.screen.h"
-#include "genshin\check\paimon\genshin.check.paimon.h"
 #include "genshin\cailb\minimap\genshin.cailb.minimap.h"
-#include <filesystem>
-#include "algorithms/algorithms.visual.odometer.h"
+#include "genshin\check\paimon\genshin.check.paimon.h"
+#include "match/surf/SurfMatch.h"
 #include "resources/Resources.h"
+#include "resources/trackCache.h"
+#include "utils/convect.string.h"
+#include "algorithms/algorithms.visual.odometer.h"
+#include "algorithms/filter/filter.kalman.h"
+#include "frame/capture/capture.bitblt.h"
+#include "frame/local/local.picture.h"
+#include "global/global.genshin.h"
+#include "global/global.include.h"
+#include "global/record/record.stdlog.h"
+#include <Windows.h>
+#include <filesystem>
 #include <fmt/format.h>
+#include <iostream>
 #include <opencv2/core/utils/logger.hpp>
+#include <opencv2/opencv.hpp>
 tianli::global::GenshinHandle genshin_handle;
 tianli::global::GenshinScreen genshin_screen;
 tianli::global::GenshinPaimon genshin_paimon;
@@ -27,7 +27,7 @@ tianli::global::GenshinAvatarPosition genshin_avatar_position;
 std::shared_ptr<trackCache::CacheInfo> cache_info;
 
 auto logger = std::make_shared<tianli::global::record::std_logger>();
-void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, tianli::global::GenshinAvatarPosition &out_genshin_position)
+void get_avatar_position(const tianli::global::GenshinMinimap& genshin_minimap, tianli::global::GenshinAvatarPosition& out_genshin_position)
 {
     static SurfMatch surf_match;
     static bool is_init = false;
@@ -101,15 +101,14 @@ void get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, 
 
         std::string area_name = cache_info->tag_info_map[surf_match.CurrentAreaId()].name;
 
-        //打印结果：
+        // 打印结果：
         fmt::print(R"(
 当前匹配结果：
     位置：[{:.2f},{:.2f}]
     缩放：{:.2f},
     地区名：{}
-)", 
-        genshin_avatar_position.position.x, genshin_avatar_position.position.y,
-        surf_match.CurrentZoom(),area_name);
+)",
+                   genshin_avatar_position.position.x, genshin_avatar_position.position.y, surf_match.CurrentZoom(), area_name);
     }
     else
     {
@@ -124,7 +123,8 @@ bool test()
     if (genshin_handle.config.frame_source->mode == tianli::frame::frame_source::source_mode::handle)
     {
         TianLi::Genshin::get_genshin_handle(genshin_handle);
-        if (genshin_handle.handle == NULL) return false;
+        if (genshin_handle.handle == NULL)
+            return false;
         genshin_handle.config.frame_source->set_capture_handle(genshin_handle.handle);
     }
     else if (genshin_handle.config.frame_source->mode == tianli::frame::frame_source::source_mode::frame)
@@ -133,7 +133,7 @@ bool test()
         // TODO: 考虑一下重构GetUiRects
         cv::Mat frame;
         genshin_handle.config.frame_source->get_frame(frame);
-        genshin_handle.rect_client = { 0,0, frame.cols,frame.rows };
+        genshin_handle.rect_client = { 0, 0, frame.cols, frame.rows };
         TianLi::Genshin::GetUiRects(genshin_handle);
     }
 
@@ -168,7 +168,7 @@ bool test()
         return false;
     }
 
-    //TODO: 在传图模式下，这里的is_handle_mode也是错的
+    // TODO: 在传图模式下，这里的is_handle_mode也是错的
     genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
     genshin_screen.config.is_handle_mode = genshin_paimon.is_handle_mode;
     genshin_screen.config.is_search_mode = genshin_paimon.is_search_mode;
@@ -193,9 +193,9 @@ bool test()
 
 int main()
 {
-    //genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+    // genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    //genshin_handle.config.frame_source->set_local_file("./test_scene.png");
+    // genshin_handle.config.frame_source->set_local_file("./test_scene.png");
     Resources::getInstance().debug_map_image = cv::imread("map.jpg");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();

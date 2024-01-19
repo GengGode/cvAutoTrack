@@ -1,11 +1,11 @@
 ﻿#include "pch.h"
 #include "genshin.match.position.h"
 
-#include "resources/Resources.h"
 #include "Match/surf/SurfMatch.h"
+#include "resources/Resources.h"
 
-#include "algorithms/filter/filter.include.h"
 #include "algorithms/algorithms.visual.odometer.h"
+#include "algorithms/filter/filter.include.h"
 
 cv::Mat to_color(cv::Mat& img_object)
 {
@@ -39,7 +39,6 @@ cv::Mat to_color(cv::Mat& img_object)
 
     cv::resize(img_object, color_mat, cv::Size(5, 5), cv::INTER_AREA);
     return roi_color;
-
 }
 // 初步定位：根据颜色确定角色在大地图的哪个方位
 cv::Point match_find_direction_in_all(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
@@ -87,7 +86,7 @@ cv::Point2d match_yellow_block(cv::Mat& _mapMat, cv::Mat& _MiniMapMat)
     cv::Point pos_block_match = match_find_block_in_direction(_mapMat, _MiniMapMat, pos_first_match);
     cv::Point2d pos_continuity_no;
     bool calc_is_faile = false;
-    //cv::Point2d pos = match_find_pos_in_block(_mapMat, _MiniMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
+    // cv::Point2d pos = match_find_pos_in_block(_mapMat, _MiniMapMat, pos_block_match, pos_continuity_no, calc_is_faile);
     if (calc_is_faile)
     {
         return cv::Point2d(-1, -1);
@@ -104,7 +103,7 @@ cv::Point2d match_find_position_in_block(cv::Point pos_second_match, bool& calc_
     else
     {
         UNREFERENCED_PARAMETER(calc_is_faile);
-        //return match_no_continuity_1st(calc_is_faile);
+        // return match_no_continuity_1st(calc_is_faile);
         return cv::Point2d(0, 0);
     }
 }
@@ -120,23 +119,23 @@ cv::Point2d match_no_continuity_2nd(bool& calc_is_faile)
     cv::Point pos_second_match;
     cv::Point2d pos_continuity_no;
     // 初步定位：根据颜色确定角色在大地图的哪个方位
-    //pos_first_match = match_find_direction_in_all(_mapMat, _miniMapMat);
+    // pos_first_match = match_find_direction_in_all(_mapMat, _miniMapMat);
     // 确定区块：根据初步定位的结果再遍历该方位的区块，确定所在区块
-    //pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
+    // pos_second_match = match_find_block_in_direction(_mapMat, _miniMapMat, pos_first_match);
     // 确定位置：根据所在区块的结果精确匹配角色位置
     pos_continuity_no = match_find_position_in_block(pos_second_match, calc_is_faile);
     // 返回结果
     return pos_continuity_no;
 }
 
-void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMinimap &genshin_minimap, tianli::global::GenshinAvatarPosition &out_genshin_position)
+void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMinimap& genshin_minimap, tianli::global::GenshinAvatarPosition& out_genshin_position)
 {
     static SurfMatch surf_match;
     static bool is_init = false;
     if (genshin_minimap.is_run_init_start == true || is_init == false)
     {
-        if (is_init)return;
-
+        if (is_init)
+            return;
 
         std::vector<cv::KeyPoint> gi_map_keypoints;
         cv::Mat gi_map_descriptors;
@@ -183,17 +182,20 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         auto odometer_config = tianli::global::odometer_config();
         auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config);
         auto ms_valid = surf_match.is_success_match;
-        
+
         // 里程计能更就更；全局匹配能配就配
-        if (od_valid) {
+        if (od_valid)
+        {
             filt_pos = out_genshin_position.config.pos_filter->predict(u_k);
         }
-        if (ms_valid) {
+        if (ms_valid)
+        {
             filt_pos = out_genshin_position.config.pos_filter->update(pos);
         }
 
         // 特判tp之后
-        if (!od_valid && ms_valid) {
+        if (!od_valid && ms_valid)
+        {
             filt_pos = out_genshin_position.config.pos_filter->re_init_filterting(pos);
         }
 

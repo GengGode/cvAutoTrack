@@ -5,7 +5,6 @@
 #include "cvAutoTrack.h"
 #include "AutoTrack.h"
 #include "ErrorCode.h"
-#include "AutoTrack.h"
 #include <atomic>
 
 static AutoTrack _at;

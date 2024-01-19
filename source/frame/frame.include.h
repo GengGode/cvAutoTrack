@@ -40,7 +40,7 @@ namespace tianli::frame
         virtual ~frame_source() = default;
         virtual bool initialization() { return false; }
         virtual bool uninitialized() { return false; }
-        virtual bool get_frame(cv::Mat &frame) = 0;
+        virtual bool get_frame(cv::Mat& frame) = 0;
         virtual bool set_capture_handle(HWND handle) = 0;
         virtual bool set_local_frame(cv::Mat frame) = 0;
         virtual bool set_local_file(std::string file) = 0;
