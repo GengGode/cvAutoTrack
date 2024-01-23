@@ -23,17 +23,6 @@ set(VerRcFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc")
 set(VerHppFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.h")
 set(InfaceHppFile "${IncludeDir}/cvAutoTrack.h")
 
-auto_increment_version_file("resource/version_hash.hash" "resource/version.ver")
-parse_version_file("resource/version.ver")
-get_commit_hash(PROJECT_VERSION_HASH)
-get_git_branch(PROJECT_VERSION_BRANCH)
-set(PROJECT_VERSION_MAJOR ${VERSION_MAJOR})
-set(PROJECT_VERSION_MINOR ${VERSION_MINOR})
-set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
-set(PROJECT_VERSION_BUILD ${VERSION_BUILD})
-
-# 划分为静态库模块
-#auto_subdirectory()
 
 # version.rc
 configure_file("${VerRcFile}.in" "${VerRcFile}")
