@@ -222,7 +222,13 @@ extern "C"
     bool CVAUTOTRACK_API CaptureSetSourceImageFromFile(cvat_capture_t capture, const char *image_encode_data, int image_data_size, cvat_error_t error);
     bool CVAUTOTRACK_API CaptureSetSourceImageFromData(cvat_capture_t capture, const char *image_data, int image_width, int image_height, int image_channels, cvat_error_t error);
     bool CVAUTOTRACK_API CaptureSetClientRectCallback(cvat_capture_t capture, void (*callback)(int &x, int &y, int &width, int &height), cvat_error_t error);
-
+   
+    // bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char* image_encode_data, int image_data_size);
+    // bool CVAUTOTRACK_API ImportMapBlockData(int uuid, const char* image_data, int image_width, int image_height, int image_channels);
+    // bool CVAUTOTRACK_API ImportMapBlockCenter(int uuid, int x, int y);
+    // bool CVAUTOTRACK_API ImportMapBlockRelativeCenter(int uuid, int parent_uuid, int x, int y);
+    // bool CVAUTOTRACK_API ImportMapBlockCenterScale(int uuid, int x, int y, double scale);
+    // bool CVAUTOTRACK_API ImportMapBlockRelativeCenterScale(int uuid, int parent_uuid, int x, int y, double scale);
 
 #ifdef __cplusplus
 }
@@ -340,12 +346,7 @@ extern "C"
     /// @param scale 缩放比例
     /// @return 设置成功
     bool CVAUTOTRACK_API SetWorldScale(double scale);
-    bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char *image_encode_data, int image_data_size);
-    bool CVAUTOTRACK_API ImportMapBlockData(int uuid, const char *image_data, int image_width, int image_height, int image_channels);
-    bool CVAUTOTRACK_API ImportMapBlockCenter(int uuid, int x, int y);
-    bool CVAUTOTRACK_API ImportMapBlockRelativeCenter(int uuid, int parent_uuid, int x, int y);
-    bool CVAUTOTRACK_API ImportMapBlockCenterScale(int uuid, int x, int y, double scale);
-    bool CVAUTOTRACK_API ImportMapBlockRelativeCenterScale(int uuid, int parent_uuid, int x, int y, double scale);
+
     bool CVAUTOTRACK_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
     bool CVAUTOTRACK_API GetPositionOfMap(double &x, double &y, int &mapId);
     bool CVAUTOTRACK_API GetDirection(double &a);

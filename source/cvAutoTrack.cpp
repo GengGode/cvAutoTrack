@@ -79,18 +79,6 @@ bool __stdcall SetWorldScale(double scale)
 {
     INSTALL_DUMP(_at.SetWorldScale(scale));
 }
-bool __stdcall ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
-{
-    INSTALL_DUMP(_at.ImportMapBlock(id_x, id_y, image_data, image_data_size, image_width, image_height));
-}
-bool __stdcall ImportMapBlockCenter(int x, int y)
-{
-    INSTALL_DUMP(_at.ImportMapBlockCenter(x, y));
-}
-bool __stdcall ImportMapBlockCenterScale(int x, int y, double scale)
-{
-    INSTALL_DUMP(_at.ImportMapBlockCenterScale(x, y, scale));
-}
 bool __stdcall GetTransformOfMap(double& x, double& y, double& a, int& mapId)
 {
     INSTALL_DUMP(_at.GetTransformOfMap(x, y, a, mapId));

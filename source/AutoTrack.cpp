@@ -55,144 +55,110 @@ bool AutoTrack::uninit()
     return !genshin_minimap.is_init_finish;
 }
 
-bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)
-{
-    if (image_data_size != image_width * image_height * 4)
-    {
-        err = { 9001, "传入图片通道不对应" };
-        return false;
-    }
-    auto map_block = cv::Mat(image_height, image_width, CV_8UC4, (void*)image_data, cv::Mat::AUTO_STEP);
-    if (map_block.empty())
-    {
-        err = { 9002, "传入图片为空 " };
-        return false;
-    }
-    // res.set_map_block(id_x, id_y, map_block);
-    UNREFERENCED_PARAMETER(id_x);
-    UNREFERENCED_PARAMETER(id_y);
 
-    return false;
-}
-
-bool AutoTrack::ImportMapBlockCenter(int x, int y)
-{
-    UNREFERENCED_PARAMETER(x);
-    UNREFERENCED_PARAMETER(y);
-    return false;
-}
-
-bool AutoTrack::ImportMapBlockCenterScale(int x, int y, double scale)
-{
-    UNREFERENCED_PARAMETER(x);
-    UNREFERENCED_PARAMETER(y);
-    UNREFERENCED_PARAMETER(scale);
-    return false;
-}
-
-bool AutoTrack::SetHandle(long long int handle)
-{
-    if (handle == 0)
-    {
-        genshin_handle.config.is_auto_find_genshin = true;
-        return true;
-    }
-    else
-    {
-        genshin_handle.config.is_auto_find_genshin = false;
-        genshin_handle.handle = (HWND)handle;
-    }
-    return IsWindow(genshin_handle.handle);
-}
-
-bool AutoTrack::SetWorldCenter(double x, double y)
-{
-    genshin_avatar_position.target_map_world_center.x = x;
-    genshin_avatar_position.target_map_world_center.y = y;
-    return true;
-}
-
-bool AutoTrack::SetWorldScale(double scale)
-{
-    genshin_avatar_position.target_map_world_scale = scale;
-    return true;
-}
-
-bool AutoTrack::startServe()
-{
-    return false;
-}
-
-bool AutoTrack::stopServe()
-{
-    return false;
-}
-
-bool AutoTrack::SetDisableFileLog()
-{
-    err.disableWirteFile();
-    return true;
-}
-
-bool AutoTrack::SetEnableFileLog()
-{
-    err.enableWirteFile();
-    return true;
-}
-
-bool AutoTrack::DebugCapture()
-{
-    return DebugCapturePath("Capture.png", 12);
-}
-
-bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
-{
-    if (path_buff == NULL || buff_size < 1)
-    {
-        err = { 251, "路径缓存区为空指针或是路径缓存区大小为小于1" };
-        return false;
-    }
-
-    if (genshin_screen.img_screen.empty())
-    {
-        err = { 252, "画面为空" };
-        return false;
-    }
-    cv::Mat out_info_img = genshin_screen.img_screen.clone();
-    switch (genshin_handle.config.frame_source->type)
-    {
-        case tianli::frame::frame_source::source_type::bitblt:
+        bool AutoTrack::SetHandle(long long int handle)
+        {
+            if (handle == 0)
             {
-                // 绘制paimon Rect
-                cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-                // 绘制miniMap Rect
-                cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-                cv::Rect Avatar = genshin_minimap.rect_avatar;
-                Avatar.x += genshin_minimap.rect_minimap.x;
-                Avatar.y += genshin_minimap.rect_minimap.y;
-
-                // 绘制avatar Rect
-                cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-                // 绘制UID Rect
-                cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
-                break;
+                genshin_handle.config.is_auto_find_genshin = true;
+                return true;
             }
-        case tianli::frame::frame_source::source_type::window_graphics:
+            else
             {
-                // 绘制paimon Rect
-                cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
-                // 绘制miniMap Rect
-                cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
-                cv::Rect Avatar = genshin_minimap.rect_avatar;
-                Avatar.x += genshin_minimap.rect_minimap.x;
-                Avatar.y += genshin_minimap.rect_minimap.y;
-
-                // 绘制avatar Rect
-                cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
-                // 绘制UID Rect
-                cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
+                genshin_handle.config.is_auto_find_genshin = false;
+                genshin_handle.handle = (HWND)handle;
             }
-    }
+            return IsWindow(genshin_handle.handle);
+        }
+
+        bool AutoTrack::SetWorldCenter(double x, double y)
+        {
+            genshin_avatar_position.target_map_world_center.x = x;
+            genshin_avatar_position.target_map_world_center.y = y;
+            return true;
+        }
+
+        bool AutoTrack::SetWorldScale(double scale)
+        {
+            genshin_avatar_position.target_map_world_scale = scale;
+            return true;
+        }
+
+        bool AutoTrack::startServe()
+        {
+            return false;
+        }
+
+        bool AutoTrack::stopServe()
+        {
+            return false;
+        }
+
+        bool AutoTrack::SetDisableFileLog()
+        {
+            err.disableWirteFile();
+            return true;
+        }
+
+        bool AutoTrack::SetEnableFileLog()
+        {
+            err.enableWirteFile();
+            return true;
+        }
+
+        bool AutoTrack::DebugCapture()
+        {
+            return DebugCapturePath("Capture.png", 12);
+        }
+
+        bool AutoTrack::DebugCapturePath(const char* path_buff, int buff_size)
+        {
+            if (path_buff == NULL || buff_size < 1)
+            {
+                err = { 251, "路径缓存区为空指针或是路径缓存区大小为小于1" };
+                return false;
+            }
+
+            if (genshin_screen.img_screen.empty())
+            {
+                err = { 252, "画面为空" };
+                return false;
+            }
+            cv::Mat out_info_img = genshin_screen.img_screen.clone();
+            switch (genshin_handle.config.frame_source->type)
+            {
+                case tianli::frame::frame_source::source_type::bitblt:
+                    {
+                        // 绘制paimon Rect
+                        cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
+                        // 绘制miniMap Rect
+                        cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+                        cv::Rect Avatar = genshin_minimap.rect_avatar;
+                        Avatar.x += genshin_minimap.rect_minimap.x;
+                        Avatar.y += genshin_minimap.rect_minimap.y;
+
+                        // 绘制avatar Rect
+                        cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+                        // 绘制UID Rect
+                        cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
+                        break;
+                    }
+                case tianli::frame::frame_source::source_type::window_graphics:
+                    {
+                        // 绘制paimon Rect
+                        cv::rectangle(out_info_img, genshin_paimon.rect_paimon, cv::Scalar(0, 0, 255), 2);
+                        // 绘制miniMap Rect
+                        cv::rectangle(out_info_img, genshin_minimap.rect_minimap, cv::Scalar(0, 0, 255), 2);
+                        cv::Rect Avatar = genshin_minimap.rect_avatar;
+                        Avatar.x += genshin_minimap.rect_minimap.x;
+                        Avatar.y += genshin_minimap.rect_minimap.y;
+
+                        // 绘制avatar Rect
+                        cv::rectangle(out_info_img, Avatar, cv::Scalar(0, 0, 255), 2);
+                        // 绘制UID Rect
+                        cv::rectangle(out_info_img, genshin_handle.rect_uid, cv::Scalar(0, 0, 255), 2);
+                    }
+            }
 
 #if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
     std::string last_time_str = global::format("{:%Y-%m-%d :%H:%M:%S}", std::chrono::system_clock::to_time_t(genshin_screen.last_time));

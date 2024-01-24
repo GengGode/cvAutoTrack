@@ -10,10 +10,6 @@ public:
     bool init();
     bool uninit();
 
-    bool ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height);
-    bool ImportMapBlockCenter(int x, int y);
-    bool ImportMapBlockCenterScale(int x, int y, double scale);
-
     bool SetHandle(long long int handle = 0);
     bool SetWorldCenter(double x, double y);
     bool SetWorldScale(double scale);
