@@ -25,16 +25,10 @@ public:
     bool GetPositionOfMap(double& x, double& y, int& mapId);
     bool GetDirection(double& a);
     bool GetRotation(double& a);
-    // 获取发现的神瞳坐标,isEnd为真则为当前画面中的最后一个神瞳
-    bool GetStar(double& x, double& y, bool& isEnd);
-    // 获取发现的神瞳坐标，以json字符串格式
-    bool GetStarJson(char* jsonBuff);
+
     bool GetUID(int& uid);
     bool GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
-    /*********/
-    bool GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a);
-    bool GetInfoLoadVideo(const char* path, const char* pathOutFile);
-    /*********/
+
     bool startServe();
     bool stopServe();
 

@@ -350,26 +350,17 @@ extern "C"
     bool CVAUTOTRACK_API GetPositionOfMap(double &x, double &y, int &mapId);
     bool CVAUTOTRACK_API GetDirection(double &a);
     bool CVAUTOTRACK_API GetRotation(double &a);
-    bool CVAUTOTRACK_API GetStar(double &x, double &y, bool &isEnd);
-    bool CVAUTOTRACK_API GetStarJson(char *json_buff, int buff_size);
     bool CVAUTOTRACK_API GetUID(int &uid);
     bool CVAUTOTRACK_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
-    bool CVAUTOTRACK_API GetInfoLoadPicture(const char *path, int &uid, double &x, double &y, double &a);
-    bool CVAUTOTRACK_API GetInfoLoadVideo(const char *path, const char *out_path);
     bool CVAUTOTRACK_API DebugCapture();
     bool CVAUTOTRACK_API DebugCapturePath(const char *path);
     int CVAUTOTRACK_API GetLastErr();
     int CVAUTOTRACK_API GetLastErrMsg(char *msg_buff, int buff_size);
     int CVAUTOTRACK_API GetLastErrJson(char *json_buff, int buff_size);
     bool CVAUTOTRACK_API GetMapIsEmbedded();
+
     bool CVAUTOTRACK_API GetCompileVersion(char *version_buff, int buff_size);
     bool CVAUTOTRACK_API GetCompileTime(char *time_buff, int buff_size);
-
-    /// @brief
-    /// @param doc_buff
-    /// @param buff_size
-    /// @return
-    bool CVAUTOTRACK_API GetHelpDoc(char *doc_buff, int buff_size);
 
 #ifdef __cplusplus
 }

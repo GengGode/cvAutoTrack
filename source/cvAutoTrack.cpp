@@ -107,14 +107,7 @@ bool __stdcall GetRotation(double& a)
 {
     INSTALL_DUMP(_at.GetRotation(a));
 }
-bool __stdcall GetStar(double& x, double& y, bool& isEnd)
-{
-    INSTALL_DUMP(_at.GetStar(x, y, isEnd));
-}
-bool __stdcall GetStarJson(char* json_buff, int buff_size)
-{
-    INSTALL_DUMP(_at.GetStarJson(json_buff));
-}
+
 bool __stdcall GetUID(int& uid)
 {
     INSTALL_DUMP(_at.GetUID(uid));
@@ -123,14 +116,6 @@ bool __stdcall GetAllInfo(double& x, double& y, int& mapId, double& a, double& r
 {
     INSTALL_DUMP(_at.GetAllInfo(x, y, mapId, a, r, uid));
     return _at.GetAllInfo(x, y, mapId, a, r, uid);
-}
-bool __stdcall GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a)
-{
-    INSTALL_DUMP(_at.GetInfoLoadPicture(path, uid, x, y, a));
-}
-bool __stdcall GetInfoLoadVideo(const char* path, const char* out_path)
-{
-    INSTALL_DUMP(_at.GetInfoLoadVideo(path, out_path));
 }
 bool __stdcall SetDisableFileLog()
 {
