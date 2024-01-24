@@ -132,18 +132,6 @@ bool __stdcall GetInfoLoadVideo(const char* path, const char* out_path)
 {
     INSTALL_DUMP(_at.GetInfoLoadVideo(path, out_path));
 }
-int __stdcall GetLastErr()
-{
-    INSTALL_DUMP(_at.GetLastError());
-}
-int __stdcall GetLastErrMsg(char* msg_buff, int buff_size)
-{
-    INSTALL_DUMP(_at.GetLastErrMsg(msg_buff, buff_size));
-}
-int __stdcall GetLastErrJson(char* json_buff, int buff_size)
-{
-    INSTALL_DUMP(_at.GetLastErrJson(json_buff, buff_size));
-}
 bool __stdcall SetDisableFileLog()
 {
     INSTALL_DUMP(_at.SetDisableFileLog());

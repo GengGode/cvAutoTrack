@@ -35,10 +35,6 @@ public:
     bool GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a);
     bool GetInfoLoadVideo(const char* path, const char* pathOutFile);
     /*********/
-    int GetLastError();
-    int GetLastErrMsg(char* msg_buff, int buff_size);
-    int GetLastErrJson(char* json_buff, int buff_size);
-
     bool startServe();
     bool stopServe();
 
