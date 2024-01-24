@@ -554,29 +554,11 @@ bool AutoTrack::getMiniMapRefMat()
 
     if (TianLi::Genshin::Check::check_paimon(genshin_screen, genshin_paimon) == false)
     {
-        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
-        {
-            // err = { 40101,"Bitblt模式下检测派蒙失败" };
-            return false;
-        }
-        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
-        {
-            // err = { 40201,"DirectX模式下检测派蒙失败" };
-            return false;
-        }
+        return false;
     }
     if (genshin_paimon.is_visial == false)
     {
-        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
-        {
-            // err = { 40102,"Bitblt模式下没有检测到派蒙" };
-            return false;
-        }
-        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
-        {
-            // err = { 40202,"DirectX模式下没有检测到派蒙" };
-            return false;
-        }
+        return false;
     }
 
     genshin_screen.config.rect_paimon = genshin_paimon.rect_paimon;
@@ -585,17 +567,7 @@ bool AutoTrack::getMiniMapRefMat()
 
     if (TianLi::Genshin::Cailb::cailb_minimap(genshin_screen, genshin_minimap) == false)
     {
-        if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
-        {
-            // err = { 40105,"Bitblt模式下计算小地图区域失败" };
-            return false;
-        }
-        else if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
-        {
-
-            // err = { 40205,"DirectX模式下计算小地图区域失败" };
-            return false;
-        }
+        return false;
     }
 
     return true;
