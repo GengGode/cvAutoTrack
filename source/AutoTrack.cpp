@@ -12,9 +12,7 @@
 #include "algorithms/algorithms.rotation.h"
 #include "algorithms/filter/filter.kalman.h"
 #include "frame/capture/capture.bitblt.h"
-#include "frame/capture/capture.window_graphics.h"
 #include "resource/version.h"
-
 
 ErrorCode& err = ErrorCode::getInstance();
 Resources& res = Resources::getInstance();
@@ -55,42 +53,6 @@ bool AutoTrack::uninit()
         genshin_minimap.is_init_finish = false;
     }
     return !genshin_minimap.is_init_finish;
-}
-
-bool AutoTrack::SetUseBitbltCaptureMode()
-{
-    if (genshin_handle.config.frame_source == nullptr)
-    {
-        genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-        return true;
-    }
-    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::bitblt)
-    {
-        return true;
-    }
-    genshin_handle.config.frame_source.reset();
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_bitblt>();
-    return true;
-}
-
-bool AutoTrack::SetUseDx11CaptureMode()
-{
-#ifdef BUILD_CAPTURE_DXGI
-    if (genshin_handle.config.frame_source == nullptr)
-    {
-        genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
-        return true;
-    }
-    if (genshin_handle.config.frame_source->type == tianli::frame::frame_source::source_type::window_graphics)
-    {
-        return true;
-    }
-    genshin_handle.config.frame_source.reset();
-    genshin_handle.config.frame_source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
-    return true;
-#else
-    return false;
-#endif // BUILD_CAPTURE_DXGI
 }
 
 bool AutoTrack::ImportMapBlock(int id_x, int id_y, const char* image_data, int image_data_size, int image_width, int image_height)

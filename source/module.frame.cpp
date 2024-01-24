@@ -1,19 +1,46 @@
 #include "pch.h"
 #include "module.frame.h"
 #include "frame/capture/capture.bitblt.h"
-// #include "frame/capture/capture.graphics.h"
+#ifdef BUILD_CAPTURE_DXGI
+    #include "frame/capture/capture.window_graphics.h"
+#endif // BUILD_CAPTURE_DXGI
 // #include "frame/capture/capture.dwm.h"
 #include "frame/local/local.picture.h"
 #include "frame/local/local.video.h"
 
 bool create_capture_bitblt(std::shared_ptr<tianli::frame::frame_source>& source)
 {
+    if (source == nullptr)
+    {
+        source = std::make_shared<tianli::frame::capture::capture_bitblt>();
+        return true;
+    }
+    if (source->type == tianli::frame::frame_source::source_type::bitblt)
+    {
+        return true;
+    }
+    source.reset();
     source = std::make_shared<tianli::frame::capture::capture_bitblt>();
     return true;
 }
 bool create_capture_graphics(std::shared_ptr<tianli::frame::frame_source>& source)
 {
+#ifdef BUILD_CAPTURE_DXGI
+    if (source == nullptr)
+    {
+        source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
+        return true;
+    }
+    if (source->type == tianli::frame::frame_source::source_type::window_graphics)
+    {
+        return true;
+    }
+    source.reset();
+    source = std::make_shared<tianli::frame::capture::capture_window_graphics>();
+    return true;
+#else
     return false;
+#endif // BUILD_CAPTURE_DXGI
 }
 bool create_capture_dwm(std::shared_ptr<tianli::frame::frame_source>& source)
 {
