@@ -35,8 +35,6 @@ public:
     bool SetDisableFileLog();
     bool SetEnableFileLog();
 
-    bool GetMapIsEmbedded();
-
     bool DebugCapture();
     bool DebugCapturePath(const char* path_buff, int buff_size);
 #pragma endregion

@@ -357,7 +357,6 @@ extern "C"
     int CVAUTOTRACK_API GetLastErr();
     int CVAUTOTRACK_API GetLastErrMsg(char *msg_buff, int buff_size);
     int CVAUTOTRACK_API GetLastErrJson(char *json_buff, int buff_size);
-    bool CVAUTOTRACK_API GetMapIsEmbedded();
 
     bool CVAUTOTRACK_API GetCompileVersion(char *version_buff, int buff_size);
     bool CVAUTOTRACK_API GetCompileTime(char *time_buff, int buff_size);

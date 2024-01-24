@@ -38,11 +38,6 @@ Resources& Resources::getInstance()
     return instance;
 }
 
-bool Resources::map_is_embedded()
-{
-    return true;
-}
-
 bool load_cache(std::shared_ptr<trackCache::CacheInfo>& cacheInfo)
 {
     std::string file_name = "cvAutoTrack_Cache.dat";

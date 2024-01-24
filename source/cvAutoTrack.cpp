@@ -125,11 +125,6 @@ bool __stdcall SetEnableFileLog()
 {
     INSTALL_DUMP(_at.SetEnableFileLog());
 }
-
-bool __stdcall GetMapIsEmbedded()
-{
-    INSTALL_DUMP(_at.GetMapIsEmbedded());
-}
 bool __stdcall DebugCapture()
 {
     INSTALL_DUMP(_at.DebugCapture());

@@ -178,11 +178,6 @@ bool AutoTrack::SetEnableFileLog()
     return true;
 }
 
-bool AutoTrack::GetMapIsEmbedded()
-{
-    return res.map_is_embedded();
-}
-
 bool AutoTrack::DebugCapture()
 {
     return DebugCapturePath("Capture.png", 12);
