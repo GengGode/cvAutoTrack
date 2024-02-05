@@ -1,6 +1,6 @@
 #pragma once
 #include "global/global.include.h"
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 namespace tianli::algorithms::filter
 {

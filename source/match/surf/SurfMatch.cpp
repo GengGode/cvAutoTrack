@@ -5,6 +5,7 @@
 #include "algorithms/algorithms.solve.linear.h"
 #include "algorithms/features/features.operate.h"
 #include "global/global.genshin.h"
+#include <opencv2/calib3d.hpp>
 
 using namespace tianli::algorithms;
 

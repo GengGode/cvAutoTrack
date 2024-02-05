@@ -7,7 +7,7 @@
 
 #include <Windows.h>
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 #if cplusplus >= 202002L
     #include <source_location>

@@ -49,6 +49,12 @@
 #include <random>
 #include <string>
 
+// opencv
+// #include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/xfeatures2d.hpp>
+
 #if (_MSC_VER && _MSVC_LANG <= 201703L) || (!_MSC_VER && __cplusplus <= 201703L)
     #include <fmt/format.h>
 #else
@@ -69,7 +75,4 @@ namespace global
     }
 } // namespace global
 
-// opencv
-#include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
 #endif // PCH_H

@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 // cv
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+
 // cereal序列化类
 #include <cereal/archives/binary.hpp>
 #include <cereal/cereal.hpp>

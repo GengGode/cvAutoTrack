@@ -1,5 +1,6 @@
 #pragma once
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+
 class DiffMatch
 {
     cv::Mat _minimap_last_mat;

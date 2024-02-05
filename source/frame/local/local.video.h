@@ -2,6 +2,7 @@
 #include "local.include.h"
 #include "global/global.include.h"
 #include <filesystem>
+#include <opencv2/videoio.hpp>
 
 namespace tianli::frame::local
 {

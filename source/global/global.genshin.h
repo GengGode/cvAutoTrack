@@ -4,7 +4,8 @@
 #include <Windows.h>
 #include <list>
 #include <memory>
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+
 #include <string>
 
 namespace tianli::global
