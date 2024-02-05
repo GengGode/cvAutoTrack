@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "global/global.windump.h"
 #include <resources/Resources.h>
 
 bool __stdcall DebugLoadMapImagePath(const char* path)

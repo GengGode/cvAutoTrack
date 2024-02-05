@@ -1,13 +1,14 @@
 #include "pch.h"
+#include "global/global.windump.h"
 #include "cvAutoTrack.h"
 
 #include "ErrorCode.h"
 #include "utils/convect.string.h"
 #include "resource/version.h"
+#include <global/global.include.h>
 #ifndef err
     #define err ErrorCode::getInstance()
 #endif
-#include <global/global.include.h>
 
 #if cplusplus >= 202002L
     #define regerr(msg) err = { error(msg), utils::to_gbk(msg) }

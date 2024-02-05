@@ -6,6 +6,7 @@
 #include "AutoTrack.h"
 #include "ErrorCode.h"
 #include <atomic>
+#include "global/global.windump.h"
 
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
