@@ -19,7 +19,7 @@ jobs:
   build:
     # 跳过提交信息开头为doc:或者docs:的提交
     if: "!startsWith(github.event.head_commit.message, 'doc:') && !startsWith(github.event.head_commit.message, 'docs:')"
-    runs-on: host-itx
+    runs-on: self-hosted
     outputs:
       version: ${{ steps.get_version.outputs._version }}
 
