@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: cvAutoTrack.Depends
-        path: ${{github.workspace}}/build/bin/Release/opencv_world480.dll
+        path: ${{github.workspace}}/build/bin/Release/opencv_*.dll
         if-no-files-found: 'warn'
 
   release:

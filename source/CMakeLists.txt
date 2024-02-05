@@ -130,7 +130,10 @@ PRIVATE
 
 # install to release
 if(WITH_DYNAMIC_OPENCV)
-    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_CONFIG_PATH}/../bin/opencv_world480$<$<CONFIG:Debug>:d>.dll" "$<TARGET_FILE_DIR:cvAutoTrack>") 
+    foreach(lib ${opencv_libs})
+        list(APPEND deps_dlls "${lib}${OpenCV_VERSION_MAJOR}${OpenCV_VERSION_MINOR}${OpenCV_VERSION_PATCH}$<$<CONFIG:Debug>:d>.dll")
+    endforeach()
+    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${deps_dlls} $<TARGET_FILE_DIR:cvAutoTrack> WORKING_DIRECTORY "${OpenCV_CONFIG_PATH}/../bin") 
 endif()
 add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
 set_target_properties(copy_version_file PROPERTIES FOLDER "scripts")
