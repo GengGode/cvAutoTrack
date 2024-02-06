@@ -113,7 +113,7 @@ FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TA
 FetchContent_MakeAvailable(fmt)
 set_target_properties(fmt PROPERTIES FOLDER "cvAutoTrack/dependencies")
 
-list(APPEND opencv_libs opencv_calib3d opencv_core opencv_features2d  opencv_imgcodecs opencv_imgproc opencv_video opencv_videoio opencv_xfeatures2d)
+list(APPEND opencv_libs opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_imgcodecs opencv_imgproc opencv_video opencv_videoio opencv_xfeatures2d)
 if(WITCH_OPENCV_CVV)
     list(APPEND opencv_libs opencv_cvv)
 endif()
