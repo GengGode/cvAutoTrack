@@ -1,11 +1,12 @@
-#include <Windows.h>
+
+#include <opencv2/core/utils/logger.hpp>
+#include <opencv2/opencv.hpp>
+
 #include <frame/frame.include.h>
 #include <frame/local/local.include.h>
 #include <frame/local/local.picture.h>
 #include <global/record/record.stdlog.h>
 #include <iostream>
-#include <opencv2/core/utils/logger.hpp>
-#include <opencv2/opencv.hpp>
 #include <utils/convect.string.h>
 
 int main()

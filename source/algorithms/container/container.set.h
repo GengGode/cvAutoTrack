@@ -1,5 +1,6 @@
 #pragma once
 #include "../algorithms.include.h"
+#include <opencv2/imgcodecs.hpp>
 
 namespace tianli::algorithms::container
 {

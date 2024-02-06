@@ -1,8 +1,5 @@
 #include "global/global.include.h"
 #include "global/record/record.stdlog.h"
-#include <Windows.h>
-#include <iostream>
-#include <opencv2/opencv.hpp>
 
 int main()
 {

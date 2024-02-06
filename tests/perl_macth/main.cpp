@@ -1,3 +1,7 @@
+
+#include <opencv2/core/utils/logger.hpp>
+#include <opencv2/opencv.hpp>
+
 #include "genshin/genshin.handle.h"
 #include "genshin/genshin.screen.h"
 #include "genshin\cailb\minimap\genshin.cailb.minimap.h"
@@ -13,12 +17,12 @@
 #include "global/global.genshin.h"
 #include "global/global.include.h"
 #include "global/record/record.stdlog.h"
-#include <Windows.h>
 #include <filesystem>
 #include <fmt/format.h>
 #include <iostream>
-#include <opencv2/core/utils/logger.hpp>
-#include <opencv2/opencv.hpp>
+
+#include <Windows.h>
+
 tianli::global::GenshinHandle genshin_handle;
 tianli::global::GenshinScreen genshin_screen;
 tianli::global::GenshinPaimon genshin_paimon;

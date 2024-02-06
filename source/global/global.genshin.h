@@ -1,12 +1,12 @@
 #pragma once
 #include "algorithms/filter/filter.include.h"
 #include "frame/frame.include.h"
-#include <Windows.h>
 #include <list>
 #include <memory>
 #include <opencv2/core.hpp>
-
 #include <string>
+
+#include <Windows.h>
 
 namespace tianli::global
 {

@@ -1,10 +1,17 @@
-#include <Windows.h>
 #include <frame/capture/capture.bitblt.h>
 #include <frame/capture/capture.include.h>
 #include <frame/frame.include.h>
-#include <iostream>
-#include <opencv2/opencv.hpp>
 #include <utils/convect.string.h>
+
+#include <iostream>
+
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+
+
+#include <Windows.h>
 
 int main()
 {

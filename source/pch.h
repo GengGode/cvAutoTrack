@@ -18,23 +18,6 @@
     #pragma warning(disable : 26495)
 #endif
 
-#ifdef SUPPORT_WINRT
-    #define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
-    // Windows 头文件
-    #include <Unknwn.h>
-    #include <inspectable.h>
-    #include <windows.h>
-
-    // WinRT
-    #include <winrt/Windows.Foundation.h>
-    #include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
-    #include <winrt/Windows.Graphics.DirectX.h>
-    #include <winrt/windows.foundation.metadata.h>
-
-    #include <dwmapi.h>
-    #pragma comment(lib, "dwmapi.lib")
-#endif // SUPPORT_WINRT
-
 // STL
 #include <algorithm>
 #include <atomic>
@@ -75,4 +58,20 @@ namespace global
     }
 } // namespace global
 
+#ifdef SUPPORT_WINRT
+    #define WIN32_LEAN_AND_MEAN // 从 Windows 头文件中排除极少使用的内容
+                                // Windows 头文件
+    #include <Unknwn.h>
+    #include <inspectable.h>
+    #include <windows.h>
+
+    // WinRT
+    #include <winrt/Windows.Foundation.h>
+    #include <winrt/Windows.Graphics.DirectX.Direct3d11.h>
+    #include <winrt/Windows.Graphics.DirectX.h>
+    #include <winrt/windows.foundation.metadata.h>
+
+    #include <dwmapi.h>
+    #pragma comment(lib, "dwmapi.lib")
+#endif // SUPPORT_WINRT
 #endif // PCH_H

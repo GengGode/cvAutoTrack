@@ -1,6 +1,5 @@
 #include "resources/binary/resources.binary.h"
 #include "algorithms/features/features.operate.h"
-#include <Windows.h>
 #include <fmt/format.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>

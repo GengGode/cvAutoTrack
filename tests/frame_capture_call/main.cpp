@@ -1,12 +1,14 @@
-#include <Windows.h>
+#include <opencv2/highgui.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
+
+#include "capture.h"
+
 #include <frame/capture/capture.bitblt.h>
 #include <frame/capture/capture.include.h>
 #include <frame/frame.include.h>
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <utils/convect.string.h>
-
-#include "capture.h"
 
 #define GEN_FUNC(name)                          \
     bool func_test_##name(const cv::Mat frame); \
@@ -22,14 +24,8 @@
         test_local(func_test_##name);           \
     }
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
-
 #include <Windows.h>
 
-using namespace std;
-using namespace cv;
 
 GEN_FUNC(calc_angle)
 {

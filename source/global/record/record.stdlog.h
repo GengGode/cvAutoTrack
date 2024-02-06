@@ -1,6 +1,9 @@
 #pragma once
 #include "../global.include.h"
 #include <iostream>
+#include <map>
+#include <chrono>
+
 namespace tianli::global::record
 {
     class std_logger : public logger
