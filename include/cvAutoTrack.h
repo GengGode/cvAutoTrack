@@ -14,68 +14,6 @@
     #define CVAUTOTRACK_API
 #endif
 
-#ifdef explicit_link
-    #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-        #include <Windows.h>
-    #else
-        #include <dlfcn.h>
-    #endif
-
-    #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-        #define LibraryHandle HMODULE
-        #define cvat_load(path) LoadLibraryA(path)
-    #else
-        #define LibraryHandle void*
-        #define cvat_load(path) dlopen(path, RTLD_LAZY)
-    #endif
-
-    #include <functional>
-    #include <memory>
-    #include <string>
-    // static LibraryHandle cvAutoTrackLibraryHandle = nullptr;
-    // bool LoadLibrary(const std::string &path)
-    // {
-    //     if (cvAutoTrackLibraryHandle != nullptr)
-    //     {
-    //         return true;
-    //     }
-    //     cvAutoTrackLibraryHandle = cvat_load(path.c_str());
-    //     if (cvAutoTrackLibraryHandle == nullptr)
-    //     {
-    //         return false;
-    //     }
-    //     return true;
-    // }
-    // template <typename T>
-    // auto GetFunction(const std::string &name)
-    // {
-    //     return reinterpret_cast<T>(GetProcAddress(get_global_handle(), name.c_str()));
-    // }
-    // #define LoadFunction(name) GetFunction<decltype(&name)>(#name)
-    // #define LoadFunctionEx(name) (decltype(&name))GetProcAddress(get_global_handle(), #name)
-    // template <typename T>
-    // std::shared_ptr<T> GetFunction(const std::string &name)
-    // {
-    //     if (cvAutoTrackLibraryHandle == nullptr)
-    //     {
-    //         return nullptr;
-    //     }
-    // #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
-    //     auto func = GetProcAddress(cvAutoTrackLibraryHandle, name.c_str());
-    // #else
-    //     auto func = dlsym(cvAutoTrackLibraryHandle, name.c_str());
-    // #endif
-    //     if (func == nullptr)
-    //     {
-    //         return nullptr;
-    //     }
-    //     return std::make_shared<T>(reinterpret_cast<T *>(func));
-    // }
-    //
-    // #define LoadFunction(name) GetFunction<decltype(name)>(#name)
-
-#endif // explicit_link
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -365,4 +303,136 @@ extern "C"
 }
 #endif
 
+#ifdef explicit_link
+    #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+        #include <Windows.h>
+    #else
+        #include <dlfcn.h>
+    #endif
+
+    #if defined(_WIN32) || defined(_WIN64) || defined(_WIN128) || defined(__CYGWIN__)
+        #define LibraryHandle HMODULE
+        #define cvat_load(path) LoadLibraryA(path)
+        #define cvat_free(handle) FreeLibrary(handle)
+        #define get_proc(handle, name) GetProcAddress(handle, name)
+    #else
+        #define LibraryHandle void*
+        #define cvat_load(path) dlopen(path, RTLD_LAZY)
+        #define cvat_free(handle) dlclose(handle)
+        #define get_proc(handle, name) dlsym(handle, name)
+    #endif
+
+    #include <functional>
+    #include <memory>
+    #include <string>
+
+    #define maroc_concatenate(a, b) maroc_concatenate_1(a, b)
+    #define maroc_concatenate_1(a, b) maroc_concatenate_2(a, b)
+    #define maroc_concatenate_2(a, b) a##b
+    #define maroc_expand(x) x
+    #define maroc_for_each_0(pred, ...)
+    #define maroc_for_each_1(pred, n, x, ...) pred(x, 0)
+    #define maroc_for_each_2(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_1(pred, 1, __VA_ARGS__))
+    #define maroc_for_each_3(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_2(pred, 2, __VA_ARGS__))
+    #define maroc_for_each_4(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_3(pred, 3, __VA_ARGS__))
+    #define maroc_for_each_5(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_4(pred, 4, __VA_ARGS__))
+    #define maroc_for_each_6(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_5(pred, 5, __VA_ARGS__))
+    #define maroc_for_each_7(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_6(pred, 6, __VA_ARGS__))
+    #define maroc_for_each_8(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_7(pred, 7, __VA_ARGS__))
+    #define maroc_for_each_9(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_8(pred, 8, __VA_ARGS__))
+    #define maroc_for_each_10(pred, n, x, ...) pred(x, n) maroc_expand(maroc_for_each_9(pred, 9, __VA_ARGS__))
+    #define maroc_args_count(...) maroc_expand(maroc_arg_count_1(0, ##__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
+    #define maroc_arg_count_1(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, n, ...) n
+    #define maroc_for_each_(n, pred, ...) maroc_expand(maroc_concatenate(maroc_for_each_, n)(pred, n, __VA_ARGS__))
+    #define maroc_for_each(pred, ...) maroc_expand(maroc_for_each_(maroc_expand(maroc_args_count(__VA_ARGS__)), pred, __VA_ARGS__))
+    #define comma_0()
+    #define comma_1() ,
+    #define comma_2() ,
+    #define comma_3() ,
+    #define comma_4() ,
+    #define comma_5() ,
+    #define comma_6() ,
+    #define comma_7() ,
+    #define comma_8() ,
+    #define comma_9() ,
+
+typedef long long int long_long_int;
+typedef const char* const_char_ptr;
+typedef char* char_ptr;
+typedef bool& bool_ref;
+typedef int& int_ref;
+typedef double& double_ref;
+    #define type_null_
+    #define type_null_bool
+    #define type_null_int
+    #define type_null_double
+    #define type_null_bool_ref
+    #define type_null_int_ref
+    #define type_null_double_ref
+    #define type_null_long_long_int
+    #define type_null_const_char_ptr
+    #define type_null_char_ptr
+    #define only_name(v, n) type_null_##v comma_##n()
+    #define bind_call(name, ...)                                               \
+        name(__VA_ARGS__)                                                      \
+        {                                                                      \
+            auto func = (decltype(&::name))get_proc(lib, #name); \
+            if (func == nullptr)                                               \
+                return false;                                                  \
+            return func(maroc_for_each(only_name, __VA_ARGS__));               \
+        }
+
+ template <typename T> auto GetFunction(const std::string& name)
+{
+    return reinterpret_cast<T>(GetProcAddress(get_global_handle(), name.c_str()));
+}
+    #define LoadFunction(name) GetFunction<decltype(&name)>(#name)
+    #define LoadFunctionEx(name) (decltype(&name))GetProcAddress(get_global_handle(), #name)
+
+struct cvAutoTrack
+{
+    LibraryHandle lib;
+    bool bind_call(InitResource);
+    bool bind_call(UnInitResource);
+    bool bind_call(SetWorldCenter, double x, double y);
+    bool bind_call(SetWorldScale, double scale);
+    bool bind_call(GetTransformOfMap, double_ref x, double_ref y, double_ref a, int_ref mapId);
+    bool bind_call(GetPositionOfMap, double_ref x, double_ref y, int_ref mapId);
+    bool bind_call(GetDirection, double_ref a);
+    bool bind_call(GetRotation, double_ref a);
+    bool bind_call(GetStar, double_ref x, double_ref y, bool_ref isEnd);
+    bool bind_call(GetUID, int_ref uid);
+    bool bind_call(GetAllInfo, double_ref x, double_ref y, int_ref mapId, double_ref a, double_ref r, int_ref uid);
+    bool bind_call(GetInfoLoadPicture, char_ptr path, int_ref uid, double_ref x, double_ref y, double_ref a);
+    bool bind_call(GetInfoLoadVideo, char_ptr path, char_ptr pathOutFile);
+    bool bind_call(DebugCapture);
+    int bind_call(GetLastErr);
+    int bind_call(GetLastErrMsg, char_ptr msg_buff, int buff_size);
+    int bind_call(GetLastErrJson, char_ptr json_buff, int buff_size);
+    bool bind_call(GetCompileVersion, char_ptr version_buff, int buff_size);
+    bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size);
+
+    #define GetFunction(name) name##_func = _GetFunction<decltype(&::name)>(#name)
+
+    cvAutoTrack(const std::string& path = "cvAutoTrack.dll")
+    {
+        lib = cvat_load(path.c_str());
+    }
+
+    ~cvAutoTrack()
+    {
+        if (lib != nullptr)
+            cvat_free(lib);
+    }
+
+    template <typename T> T _GetFunction(std::string name)
+    {
+        auto func = (T)get_proc(lib, name.c_str());
+        if (func == nullptr)
+            return nullptr;
+        return func;
+    }
+};
+
+#endif // explicit_link
 #endif // CVAUTOTRACE_H
