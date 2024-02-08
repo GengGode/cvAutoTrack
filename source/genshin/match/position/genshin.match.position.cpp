@@ -140,7 +140,8 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         std::vector<cv::KeyPoint> gi_map_keypoints;
         cv::Mat gi_map_descriptors;
         std::shared_ptr<trackCache::CacheInfo> cache_info;
-        load_cache(cache_info);
+        if (load_cache(cache_info) == false)
+            return;
         surf_match.Init(cache_info);
 
         is_init = true;
