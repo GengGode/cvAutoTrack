@@ -57,7 +57,14 @@ bool load_cache(std::shared_ptr<trackCache::CacheInfo>& cacheInfo)
     {
         return false;
     }
-    cacheInfo = trackCache::Deserialize(cache_file_path.string());
-
+    
+    try
+    {
+        cacheInfo = trackCache::Deserialize(cache_file_path.string());
+    }
+    catch (...)
+    {
+        return false;
+    }
     return true;
 }
