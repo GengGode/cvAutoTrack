@@ -133,6 +133,11 @@ jobs:
           try {
             $uploadInfo = Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
             Write-Host $uploadInfo
+            Write-File -Path 'success.log' -Value $upload_path -Append
+            Write-File -Path 'post-log.log' -Value $upload_url -Append
+            Write-File -Path 'post-log.log' -Value $upload_headers -Append
+            Write-File -Path 'post-log.log' -Value $upload_file -Append
+
             $successTime++
             Write-Host "Upload Success on $upload_path"
           }
