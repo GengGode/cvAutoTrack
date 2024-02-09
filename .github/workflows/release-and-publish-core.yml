@@ -101,10 +101,7 @@ jobs:
   
     - name: push core file
       run: |
-        $version = ${{ job.build.outputs.version }}
-        echo "job.build.outputs.version: ${{ job.build.outputs.version }}"
-        echo "needs.build.outputs.version: ${{ needs.build.outputs.version }}"
-        echo "needs.build.outputs._version: ${{ needs.build.outputs._version }}"
+        $version = ${{ needs.build.outputs.version }}
         echo "version: $version"
         cd ${{github.workspace}}/Release
     
