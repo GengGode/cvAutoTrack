@@ -1,0 +1,150 @@
+name: release-and-publish-core
+on:
+  push:
+    branches: [ "release-new" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/release-and-publish-core.yml'
+  pull_request:
+    branches: [ "release-new" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/drelease-and-publish-core.yml'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # 跳过提交信息开头为doc:或者docs:的提交
+    if: "!startsWith(github.event.head_commit.message, 'doc:') && !startsWith(github.event.head_commit.message, 'docs:')"
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.get_version.outputs._version }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: test env
+      run: |
+        dir
+        echo "github.workspace: ${{github.workspace}}"
+        echo "github.ref: ${{github.ref}}"
+        dir ${{github.workspace}}
+
+    - name: clone third party submodule
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Get the Version
+      id: get_version
+      run: |
+        $version = (Get-Content -Path ${{github.workspace}}/build/bin/Release/version -TotalCount 1).Trim()
+        echo "dll version: $version"
+        echo "_version=$version" >> $env:GITHUB_OUTPUT
+    
+    - name: zip all dll
+      run: |
+        $version = '${{steps.get_version.outputs._version}}'
+        echo "dll version: $version"
+        Compress-Archive -Path ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll -DestinationPath ${{github.workspace}}/build/bin/Release/cvAutoTrack-$version.zip
+        $files = $(ls ${{github.workspace}}/build/bin/Release/opencv_*.dll) 
+        foreach ($file_str in $files)
+        {
+          $file = New-Object System.IO.FileInfo("$file_str")
+          $fileNmae =  $file.BaseName
+          $hash = $(Get-FileHash -Path $file_str -Algorithm MD5).Hash
+          Compress-Archive -Path $file -DestinationPath ${{github.workspace}}/build/bin/Release/$fileNmae-$hash.zip
+        }
+
+    - name: Upload a Build Artifact for Release
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack-*.zip
+        if-no-files-found: 'warn'
+
+    - name: Upload a Build Artifact for Release.Depends
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack.Depends
+        path: ${{github.workspace}}/build/bin/Release/opencv_*.zip
+        if-no-files-found: 'warn'
+  
+  push-file:
+    if: github.ref == 'refs/heads/release-new'
+    needs: build
+    runs-on: self-hosted
+    env:
+      Version: ${{ needs.build.outputs.version }}
+      loginToken: ${{ secrets.AlistLoginToken }}
+      UpdataToken: ${{ secrets.TianLiUpdateServiceToken }}
+    steps:  
+    - name: Download a Build Artifact for Core
+      uses: actions/download-artifact@v3
+      with:
+        name: cvAutoTrack
+        path: ${{github.workspace}}/Release/
+
+    - name: Download a Build Artifact for Depends
+      uses: actions/download-artifact@v3
+      with:
+        name: cvAutoTrack.Depends
+        path: ${{github.workspace}}/Release/
+  
+    - name: push core file
+      run: |
+        . ${{github.workspace}}/ci/AlistProxy.ps1
+
+        $version = '${{ needs.build.outputs.version }}'
+        $login_password = '${{ env.loginToken }}'
+        Write-Host "Login ..."
+        $token = Get-LoginToken -username 'GitAction' -password $login_password
+
+        $file = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
+        $upload_core_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack.Core/',
+          '/sync/TianLiUpdateService.object/cvAutoTrack.Core/',
+          '/sync/TianLiUpdateService.local/cvAutoTrack.Core/')
+        Write-Host "upload file: $file"
+        Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_core_paths
+    
+    - name: push deps file
+      run: |
+        . ${{github.workspace}}/ci/AlistProxy.ps1
+
+        $version = '${{ needs.build.outputs.version }}'
+        $login_password = '${{ env.loginToken }}'
+        Write-Host "Login ..."
+        $token = Get-LoginToken -username 'GitAction' -password $login_password
+
+        $files = Get-ChildItem -Path '${{github.workspace}}/Release/opencv_*' -Filter '*.zip'        
+        $upload_deps_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack.Core/deps/',
+          '/sync/TianLiUpdateService.object/cvAutoTrack.Core/deps/',
+          '/sync/TianLiUpdateService.local/cvAutoTrack.Core/deps/')
+        foreach ($file in $files) {
+          Write-Host "upload file: $file"
+          Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_deps_paths
+        }
+    - name: push version
+      run: |
+        . ${{github.workspace}}/ci/UpdateServiceProxy.ps1
+
+        $deps_files = Get-ChildItem -Path '${{github.workspace}}/Release/opencv_*' -Filter '*.zip' 
+        $parent_dir_url = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/deps/"
+        $depsJson = GenDepsJson -deps_files $deps_files -parent_dir_url $parent_dir_url
+
+        $version = '${{ needs.build.outputs.version }}'
+        $cvAutoTrackFile = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
+        $log = "Auto Build"
+        $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/" + $cvAutoTrackFile
+        $jsonBody = GenVersionPostBody -version $version -cvAutoTrackFile $cvAutoTrackFile -log $log -downloadUrl $downloadUrl -depsJson $depsJson
+
+        $token = '${{ env.UpdataToken }}'
+        $info = PostVersion -token $token -jsonBody $jsonBody
+        Write-Host "PostVersion: $info"

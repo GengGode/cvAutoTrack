@@ -292,6 +292,7 @@ extern "C"
     bool CVAUTOTRACK_API GetMapIsEmbedded();
     bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
     bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
+    bool CVAUTOTRACK_API GetModulePath(char* path_buff, int buff_size);
 
     /// @brief
     /// @param doc_buff
