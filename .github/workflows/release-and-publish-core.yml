@@ -63,6 +63,7 @@ jobs:
           $hash = $(Get-FileHash -Path $file_str -Algorithm MD5).Hash
           Compress-Archive -Path $file -DestinationPath ${{github.workspace}}/build/bin/Release/$fileNmae-$hash.zip
         }
+        echo ${{env.version}} 
 
     - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
@@ -83,7 +84,7 @@ jobs:
     needs: build
     runs-on: self-hosted
     env:
-      version: ${{ needs.build.outputs.version }}
+      Version: ${{ needs.build.outputs.version }}
       token: ${{ secrets.AlistLoginToken }}
     steps:  
     - name: Download a Build Artifact for Core
@@ -100,7 +101,7 @@ jobs:
   
     - name: push core file
       run: |
-        $version = ${{ env.version }}
+        $version = ${{ env.Version }}
         echo "version: $version"
         cd ${{github.workspace}}/Release
     
