@@ -118,26 +118,26 @@ jobs:
         $upload_url = 'http://download.weixitianli.com' + $upload_api
         $upload_file = 'cvAutoTrack-' + $version + '.zip'
         $upload_file_length = (Get-Item $upload_file).Length
-        $upload_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack/',
-          '/sync/TianLiUpdateService.object/cvAutoTrack/',
-          '/sync/TianLiUpdateService.local/cvAutoTrack/')
+        $upload_paths = @('/TianLiUpdateService_TianYi/cvAutoTrack.Core/',
+          '/TianLiUpdateService_OSS/cvAutoTrack.Core/',
+          '/TianLiUpdateService_Local/cvAutoTrack.Core/')
 
         foreach($upload_path in $upload_paths) {
           $upload_headers = @{
-            Authorization    = $token
+            Authorization    = '$token'
             'Content-Type'   = 'application/x-zip-compressed'
             'Content-Length' = $upload_file_length
-            'file-path'      = $upload_path+$upload_file
+            'file-path'      = '$upload_path+$upload_file'
           }
 
           try {
             $uploadInfo = Invoke-RestMethod -Uri $upload_url -Method Put -Headers $upload_headers -InFile $upload_file
             Write-Host $uploadInfo
             $successTime++
-            Write-Host "Upload Success on"+$upload_path
+            Write-Host "Upload Success on $upload_path"
           }
           catch {
-            Write-Host "Upload Error on"+$upload_path
+            Write-Host "Upload Error on $upload_path"
           }
         }
 
