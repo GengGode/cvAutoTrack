@@ -71,6 +71,9 @@ set_target_properties(cvAutoTrack PROPERTIES FOLDER "cvAutoTrack")
 set_target_properties(cvAutoTrack PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
         
+# release gen .pdb
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
+set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DEBUG /OPT:REF /OPT:ICF")
 if(MSVC)
     add_pch_define(cvAutoTrack ${SourceDir}/pch.h ${SourceDir}/pch.cpp)
 
