@@ -69,6 +69,12 @@ jobs:
         name: cvAutoTrack
         path: ${{github.workspace}}/build/bin/Release/cvAutoTrack-*.zip
         if-no-files-found: 'warn'
+    - name: Upload a Build Artifact for Core pdb
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack pdb
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.pdb
+        if-no-files-found: 'warn'
 
     - name: Upload a Build Artifact for Release.Depends
       uses: actions/upload-artifact@v3
