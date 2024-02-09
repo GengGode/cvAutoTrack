@@ -122,7 +122,7 @@ jobs:
         Write-Host "Login ..."
         $token = Get-LoginToken -username 'GitAction' -password $login_password
 
-        $files = Get-ChildItem -Path 'opencv_*' -Filter '*.zip'        
+        $files = Get-ChildItem -Path '${{github.workspace}}/Release/opencv_*' -Filter '*.zip'        
         $upload_deps_paths = @('/sync/TianLiUpdateService.tianyi/deps/',
           '/sync/TianLiUpdateService.object/deps/',
           '/sync/TianLiUpdateService.local/deps/')
