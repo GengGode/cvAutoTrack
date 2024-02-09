@@ -100,5 +100,6 @@ jobs:
     - name: push core file
       run: |
         $version = ${{ env.version }}
+        cd ${{github.workspace}}/Release
         ${{github.workspace}}/ci/upload_core_file.ps1
         

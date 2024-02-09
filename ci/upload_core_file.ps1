@@ -9,7 +9,7 @@ $login_url = 'http://download.weixitianli.com' + $login_api + '?Username=' + $lo
 $token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
 Write-Host $token
 
-Write-Host  Uploading
+Write-Host Uploading
 
 $upload_api = '/api/fs/put'
 $upload_url = 'http://download.weixitianli.com' + $upload_api
