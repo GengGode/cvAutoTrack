@@ -63,7 +63,7 @@ jobs:
           $hash = $(Get-FileHash -Path $file_str -Algorithm MD5).Hash
           Compress-Archive -Path $file -DestinationPath ${{github.workspace}}/build/bin/Release/$fileNmae-$hash.zip
         }
-        echo ${{env.version}} 
+        echo "version: ${{steps.get_version.outputs._version}}"
 
     - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
@@ -101,7 +101,10 @@ jobs:
   
     - name: push core file
       run: |
-        $version = ${{ env.Version }}
+        $version = ${{ job.build.outputs.version }}
+        echo "job.build.outputs.version: ${{ job.build.outputs.version }}"
+        echo "needs.build.outputs.version: ${{ needs.build.outputs.version }}"
+        echo "needs.build.outputs._version: ${{ needs.build.outputs._version }}"
         echo "version: $version"
         cd ${{github.workspace}}/Release
     
