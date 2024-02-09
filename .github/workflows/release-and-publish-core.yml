@@ -49,14 +49,23 @@ jobs:
         echo "dll version: $version"
         echo "_version=$version" >> $env:GITHUB_OUTPUT
     
-    - name: zip
+    - name: zip all dll
       run: |
-        7z a -tzip ${{github.workspace}}/build/bin/Release/cvAutoTrack.zip ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
+        # 7z a -tzip ${{github.workspace}}/build/bin/Release/cvAutoTrack.zip ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
+        # #每个文件单独打包
+        # ls ${{github.workspace}}/build/bin/Release/opencv_*.dll | while read -r file
+        # do
+        #   7z a -tzip ${{github.workspace}}/build/bin/Release/$(basename $file .dll).zip $file
+        # done
+        Compress-Archive -Path ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll -DestinationPath ${{github.workspace}}/build/bin/Release/cvAutoTrack.zip
         #每个文件单独打包
-        ls ${{github.workspace}}/build/bin/Release/opencv_*.dll | while read -r file
-        do
-          7z a -tzip ${{github.workspace}}/build/bin/Release/$(basename $file .dll).zip $file
-        done
+        $files = $(ls ${{github.workspace}}/build/bin/Release/opencv_*.dll) 
+        foreach ($file_str in $files)
+        {
+          $file = New-Object System.IO.FileInfo("$file_str")
+          $fileNmae =  $file.BaseName
+          Compress-Archive -Path $file -DestinationPath ${{github.workspace}}/build/bin/Release/$fileNmae.zip
+        }
 
     - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
