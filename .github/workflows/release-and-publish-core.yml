@@ -108,14 +108,14 @@ jobs:
         $login_username = 'GitAction'
         $login_password = '${{ env.loginToken }}'
         $login_api = '/api/auth/login'
-        $login_url = 'http://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
+        $login_url = 'https://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
         $token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
         Write-Host $token
 
         Write-Host  Uploading
 
         $upload_api = '/api/fs/put'
-        $upload_url = 'http://download.weixitianli.com' + $upload_api
+        $upload_url = 'https://download.weixitianli.com' + $upload_api
         $upload_file = 'cvAutoTrack-' + $version + '.zip'
         $upload_file_length = (Get-Item $upload_file).Length
         $upload_paths = @('/TianLiUpdateService_TianYi/cvAutoTrack.Core/',
