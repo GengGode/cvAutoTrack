@@ -106,7 +106,7 @@ jobs:
         $successTime = 0
 
         $login_username = 'GitAction'
-        $login_password = ${{ env.token }}
+        $login_password = '${{ env.token }}'
         $login_api = '/api/auth/login'
         $login_url = 'http://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
         $token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
