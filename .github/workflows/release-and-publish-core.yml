@@ -51,10 +51,8 @@ jobs:
     
     - name: zip all dll
       run: |
-        $version = (Get-Content -Path ${{github.workspace}}/build/bin/Release/version -TotalCount 1).Trim()
-        echo "dll version: $version"
+        echo "dll version: ${{steps.get_version.outputs._version}}"
         Compress-Archive -Path ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll -DestinationPath ${{github.workspace}}/build/bin/Release/cvAutoTrack-$version.zip
-        #每个文件单独打包
         $files = $(ls ${{github.workspace}}/build/bin/Release/opencv_*.dll) 
         foreach ($file_str in $files)
         {
@@ -63,7 +61,6 @@ jobs:
           $hash = $(Get-FileHash -Path $file_str -Algorithm MD5).Hash
           Compress-Archive -Path $file -DestinationPath ${{github.workspace}}/build/bin/Release/$fileNmae-$hash.zip
         }
-        echo "version: ${{steps.get_version.outputs._version}}"
 
     - name: Upload a Build Artifact for Release
       uses: actions/upload-artifact@v3
@@ -101,7 +98,7 @@ jobs:
   
     - name: push core file
       run: |
-        $version = ${{ needs.build.outputs.version }}
+        $version = '${{ needs.build.outputs.version }}'
         echo "version: $version"
         cd ${{github.workspace}}/Release
     
