@@ -7,6 +7,13 @@ function Get-LoginToken {
   $login_api = '/api/auth/login'
   $login_url = 'https://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
   $token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
+  if ($token -eq $null) {
+    Write-Host "Login Failed"
+  }
+  else
+  {
+    Write-Host "Login Success"
+  }
   return $token
 }
 
