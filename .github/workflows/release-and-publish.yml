@@ -9,7 +9,7 @@ on:
     branches: [ "dev", "master" ]
     paths:
       - 'source/**'
-      - '.github/workflows/drelease-and-publishev.yml'
+      - '.github/workflows/drelease-and-publish.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
