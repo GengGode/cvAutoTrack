@@ -1,12 +1,12 @@
 name: release-and-publish-core
 on:
   push:
-    branches: [ "release-new" ]
+    branches: [ "release-core" ]
     paths:
       - 'source/**'
       - '.github/workflows/release-and-publish-core.yml'
   pull_request:
-    branches: [ "release-new" ]
+    branches: [ "release-core" ]
     paths:
       - 'source/**'
       - '.github/workflows/drelease-and-publish-core.yml'
@@ -78,7 +78,7 @@ jobs:
         if-no-files-found: 'warn'
   
   push-file:
-    if: github.ref == 'refs/heads/release-new'
+    if: github.ref == 'refs/heads/release-core'
     needs: build
     runs-on: self-hosted
     env:
@@ -142,8 +142,9 @@ jobs:
         $version = '${{ needs.build.outputs.version }}'
         $cvAutoTrackFile = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
         $log = "Auto Build"
-        $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/" + $cvAutoTrackFile
+        $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/cvAutoTrack-" + $version + ".zip"
         $jsonBody = GenVersionPostBody -version $version -cvAutoTrackFile $cvAutoTrackFile -log $log -downloadUrl $downloadUrl -depsJson $depsJson
+        echo $jsonBody > ${{github.workspace}}/Release/version.json
 
         $token = '${{ env.UpdataToken }}'
         $info = PostVersion -token $token -jsonBody $jsonBody
