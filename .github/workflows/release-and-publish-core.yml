@@ -99,28 +99,28 @@ jobs:
   
     - name: push core file
       run: |
-        #${{github.workspace}}/ci/AlistProxy.ps1
+        . ${{github.workspace}}/ci/AlistProxy.ps1
 
         $version = '${{ needs.build.outputs.version }}'
         $login_password = '${{ env.loginToken }}'
         Write-Host "Login ..."
-        $token = ${{github.workspace}}/ci/AlistProxy.ps1 Get-LoginToken -username 'GitAction' -password $login_password
+        $token = Get-LoginToken -username 'GitAction' -password $login_password
 
         $file = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
         $upload_core_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack/',
           '/sync/TianLiUpdateService.object/cvAutoTrack/',
           '/sync/TianLiUpdateService.local/cvAutoTrack/')
         Write-Host "upload file: $file"
-        ${{github.workspace}}/ci/AlistProxy.ps1 Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_core_paths
+        Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_core_paths
     
     - name: push deps file
       run: |
-        #${{github.workspace}}/ci/AlistProxy.ps1
+        . ${{github.workspace}}/ci/AlistProxy.ps1
 
         $version = '${{ needs.build.outputs.version }}'
         $login_password = '${{ env.loginToken }}'
         Write-Host "Login ..."
-        $token = ${{github.workspace}}/ci/AlistProxy.ps1 Get-LoginToken -username 'GitAction' -password $login_password
+        $token = Get-LoginToken -username 'GitAction' -password $login_password
 
         $file = Get-ChildItem -Path 'opencv_*' -Filter '*.zip'        
         $upload_deps_paths = @('/sync/TianLiUpdateService.tianyi/deps/',
@@ -128,7 +128,7 @@ jobs:
           '/sync/TianLiUpdateService.local/deps/')
         foreach ($file in $files) {
           Write-Host "upload file: $file"
-          ${{github.workspace}}/ci/AlistProxy.ps1 Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_deps_paths
+          Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_deps_paths
         }
 
   
