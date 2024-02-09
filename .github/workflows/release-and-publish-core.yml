@@ -1,15 +1,15 @@
-name: release-and-publish
+name: release-and-publish-core
 on:
   push:
     branches: [ "release-new" ]
     paths:
       - 'source/**'
-      - '.github/workflows/release-and-publish.yml'
+      - '.github/workflows/release-and-publish-core.yml'
   pull_request:
     branches: [ "release-new" ]
     paths:
       - 'source/**'
-      - '.github/workflows/drelease-and-publish.yml'
+      - '.github/workflows/drelease-and-publish-core.yml'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
