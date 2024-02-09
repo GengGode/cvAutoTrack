@@ -83,7 +83,7 @@ jobs:
     runs-on: self-hosted
     env:
       Version: ${{ needs.build.outputs.version }}
-      token: ${{ secrets.AlistLoginToken }}
+      loginToken: ${{ secrets.AlistLoginToken }}
     steps:  
     - name: Download a Build Artifact for Core
       uses: actions/download-artifact@v3
@@ -106,7 +106,7 @@ jobs:
         $successTime = 0
 
         $login_username = 'GitAction'
-        $login_password = '${{ env.token }}'
+        $login_password = ${{ env.loginToken }}
         $login_api = '/api/auth/login'
         $login_url = 'http://download.weixitianli.com' + $login_api + '?Username=' + $login_username + '&Password=' + $login_password
         $token = (Invoke-RestMethod -Uri $login_url -Method Post).data.token
