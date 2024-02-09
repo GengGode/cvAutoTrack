@@ -127,7 +127,7 @@ jobs:
             Authorization    = '$token'
             'Content-Type'   = 'application/x-zip-compressed'
             'Content-Length' = $upload_file_length
-            'file-path'      = '$upload_path+$upload_file'
+            'file-path'      = '$upload_path$upload_file'
           }
 
           try {
@@ -137,6 +137,7 @@ jobs:
             Write-Host "Upload Success on $upload_path"
           }
           catch {
+            echo $upload_headers >> error.log
             Write-Host "Upload Error on $upload_path"
           }
         }
