@@ -1,4 +1,5 @@
 #include "pch.h"
+#include <cvAutoTrack.h>
 
 static HMODULE g_library_module = NULL;
 
