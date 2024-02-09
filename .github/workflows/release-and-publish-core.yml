@@ -124,10 +124,10 @@ jobs:
 
         foreach($upload_path in $upload_paths) {
           $upload_headers = @{
-            Authorization    = '$token'
+            Authorization    = $token
             'Content-Type'   = 'application/x-zip-compressed'
             'Content-Length' = $upload_file_length
-            'file-path'      = '$upload_path$upload_file'
+            'file-path'      = $upload_path + $upload_file
           }
 
           try {
