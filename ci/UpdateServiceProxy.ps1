@@ -52,7 +52,7 @@ function PostVersion {
         [string]$token,
         [string]$jsonBody
     )
-    $url = 'https://update.api.weixitianli.com/cvAutoTrack.Core/Version?token=' + $token
+    $url = 'https://download.api.weixitianli.com/cvAutoTrack.Core/Version?token=' + $token
     $info = Invoke-RestMethod -Method Post -Uri $url -Body $jsonBody -ContentType 'application/json'
     return $info
 }
