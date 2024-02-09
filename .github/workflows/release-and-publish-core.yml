@@ -68,7 +68,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: cvAutoTrack
-        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.zip
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack-*.zip
         if-no-files-found: 'warn'
 
     - name: Upload a Build Artifact for Release.Depends
