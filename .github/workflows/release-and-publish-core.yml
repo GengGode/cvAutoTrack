@@ -144,8 +144,8 @@ jobs:
         $log = "Auto Build"
         $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/" + $cvAutoTrackFile
         $jsonBody = GenVersionPostBody -version $version -cvAutoTrackFile $cvAutoTrackFile -log $log -downloadUrl $downloadUrl -depsJson $depsJson
+        echo $jsonBody > ${{github.workspace}}/Release/version.json
 
         $token = '${{ env.UpdataToken }}'
-        Write-File -Path ${{github.workspace}}/Release/cvAutoTrack.json -Value $jsonBody
         $info = PostVersion -token $token -jsonBody $jsonBody
         Write-Host "PostVersion: $info"
