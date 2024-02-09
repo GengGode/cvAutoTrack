@@ -142,7 +142,7 @@ jobs:
         $version = '${{ needs.build.outputs.version }}'
         $cvAutoTrackFile = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
         $log = "Auto Build"
-        $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/" + $cvAutoTrackFile
+        $downloadUrl = "https://download.weixitianli.com/d/TianLiUpdateService/cvAutoTrack.Core/cvAutoTrack-" + $version + ".zip"
         $jsonBody = GenVersionPostBody -version $version -cvAutoTrackFile $cvAutoTrackFile -log $log -downloadUrl $downloadUrl -depsJson $depsJson
         echo $jsonBody > ${{github.workspace}}/Release/version.json
 
