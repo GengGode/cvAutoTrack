@@ -51,7 +51,8 @@ jobs:
     
     - name: zip all dll
       run: |
-        echo "dll version: ${{steps.get_version.outputs._version}}"
+        $version = '${{steps.get_version.outputs._version}}'
+        echo "dll version: $version"
         Compress-Archive -Path ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll -DestinationPath ${{github.workspace}}/build/bin/Release/cvAutoTrack-$version.zip
         $files = $(ls ${{github.workspace}}/build/bin/Release/opencv_*.dll) 
         foreach ($file_str in $files)
