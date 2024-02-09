@@ -84,9 +84,7 @@ jobs:
     runs-on: self-hosted
     env:
       version: ${{ needs.build.outputs.version }}
-    steps:
-    - uses: actions/checkout@v3
-  
+    steps:  
     - name: Download a Build Artifact for Core
       uses: actions/download-artifact@v3
       with:
@@ -99,9 +97,8 @@ jobs:
         name: cvAutoTrack.Depends
         path: ${{github.workspace}}/Release/
   
-    - name: Get Current Version
-      id: get_new_version
+    - name: push core file
       run: |
-        $version = ${{ env.Version }}
+        $version = ${{ env.version }}
         ${{github.workspace}}/ci/upload_core_file.ps1
         
