@@ -50,7 +50,7 @@ function GenerateUploadVersionJson {
 function PostVersion {
     param(
         [string]$token,
-        [string]$jsonBody,
+        [string]$jsonBody
     )
     $url = 'https://update.api.weixitianli.com/cvAutoTrack.Core/Version?token=' + $token
     $info = Invoke-RestMethod -Method Post -Uri $url -Body $jsonBody -ContentType 'application/json'
@@ -75,4 +75,17 @@ function GenDepsJson{
         $depsJsons.Add($depsJson) | Out-Null
     }
     return $depsJsons | Out-String
+}
+
+function GenVersionPostBody {
+    param(
+        [string]$version,
+        [string]$cvAutoTrackFile,
+        [string]$log,
+        [string]$downloadUrl,
+        [string]$depsJson
+    )
+    $cvAutoTrackHash = (Get-FileHash -Path $cvAutoTrackFile -Algorithm MD5).Hash
+    $json = GenerateUploadVersionJson -version $version -cvAutoTrackHash $cvAutoTrackHash -log $log -downloadUrl $downloadUrl -depsJson $depsJson
+    return $json
 }
