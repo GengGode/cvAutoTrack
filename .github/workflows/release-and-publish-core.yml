@@ -107,9 +107,9 @@ jobs:
         $token = Get-LoginToken -username 'GitAction' -password $login_password
 
         $file = Get-ChildItem ${{github.workspace}}/Release/cvAutoTrack-*.zip
-        $upload_core_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack/',
-          '/sync/TianLiUpdateService.object/cvAutoTrack/',
-          '/sync/TianLiUpdateService.local/cvAutoTrack/')
+        $upload_core_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack.Core/',
+          '/sync/TianLiUpdateService.object/cvAutoTrack.Core/',
+          '/sync/TianLiUpdateService.local/cvAutoTrack.Core/')
         Write-Host "upload file: $file"
         Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_core_paths
     
@@ -123,9 +123,9 @@ jobs:
         $token = Get-LoginToken -username 'GitAction' -password $login_password
 
         $files = Get-ChildItem -Path '${{github.workspace}}/Release/opencv_*' -Filter '*.zip'        
-        $upload_deps_paths = @('/sync/TianLiUpdateService.tianyi/deps/',
-          '/sync/TianLiUpdateService.object/deps/',
-          '/sync/TianLiUpdateService.local/deps/')
+        $upload_deps_paths = @('/sync/TianLiUpdateService.tianyi/cvAutoTrack.Core/deps/',
+          '/sync/TianLiUpdateService.object/cvAutoTrack.Core/deps/',
+          '/sync/TianLiUpdateService.local/cvAutoTrack.Core/deps/')
         foreach ($file in $files) {
           Write-Host "upload file: $file"
           Put-FileToAlist -token $token -file $file -target_filename $file.Name -upload_paths $upload_deps_paths
