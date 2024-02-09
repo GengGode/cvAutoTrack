@@ -16,7 +16,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID /*lpRese
     return TRUE;
 }
 
-bool GetModulePath(char* path_buff, int buff_size)
+bool GetCoreModulePath(char* path_buff, int buff_size)
 {
     if (g_library_module == NULL)
     {

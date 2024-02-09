@@ -292,7 +292,7 @@ extern "C"
     bool CVAUTOTRACK_API GetMapIsEmbedded();
     bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
     bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
-    bool CVAUTOTRACK_API GetModulePath(char* path_buff, int buff_size);
+    bool CVAUTOTRACK_API GetCoreModulePath(char* path_buff, int buff_size);
 
     /// @brief
     /// @param doc_buff
@@ -412,6 +412,7 @@ struct cvAutoTrack
     int bind_call(GetLastErrJson, char_ptr json_buff, int buff_size);
     bool bind_call(GetCompileVersion, char_ptr version_buff, int buff_size);
     bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size);
+    bool bind_call(GetCoreModulePath, char_ptr time_buff, int buff_size);
 
     #define GetFunction(name) name##_func = _GetFunction<decltype(&::name)>(#name)
 
