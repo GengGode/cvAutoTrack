@@ -67,7 +67,13 @@ function GenDepsJson{
         $fileName = $deps_file.Name
         $filePath = "./deps"
         $downloadUrl = $parent_dir_url + $fileName
-        $hash = (Get-FileHash -Path $deps_file -Algorithm MD5).Hash
+        $md5_is_exists = Test-Path -Path "$deps_file.md5"
+        if($md5_is_exists) {
+            $hash = Get-Content -Path "$deps_file.md5"
+        }
+        else {
+            $hash = (Get-FileHash -Path $deps_file -Algorithm MD5).Hash
+        }
         $depsJson = GenerateDepsFileJson -fileName $fileName -filePath $filePath -downloadUrl $downloadUrl -hash $hash
         if($depsJsons.Count -ne 0) {
              $depsJsons.Add(",") | Out-Null
