@@ -171,12 +171,7 @@ void Run_GetUID()
 }
 void Run_GetStars()
 {
-    char buff[1024] = { 0 };
-    if (GetStarJson(buff, 1024))
-        // 坐标需要映射 p + AvatarPos
-        fmt::print("神瞳Json     : {}\n", buff);
-    else
-        fmt::print("错误码       : {}\n", GetLastErr());
+	fmt::print("GetStar deleted!\n");
 }
 void Run_Capture()
 {
@@ -393,25 +388,9 @@ void Test_video()
     // uninit();
     // Sleep(1000);
 
-    FILE* fptr = NULL;
-    fopen_s(&fptr, "./Output.txt", "w+");
-
-    // SetWorldScale(0.666667);
-    if (GetInfoLoadPicture(path, uid, x2, y2, a2))
-        fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
-    else
-        fmt::print("错误码       : {}\n", GetLastErr());
-    // SetWorldScale(1.0);
-    if (GetInfoLoadPicture(path, uid, x2, y2, a2))
-        fmt::print("Now Coor and Angle: {} {} {} {}\n", uid, x2, y2, a2);
-    else
-        fmt::print("错误码       : {}\n", GetLastErr());
-    char buff[1024] = { 0 };
-#ifdef _DEBUG
-    if (GetStarJson(buff, 1024))
-        // 坐标需要映射 p + AvatarPos
-        fmt::print("神瞳Json     : {}\n", buff);
-    else
-        fmt::print("错误码       : {}\n", GetLastErr());
-#endif
+	FILE *fptr = NULL;
+	fopen_s(&fptr, "./Output.txt", "w+");
+    fmt::print("GetInfoLoadPicture deleted!");
+    fmt::print("GetInfoLoadPicture deleted!");
+    fmt::print("GetStarJson deleted!");
 }

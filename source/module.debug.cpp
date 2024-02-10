@@ -1,8 +1,9 @@
 #include "pch.h"
+#include <cvAutoTrack.h>
 #include "global/global.windump.h"
 #include <resources/Resources.h>
 
-bool __stdcall DebugLoadMapImagePath(const char* path)
+bool DebugLoadMapImagePath(const char* path)
 {
 #ifdef _DEBUG
     INSTALL_DUMP_();
