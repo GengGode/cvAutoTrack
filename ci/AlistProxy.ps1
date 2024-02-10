@@ -17,6 +17,42 @@ function Get-LoginToken {
   return $token
 }
 
+function Get-FileIsExists {
+  param (
+    [string]$file
+  )
+  $file_api = '/api/fs/get'
+  $file_url = 'https://download.weixitianli.com' + $file_api
+  $body =  @{ path = $file } | ConvertTo-Json
+  $headers = @{'Content-Type' = 'application/json'} 
+  $file_info = (Invoke-RestMethod -Uri $file_url -Method Post -Headers $headers -Body $body).code
+  if($file_info -eq 200) {
+    return $true
+  }
+  else
+  {
+    return $false
+  }
+}
+
+function Get-FileHash {
+  param (
+    [string]$file
+  )
+  $file_api = '/api/fs/get'
+  $file_url = 'https://download.weixitianli.com' + $file_api
+  $body =  @{ path = $file } | ConvertTo-Json
+  $headers = @{'Content-Type' = 'application/json'} 
+  $file_info = (Invoke-RestMethod -Uri $file_url -Method Post -Headers $headers -Body $body)
+  if($file_info.code -eq 200) {
+    return $file_info.data.hash_info.md5
+  }
+  else
+  {
+    return $false
+  }
+}
+
 function Put-FileToAlist {
   param (
     [string]$token,
@@ -34,6 +70,12 @@ function Put-FileToAlist {
       'Content-Type'   = 'application/x-zip-compressed'
       'Content-Length' = $upload_file_length
       'file-path'      = $upload_path + $target_filename
+    }
+
+    if (Get-FileIsExists -file $upload_path + $target_filename) {
+      Write-Host "File Exists on $target_filename"
+      echo Get-FileHash -file $upload_path + $target_filename > "$file.md5"
+      continue
     }
 
     try {
