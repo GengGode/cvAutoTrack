@@ -268,37 +268,22 @@ extern "C"
     /// @param scale 缩放比例
     /// @return 设置成功
     bool CVAUTOTRACK_API SetWorldScale(double scale);
-    bool CVAUTOTRACK_API ImportMapBlock(int uuid, const char* image_encode_data, int image_data_size);
-    bool CVAUTOTRACK_API ImportMapBlockData(int uuid, const char* image_data, int image_width, int image_height, int image_channels);
-    bool CVAUTOTRACK_API ImportMapBlockCenter(int uuid, int x, int y);
-    bool CVAUTOTRACK_API ImportMapBlockRelativeCenter(int uuid, int parent_uuid, int x, int y);
-    bool CVAUTOTRACK_API ImportMapBlockCenterScale(int uuid, int x, int y, double scale);
-    bool CVAUTOTRACK_API ImportMapBlockRelativeCenterScale(int uuid, int parent_uuid, int x, int y, double scale);
-    bool CVAUTOTRACK_API GetTransformOfMap(double& x, double& y, double& a, int& mapId);
-    bool CVAUTOTRACK_API GetPositionOfMap(double& x, double& y, int& mapId);
-    bool CVAUTOTRACK_API GetDirection(double& a);
-    bool CVAUTOTRACK_API GetRotation(double& a);
-    bool CVAUTOTRACK_API GetStar(double& x, double& y, bool& isEnd);
-    bool CVAUTOTRACK_API GetStarJson(char* json_buff, int buff_size);
-    bool CVAUTOTRACK_API GetUID(int& uid);
-    bool CVAUTOTRACK_API GetAllInfo(double& x, double& y, int& mapId, double& a, double& r, int& uid);
-    bool CVAUTOTRACK_API GetInfoLoadPicture(const char* path, int& uid, double& x, double& y, double& a);
-    bool CVAUTOTRACK_API GetInfoLoadVideo(const char* path, const char* out_path);
+
+    bool CVAUTOTRACK_API GetTransformOfMap(double &x, double &y, double &a, int &mapId);
+    bool CVAUTOTRACK_API GetPositionOfMap(double &x, double &y, int &mapId);
+    bool CVAUTOTRACK_API GetDirection(double &a);
+    bool CVAUTOTRACK_API GetRotation(double &a);
+    bool CVAUTOTRACK_API GetUID(int &uid);
+    bool CVAUTOTRACK_API GetAllInfo(double &x, double &y, int &mapId, double &a, double &r, int &uid);
     bool CVAUTOTRACK_API DebugCapture();
     bool CVAUTOTRACK_API DebugCapturePath(const char* path);
     int CVAUTOTRACK_API GetLastErr();
-    int CVAUTOTRACK_API GetLastErrMsg(char* msg_buff, int buff_size);
-    int CVAUTOTRACK_API GetLastErrJson(char* json_buff, int buff_size);
-    bool CVAUTOTRACK_API GetMapIsEmbedded();
-    bool CVAUTOTRACK_API GetCompileVersion(char* version_buff, int buff_size);
+    int CVAUTOTRACK_API GetLastErrMsg(char *msg_buff, int buff_size);
+    int CVAUTOTRACK_API GetLastErrJson(char *json_buff, int buff_size);
+
+    bool CVAUTOTRACK_API GetCompileVersion(char *version_buff, int buff_size);
     bool CVAUTOTRACK_API GetCompileTime(char* time_buff, int buff_size);
     bool CVAUTOTRACK_API GetCoreModulePath(char* path_buff, int buff_size);
-
-    /// @brief
-    /// @param doc_buff
-    /// @param buff_size
-    /// @return
-    bool CVAUTOTRACK_API GetHelpDoc(char* doc_buff, int buff_size);
 
 #ifdef __cplusplus
 }
@@ -401,11 +386,8 @@ struct cvAutoTrack
     bool bind_call(GetPositionOfMap, double_ref x, double_ref y, int_ref mapId);
     bool bind_call(GetDirection, double_ref a);
     bool bind_call(GetRotation, double_ref a);
-    bool bind_call(GetStar, double_ref x, double_ref y, bool_ref isEnd);
     bool bind_call(GetUID, int_ref uid);
     bool bind_call(GetAllInfo, double_ref x, double_ref y, int_ref mapId, double_ref a, double_ref r, int_ref uid);
-    bool bind_call(GetInfoLoadPicture, char_ptr path, int_ref uid, double_ref x, double_ref y, double_ref a);
-    bool bind_call(GetInfoLoadVideo, char_ptr path, char_ptr pathOutFile);
     bool bind_call(DebugCapture);
     int bind_call(GetLastErr);
     int bind_call(GetLastErrMsg, char_ptr msg_buff, int buff_size);
