@@ -1,0 +1,142 @@
+name: release-and-publish
+on:
+  push:
+    branches: [ "dev", "master"]
+    paths:
+      - 'source/**'
+      - '.github/workflows/release-and-publish.yml'
+  pull_request:
+    branches: [ "dev", "master" ]
+    paths:
+      - 'source/**'
+      - '.github/workflows/drelease-and-publish.yml'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # 跳过提交信息开头为doc:或者docs:的提交
+    if: "!startsWith(github.event.head_commit.message, 'doc:') && !startsWith(github.event.head_commit.message, 'docs:')"
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.get_version.outputs._version }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: test env
+      run: |
+        dir
+        echo "github.workspace: ${{github.workspace}}"
+        echo "github.ref: ${{github.ref}}"
+        dir ${{github.workspace}}
+
+    - name: clone third party submodule
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Get the Version
+      id: get_version
+      run: |
+        $version = (Get-Content -Path ${{github.workspace}}/build/bin/Release/version -TotalCount 1).Trim()
+        echo "dll version: $version"
+        echo "_version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Upload a Build Artifact for Release
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack
+        path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
+        if-no-files-found: 'warn'
+
+    - name: Upload a Build Artifact for Release.Depends
+      uses: actions/upload-artifact@v3
+      with:
+        name: cvAutoTrack.Depends
+        path: ${{github.workspace}}/build/bin/Release/opencv_*.dll
+        if-no-files-found: 'warn'
+
+  release:
+    # only run in master branch
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: cvAutoTrack
+        path: ${{github.workspace}}/Release/
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        Version: ${{ needs.build.outputs.version }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.Version }}
+        release_name: Release ${{ env.Version }}
+        draft: false
+        prerelease: false
+    - name: Upload a Inface Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{github.workspace}}/Release/*.dll
+        asset_content_type: application/x-msdownload
+  
+  #push-version:
+  #  if: github.ref == 'refs/heads/master'
+  #  needs: release
+  #  runs-on: ubuntu-latest
+  #  outputs:
+  #    version: ${{ steps.get_new_version.outputs.new_version }}
+  #  steps:
+  #  - uses: actions/checkout@v3
+  #
+  #  - name: Download a Build Artifact
+  #    uses: actions/download-artifact@v3
+  #    with:
+  #      name: cvAutoTrack
+  #      path: ${{github.workspace}}/Release/
+  #
+  #  - name: Get Current Version
+  #    id: get_new_version
+  #    run: |
+  #      version=$(cat ${{github.workspace}}/Release/version)
+  #      # 需要取出可能的行尾
+  #      version=${version%$'\r'}
+  #      echo "Current version: $version"
+  #      # split version
+  #      version_pack=(${version//./ })
+  #      major=${version_pack[0]}
+  #      minor=${version_pack[1]}
+  #      patch=${version_pack[2]}
+  #      echo "major: $major, minor: $minor, patch: $patch"
+  #      # update version
+  #      patch=$((patch+1))
+  #      echo "new version: $major.$minor.$patch"
+  #      #echo "new_version=$major.$minor.$patch" >> $env:GITHUB_OUTPUT
+  #      #需要清空版本文件
+  #      echo "$major.$minor.$patch" > ${{github.workspace}}/source/version
+  #
+  #  - name: Update Version
+  #    run: |
+  #      new_version=$(cat ${{github.workspace}}/source/version)
+  #      echo "new version: $new_version"
+  #      git config --global user.name "github-actions[bot]"
+  #      git config --global user.email "github-actions[bot]@users.noreply.github.com"
+  #      git add ${{github.workspace}}/source/version
+  #      git commit -m "update:version to $new_version"
+  #      git push
+        

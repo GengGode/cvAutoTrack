@@ -1,6 +1,6 @@
-#include <opencv2/opencv.hpp>
 #include <Windows.h>
 #include <iostream>
+#include <opencv2/opencv.hpp>
 double get_window_screen_scale()
 {
     HWND desktop_hwnd = GetDesktopWindow();

@@ -2,17 +2,15 @@
 #include "algorithms.include.h"
 
 // 从匹配点对求解带仅缩放、dx和dy的线性方程
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d> &src, std::vector<cv::Point2d> &dst, double &s, double &dx, double &dy);
+inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d>& src, std::vector<cv::Point2d>& dst, double& s, double& dx, double& dy);
 
-
-
-
-inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d> &src, std::vector<cv::Point2d> &dst, double &s, double &dx, double &dy)
+inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d>& src, std::vector<cv::Point2d>& dst, double& s, double& dx, double& dy)
 {
     // assert(src.size() == dst.size());
     // assert(src.size() >= 2);
 
-    if (src.size() != dst.size() || src.size() < 2) {
+    if (src.size() != dst.size() || src.size() < 2)
+    {
         return false;
     }
 
@@ -20,7 +18,8 @@ inline bool solve_linear_s_dx_dy(std::vector<cv::Point2d> &src, std::vector<cv::
     // 1. 构造A
     cv::Mat A = cv::Mat::zeros(src.size() * 2, 3, CV_64F);
     cv::Mat b = cv::Mat::zeros(src.size() * 2, 1, CV_64F);
-    for (int i = 0; i < src.size(); i++) {
+    for (int i = 0; i < src.size(); i++)
+    {
         A.at<double>(i * 2, 0) = src[i].x;
         A.at<double>(i * 2, 1) = 1.;
         A.at<double>(i * 2, 2) = 0.;

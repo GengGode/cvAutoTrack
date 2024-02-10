@@ -1,9 +1,13 @@
 #pragma once
+
+#include <iostream>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+
 #include <Windows.h>
 #include <shellscalingapi.h>
 #pragma comment(lib, "Shcore.lib")
-#include <iostream>
-#include <opencv2/opencv.hpp>
 
 class LockCycleTime
 {
@@ -30,10 +34,10 @@ public:
 cv::Mat gi_frame()
 {
     static HWND gi_handle = nullptr;
-    static RECT gi_window_rect = {0, 0, 0, 0};
-    static RECT gi_client_rect = {0, 0, 0, 0};
+    static RECT gi_window_rect = { 0, 0, 0, 0 };
+    static RECT gi_client_rect = { 0, 0, 0, 0 };
     static double gi_frame_scale = 1.0;
-    static cv::Size re_size_frame = {1920,1080};
+    static cv::Size re_size_frame = { 1920, 1080 };
     static cv::Mat gi_frame;
 
     if (gi_handle == nullptr)
@@ -96,7 +100,7 @@ cv::Mat gi_frame()
         }
         if (frame_channels == 3)
         {
-            cvtColor(tmp_frame, tmp_frame, cv::COLOR_RGB2RGBA);
+            cv::cvtColor(tmp_frame, tmp_frame, cv::COLOR_RGB2RGBA);
         }
         cv::resize(tmp_frame, gi_frame, re_size_frame);
     }
@@ -111,17 +115,17 @@ void show_frame(cv::Mat frame)
         std::cout << "frame is empty" << std::endl;
         return;
     }
-    cv::imshow("frame", frame);
-    cv::waitKey(1);
+    // cv::imshow("frame", frame);
+    // cv::waitKey(1);
 }
 
-void test(std::function<bool(const cv::Mat &)> func_test, int frame_rate = 30)
+void test(std::function<bool(const cv::Mat&)> func_test, int frame_rate = 30)
 {
     auto lct = LockCycleTime(frame_rate);
     while (1)
     {
         auto frame = gi_frame();
-        if (frame.empty() || frame.channels()==1)
+        if (frame.empty() || frame.channels() == 1)
         {
             std::cout << "frame is empty" << std::endl;
         }
@@ -134,7 +138,7 @@ void test(std::function<bool(const cv::Mat &)> func_test, int frame_rate = 30)
     }
 }
 
-void test_local(std::function<bool(const cv::Mat &)> func_test, std::string path = "img.png", int frame_rate = 30)
+void test_local(std::function<bool(const cv::Mat&)> func_test, std::string path = "img.png", int frame_rate = 30)
 {
     auto lct = LockCycleTime(frame_rate);
     while (1)

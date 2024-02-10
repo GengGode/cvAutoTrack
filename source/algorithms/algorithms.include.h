@@ -1,5 +1,7 @@
 #pragma once
-#include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+
 #include <opencv2/xfeatures2d.hpp>
 
 struct features
@@ -18,36 +20,35 @@ struct features
     size_t cols() const { return descriptors.cols; }
     bool empty() const { return keypoints.empty(); }
 
-    //转换features的坐标系，先平移，再缩放
-    inline void transform(const cv::Point2f &origin, const cv::Size2f& scale)
+    // 转换features的坐标系，先平移，再缩放
+    inline void transform(const cv::Point2f& origin, const cv::Size2f& scale)
     {
-        for (auto &keypoint : keypoints)
+        for (auto& keypoint : keypoints)
         {
             keypoint.pt = cv::Point2d(keypoint.pt - origin);
             keypoint.pt = cv::Point2d(keypoint.pt.x * scale.width, keypoint.pt.y * scale.height);
         }
     }
 
-    //转换features的坐标系，使用两个Rect表示前后的坐标系
-    inline void transform(const cv::Rect2d &inRect, const cv::Rect2d &outRect)
+    // 转换features的坐标系，使用两个Rect表示前后的坐标系
+    inline void transform(const cv::Rect2d& inRect, const cv::Rect2d& outRect)
     {
-        for (auto &keypoint : keypoints)
+        for (auto& keypoint : keypoints)
         {
-            //输入>输出的缩放
+            // 输入>输出的缩放
             auto scale = cv::Point2d(outRect.width / inRect.width, outRect.height / inRect.height);
-            //输入>输出的平移
-            cv::Rect2d scaled_inRect = cv::Rect2d(inRect.x * scale.x, inRect.y * scale.y,
-                inRect.width * scale.x, inRect.height * scale.y);
+            // 输入>输出的平移
+            cv::Rect2d scaled_inRect = cv::Rect2d(inRect.x * scale.x, inRect.y * scale.y, inRect.width * scale.x, inRect.height * scale.y);
             auto translate = cv::Point2d(outRect.x - scaled_inRect.x, outRect.y - scaled_inRect.y);
-            //坐标换算
+            // 坐标换算
             keypoint.pt = cv::Point2d(keypoint.pt.x * scale.x, keypoint.pt.y * scale.y) + translate;
         }
     }
 
-    //转换features的坐标系，使用矩阵
-    inline void transform(const cv::Mat &trans_mat)
+    // 转换features的坐标系，使用矩阵
+    inline void transform(const cv::Mat& trans_mat)
     {
-        for (auto &keypoint : keypoints)
+        for (auto& keypoint : keypoints)
         {
             cv::Mat pos_vec = (cv::Mat_<double>(3, 1) << keypoint.pt.x, keypoint.pt.y, 1);
             cv::Mat pos_vec_translated = trans_mat * pos_vec;

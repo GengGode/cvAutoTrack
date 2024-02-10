@@ -1,6 +1,6 @@
 #pragma once
-#include <opencv2/opencv.hpp>
 #include "global/global.include.h"
+#include <opencv2/core.hpp>
 
 namespace tianli::algorithms::filter
 {
@@ -27,10 +27,10 @@ namespace tianli::algorithms::filter
         }
         virtual ~filter() = default;
 
-        virtual cv::Point2d filterting(const cv::Point2d &pos, const cv::Point2f &u_k) = 0;
-        virtual cv::Point2d re_init_filterting(const cv::Point2d &pos) = 0;
-        virtual cv::Point2d predict(const cv::Point2f &u_k) = 0;
-        virtual cv::Point2d update(const cv::Point2d &pos) = 0;
+        virtual cv::Point2d filterting(const cv::Point2d& pos, const cv::Point2f& u_k) = 0;
+        virtual cv::Point2d re_init_filterting(const cv::Point2d& pos) = 0;
+        virtual cv::Point2d predict(const cv::Point2f& u_k) = 0;
+        virtual cv::Point2d update(const cv::Point2d& pos) = 0;
     };
 
 } // namespace tianli::algorithms::filter

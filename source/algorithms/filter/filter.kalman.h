@@ -1,6 +1,6 @@
 #pragma once
-#include <opencv2/opencv.hpp>
 #include "filter.include.h"
+#include <opencv2/core.hpp>
 
 namespace tianli::algorithms::filter
 {
@@ -8,10 +8,7 @@ namespace tianli::algorithms::filter
     {
     public:
         KalmanFilter() {}
-        KalmanFilter(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
-        {
-            init(dynamParams, measureParams, controlParams, type);
-        }
+        KalmanFilter(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F) { init(dynamParams, measureParams, controlParams, type); }
         void init(int DP, int MP, int CP = 0, int type = CV_32F) // init(int dynamParams, int measureParams, int controlParams = 0, int type = CV_32F)
         {
             CP = (std::max)(CP, 0);
@@ -40,7 +37,7 @@ namespace tianli::algorithms::filter
             temp5.create(MP, 1, type);
         }
 
-        const cv::Mat &predict(const cv::Mat &control = cv::Mat())
+        const cv::Mat& predict(const cv::Mat& control = cv::Mat())
         {
 
             // update the state: x'(k) = A*x(k)
@@ -62,7 +59,7 @@ namespace tianli::algorithms::filter
 
             return statePre;
         }
-        const cv::Mat &correct(const cv::Mat &measurement)
+        const cv::Mat& correct(const cv::Mat& measurement)
         {
             // temp2 = H*P'(k)
             temp2 = measurementMatrix * errorCovPre;
@@ -121,16 +118,13 @@ namespace tianli::algorithms::filter
 
             randn(state, cv::Scalar::all(0), cv::Scalar::all(0.1)); // 随机生成一个矩阵，期望是0，标准差为0.1;
             // set A
-            KF.transitionMatrix = (cv::Mat_<float>(stateNum, stateNum) << 1, 0,
-                                   0, 1);
+            KF.transitionMatrix = (cv::Mat_<float>(stateNum, stateNum) << 1, 0, 0, 1);
             // set B
-            KF.controlMatrix = (cv::Mat_<float>(stateNum, controlNum) << 1, 0,
-                                0, 1);
+            KF.controlMatrix = (cv::Mat_<float>(stateNum, controlNum) << 1, 0, 0, 1);
             // set Q
             setIdentity(KF.processNoiseCov, cv::Scalar::all(1e-5));
             // set H
-            KF.measurementMatrix = (cv::Mat_<float>(measureNum, stateNum) << 1, 0,
-                                    0, 1);
+            KF.measurementMatrix = (cv::Mat_<float>(measureNum, stateNum) << 1, 0, 0, 1);
             // set R
             setIdentity(KF.measurementNoiseCov, cv::Scalar::all(1e-3));
 
@@ -138,7 +132,7 @@ namespace tianli::algorithms::filter
         }
         ~filter_kalman() override = default;
 
-        cv::Point2d filterting(const cv::Point2d &pos, const cv::Point2f &u_k) override
+        cv::Point2d filterting(const cv::Point2d& pos, const cv::Point2f& u_k) override
         {
             // KF中弃用！
             // 若要调用，相当于调用了一次predict和一次update
@@ -162,7 +156,7 @@ namespace tianli::algorithms::filter
             return resP;
         }
 
-        cv::Point2d re_init_filterting(const cv::Point2d &pos) override
+        cv::Point2d re_init_filterting(const cv::Point2d& pos) override
         {
             // set state
             KF.statePost.at<float>(0) = static_cast<float>(pos.x);
@@ -180,7 +174,7 @@ namespace tianli::algorithms::filter
             return resP;
         }
 
-        cv::Point2d predict(const cv::Point2f &u_k) override
+        cv::Point2d predict(const cv::Point2f& u_k) override
         {
             // use u_k to predict
             // make u_k to cv::Mat
@@ -192,7 +186,7 @@ namespace tianli::algorithms::filter
             return predictPt;
         }
 
-        cv::Point2d update(const cv::Point2d &pos) override
+        cv::Point2d update(const cv::Point2d& pos) override
         {
             // update measurement
             measurement.at<float>(0, 0) = static_cast<float>(pos.x);

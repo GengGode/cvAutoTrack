@@ -2,7 +2,6 @@
 #include "ErrorCode.h"
 #include "utils/Utils.h"
 
-
 inline std::string wstring2string(std::wstring wstr)
 {
     std::string result;

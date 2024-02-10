@@ -1,17 +1,16 @@
 #pragma once
-#include "global/global.include.h"
 #include "local.include.h"
+#include "global/global.include.h"
 #include <filesystem>
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 namespace tianli::frame::local
 {
     class local_picture : public local_source
     {
     public:
-        local_picture(std::shared_ptr<global::logger> logger = nullptr) : local_source(logger)
-        {
-            this->type = source_type::picture;
-        }
+        local_picture(std::shared_ptr<global::logger> logger = nullptr) : local_source(logger) { this->type = source_type::picture; }
         ~local_picture() override = default;
 
     public:
@@ -23,10 +22,7 @@ namespace tianli::frame::local
                 return false;
             return true;
         }
-        bool uninitialized() override
-        {
-            return true;
-        }
+        bool uninitialized() override { return true; }
         bool set_source_frame_callback(std::function<cv::Mat()> callback) override
         {
             if (callback == nullptr)
@@ -51,7 +47,7 @@ namespace tianli::frame::local
             this->source_frame = cv::imread(file);
             return true;
         }
-        bool get_frame(cv::Mat &frame) override
+        bool get_frame(cv::Mat& frame) override
         {
             if (this->is_callback)
             {

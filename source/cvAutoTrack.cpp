@@ -5,8 +5,8 @@
 #include "cvAutoTrack.h"
 #include "AutoTrack.h"
 #include "ErrorCode.h"
-#include "AutoTrack.h"
 #include <atomic>
+#include "global/global.windump.h"
 
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;

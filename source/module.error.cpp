@@ -2,6 +2,10 @@
 #include "cvAutoTrack.h"
 #include "ErrorCode.h"
 
+#ifdef _DEBUG
+    #include <iostream>
+#endif
+
 #define err ErrorCode::getInstance()
 
 int __stdcall GetLastErr()
