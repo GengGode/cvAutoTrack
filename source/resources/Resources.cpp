@@ -1,4 +1,6 @@
 #include "pch.h"
+#include <cvAutoTrack.h>
+
 #include "Resources.h"
 #include "resources.load.h"
 #include "resources/import/resources.import.h"
@@ -42,22 +44,39 @@ bool Resources::map_is_embedded()
     return true;
 }
 
+bool select_exists_file(const std::vector<std::filesystem::path>& files, std::filesystem::path& result)
+{
+    for (auto& file : files)
+    {
+        if (std::filesystem::exists(file))
+        {
+            result = file;
+            return true;
+        }
+    }
+    return false;
+}
+
 bool load_cache(std::shared_ptr<trackCache::CacheInfo>& cacheInfo)
 {
     std::string file_name = "cvAutoTrack_Cache.dat";
     // get module path
-    wchar_t module_path[MAX_PATH];
-    GetModuleFileNameW(NULL, module_path, MAX_PATH);
-    std::wstring module_path_wstr(module_path);
-    std::string module_path_str = utils::to_string(module_path_wstr);
+    wchar_t applicate_path[MAX_PATH];
+    GetModuleFileNameW(NULL, applicate_path, MAX_PATH);
+    std::string applicate_path_str = utils::to_string(applicate_path);
+    std::filesystem::path applicate_dir = std::filesystem::path(applicate_path_str).parent_path();
+    char module_path[MAX_PATH];
+    GetCoreModulePath(module_path, MAX_PATH);
+    std::string module_path_str = module_path;
     std::filesystem::path module_dir = std::filesystem::path(module_path_str).parent_path();
-    auto cache_file_path = module_dir / file_name;
 
-    if (std::filesystem::exists(cache_file_path) == false)
+    std::vector<std::filesystem::path> files = { applicate_dir / file_name, module_dir / file_name, module_dir / "resource" / file_name };
+    std::filesystem::path cache_file_path;
+    if (select_exists_file(files, cache_file_path) == false)
     {
         return false;
     }
-    
+
     try
     {
         cacheInfo = trackCache::Deserialize(cache_file_path.string());
