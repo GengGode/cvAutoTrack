@@ -112,7 +112,6 @@ endif()
 
 target_link_libraries(cvAutoTrack 
 PRIVATE  
-    #${OpenCV_LIBS} 
     ${opencv_libs}
     cereal::cereal 
     fmt::fmt-header-only 

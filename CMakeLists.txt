@@ -59,7 +59,6 @@ if(BUILD_CVAUTOTRACK_TESTS)
 endif()
 #=======================================================================================================================
 message(STATUS "==============================================================")
-
 message(STATUS "Config : ")
 message(STATUS "    当前版本                     : ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 message(STATUS "    产物名称                     : ${PROJECT_NAME}")
