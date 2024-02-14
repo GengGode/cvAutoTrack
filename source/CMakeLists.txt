@@ -1,11 +1,4 @@
 
-set(WITH_DYNAMIC_OPENCV ON CACHE BOOL "link static opencv")
-set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
-set(BUILD_SUPPORT_WINRT ON CACHE BOOL "support winrt api")
-set(BUILD_SUPPORT_WINDUMP ON CACHE BOOL "support window dump")
-
-set(WITH_DYNAMIC_OPENCV ON)
-set(BUILD_CAPTURE_DXGI ON)
 
 # opencv
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")

@@ -28,6 +28,10 @@ set(BUILD_DYANMIC_LINK_DEPS ON CACHE BOOL "动态链接依赖库")
 set(BUILD_TESTS OFF CACHE BOOL "编译测试")
 set(BUILD_DOC OFF CACHE BOOL "编译文档")
 
+#=======================================================================================================================
+set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
+set(BUILD_SUPPORT_WINRT ON CACHE BOOL "support winrt api")
+set(BUILD_SUPPORT_WINDUMP ON CACHE BOOL "support window dump")
 
 
 include_directories(${IncludeDir})
