@@ -383,6 +383,8 @@ struct cvAutoTrack
     LibraryHandle lib;
     bool bind_call(InitResource);
     bool bind_call(UnInitResource);
+    bool bind_call(SetCoreCachePath, const_char_ptr path);
+    bool bind_call(GetCoreCachePath, char_ptr path_buff, int buff_size);
     bool bind_call(SetWorldCenter, double x, double y);
     bool bind_call(SetWorldScale, double scale);
     bool bind_call(GetTransformOfMap, double_ref x, double_ref y, double_ref a, int_ref mapId);
