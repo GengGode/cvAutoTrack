@@ -39,11 +39,6 @@ Resources& Resources::getInstance()
     return instance;
 }
 
-bool Resources::map_is_embedded()
-{
-    return true;
-}
-
 bool select_exists_file(const std::vector<std::filesystem::path>& files, std::filesystem::path& result)
 {
     for (auto& file : files)
