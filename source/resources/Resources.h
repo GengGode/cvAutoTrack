@@ -35,4 +35,4 @@ private:
     bool is_installed = false;
 };
 
-bool load_cache(std::shared_ptr<trackCache::CacheInfo>& cacheInfo);
+bool load_cache(const std::string& cache_file_path, std::shared_ptr<trackCache::CacheInfo>& cacheInfo);

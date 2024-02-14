@@ -14,7 +14,7 @@ int main(int v, char* s[])
 {
     features fts;
     std::shared_ptr<trackCache::CacheInfo> cache_info;
-    if (load_cache(cache_info) == false)
+    if (load_cache("./cvAutoTrack_Cache.dat", cache_info) == false)
         return -1;
     fts.keypoints = cache_info->key_points;
     fts.descriptors = cache_info->descriptors;

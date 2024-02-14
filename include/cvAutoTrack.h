@@ -174,6 +174,9 @@ extern "C"
     /// @return 是否卸载成功
     bool CVAUTOTRACK_API UnInitResource();
 
+    bool CVAUTOTRACK_API SetCoreCachePath(const char* path);
+    bool CVAUTOTRACK_API GetCoreCachePath(char* path_buff, int buff_size);
+
     /// @brief 启用循环调用服务
     /// @return 启用成功
     bool CVAUTOTRACK_API StartServer();

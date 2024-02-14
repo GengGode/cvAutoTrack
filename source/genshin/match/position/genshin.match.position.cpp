@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 #include "genshin.match.position.h"
+#include <cvAutoTrack.h>
+
 
 #include "Match/surf/SurfMatch.h"
 #include "resources/Resources.h"
@@ -140,7 +142,11 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         std::vector<cv::KeyPoint> gi_map_keypoints;
         cv::Mat gi_map_descriptors;
         std::shared_ptr<trackCache::CacheInfo> cache_info;
-        if (load_cache(cache_info) == false)
+        std::string cache_file_path;
+        char cache_file_path_c[MAX_PATH];
+        if (GetCoreCachePath(cache_file_path_c, MAX_PATH))
+            cache_file_path = cache_file_path_c;
+        if (load_cache(cache_file_path, cache_info) == false)
             return;
         surf_match.Init(cache_info);
 

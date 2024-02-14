@@ -203,7 +203,7 @@ int main()
     Resources::getInstance().debug_map_image = cv::imread("map.jpg");
     genshin_handle.config.frame_source->initialization();
     genshin_avatar_position.config.pos_filter = std::make_shared<tianli::algorithms::filter::filter_kalman>();
-    load_cache(cache_info);
+    load_cache("./cvAutoTrack_Cache.dat",cache_info);
     // 实现30fps call test
     auto beg_time = std::chrono::steady_clock::now();
     auto end_time = std::chrono::steady_clock::now();
