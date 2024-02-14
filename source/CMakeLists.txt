@@ -7,9 +7,8 @@ if(WITH_DYNAMIC_OPENCV)
     set(OpenCV_DIR "${ThridPatryDir}/opencv-cvv-dll/x64/vc17/lib")
 endif()
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
-
+set(opencv_include_dir ${OpenCV_INCLUDE_DIRS} PARENT_SCOPE)
+set(opencv_version ${OpenCV_VERSION} PARENT_SCOPE)
 
 file(GLOB_RECURSE CppFiles "*.cpp")
 file(GLOB_RECURSE HppFiles "*.h")
