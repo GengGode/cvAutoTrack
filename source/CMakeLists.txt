@@ -1,8 +1,6 @@
-
-
 # opencv
 set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-if(WITH_DYNAMIC_OPENCV)
+if(BUILD_DYANMIC_LINK_DEPS)
     set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
     set(OpenCV_DIR "${ThridPatryDir}/opencv-cvv-dll/x64/vc17/lib")
 endif()
@@ -112,7 +110,7 @@ PRIVATE
     dxgi.lib)
 
 # install to release
-if(WITH_DYNAMIC_OPENCV)
+if(BUILD_DYANMIC_LINK_DEPS)
     foreach(lib ${opencv_libs})
         list(APPEND deps_dlls "${lib}${OpenCV_VERSION_MAJOR}${OpenCV_VERSION_MINOR}${OpenCV_VERSION_PATCH}$<$<CONFIG:Debug>:d>.dll")
     endforeach()
