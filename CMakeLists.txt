@@ -25,7 +25,7 @@ get_commit_hash(PROJECT_VERSION_HASH)
 get_git_branch(PROJECT_VERSION_BRANCH)
 #=======================================================================================================================
 set(BUILD_DYANMIC_LINK_DEPS ON CACHE BOOL "动态链接依赖库")
-set(BUILD_TESTS OFF CACHE BOOL "编译测试")
+set(BUILD_CVAUTOTRACK_TESTS OFF CACHE BOOL "编译测试")
 set(BUILD_DOC OFF CACHE BOOL "编译文档")
 
 #=======================================================================================================================
@@ -74,7 +74,7 @@ message(STATUS "Library : ")
 message(STATUS "    opencv_include_dir          : ${opencv_include_dir}")
 message(STATUS "    opencv_version              : ${opencv_version}")
 message(STATUS "Include : ")   
-message(STATUS "    include_dir                 : ${include_dir}")
+message(STATUS "    include_dir                 : ${IncludeDir}")
 message(STATUS "Install : ")   
 message(STATUS "    CMAKE_INSTALL_PREFIX        : ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "==============================================================\n")
