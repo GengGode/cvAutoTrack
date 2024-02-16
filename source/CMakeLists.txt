@@ -9,7 +9,7 @@ set(opencv_include_dir ${OpenCV_INCLUDE_DIRS} PARENT_SCOPE)
 set(opencv_version ${OpenCV_VERSION} PARENT_SCOPE)
 
 file(GLOB_RECURSE CppFiles "*.cpp")
-file(GLOB_RECURSE HppFiles "*.h")
+file(GLOB_RECURSE HppFiles "*.h" "*.hpp")
 set(VerRcFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.rc")
 set(VerHppFile "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.h")
 set(InfaceHppFile "${IncludeDir}/cvAutoTrack.h")
