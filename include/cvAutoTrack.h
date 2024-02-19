@@ -371,13 +371,6 @@ typedef double& double_ref;
             return func(maroc_for_each(only_name, __VA_ARGS__));               \
         }
 
- template <typename T> auto GetFunction(const std::string& name)
-{
-    return reinterpret_cast<T>(GetProcAddress(get_global_handle(), name.c_str()));
-}
-    #define LoadFunction(name) GetFunction<decltype(&name)>(#name)
-    #define LoadFunctionEx(name) (decltype(&name))GetProcAddress(get_global_handle(), #name)
-
 struct cvAutoTrack
 {
     LibraryHandle lib;
@@ -401,8 +394,6 @@ struct cvAutoTrack
     bool bind_call(GetCompileTime, char_ptr time_buff, int buff_size);
     bool bind_call(GetCoreModulePath, char_ptr time_buff, int buff_size);
 
-    #define GetFunction(name) name##_func = _GetFunction<decltype(&::name)>(#name)
-
     cvAutoTrack(const std::string& path = "cvAutoTrack.dll")
     {
         lib = cvat_load(path.c_str());
@@ -412,14 +403,6 @@ struct cvAutoTrack
     {
         if (lib != nullptr)
             cvat_free(lib);
-    }
-
-    template <typename T> T _GetFunction(std::string name)
-    {
-        auto func = (T)get_proc(lib, name.c_str());
-        if (func == nullptr)
-            return nullptr;
-        return func;
     }
 };
 
