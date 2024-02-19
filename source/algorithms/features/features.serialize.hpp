@@ -1,5 +1,6 @@
 #pragma once
 #include "algorithms/algorithms.include.h"
+#include "algorithms/algorithms.serialize.hpp"
 
 #include <fstream>
 
@@ -8,14 +9,17 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 
-namespace tianli::algorithms
+namespace cereal
 {
     // features
     template <class Archive> void serialize(Archive& ar, features& fts)
     {
         ar(fts.indexs, fts.keypoints, fts.descriptors);
     }
+} // namespace cereal
 
+namespace tianli::algorithms::features_serialize
+{
     struct features_config
     {
         int32_t octaves = 1;
@@ -31,9 +35,29 @@ namespace tianli::algorithms
         features_config config;
         features feature;
         cv::Rect2d rect;
-        std::string hash;
         std::string name;
-        template <class Archive> void serialize(Archive& ar) { ar(config, feature, rect, hash, name); }
+        template <class Archive> void serialize(Archive& ar) { ar(config, feature, rect, name); }
+        static features_block read(const std::string& file)
+        {
+            std::ifstream ifs(file, std::ios::binary);
+            if (!ifs.is_open())
+            {
+                throw std::runtime_error("features_block file not found");
+            }
+            try
+            {
+                features_block block;
+                cereal::BinaryInputArchive ar(ifs);
+                ar(block);
+                ifs.close();
+                return block;
+            }
+            catch (const std::exception& e)
+            {
+                ifs.close();
+                throw e;
+            }
+        }
     };
 
     struct features_group_config
@@ -43,6 +67,28 @@ namespace tianli::algorithms
         std::map<std::string, std::string> block_hashs;
         int block_count;
         template <class Archive> void serialize(Archive& ar) { ar(version, names, block_hashs, block_count); }
+
+        static features_group_config read(const std::string& file)
+        {
+            std::ifstream ifs(file, std::ios::binary);
+            if (!ifs.is_open())
+            {
+                throw std::runtime_error("features_group file not found");
+            }
+            try
+            {
+                features_group_config config;
+                cereal::BinaryInputArchive ar(ifs);
+                ar(config);
+                ifs.close();
+                return config;
+            }
+            catch (const std::exception& e)
+            {
+                ifs.close();
+                throw e;
+            }
+        }
     };
 
     struct features_group
@@ -50,6 +96,7 @@ namespace tianli::algorithms
         std::map<std::string, features_block> blocks;
         features_group_config config;
         bool is_loaded = false;
+        features_group() = default;
         features_group(std::string config_file, std::string blocks_dir)
         {
             std::ifstream file(config_file, std::ios::binary);
@@ -71,7 +118,7 @@ namespace tianli::algorithms
 
             for (auto& name : config.names)
             {
-                std::string block_file = blocks_dir + "/" + name + ".block";
+                std::string block_file = blocks_dir + "/" + name;
                 std::ifstream file(block_file, std::ios::binary);
                 if (!file.is_open())
                 {
@@ -80,7 +127,9 @@ namespace tianli::algorithms
                 try
                 {
                     cereal::BinaryInputArchive ar(file);
-                    ar(blocks[name]);
+                    features_block block;
+                    ar(block);
+                    blocks[name] = block;
                     file.close();
                 }
                 catch (const std::exception& e)
@@ -92,4 +141,4 @@ namespace tianli::algorithms
             is_loaded = true;
         }
     };
-} // namespace tianli::algorithms
+} // namespace tianli::algorithms::features_serialize
