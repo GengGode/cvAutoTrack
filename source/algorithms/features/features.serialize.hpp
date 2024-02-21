@@ -3,6 +3,7 @@
 #include "algorithms/algorithms.serialize.hpp"
 
 #include <fstream>
+#include <filesystem>
 
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/map.hpp>
@@ -55,6 +56,25 @@ namespace tianli::algorithms::features_serialize
             catch (const std::exception& e)
             {
                 ifs.close();
+                throw e;
+            }
+        }
+        void write(const std::string& file)
+        {
+            std::ofstream ofs(file, std::ios::binary);
+            if (!ofs.is_open())
+            {
+                throw std::runtime_error("features_block file not found");
+            }
+            try
+            {
+                cereal::BinaryOutputArchive ar(ofs);
+                ar(*this);
+                ofs.close();
+            }
+            catch (const std::exception& e)
+            {
+                ofs.close();
                 throw e;
             }
         }
@@ -118,7 +138,7 @@ namespace tianli::algorithms::features_serialize
 
             for (auto& name : config.names)
             {
-                std::string block_file = blocks_dir + "/" + name;
+                auto block_file = std::filesystem::path(blocks_dir) / name;
                 std::ifstream file(block_file, std::ios::binary);
                 if (!file.is_open())
                 {
