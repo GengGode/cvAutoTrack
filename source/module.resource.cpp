@@ -32,3 +32,10 @@ void DestroyResource(cvat_resource_t resource)
 {
     cvat_resource::destroy(resource);
 }
+
+bool SetCacheConfig(const char* config_file, const char* blocks_dir, const char* config, int config_size)
+{
+    
+
+    return false;
+}

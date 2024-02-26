@@ -18,6 +18,14 @@
 extern "C"
 {
 #endif
+
+// #define StructType(type) struct type; \
+// typedef struct type* type##_ptr;\
+// CVAUTOTRACK_API type##_ptr alloc_##type();\
+// CVAUTOTRACK_API void free_##type(type##_ptr ptr);
+// 
+//     StructType(cvat_string);
+// 
     // string alloc
     struct CVAUTOTRACK_API cvat_string;
     typedef struct cvat_string* cvat_string_ptr;
@@ -173,6 +181,8 @@ extern "C"
     /// @brief 卸载资源
     /// @return 是否卸载成功
     bool CVAUTOTRACK_API UnInitResource();
+
+    bool CVAUTOTRACK_API SetCacheConfig(const char* config_file, const char* blocks_dir, const char* config, int config_size);
 
     bool CVAUTOTRACK_API SetCoreCachePath(const char* path);
     bool CVAUTOTRACK_API GetCoreCachePath(char* path_buff, int buff_size);
@@ -376,6 +386,7 @@ struct cvAutoTrack
     LibraryHandle lib;
     bool bind_call(InitResource);
     bool bind_call(UnInitResource);
+    bool bind_call(SetCacheConfig, const_char_ptr config_file, const_char_ptr blocks_dir, const_char_ptr config, int config_size);
     bool bind_call(SetCoreCachePath, const_char_ptr path);
     bool bind_call(GetCoreCachePath, char_ptr path_buff, int buff_size);
     bool bind_call(SetWorldCenter, double x, double y);
