@@ -88,13 +88,13 @@ jobs:
       UpdataToken: ${{ secrets.TianLiUpdateServiceToken }}
     steps:  
     - name: Download a Build Artifact for Core
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: cvAutoTrack
         path: ${{github.workspace}}/Release/
 
     - name: Download a Build Artifact for Depends
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: cvAutoTrack.Depends
         path: ${{github.workspace}}/Release/
