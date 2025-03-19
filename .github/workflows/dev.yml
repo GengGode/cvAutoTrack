@@ -44,14 +44,14 @@ jobs:
         echo "_version=$version" >> $env:GITHUB_OUTPUT
 
     - name: Upload a Build Artifact for Release
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cvAutoTrack
         path: ${{github.workspace}}/build/bin/Release/cvAutoTrack.dll
         if-no-files-found: 'warn'
 
     - name: Upload a Build Artifact for Release.Depends
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cvAutoTrack.Depends
         path: ${{github.workspace}}/build/bin/Release/opencv_*.dll
