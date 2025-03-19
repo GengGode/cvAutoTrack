@@ -5,8 +5,8 @@
 #include "cvAutoTrack.h"
 #include "AutoTrack.h"
 #include "ErrorCode.h"
-#include <atomic>
 #include "global/global.windump.h"
+#include <atomic>
 
 static AutoTrack _at;
 static std::atomic<bool> _inited = true;
@@ -128,4 +128,49 @@ bool __stdcall startServe()
 bool __stdcall stopServe()
 {
     INSTALL_DUMP(_at.stopServe());
+}
+
+cvAutoTrackContextV1* create_cvAutoTrack_context_v1()
+{
+    cvAutoTrackContextV1* context = new cvAutoTrackContextV1();
+    context->DebugLoadMapImagePath = DebugLoadMapImagePath;
+    context->InitResource = InitResource;
+    context->UnInitResource = UnInitResource;
+    context->SetCoreCachePath = SetCoreCachePath;
+    context->GetCoreCachePath = GetCoreCachePath;
+    context->SetDisableFileLog = SetDisableFileLog;
+    context->SetEnableFileLog = SetEnableFileLog;
+    context->SetUseBitbltCaptureMode = SetUseBitbltCaptureMode;
+    context->SetUseGraphicsCaptureMode = SetUseGraphicsCaptureMode;
+    context->SetUseDwmCaptureMode = SetUseDwmCaptureMode;
+    context->SetUseLocalPictureMode = SetUseLocalPictureMode;
+    context->SetUseLocalVideoMode = SetUseLocalVideoMode;
+    context->SetCaptureHandle = SetCaptureHandle;
+    context->SetCaptureHandleCallback = SetCaptureHandleCallback;
+    context->SetScreenSourceCallback = SetScreenSourceCallback;
+    context->SetScreenSourceCallbackEx = SetScreenSourceCallbackEx;
+    context->SetScreenSourceImage = SetScreenSourceImage;
+    context->SetScreenSourceImageEx = SetScreenSourceImageEx;
+    context->SetScreenClientRectCallback = SetScreenClientRectCallback;
+    context->SetWorldCenter = SetWorldCenter;
+    context->SetWorldScale = SetWorldScale;
+    context->GetTransformOfMap = GetTransformOfMap;
+    context->GetPositionOfMap = GetPositionOfMap;
+    context->GetDirection = GetDirection;
+    context->GetRotation = GetRotation;
+    context->GetUID = GetUID;
+    context->GetAllInfo = GetAllInfo;
+    context->DebugCapture = DebugCapture;
+    context->GetLastErr = GetLastErr;
+    context->GetLastErrMsg = GetLastErrMsg;
+    context->GetLastErrJson = GetLastErrJson;
+    context->GetCompileVersion = GetCompileVersion;
+    context->GetCompileTime = GetCompileTime;
+    context->GetCoreModulePath = GetCoreModulePath;
+    return context;
+}
+
+void destroy_cvAutoTrack_context_v1(cvAutoTrackContextV1* context)
+{
+    delete context;
 }

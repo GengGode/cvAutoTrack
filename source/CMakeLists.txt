@@ -25,8 +25,6 @@ file(GLOB_RECURSE CppFiles
 "module.debug.cpp"
 "module.error.cpp"
 "module.frame.cpp"
-"module.resource.cpp"
-"module.string.cpp"
 "module.version.cpp"
 "pch.cpp"
 )
