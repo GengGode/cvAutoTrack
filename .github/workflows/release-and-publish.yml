@@ -24,7 +24,7 @@ jobs:
       version: ${{ steps.get_version.outputs._version }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: test env
       run: |
