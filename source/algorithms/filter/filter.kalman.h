@@ -4,7 +4,6 @@
 #include <memory>
 #include <mutex>
 #include <opencv2/core.hpp>
-#include <opencv2/video/tracking.hpp>
 
 namespace tianli::algorithms::filter
 {
