@@ -1,6 +1,10 @@
 #pragma once
 #include "filter.include.h"
+#include <chrono>
+#include <memory>
+#include <mutex>
 #include <opencv2/core.hpp>
+#include <opencv2/video/tracking.hpp>
 
 namespace tianli::algorithms::filter
 {
@@ -103,6 +107,124 @@ namespace tianli::algorithms::filter
         cv::Mat temp4;
         cv::Mat temp5;
     };
+
+    struct position_estimater
+    {
+        cv::Point2d get_position();
+        void set_high_resolution_position(const cv::Point2d& pos, std::chrono::system_clock::time_point time);
+        void set_low_resolution_position(const cv::Point2d& pos, std::chrono::system_clock::time_point time);
+
+        struct impl_t;
+        std::unique_ptr<impl_t> impl;
+
+        position_estimater();
+        ~position_estimater(); // 需要析构函数的声明，因为impl_t是不完整类型
+    };
+
+    // position_estimater的实现
+    struct position_estimater::impl_t
+    {
+        KalmanFilter kf;
+        std::chrono::system_clock::time_point last_time;
+        bool initialized;
+        std::mutex mtx;
+        double sigma_a; // 加速度噪声标准差
+
+        impl_t() : kf(4, 2, 0), initialized(false), sigma_a(0.5)
+        {
+            // 初始化测量矩阵 H
+            kf.measurementMatrix = (cv::Mat_<double>(2, 4) << 1, 0, 0, 0, 0, 1, 0, 0);
+            // 初始转移矩阵 F (dt=0)
+            kf.transitionMatrix = cv::Mat::eye(4, 4, CV_64F);
+            // 初始过程噪声协方差，之后每次更新
+            cv::setIdentity(kf.processNoiseCov, cv::Scalar::all(1e-5));
+            // 初始测量噪声协方差，之后根据高低精度设置
+            cv::setIdentity(kf.measurementNoiseCov, cv::Scalar::all(1e-1));
+            // 初始后验误差协方差
+            cv::setIdentity(kf.errorCovPost, cv::Scalar::all(0.1));
+        }
+
+        void update(const cv::Point2d& pos, const std::chrono::system_clock::time_point& time, bool is_high_res)
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            if (!initialized)
+            {
+                kf.statePost = (cv::Mat_<double>(4, 1) << pos.x, pos.y, 0.0, 0.0);
+                last_time = time;
+                initialized = true;
+                return;
+            }
+
+            auto dt_duration = time - last_time;
+            double dt = std::chrono::duration_cast<std::chrono::duration<double>>(dt_duration).count();
+            if (dt <= 0.0)
+            {
+                return;
+            }
+
+            // 更新转移矩阵 F
+            cv::Mat& F = kf.transitionMatrix;
+            F.at<double>(0, 2) = dt;
+            F.at<double>(1, 3) = dt;
+
+            // 更新过程噪声协方差 Q
+            double dt2 = dt * dt;
+            double dt3 = dt2 * dt;
+            double dt4 = dt3 * dt;
+            double sigma_a2 = sigma_a * sigma_a;
+
+            cv::Mat Q = (cv::Mat_<double>(4, 4) << dt4 / 4 * sigma_a2, 0, dt3 / 2 * sigma_a2, 0, 0, dt4 / 4 * sigma_a2, 0, dt3 / 2 * sigma_a2, dt3 / 2 * sigma_a2, 0, dt2 * sigma_a2, 0, 0,
+                         dt3 / 2 * sigma_a2, 0, dt2 * sigma_a2);
+            kf.processNoiseCov = Q;
+
+            // 预测
+            kf.predict();
+
+            // 设置测量噪声
+            if (is_high_res)
+            {
+                cv::setIdentity(kf.measurementNoiseCov, cv::Scalar::all(1e-1)); // 高频噪声大
+            }
+            else
+            {
+                cv::setIdentity(kf.measurementNoiseCov, cv::Scalar::all(1e-3)); // 低频噪声小
+            }
+
+            // 更新
+            cv::Mat measurement = (cv::Mat_<double>(2, 1) << pos.x, pos.y);
+            kf.correct(measurement);
+
+            last_time = time;
+        }
+
+        cv::Point2d get_position()
+        {
+            std::lock_guard<std::mutex> lock(mtx);
+            if (!initialized)
+            {
+                return cv::Point2d(0.0, 0.0);
+            }
+            return cv::Point2d(kf.statePost.at<double>(0), kf.statePost.at<double>(1));
+        }
+    };
+
+    position_estimater::position_estimater() : impl(new impl_t()) {}
+    position_estimater::~position_estimater() = default;
+
+    cv::Point2d position_estimater::get_position()
+    {
+        return impl->get_position();
+    }
+
+    void position_estimater::set_high_resolution_position(const cv::Point2d& pos, std::chrono::system_clock::time_point time)
+    {
+        impl->update(pos, time, true);
+    }
+
+    void position_estimater::set_low_resolution_position(const cv::Point2d& pos, std::chrono::system_clock::time_point time)
+    {
+        impl->update(pos, time, false);
+    }
 
     class filter_kalman : public filter
     {
