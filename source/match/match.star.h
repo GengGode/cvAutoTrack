@@ -3,10 +3,8 @@
 #include "utils/Utils.h"
 #include "global/global.genshin.h"
 
-void star_calculation(cv::Mat& giStarRef, char* jsonBuff, tianli::global::star_calculation_config& config)
+void star_calculation(Resources& res, cv::Mat& giStarRef, char* jsonBuff, tianli::global::star_calculation_config& config)
 {
-    Resources& res = Resources::getInstance();
-
     int MAXLOOP = 0;
     bool isLoopMatch = false;
     cv::Mat tmp;

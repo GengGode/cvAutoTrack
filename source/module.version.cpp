@@ -7,7 +7,7 @@
 #include "resource/version.h"
 #include <global/global.include.h>
 #ifndef err
-    #define err ErrorCode::getInstance()
+    #define err (*ErrorCode::getSharedPtr())
 #endif
 
 #if cplusplus >= 202002L

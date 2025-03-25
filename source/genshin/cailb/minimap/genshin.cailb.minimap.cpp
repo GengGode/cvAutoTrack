@@ -1,36 +1,18 @@
 #include "pch.h"
 #include "genshin.cailb.minimap.h"
-#include "../../../resources/Resources.h"
-bool match_minimap_cailb(const tianli::global::GenshinScreen& genshin_screen, tianli::global::GenshinMinimapCailb& out_genshin_minimap_cailb)
+bool match_minimap_cailb(const tianli::global::match_minimap_cailb_params& params, const tianli::global::GenshinScreen& genshin_screen, tianli::global::GenshinMinimapCailb& out_genshin_minimap_cailb)
 {
-    static std::vector<cv::Mat> split_minimap_cailb_template;
-    static cv::Mat minimap_cailb_template;
-    static cv::Mat minimap_cailb_template_handle_mode;
-    static cv::Mat minimap_cailb_template_no_alpha;
-    static cv::Mat minimap_cailb_template_no_alpha_handle_mode;
-    static bool is_first = true;
-    if (is_first)
-    {
-        cv::Mat minimap_cailb;
-        cv::resize(Resources::getInstance().MinimapCailbTemplate, minimap_cailb, cv::Size(), 0.8, 0.8);
-        cv::split(minimap_cailb, split_minimap_cailb_template);
-        minimap_cailb_template = split_minimap_cailb_template[3];
-        minimap_cailb_template_no_alpha = split_minimap_cailb_template[0];
-        cv::resize(split_minimap_cailb_template[3], minimap_cailb_template_handle_mode, cv::Size(), 1 / 1.2, 1 / 1.2, cv::INTER_CUBIC);
-        cv::resize(split_minimap_cailb_template[3], minimap_cailb_template_no_alpha_handle_mode, cv::Size(), 1.0 / 1.2, 1.0 / 1.2);
-        is_first = false;
-    }
 
     auto giMinimapCailbRef = genshin_screen.img_minimap_cailb_maybe;
     auto& rect_origin = genshin_screen.config.rect_minimap_cailb_maybe;
     auto& is_handle_mode = genshin_screen.config.is_handle_mode;
 
-    auto& template_not_handle_mode = split_minimap_cailb_template[3];
-    auto& template_handle_mode = minimap_cailb_template_handle_mode;
+    auto template_not_handle_mode = params.split_minimap_cailb_template[3];
+    auto template_handle_mode = params.minimap_cailb_template_handle_mode;
 
-    if (giMinimapCailbRef.empty() || minimap_cailb_template_handle_mode.empty())
+    if (giMinimapCailbRef.empty() || params.minimap_cailb_template_handle_mode.empty())
         return false;
-    if (giMinimapCailbRef.cols < split_minimap_cailb_template[3].cols || giMinimapCailbRef.rows < split_minimap_cailb_template[3].rows)
+    if (giMinimapCailbRef.cols < params.split_minimap_cailb_template[3].cols || giMinimapCailbRef.rows < params.split_minimap_cailb_template[3].rows)
         return false;
 
     // 设置阈值取值 根据是否使用alpha图层
@@ -38,8 +20,8 @@ bool match_minimap_cailb(const tianli::global::GenshinScreen& genshin_screen, ti
     if (genshin_screen.config.is_used_alpha == false)
     {
         cv::cvtColor(genshin_screen.img_minimap_cailb_maybe, giMinimapCailbRef, cv::COLOR_RGBA2GRAY);
-        template_not_handle_mode = minimap_cailb_template_no_alpha;
-        template_handle_mode = minimap_cailb_template_no_alpha_handle_mode;
+        template_not_handle_mode = params.minimap_cailb_template_no_alpha;
+        template_handle_mode = params.minimap_cailb_template_no_alpha_handle_mode;
         check_match_minimap_cailb_param = out_genshin_minimap_cailb.config.check_match_minimap_cailb_params_no_alpha;
     }
 
@@ -94,7 +76,7 @@ bool cailb_minimap_impl(const tianli::global::GenshinScreen& genshin_screen, tia
     if (genshin_screen.config.is_search_mode)
     {
         static tianli::global::GenshinMinimapCailb genshin_minimap_cailb;
-        bool is_find_minimap_cailb = match_minimap_cailb(genshin_screen, genshin_minimap_cailb);
+        bool is_find_minimap_cailb = match_minimap_cailb(*genshin_screen.minimap_cailb_params, genshin_screen, genshin_minimap_cailb);
         if (is_find_minimap_cailb == false)
         {
             return false;

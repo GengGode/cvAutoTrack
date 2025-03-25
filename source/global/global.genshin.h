@@ -7,6 +7,7 @@
 #include <string>
 
 #include <Windows.h>
+class SurfMatch;
 
 namespace tianli::global
 {
@@ -134,8 +135,13 @@ namespace tianli::global
         cv::Rect rect_minimap_handle = MiniMapHandleRect;
     };
     // 用于获取原神画面的相关变量
+    struct match_minimap_cailb_params;
+    struct check_paimon_search_params;
     struct GenshinScreen
     {
+        std::shared_ptr<match_minimap_cailb_params> minimap_cailb_params;
+        std::shared_ptr<check_paimon_search_params> paimon_search_params;
+
         cv::Rect rect_client;
         std::chrono::system_clock::time_point last_time = std::chrono::system_clock::now();
 
@@ -206,6 +212,8 @@ namespace tianli::global
 
     struct GenshinMinimap
     {
+        mutable std::shared_ptr<SurfMatch> matcher;
+
         bool is_init_finish = false;
         bool is_run_init_start = false;
         bool is_run_uninit_start = false;

@@ -3,12 +3,13 @@
 #include "utils/Utils.h"
 #include "algorithms/algorithms.include.h"
 #include <opencv2/xfeatures2d.hpp>
+#include "resources/Resources.h"
 
 class Matcher
 {
 public:
     Matcher(double hessian_threshold = 1, int octaves = 1, int octave_layers = 1, bool extended = false, bool upright = true);
-    ~Matcher() = default;
+    ~Matcher() {};
 
 public:
     cv::Ptr<cv::xfeatures2d::SURF> detector;
@@ -25,6 +26,8 @@ public:
 
 class SurfMatch
 {
+    Resources& res;
+
     cv::Mat _mapMat;
     cv::Mat _miniMapMat;
 
@@ -35,8 +38,8 @@ class SurfMatch
     float zoom;  // 小地图的缩放
     int area_id; // 当前地区的id
 public:
-    SurfMatch() = default;
-    ~SurfMatch() = default;
+    SurfMatch(Resources& res) : res(res) {}
+    ~SurfMatch() {};
     Matcher matcher;
 
     features all_map_features;

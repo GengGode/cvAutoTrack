@@ -3,10 +3,8 @@
 #include "utils/Utils.h"
 #include "global/global.genshin.h"
 
-void uid_calculation(cv::Mat& giUIDRef, int& uid, tianli::global::uid_calculation_config config)
+void uid_calculation(Resources& res,cv::Mat& giUIDRef, int& uid, tianli::global::uid_calculation_config config)
 {
-    Resources& res = Resources::getInstance();
-
     int _uid = 0;
     int _NumBit[9] = { 0 };
 

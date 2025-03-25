@@ -132,7 +132,7 @@ cv::Point2d match_no_continuity_2nd(bool& calc_is_faile)
 
 void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMinimap& genshin_minimap, tianli::global::GenshinAvatarPosition& out_genshin_position)
 {
-    static SurfMatch surf_match;
+    //static SurfMatch surf_match;
     static bool is_init = false;
     if (genshin_minimap.is_run_init_start == true || is_init == false)
     {
@@ -148,7 +148,7 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
             cache_file_path = cache_file_path_c;
         if (load_cache(cache_file_path, cache_info) == false)
             return;
-        surf_match.Init(cache_info);
+        genshin_minimap.matcher->Init(cache_info);
 
         is_init = true;
         return;
@@ -156,7 +156,7 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
 
     if (genshin_minimap.is_run_uninit_start == true)
     {
-        surf_match.UnInit();
+        genshin_minimap.matcher->UnInit();
         is_init = false;
         return;
     }
@@ -173,12 +173,12 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
 
     auto beg_time = std::chrono::steady_clock::now();
     cv::Point2d matched_pos;
-    surf_match.UpdateMatch(genshin_minimap.img_minimap);
+    genshin_minimap.matcher->UpdateMatch(genshin_minimap.img_minimap);
     auto end_time = std::chrono::steady_clock::now();
     auto cost_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - beg_time).count();
 
-    out_genshin_position.config.is_continuity = surf_match.isContinuity;
-    out_genshin_position.position = surf_match.CurrentPosition();
+    out_genshin_position.config.is_continuity = genshin_minimap.matcher->isContinuity;
+    out_genshin_position.position = genshin_minimap.matcher->CurrentPosition();
 
     if (out_genshin_position.config.is_use_filter)
     {
@@ -188,7 +188,7 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         auto u_k = cv::Point2d(0, 0);
         auto odometer_config = tianli::global::odometer_config();
         auto od_valid = control_odometer_calculation(genshin_minimap.img_minimap, u_k, odometer_config);
-        auto ms_valid = surf_match.is_success_match;
+        auto ms_valid = genshin_minimap.matcher->is_success_match;
 
         // 里程计能更就更；全局匹配能配就配
         if (od_valid)
@@ -209,7 +209,7 @@ void TianLi::Genshin::Match::get_avatar_position(const tianli::global::GenshinMi
         out_genshin_position.position = filt_pos;
     }
 
-    if (surf_match.is_success_match)
+    if (genshin_minimap.matcher->is_success_match)
     {
         out_genshin_position.config.img_last_match_minimap = genshin_minimap.img_minimap.clone();
         out_genshin_position.config.is_exist_last_match_minimap = true;

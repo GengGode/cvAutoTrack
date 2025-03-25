@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SurfMatch.h"
-#include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "algorithms/algorithms.solve.linear.h"
 #include "algorithms/features/features.operate.h"
@@ -17,9 +16,9 @@ void SurfMatch::Init(std::shared_ptr<trackCache::CacheInfo> cache_info)
     all_map_features = features(cache_info->key_points, cache_info->descriptors);
 
     // 如果图像非空，则设定调试图像
-    if (Resources::getInstance().debug_map_image.empty())
+    if (res.debug_map_image.empty())
     {
-        _mapMat = Resources::getInstance().debug_map_image;
+        _mapMat = res.debug_map_image;
     }
 
     double hessian_threshold = cache_info->setting.hessian_threshold;
@@ -176,12 +175,12 @@ void SurfMatch::debug_draw_match_keypoints_wrapper(features& map_feature, const 
 {
     cv::Size2i mini_map_pixel_size = mini_map_image.size();
     features translated_map_feature = map_feature;
-    translated_map_feature.transform(cache_info->setting.roi, cv::Rect(cv::Point2i(), Resources::getInstance().debug_map_image.size()));
+    translated_map_feature.transform(cache_info->setting.roi, cv::Rect(cv::Point2i(), res.debug_map_image.size()));
 
     features translated_minimap_feature = mini_map_feature;
     translated_minimap_feature.transform(cv::Point2d(-100, -100), cv::Size2d(mini_map_pixel_size.width / 200.0, mini_map_pixel_size.height / 200.0));
 
-    draw_matched_keypoints(Resources::getInstance().debug_map_image, translated_map_feature.keypoints, mini_map_image, translated_minimap_feature.keypoints, d_matchs);
+    draw_matched_keypoints(res.debug_map_image, translated_map_feature.keypoints, mini_map_image, translated_minimap_feature.keypoints, d_matchs);
 }
 
 void SurfMatch::calc_good_matches(const std::vector<cv::KeyPoint>& keypoint_scene, const std::vector<cv::KeyPoint>& keypoint_object, const std::vector<std::vector<cv::DMatch>>& KNN_m,

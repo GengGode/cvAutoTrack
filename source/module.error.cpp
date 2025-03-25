@@ -6,7 +6,7 @@
     #include <iostream>
 #endif
 
-#define err ErrorCode::getInstance()
+#define err (*ErrorCode::getSharedPtr())
 
 int __stdcall GetLastErr()
 {
