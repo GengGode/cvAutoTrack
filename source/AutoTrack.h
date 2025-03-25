@@ -1,11 +1,20 @@
 #pragma once
+//#include "interface/resources.interface.h"
+#include "ErrorCode.h"
+#include "resources/Resources.h"
+
 #include "global/global.genshin.h"
 
 class AutoTrack
 {
 public:
-    AutoTrack();
+    AutoTrack(ErrorCode& err, Resources& res);
 
+public:
+    ErrorCode& err;
+    Resources& res;
+
+public:
 #pragma region 外部接口
     bool init();
     bool uninit();

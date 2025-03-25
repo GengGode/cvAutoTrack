@@ -1,11 +1,9 @@
 #include "pch.h"
 #include "AutoTrack.h"
 
-#include "ErrorCode.h"
 #include "genshin/genshin.h"
 #include "match/match.star.h"
 #include "match/match.uid.h"
-#include "resources/Resources.h"
 #include "utils/Utils.h"
 #include "utils/convect.string.h"
 #include "algorithms/algorithms.direction.h"
@@ -14,10 +12,8 @@
 #include "frame/capture/capture.bitblt.h"
 #include "resource/version.h"
 
-ErrorCode& err = ErrorCode::getInstance();
-Resources& res = Resources::getInstance();
 
-AutoTrack::AutoTrack()
+AutoTrack::AutoTrack(ErrorCode& err, Resources& res) : err(err), res(res)
 {
     err.enableWirteFile();
 

@@ -13,7 +13,7 @@ public:
     ~ErrorCode();
     ErrorCode(const ErrorCode&) = delete;
     ErrorCode& operator=(const ErrorCode&) = delete;
-    static ErrorCode& getInstance();
+    static std::shared_ptr<ErrorCode> getSharedPtr();
     ErrorCode& operator=(const std::pair<int, std::string>& err_code_msg);
     operator int();
     friend std::ostream& operator<<(std::ostream& os, const ErrorCode& err);

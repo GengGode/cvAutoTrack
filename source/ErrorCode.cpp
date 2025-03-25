@@ -47,9 +47,9 @@ ErrorCode::ErrorCode() {}
 
 ErrorCode::~ErrorCode() {}
 
-ErrorCode& ErrorCode::getInstance()
+std::shared_ptr<ErrorCode> ErrorCode::getSharedPtr()
 {
-    static ErrorCode instance;
+    static std::shared_ptr<ErrorCode> instance(new ErrorCode, [](ErrorCode* p) { delete p; });
     return instance;
 }
 

@@ -31,9 +31,9 @@ Resources::Resources()
     }
 }
 
-Resources& Resources::getInstance()
+std::shared_ptr<Resources> Resources::getSharedPtr()
 {
-    static Resources instance;
+    static std::shared_ptr<Resources> instance(new Resources, [](Resources* p) { delete p; });
     return instance;
 }
 

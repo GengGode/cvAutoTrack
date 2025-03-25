@@ -11,7 +11,7 @@ public:
 
     Resources(const Resources&) = delete;
     Resources& operator=(const Resources&) = delete;
-    static Resources& getInstance();
+    static std::shared_ptr<Resources> getSharedPtr();
 
 public:
     std::map<std::pair<int, int>, cv::Mat> MapBlockCache;
