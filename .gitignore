@@ -282,3 +282,4 @@ bulid
 *.sln
 source/resource/version.h
 source/resource/version.rc
+.vcpkg-root

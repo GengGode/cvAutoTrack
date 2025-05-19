@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
-project(cvAutoTrack)
 
+#=======================================================================================================================
+# 设置VCPKG
+include(cmake/vcpkg_env.cmake)
+#=======================================================================================================================
+project(cvAutoTrack)
+#=======================================================================================================================
+# 设置VCPKG工具链
+list(APPEND CMAKE_PREFIX_PATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
 #=======================================================================================================================
 # 设置dll输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -32,6 +39,7 @@ set(BUILD_DOC OFF CACHE BOOL "编译文档")
 set(BUILD_CAPTURE_DXGI ON CACHE BOOL "build capture dxgi")
 set(BUILD_SUPPORT_WINRT ON CACHE BOOL "support winrt api")
 set(BUILD_SUPPORT_WINDUMP ON CACHE BOOL "support window dump")
+set(BUILD_CVAUTOTRACK_TESTS ON)
 
 
 include_directories(${IncludeDir})

@@ -235,6 +235,36 @@ extern "C"
     CVAUTOTRACK_API cvAutoTrackContextV1* create_cvAutoTrack_context_v1();
     // 定义上下文销毁函数
     CVAUTOTRACK_API void destroy_cvAutoTrack_context_v1(cvAutoTrackContextV1* context);
+
+    // 定义上下文结构体
+    struct cvAutoTrackContextV2
+    {
+        // 开发保留接口
+        bool (*Call)(const char* command, const char* json_buff, int json_size, char* result_buff, int result_size);
+
+        // 数据获取接口
+        bool (*GetTransformOfMap)(double&, double&, double&, int&);
+        bool (*GetPositionOfMap)(double&, double&, int&);
+        bool (*GetDirection)(double&);
+        bool (*GetRotation)(double&);
+        bool (*GetUID)(int&);
+        bool (*GetAllInfo)(double&, double&, int&, double&, double&, int&);
+
+        // 错误处理接口
+        int (*GetLastErr)();
+        int (*GetLastErrMsg)(char*, int);
+
+        // 版本信息接口
+        bool (*GetCompileVersion)(char*, int);
+        bool (*GetCompileTime)(char*, int);
+        bool (*GetCoreModulePath)(char*, int);
+    };
+
+    // 定义上下文初始化函数
+    CVAUTOTRACK_API cvAutoTrackContextV2* create_cvAutoTrack_context_v2();
+    // 定义上下文销毁函数
+    CVAUTOTRACK_API void destroy_cvAutoTrack_context_v2(cvAutoTrackContextV2* context);
+
 #ifdef __cplusplus
 }
 #endif

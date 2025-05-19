@@ -124,10 +124,7 @@ set(BUILD_TESTS OFF)
 FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
 FetchContent_MakeAvailable(cereal)
 set_target_properties(cereal PROPERTIES FOLDER "cvAutoTrack/dependencies")
-# 配置fmt
-FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 10.1.1)
-FetchContent_MakeAvailable(fmt)
-set_target_properties(fmt PROPERTIES FOLDER "cvAutoTrack/dependencies")
+
 
 list(APPEND opencv_libs opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_imgcodecs opencv_imgproc opencv_video opencv_videoio opencv_xfeatures2d)
 if(WITCH_OPENCV_CVV)
@@ -136,14 +133,17 @@ endif()
 
 add_subdirectory(frame)
 
-
+find_package(fmt REQUIRED)
+find_package(imgui REQUIRED)
 target_link_libraries(cvAutoTrack 
 PRIVATE  
     tianli::frame
     ${opencv_libs}
     cereal::cereal 
     fmt::fmt-header-only 
+    imgui::imgui
     )
+target_link_libraries(cvAutoTrack PRIVATE opengl32)
 
 # install to release
 if(BUILD_DYANMIC_LINK_DEPS)

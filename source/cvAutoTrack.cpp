@@ -79,7 +79,7 @@ bool __stdcall SetCaptureHandleCallback(long long int (*callback)())
 {
     if (_inited == false)
         InitResource();
-    INSTALL_DUMP(set_capture_handle_callback(_at->get_source(), (HWND(*)())callback));
+    INSTALL_DUMP(set_capture_handle_callback(_at->get_source(), (HWND (*)())callback));
 }
 bool __stdcall SetScreenSourceCallback(void (*callback)(const char* image_encode_data, int& image_data_size))
 {
@@ -240,6 +240,78 @@ cvAutoTrackContextV1* create_cvAutoTrack_context_v1()
 }
 
 void destroy_cvAutoTrack_context_v1(cvAutoTrackContextV1* context)
+{
+    delete context;
+}
+#include "global/debugger.h"
+#include "global/pool.hpp"
+cvAutoTrackContextV2* create_cvAutoTrack_context_v2()
+{
+    cvAutoTrackContextV2* context = new cvAutoTrackContextV2();
+    context->Call = +[](const char* command, const char* json_buff, int json_size, char* result_buff, int result_size) {
+        if (command == nullptr || json_buff == nullptr)
+        {
+            return false;
+        }
+        auto cmd = std::string(command);
+        auto args = std::string(json_buff, json_size);
+        if (cmd == "debugger")
+        {
+            if (args == "on")
+            {
+                if (auto gui = global::shareder<debugger>::get_or_created_get(); gui)
+                {
+                    gui->initlize();
+                }
+            }
+            else if (args == "off")
+            {
+                if (auto gui = global::shareder<debugger>::get(); gui)
+                {
+                    gui->destory();
+                }
+            }
+        }
+        return true;
+    };
+    // context->DebugLoadMapImagePath = DebugLoadMapImagePath;
+    // context->InitResource = InitResource;
+    // context->UnInitResource = UnInitResource;
+    // context->SetCoreCachePath = SetCoreCachePath;
+    // context->GetCoreCachePath = GetCoreCachePath;
+    // context->SetDisableFileLog = SetDisableFileLog;
+    // context->SetEnableFileLog = SetEnableFileLog;
+    // context->SetUseBitbltCaptureMode = SetUseBitbltCaptureMode;
+    // context->SetUseGraphicsCaptureMode = SetUseGraphicsCaptureMode;
+    // context->SetUseDwmCaptureMode = SetUseDwmCaptureMode;
+    // context->SetUseLocalPictureMode = SetUseLocalPictureMode;
+    // context->SetUseLocalVideoMode = SetUseLocalVideoMode;
+    // context->SetCaptureHandle = SetCaptureHandle;
+    // context->SetCaptureHandleCallback = SetCaptureHandleCallback;
+    // context->SetScreenSourceCallback = SetScreenSourceCallback;
+    // context->SetScreenSourceCallbackEx = SetScreenSourceCallbackEx;
+    // context->SetScreenSourceImage = SetScreenSourceImage;
+    // context->SetScreenSourceImageEx = SetScreenSourceImageEx;
+    // context->SetScreenClientRectCallback = SetScreenClientRectCallback;
+    // context->SetWorldCenter = SetWorldCenter;
+    // context->SetWorldScale = SetWorldScale;
+    context->GetTransformOfMap = GetTransformOfMap;
+    context->GetPositionOfMap = GetPositionOfMap;
+    context->GetDirection = GetDirection;
+    context->GetRotation = GetRotation;
+    context->GetUID = GetUID;
+    context->GetAllInfo = GetAllInfo;
+    // context->DebugCapture = DebugCapture;
+    context->GetLastErr = GetLastErr;
+    context->GetLastErrMsg = GetLastErrMsg;
+    // context->GetLastErrJson = GetLastErrJson;
+    context->GetCompileVersion = GetCompileVersion;
+    context->GetCompileTime = GetCompileTime;
+    context->GetCoreModulePath = GetCoreModulePath;
+    return context;
+}
+
+void destroy_cvAutoTrack_context_v2(cvAutoTrackContextV2* context)
 {
     delete context;
 }
