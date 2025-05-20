@@ -17,7 +17,8 @@
         "contrib",
         "nonfree",
         "opengl",
-        "tbb"
+        "tbb",
+        "ipp"
       ]
     }
   ]
