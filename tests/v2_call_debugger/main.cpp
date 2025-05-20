@@ -35,20 +35,40 @@ int TEST()
         return 0;
     }
     bool ret = false;
-    ret = v2->Call("debugger", "on",2, nullptr, 0);
+    ret = v2->Call("debugger", "on", 2, nullptr, 0);
     if (ret == false)
     {
-        std::cout << "调用失败\n";
+        std::cout << "debugger on 调用失败\n";
+        return 0;
     }
-    Sleep(3000);
-    ret = v2->Call("debugger", "off",3, nullptr, 0);
+    Sleep(300);
+    ret = v2->Call("debugger", "off", 3, nullptr, 0);
     if (ret == false)
     {
-        std::cout << "调用失败\n";
+        std::cout << "debugger off 调用失败\n";
+        return 0;
     }
-    Sleep(3000);
+    Sleep(100);
+    ret = v2->Call("debugger", "on", 2, nullptr, 0);
+    if (ret == false)
+    {
+        std::cout << "debugger on 调用失败\n";
+        return 0;
+    }
+    Sleep(100);
+    ret = v2->Call("capture", "current", 7, nullptr, 0);
+    if (ret == false)
+    {
+        std::cout << "capture current 调用失败\n";
+        return 0;
+    }
 
-
+    ret = v2->Call("debugger", "wait", 4, nullptr, 0);
+    if (ret == false)
+    {
+        std::cout << "debugger wait 调用失败\n";
+        return 0;
+    }
     destroy_cvAutoTrack_context_v2(v2);
     return 0;
 }

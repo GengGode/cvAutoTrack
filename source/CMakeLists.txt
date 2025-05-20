@@ -98,6 +98,7 @@ find_package(fmt REQUIRED)
 find_package(imgui REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(cereal REQUIRED)
+target_include_directories(cvAutoTrack PRIVATE ${OpenCV_INCLUDE_DIRS})
 target_link_libraries(cvAutoTrack
 PRIVATE  
     tianli::frame
@@ -107,7 +108,6 @@ PRIVATE
     imgui::imgui
     opengl32
     )
-target_include_directories(cvAutoTrack PRIVATE ${OpenCV_INCLUDE_DIRS})
 
 add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
 set_target_properties(copy_version_file PROPERTIES FOLDER "scripts")

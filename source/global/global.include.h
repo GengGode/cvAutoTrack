@@ -68,11 +68,11 @@ namespace tianli::global
         return index;
     }
 
-    #define error(msg)                                                                                                                                                                          \
+    #define errreg(msg)                                                                                                                                                                          \
         tianli::global::error_proxy<tianli::global::error_invoker, tianli::global::source_location(__FILE__, std::source_location::current().line(), std::source_location::current().column()), \
                                     tianli::global::error_message(msg)>::callback(tianli::global::error_impl, msg)
 #else
-    #define error(msg)
+    #define errreg(msg)
 #endif
 
     class error_type

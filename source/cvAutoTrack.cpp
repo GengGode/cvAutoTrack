@@ -271,6 +271,20 @@ cvAutoTrackContextV2* create_cvAutoTrack_context_v2()
                     gui->destory();
                 }
             }
+            else if (args == "wait")
+            {
+                if (auto gui = global::shareder<debugger>::get(); gui)
+                {
+                    gui->wait_exit();
+                }
+            }
+        }
+        else
+        {
+            if (auto gui = global::shareder<debugger>::get(); gui)
+            {
+                gui->call(cmd, args);
+            }
         }
         return true;
     };

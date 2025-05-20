@@ -20,7 +20,7 @@ namespace stdex
         void wait()
         {
             std::lock_guard<std::mutex> lock(mutex);
-            if (future.valid() && future.wait_for(std::chrono::seconds(0)) != std::future_status::ready)
+            if (future.valid() /*&& future.wait_for(std::chrono::seconds(0)) != std::future_status::ready*/)
                 future.wait();
         }
     };
