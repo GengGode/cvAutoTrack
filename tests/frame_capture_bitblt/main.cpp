@@ -6,10 +6,9 @@
 #include <iostream>
 
 #include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
+
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
-
 
 #include <Windows.h>
 
@@ -42,8 +41,6 @@ int main()
     else
         std::cout << "frame is not empty" << std::endl;
     cv::imwrite("test.png", frame);
-    cv::imshow("gi", frame);
-    cv::waitKey(0);
     std::cout << frame.size() << std::endl;
     return 0;
 }

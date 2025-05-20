@@ -1,9 +1,10 @@
 #pragma once
+#include <future>
+#include <list>
 #include <map>
 #include <vector>
-#include <list>
-#include <future>
-#include <opencv2/opencv.hpp>
+
+#include <opencv2/core.hpp>
 
 class obj
 {
@@ -37,7 +38,7 @@ public:
     int height() const { return size.height; }
     int weight() const { return width() * height(); }
     int get_priority() const { return priority; }
-    bool better_than(std::list<obj> &objs, std::list<obj>::iterator it) const
+    bool better_than(std::list<obj>& objs, std::list<obj>::iterator it) const
     {
         if (it == objs.end())
             return true;
@@ -93,10 +94,7 @@ private:
         // int p2 = judge_one(btm, low, high, limit, obj_height, obj_width) ^ binpry_base::rotate_topple;
         // return compare(p1, p2) < 0 ? p2 : p1;
     }
-    static int compare(const int &pry_a, const int &pry_b)
-    {
-        return (priority_mask & pry_a) - (priority_mask & pry_b);
-    }
+    static int compare(const int& pry_a, const int& pry_b) { return (priority_mask & pry_a) - (priority_mask & pry_b); }
 };
 
 struct placement
@@ -121,7 +119,7 @@ public:
         reverse = -1,
         obverse = 1,
     };
-    static int adjoin(skyline *step_a, skyline *step_b)
+    static int adjoin(skyline* step_a, skyline* step_b)
     {
         if (step_a && step_b)
         {
@@ -133,7 +131,7 @@ public:
         return undefined;
     }
 
-    static std::list<skyline>::iterator insert_to(std::list<skyline> &steps, skyline *step)
+    static std::list<skyline>::iterator insert_to(std::list<skyline>& steps, skyline* step)
     {
         for (auto it = steps.begin(); it != steps.end(); it++)
         {
@@ -146,14 +144,14 @@ public:
         return steps.insert(steps.end(), *step);
     }
     // SkylineStepT::insertTo(queStep, queStep.Dechain(pCurStep));
-    static void insert_to_dechain(std::list<skyline> &steps, std::list<skyline>::iterator &it)
+    static void insert_to_dechain(std::list<skyline>& steps, std::list<skyline>::iterator& it)
     {
         skyline tmp = *it;
         steps.erase(it);
         it = insert_to(steps, &tmp);
     }
 
-    void measure_both_flank(std::list<skyline> &steps, std::list<skyline>::iterator it, int &drop_left, int &drop_right, const int &drop_top)
+    void measure_both_flank(std::list<skyline>& steps, std::list<skyline>::iterator it, int& drop_left, int& drop_right, const int& drop_top)
     {
         drop_left = drop_right = drop_top;
         auto cur_step = it++;
@@ -162,15 +160,9 @@ public:
         {
             switch (adjoin(&*cur_step, this))
             {
-            case step_adjoin::obverse:
-                drop_left = cur_step->level - level;
-                break;
-            case step_adjoin::reverse:
-                drop_right = cur_step->level - level;
-                break;
-            default:
-                --cnt;
-                break;
+                case step_adjoin::obverse: drop_left = cur_step->level - level; break;
+                case step_adjoin::reverse: drop_right = cur_step->level - level; break;
+                default: --cnt; break;
             }
             cur_step++;
         }
@@ -183,7 +175,7 @@ public:
     combiner_inface() = default;
 
 public:
-    virtual void init(std::vector<cv::Size> &objs) = 0;
+    virtual void init(std::vector<cv::Size>& objs) = 0;
     virtual std::map<int, cv::Rect> pre_combinered(cv::Size limit_size) = 0;
 };
 class combine : public combiner_inface
@@ -195,9 +187,9 @@ public:
 public:
     void add(int width, int height) { objs.emplace_back(width, height); }
 
-    void init(std::vector<cv::Size> &objs)
+    void init(std::vector<cv::Size>& objs)
     {
-        for (auto &obj : objs)
+        for (auto& obj : objs)
         {
             add(obj.width, obj.height);
         }
@@ -212,7 +204,7 @@ public:
         std::map<int, cv::Rect> result;
         int index = 0;
         size_t sum = 0;
-        for (auto &place : places)
+        for (auto& place : places)
         {
             result[index++] = place.rect;
             sum += place.rect.area();
@@ -222,7 +214,7 @@ public:
     }
 
 private:
-    bool pack(int width, int height, std::list<skyline> &steps, std::list<placement> &places)
+    bool pack(int width, int height, std::list<skyline>& steps, std::list<placement>& places)
     {
         auto head = objs.begin();
         skyline::insert_to(steps, new skyline(0, width, 0));
@@ -233,8 +225,7 @@ private:
             auto __cur_step = cur_step;
             while (tmp_step = __cur_step++, tmp_step != steps.end())
             {
-                if ((cur_step->level != tmp_step->level) ||
-                    (skyline::adjoin(&*cur_step, &*tmp_step) == skyline::step_adjoin::undefined))
+                if ((cur_step->level != tmp_step->level) || (skyline::adjoin(&*cur_step, &*tmp_step) == skyline::step_adjoin::undefined))
                 {
                     break;
                 }
@@ -267,7 +258,7 @@ private:
                 int remain = cur_step->width - bottom;
                 if (remain != 0)
                 {
-                    auto *new_step = new skyline(cur_step->start, remain, old_level);
+                    auto* new_step = new skyline(cur_step->start, remain, old_level);
                     if (flipped)
                     {
                         cur_step->start = cur_step->start + remain;
@@ -328,7 +319,7 @@ void show(std::map<cv::Size, cv::Rect> result, cv::Size limit_size)
 {
     std::vector<cv::Rect> rects;
     cv::Rect max_rect;
-    for (auto &r : result)
+    for (auto& r : result)
     {
         rects.push_back(r.second);
         max_rect = max_rect | r.second;
@@ -336,7 +327,7 @@ void show(std::map<cv::Size, cv::Rect> result, cv::Size limit_size)
     }
     cv::Mat img = cv::Mat::zeros(limit_size, CV_8UC3);
     int index = 0;
-    for (auto &r : rects)
+    for (auto& r : rects)
     {
         cv::rectangle(img, r, cv::Scalar(0, 0, 255), 10);
         auto center = r.tl() + cv::Point(r.width / 2, r.height / 2);
@@ -349,13 +340,13 @@ void show(std::map<cv::Size, cv::Rect> result, cv::Size limit_size)
     // cv::waitKey(000);
 }
 
-std::map<cv::Size, cv::Rect> pack(std::vector<cv::Size> &objs, cv::Size limit_size)
+std::map<cv::Size, cv::Rect> pack(std::vector<cv::Size>& objs, cv::Size limit_size)
 {
-    combiner_inface *combiner = new combine();
+    combiner_inface* combiner = new combine();
     combiner->init(objs);
     auto pre = combiner->pre_combinered(limit_size);
     std::map<cv::Size, cv::Rect> result;
-    for (auto &p : pre)
+    for (auto& p : pre)
     {
         result[p.second.size()] = p.second;
     }

@@ -1,6 +1,6 @@
 
 #include <opencv2/core/utils/logger.hpp>
-#include <opencv2/opencv.hpp>
+#include <opencv2/imgcodecs.hpp>
 
 #include <frame/frame.include.h>
 #include <frame/local/local.include.h>

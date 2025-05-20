@@ -1,5 +1,3 @@
-#include <opencv2/highgui.hpp>
-#include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
 #include "capture.h"
@@ -25,7 +23,6 @@
     }
 
 #include <Windows.h>
-
 
 GEN_FUNC(calc_angle)
 {
@@ -123,11 +120,6 @@ GEN_FUNC(calc_angle)
 
     cv::Mat t2 = (t(cv::Rect(0, 40, 720, 100)) - (c)) * 10;
 
-    cv::imshow("c", c);
-    cv::imshow("t", t);
-    cv::imshow("t2", t2);
-
-    cv::waitKey(1);
     return true;
 }
 
