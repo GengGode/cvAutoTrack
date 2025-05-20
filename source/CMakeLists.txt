@@ -1,14 +1,3 @@
-# opencv
-set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-release-static/x64/vc17/staticlib")
-set(WITH_DYNAMIC_OPENCV OFF)
-if(BUILD_DYANMIC_LINK_DEPS)
-    set(OpenCV_DIR "${ThridPatryDir}/opencv-xfeatures2d-shared/x64/vc17/lib")
-    set(OpenCV_DIR "${ThridPatryDir}/opencv-cvv-dll/x64/vc17/lib")
-    set(WITH_DYNAMIC_OPENCV ON)
-endif()
-find_package(OpenCV REQUIRED)
-set(opencv_include_dir ${OpenCV_INCLUDE_DIRS} PARENT_SCOPE)
-set(opencv_version ${OpenCV_VERSION} PARENT_SCOPE)
 
 file(GLOB_RECURSE CppFiles 
 "algorithms/*.cpp"
@@ -101,56 +90,24 @@ if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
     set_target_properties(cvAutoTrack PROPERTIES COMPILE_FLAGS "/MP")
 endif()
-if(NOT MSVC)
-    message(STATUS "使用pthread")
-    # pthread
-    find_package(Threads REQUIRED)
-    target_link_libraries(cvAutoTrack PRIVATE Threads::Threads)
-endif()
 
-set_property(TARGET cvAutoTrack PROPERTY  MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${WITH_DYNAMIC_OPENCV}>:DLL>")
-if(WITH_DYNAMIC_OPENCV)
-    message(STATUS "使用Opencv动态库")
-else()
-    message(STATUS "使用Opencv静态库")
-endif()
-
-include(FetchContent)
-# 配置cereal
-set(BUILD_DOC OFF)
-set(BUILD_SANDBOX OFF)
-set(SKIP_PERFORMANCE_COMPARISON ON)
-set(BUILD_TESTS OFF)
-FetchContent_Declare(cereal GIT_REPOSITORY https://github.com/USCiLab/cereal.git GIT_TAG v1.3.2)
-FetchContent_MakeAvailable(cereal)
-set_target_properties(cereal PROPERTIES FOLDER "cvAutoTrack/dependencies")
-
-
-list(APPEND opencv_libs opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_imgcodecs opencv_imgproc opencv_video opencv_videoio opencv_xfeatures2d)
-if(WITCH_OPENCV_CVV)
-    list(APPEND opencv_libs opencv_cvv)
-endif()
 
 add_subdirectory(frame)
 
 find_package(fmt REQUIRED)
 find_package(imgui REQUIRED)
-target_link_libraries(cvAutoTrack 
+find_package(OpenCV REQUIRED)
+find_package(cereal REQUIRED)
+target_link_libraries(cvAutoTrack
 PRIVATE  
     tianli::frame
-    ${opencv_libs}
+    ${OpenCV_LIBS}
     cereal::cereal 
     fmt::fmt-header-only 
     imgui::imgui
+    opengl32
     )
-target_link_libraries(cvAutoTrack PRIVATE opengl32)
+target_include_directories(cvAutoTrack PRIVATE ${OpenCV_INCLUDE_DIRS})
 
-# install to release
-if(BUILD_DYANMIC_LINK_DEPS)
-    foreach(lib ${opencv_libs})
-        list(APPEND deps_dlls "${lib}${OpenCV_VERSION_MAJOR}${OpenCV_VERSION_MINOR}${OpenCV_VERSION_PATCH}$<$<CONFIG:Debug>:d>.dll")
-    endforeach()
-    add_custom_command(TARGET cvAutoTrack POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${deps_dlls} $<TARGET_FILE_DIR:cvAutoTrack> WORKING_DIRECTORY "${OpenCV_CONFIG_PATH}/../bin") 
-endif()
 add_custom_target(copy_version_file ALL COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/resource/version.ver" "$<TARGET_FILE_DIR:cvAutoTrack>/version")
 set_target_properties(copy_version_file PROPERTIES FOLDER "scripts")

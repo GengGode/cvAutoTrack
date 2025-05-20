@@ -17,12 +17,18 @@ target_sources(tianli_frame
         
         )
 
-set_target_properties(tianli_frame PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>$<$<BOOL:${WITH_DYNAMIC_OPENCV}>:DLL>")
 set_target_properties(tianli_frame PROPERTIES FOLDER "cvAutoTrack/modules")
 
+find_package(OpenCV REQUIRED)
 target_link_libraries(tianli_frame
     PUBLIC
-        ${opencv_libs}
+        ${OpenCV_LIBS}
         d3d11.lib 
         d3dcompiler.lib 
         dxgi.lib)
+target_include_directories(tianli_frame
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+        ${OpenCV_INCLUDE_DIRS}
+)

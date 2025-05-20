@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "fmt",
+    "cereal",
     "glad",
     {
       "name": "imgui",
@@ -8,6 +9,15 @@
         "docking-experimental",
         "win32-binding",
         "opengl3-binding"
+      ]
+    },
+    {
+      "name": "opencv",
+      "features": [
+        "contrib",
+        "nonfree",
+        "opengl",
+        "tbb"
       ]
     }
   ]
