@@ -1,8 +1,11 @@
 {
+  "name": "cvautotrack",
+  "version": "0.0.1",
   "dependencies": [
     "fmt",
     "cereal",
     "glad",
+    "glfw3",
     {
       "name": "imgui",
       "features": [
@@ -20,6 +23,38 @@
         "tbb",
         "ipp"
       ]
+    },
+    "tracy"
+  ],
+  "overrides": [
+    {
+      "name": "fmt",
+      "version": "11.0.2#1"
+    },
+    {
+      "name": "glew",
+      "version": "2.2.0"
+    },
+    {
+      "name": "glfw3",
+      "version": "3.3.8"
+    },
+    {
+      "name": "spdlog",
+      "version": "1.15.2"
+    },
+    {
+      "name": "opencv",
+      "version": "4.10.0#1"
+    },
+    {
+      "name": "opencv4",
+      "version": "4.10.0#1"
+    },
+    {
+      "name": "tbb",
+      "version": "2022.1.0#0"
     }
-  ]
+  ],
+  "builtin-baseline": "b12aa38a44a29bd8461404f2514e4c7cf00e1fc5"
 }
